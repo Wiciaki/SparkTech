@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SparkTech.SDK\SparkTech.SDK.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="API_Implementation\" />
+    <Folder Include="Entities_Implementation\" />
+  </ItemGroup>
+
+</Project>
