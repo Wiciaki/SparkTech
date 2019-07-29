@@ -22,7 +22,6 @@
 
   <ItemGroup>
     <Folder Include="Misc\Unit\" />
-    <Folder Include="Utility\" />
   </ItemGroup>
 
 </Project>
