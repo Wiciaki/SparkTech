@@ -1,4 +1,4 @@
-﻿namespace SparkTech.SDK.Champions
+﻿namespace SparkTech.SDK.Champions.Xerath
 {
     public class Xerath
     {

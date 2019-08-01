@@ -3,8 +3,10 @@
     using System.Reflection;
 
     using SparkTech.SDK.Auth;
+    using SparkTech.SDK.Entities;
     using SparkTech.SDK.Logging;
-    using SparkTech.SDK.Logging.Default;
+    using SparkTech.SDK.Rendering;
+    using SparkTech.SDK.Security;
     using SparkTech.SDK.UI;
 
     public sealed class VendorSetup
@@ -12,51 +14,60 @@
         private VendorSetup()
         { }
 
-        private static bool flag;
+        private static int state;
 
         public static VendorSetup GetTrustedInstance()
         {
-            if (flag)
+            if (state != 0)
             {
                 return null;
             }
 
-            if (VendorValidation.IsTrusted(Assembly.GetCallingAssembly()))
+            if (!VendorValidation.IsTrusted(Assembly.GetCallingAssembly()))
             {
-                flag = true;
-
-                return new VendorSetup();
+                return null;
             }
 
-            return null;
+            state++;
+
+            return new VendorSetup();
         }
 
-        internal static IPlatform Platform { get; private set; }
 
-        public void SetPlatform(IPlatform platform)
+
+        public void StartGame()
         {
-            Platform = platform;
+            //if (state )
+
+            ObjectManager.Initialize(platform.GetObjectManager());
+
+            Render.Initialize(platform.GetRender());
+
+            Spellbook.Initialize(platform.GetSpellbook());
         }
 
-        internal static ITheme Theme { get; private set; }
-
-        public static void SetDefaultPlatformTheme(ITheme theme)
+        public void SetDefaultPlatformTheme(ITheme theme)
         {
-            Theme = theme;
+            // Theme = theme;
         }
 
-        internal static IAuth Auth { get; private set; }
+        public IAuth Auth { get; set; }
 
-        public static void SetAuth(IAuth auth)
+        public ILogger Logger
         {
-            Auth = auth;
+            get => Log.Logger;
+            set
+            {
+                if (true)
+                {
+                    Log.Logger = value;
+                }
+            } 
         }
 
-        internal static ILogger Logger { get; private set; } = new DefaultLogger();
-
-        public static void SetLogger(ILogger logger)
+        public void Boot()
         {
-            Logger = logger;
+
         }
     }
 }

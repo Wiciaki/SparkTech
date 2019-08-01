@@ -1,6 +1,6 @@
 ﻿namespace SparkTech.SDK.Entities
 {
-    public interface ITurret : IUnit
+    public interface ITurret : IAIBase
     {
 
     }

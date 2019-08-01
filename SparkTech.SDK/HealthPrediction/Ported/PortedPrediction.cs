@@ -28,7 +28,7 @@
 
         public ModuleMenu Menu { get; }
 
-        public float Predict(IUnit unit, float time)
+        public float Predict(IAIBase unit, float time)
         {
             return GetHealthPrediction(unit, time.ToTicks());
         }
@@ -49,7 +49,7 @@
         /// </summary>
         /// <param name="minion"></param>
         /// <returns></returns>
-        public static IUnit GetAggroTurret(Obj_AI_Minion minion)
+        public static IAIBase GetAggroTurret(Obj_AI_Minion minion)
         {
             var ActiveTurret =
                 ActiveAttacks.Values.FirstOrDefault(
@@ -64,7 +64,7 @@
         /// <param name="time">The time.</param>
         /// <param name="delay">The delay.</param>
         /// <returns></returns>
-        public static float GetHealthPrediction(IUnit unit, int time, int delay = 70)
+        public static float GetHealthPrediction(IAIBase unit, int time, int delay = 70)
         {
             var predictedDamage = 0f;
 
@@ -117,7 +117,7 @@
         /// <param name="time">The time.</param>
         /// <param name="delay">The delay.</param>
         /// <returns></returns>
-        public static float LaneClearHealthPrediction(IUnit unit, int time, int delay = 70)
+        public static float LaneClearHealthPrediction(IAIBase unit, int time, int delay = 70)
         {
             var predictedDamage = 0f;
 
@@ -204,7 +204,7 @@
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="args">The <see cref="GameObjectProcessSpellCastEventArgs" /> instance containing the event data.</param>
-        private static void Obj_AI_Base_OnDoCast(IUnit sender, GameObjectProcessSpellCastEventArgs args)
+        private static void Obj_AI_Base_OnDoCast(IAIBase sender, GameObjectProcessSpellCastEventArgs args)
         {
             if (ActiveAttacks.ContainsKey(sender.Id) && sender.IsMelee)
             {
@@ -217,7 +217,7 @@
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="args">The <see cref="GameObjectProcessSpellCastEventArgs" /> instance containing the event data.</param>
-        private static void ObjAiBaseOnOnProcessSpellCast(IUnit sender, GameObjectProcessSpellCastEventArgs args)
+        private static void ObjAiBaseOnOnProcessSpellCast(IAIBase sender, GameObjectProcessSpellCastEventArgs args)
         {
             if (!sender.IsValidTarget(3000, false) || sender.Team != ObjectManager.Player.Team || sender is IHero
                 || !Orbwalking.IsAutoAttack(args.SData.Name) || !(args.Target is Obj_AI_Base))
@@ -225,7 +225,7 @@
                 return;
             }
 
-            var target = (IUnit)args.Target;
+            var target = (IAIBase)args.Target;
             ActiveAttacks.Remove(sender.NetworkId);
 
             var attackData = new PredictedDamage(
@@ -284,8 +284,8 @@
             /// <param name="projectileSpeed">The projectile speed.</param>
             /// <param name="damage">The damage.</param>
             public PredictedDamage(
-                IUnit source,
-                IUnit target,
+                IAIBase source,
+                IAIBase target,
                 int startTick,
                 float delay,
                 float animationTime,
@@ -343,7 +343,7 @@
             /// <value>
             ///     The source.
             /// </value>
-            public IUnit Source { get; private set; }
+            public IAIBase Source { get; private set; }
 
             /// <summary>
             ///     Gets or sets the start tick.
@@ -359,7 +359,7 @@
             /// <value>
             ///     The target.
             /// </value>
-            public IUnit Target { get; private set; }
+            public IAIBase Target { get; private set; }
 
             #endregion
         }

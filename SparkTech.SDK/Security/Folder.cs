@@ -4,6 +4,17 @@
 
     public class Folder
     {
+        public static Folder RootFolder { get; private set; }
+
+        public static Folder ScriptsFolder => RootFolder.GetFolder("Scripts");
+
+        public static Folder MenuFolder => RootFolder.GetFolder("Scripts");
+
+        internal void Initialize(string root)
+        {
+            RootFolder = new Folder(root);
+        }
+
         private readonly string path;
 
         public Folder(string path)
@@ -28,9 +39,6 @@
             return Path.Combine(this, itemName);
         }
 
-        public static implicit operator string(Folder folder)
-        {
-            return folder.path;
-        }
+        public static implicit operator string(Folder folder) => folder.path;
     }
 }

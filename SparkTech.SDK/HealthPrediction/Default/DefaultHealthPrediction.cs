@@ -18,7 +18,7 @@
             this.tempSolution.Release();
         }
 
-        public float Predict(IUnit unit, float time)
+        public float Predict(IAIBase unit, float time)
         {
             return this.tempSolution.Predict(unit, time);
         }

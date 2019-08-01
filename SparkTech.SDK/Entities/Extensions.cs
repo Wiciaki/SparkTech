@@ -6,16 +6,23 @@
 
     using SharpDX;
 
+    using SparkTech.SDK.Rendering;
+
     public static class Extensions
     {
-        public static Vector3 GetPosition(this IGameObject o)
+        public static float HealthPercent(this IHero hero)
         {
-            return new Vector3(o.PositionX(), o.PositionY(), o.PositionZ());
+            return hero.Health() / hero.MaxHealth() * 100f;
         }
 
         public static float ManaPercent(this IHero hero)
         {
-            return hero.Mana() / hero.MaxMana() * 100;
+            return hero.Mana() / hero.MaxMana() * 100f;
+        }
+
+        public static void DrawCircle(this IGameObject o, Color color, float radius)
+        {
+            Circle.Draw(color, radius, o.Position());
         }
 
         #region Static Fields
@@ -35,7 +42,7 @@
                 return MinionType.Unknown;
             }
 
-            var baseSkinName = minion.GetBaseSkinName();
+            var baseSkinName = minion.BaseSkinName();
             var match = LaneMinionRegex.Match(baseSkinName);
 
             if (match.Success)
@@ -85,7 +92,7 @@
 
         public static bool IsJungleBuff(this IMinion minion)
         {
-            switch (minion.GetCharName())
+            switch (minion.CharName())
             {
                 case "SRU_Blue":
                 case "SRU_Red":
@@ -116,7 +123,7 @@
 
         #endregion
 
-        private static readonly GameObjectComparer<IGameObject> GameObjectComparer = new GameObjectComparer<IGameObject>();
+        private static readonly EntityComparer<IGameObject> GameObjectComparer = new EntityComparer<IGameObject>();
 
         public static bool Compare(this IGameObject left, IGameObject right)
         {
@@ -131,11 +138,6 @@
         public static bool HasItem(this AIHeroClient target, params uint[] itemIds)
         {
             return target.InventorySlots.HasItem(itemIds);
-        }
-
-        public static bool IsMe(this IGameObject o)
-        {
-            return o.Id() == ObjectManager.PlayerId;
         }
 
         public static bool IsMovementImpaired(this AIBaseClient unit)

@@ -5,11 +5,9 @@ VisualStudioVersion = 16.0.28621.142
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SparkTech.SDK", "SparkTech.SDK\SparkTech.SDK.csproj", "{35284B3E-CDFC-475C-9F90-185E605272CB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FatSquirrel", "FatSquirrel\FatSquirrel.csproj", "{9F3F0B35-B255-4DBC-A00F-748BC111E961}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SparkTech.SDK.Tests", "SparkTech.SDK.Tests\SparkTech.SDK.Tests.csproj", "{41CC018B-0D34-4D9B-AA4B-DCFAB5DBDD91}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{7A712975-81FB-49EA-BA82-E36021F9AFC8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LinkerBase", "LinkerBase\LinkerBase.csproj", "{2F25C3F7-18AE-4444-BDED-4D2AB8FF3DC1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,18 +19,14 @@ Global
 		{35284B3E-CDFC-475C-9F90-185E605272CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{35284B3E-CDFC-475C-9F90-185E605272CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{35284B3E-CDFC-475C-9F90-185E605272CB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9F3F0B35-B255-4DBC-A00F-748BC111E961}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9F3F0B35-B255-4DBC-A00F-748BC111E961}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9F3F0B35-B255-4DBC-A00F-748BC111E961}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9F3F0B35-B255-4DBC-A00F-748BC111E961}.Release|Any CPU.Build.0 = Release|Any CPU
 		{41CC018B-0D34-4D9B-AA4B-DCFAB5DBDD91}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{41CC018B-0D34-4D9B-AA4B-DCFAB5DBDD91}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{41CC018B-0D34-4D9B-AA4B-DCFAB5DBDD91}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{41CC018B-0D34-4D9B-AA4B-DCFAB5DBDD91}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7A712975-81FB-49EA-BA82-E36021F9AFC8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7A712975-81FB-49EA-BA82-E36021F9AFC8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7A712975-81FB-49EA-BA82-E36021F9AFC8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7A712975-81FB-49EA-BA82-E36021F9AFC8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2F25C3F7-18AE-4444-BDED-4D2AB8FF3DC1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2F25C3F7-18AE-4444-BDED-4D2AB8FF3DC1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2F25C3F7-18AE-4444-BDED-4D2AB8FF3DC1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2F25C3F7-18AE-4444-BDED-4D2AB8FF3DC1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

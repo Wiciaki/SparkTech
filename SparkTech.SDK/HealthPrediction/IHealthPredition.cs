@@ -29,7 +29,7 @@ namespace SparkTech.SDK.HealthPrediction
     {
         #region Public Methods and Operators
 
-        float Predict(IUnit unit, float time);
+        float Predict(IAIBase unit, float time);
 
         #endregion
     }

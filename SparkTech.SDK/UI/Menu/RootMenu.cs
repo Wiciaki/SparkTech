@@ -32,6 +32,10 @@ namespace SparkTech.SDK.UI.Menu
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
 
+    using SharpDX.Direct3D9;
+
+    using SparkTech.SDK.Game;
+    using SparkTech.SDK.Properties;
     using SparkTech.SDK.Util;
 
     using Color = SharpDX.Color;
@@ -89,7 +93,7 @@ namespace SparkTech.SDK.UI.Menu
             lastStart = menuStart;
 
             VisibilityStateChanged += MenuVisibilityStateChanged;
-            Game.OnWndProc += GameOnWndProc;
+            GameEvents.OnWndProc += GameOnWndProc;
         }
 
         private static async void MenuVisibilityStateChanged()

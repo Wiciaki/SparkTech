@@ -43,7 +43,11 @@ namespace SparkTech.SDK.Rendering
         /// </summary>
         static Line()
         {
-            Initialize();
+            DxLine = new SharpDX.Direct3D9.Line(Render.Direct3DDevice) { Antialias = true };
+
+            Render.OnDispose += DxLine.Dispose;
+            Render.OnLostDevice += DxLine.OnLostDevice;
+            Render.OnResetDevice += DxLine.OnResetDevice;
         }
 
         #endregion
@@ -56,23 +60,30 @@ namespace SparkTech.SDK.Rendering
         /// <value>
         ///     The cached line.
         /// </value>
-        private static SharpDX.Direct3D9.Line CachedLine { get; set; }
-
-        /// <summary>
-        ///     Gets or sets a value indicating whether this instance is drawing.
-        /// </summary>
-        /// <value>
-        ///     <c>true</c> if this instance is drawing; otherwise, <c>false</c>.
-        /// </value>
-        private static bool IsDrawing { get; set; }
+        private static readonly SharpDX.Direct3D9.Line DxLine;
 
         #endregion
 
         #region Public Methods and Operators
 
-        public static void Render(Color color, float thickness, bool antiAlias, params Vector2[] screenPositions)
+        /// <summary>
+        ///     Renders a line.
+        /// </summary>
+        /// <param name="color">The color.</param>
+        /// <param name="thickness">The thickness.</param>
+        /// <param name="worldPositions">The world positions.</param>
+        public static void Draw(Color color, float thickness, params Vector3[] worldPositions)
         {
-            Render(color, thickness, antiAlias, Array.ConvertAll(screenPositions, v => new RawVector2(v.X, v.Y)));
+            // Convert the world space positions to screen space positions
+            var screenPositions = Array.ConvertAll(worldPositions, Render.WorldToScreen);
+
+            // Draw the screen space positions
+            Draw(color, thickness, screenPositions);
+        }
+
+        public static void Draw(Color color, float thickness, params Vector2[] screenPositions)
+        {
+            Draw(color, thickness, Array.ConvertAll(screenPositions, v => new RawVector2(v.X, v.Y)));
         }
 
         /// <summary>
@@ -80,9 +91,8 @@ namespace SparkTech.SDK.Rendering
         /// </summary>
         /// <param name="color">The color.</param>
         /// <param name="thickness">The thickness.</param>
-        /// <param name="antiAlias">if set to <c>true</c> [anti alias].</param>
         /// <param name="screenPositions">The screen positions.</param>
-        public static void Render(Color color, float thickness, bool antiAlias, params RawVector2[] screenPositions)
+        public static void Draw(Color color, float thickness, params RawVector2[] screenPositions)
         {
             // Make sure we can draw the line
             if (screenPositions.Length < 2 || thickness < float.Epsilon)
@@ -90,88 +100,11 @@ namespace SparkTech.SDK.Rendering
                 return;
             }
 
-            // Check if the line is still being drawn
-            if (!IsDrawing)
-            {
-                // If not, set the line parameters
-                CachedLine.Width = thickness;
-                CachedLine.Antialias = antiAlias;
+            DxLine.Width = thickness;
 
-                // And begin the drawing process
-                CachedLine.Begin();
-                IsDrawing = true;
-            }
-
-            // Draw the cached line
-            CachedLine.Draw(screenPositions, color);
-
-            // Finish drawing and release control of the object
-            IsDrawing = false;
-            CachedLine.End();
-        }
-
-        /// <summary>
-        ///     Renders a line.
-        /// </summary>
-        /// <param name="color">The color.</param>
-        /// <param name="thickness">The thickness.</param>
-        /// <param name="antiAlias">if set to <c>true</c> [anti alias].</param>
-        /// <param name="worldPositions">The world positions.</param>
-        public static void Render(Color color, float thickness, bool antiAlias, params Vector3[] worldPositions)
-        {
-            // Convert the world space positions to screen space positions
-            var screenPositions = Array.ConvertAll(worldPositions, Renderer.WorldToScreen);
-
-            // Draw the screen space positions
-            Render(color, thickness, antiAlias, screenPositions);
-        }
-
-        #endregion
-
-        #region Methods
-
-        /// <summary>
-        ///     Releases unmanaged and - optionally - managed resources.
-        /// </summary>
-        private static void Dispose()
-        {
-            CachedLine?.Dispose();
-            CachedLine = null;
-        }
-
-        /// <summary>
-        ///     Initializes this instance.
-        /// </summary>
-        private static void Initialize()
-        {
-            // Set the cached line so we don't have to intiialize it every frame
-            CachedLine = new SharpDX.Direct3D9.Line(Renderer.Direct3DDevice);
-
-            // Listen to events
-            AppDomain.CurrentDomain.DomainUnload += (sender, args) => Dispose();
-            AppDomain.CurrentDomain.ProcessExit += (sender, args) => Dispose();
-
-            Renderer.OnReset += args =>
-            {
-                Unload();
-                Reset();
-            };
-        }
-
-        /// <summary>
-        ///     Resets this instance.
-        /// </summary>
-        private static void Reset()
-        {
-            CachedLine?.OnResetDevice();
-        }
-
-        /// <summary>
-        ///     Unloads this instance.
-        /// </summary>
-        private static void Unload()
-        {
-            CachedLine?.OnLostDevice();
+            DxLine.Begin();
+            DxLine.Draw(screenPositions, color);
+            DxLine.End();
         }
 
         #endregion

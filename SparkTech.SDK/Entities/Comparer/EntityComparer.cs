@@ -29,7 +29,7 @@ namespace SparkTech.SDK.Entities
     ///     The comparer class, which is responsible for determining whether GameObject instances represent the same underlying
     ///     game object.
     /// </summary>
-    public sealed class GameObjectComparer<T> : IEqualityComparer<T> where T : IGameObject
+    public class EntityComparer<T> : IEqualityComparer<T> where T : IGameObject
     {
         #region Explicit Interface Methods
 

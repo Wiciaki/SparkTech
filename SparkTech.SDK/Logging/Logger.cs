@@ -1,12 +1,12 @@
-﻿namespace SparkTech.SDK.Logging.Default
+﻿namespace SparkTech.SDK.Logging
 {
     using System;
 
-    public sealed class DefaultLogger : ILogger
+    public sealed class ConsoleLogger : ILogger
     {
         public void Write(string msg, LogLevel level)
         {
-            // TODO this is some temp garbage
+            Console.Write($"[{DateTime.Now:hh:mm:ss}] ");
 
             Console.ForegroundColor = level switch
             {
@@ -15,9 +15,7 @@
                 _ => ConsoleColor.White
             };
 
-            Console.WriteLine();
             Console.WriteLine(msg);
-            Console.WriteLine();
 
             Console.ForegroundColor = ConsoleColor.White;
         }

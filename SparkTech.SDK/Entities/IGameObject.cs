@@ -1,5 +1,7 @@
 ﻿namespace SparkTech.SDK.Entities
 {
+    using SharpDX;
+
     public interface IGameObject
     {
         int Id();
@@ -14,13 +16,9 @@
 
         float BoundingRadius();
 
-        float PositionX();
-        float PositionY();
-        float PositionZ();
+        Vector3 Position();
 
-        float OrientationX();
-        float OrientationY();
-        float OrientationZ();
+        Vector3 Orientation();
 
         // needed?
         bool IsValid();

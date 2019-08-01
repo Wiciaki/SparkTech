@@ -32,7 +32,7 @@
             Menu = new ModuleMenu("Orbwalker") { /*KeysMenu*/ };
         }
 
-        protected virtual IUnit Unit => ObjectManager.Player;
+        protected virtual IAIBase Unit => ObjectManager.Player;
 
         #region Constructors and Destructors
 

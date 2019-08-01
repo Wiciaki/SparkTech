@@ -1,6 +1,6 @@
 ﻿namespace SparkTech.SDK.Entities
 {
-    public interface IHero : IUnit
+    public interface IHero : IAIBase
     {
 
     }

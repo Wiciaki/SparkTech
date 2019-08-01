@@ -8,25 +8,30 @@
     using System.Text;
     using System.Text.RegularExpressions;
     using System.Threading.Tasks;
-
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
 
+    using SparkTech.SDK.Entities;
+    using SparkTech.SDK.Logging;
     using SparkTech.SDK.Misc;
     using SparkTech.SDK.Modules;
+    using SparkTech.SDK.Properties;
+    using SparkTech.SDK.Rendering;
+    using SparkTech.SDK.Security;
     using SparkTech.SDK.SpellDatabase;
     using SparkTech.SDK.TickOperations;
-    using SparkTech.SDK.UI;
     using SparkTech.SDK.UI.Menu;
     using SparkTech.SDK.UI.Menu.Values;
     using SparkTech.SDK.UI.Notifications;
     using SparkTech.SDK.Util;
 
+    using Keys = System.Windows.Forms.Keys;
+
     internal static class SdkSetup
     {
         #region Static Fields
 
-        private static readonly string ModulesDirectory;
+        private static readonly Folder ModulesDirectory;
 
         private static readonly RootMenu RootMenu;
 
@@ -36,7 +41,7 @@
 
         private const string DefaultItemName = "Default";
 
-        internal static readonly string SaveDirectory;
+        internal static readonly Folder SaveDirectory;
 
         #endregion
 
@@ -44,13 +49,11 @@
 
         static SdkSetup()
         {
-            var folder = Paths.GetScriptDataFolder();
+            Keys a = Keys.A;
 
-            ModulesDirectory = Path.Combine(folder, "Modules");
-            Directory.CreateDirectory(ModulesDirectory);
+            ModulesDirectory = Folder.MenuFolder.GetFolder("Modules");
 
             SaveDirectory = Path.Combine(folder, "MenuData");
-            Directory.CreateDirectory(SaveDirectory);
 
             RootMenu = new RootMenu("Entropy.SDK");
             ModuleSelectionMenu = RootMenu.Add(new Menu("Modules"));
@@ -66,7 +69,7 @@
             var ticks = RootMenu.Add(new MenuSlider("Ticks", 25, 10, 50));
             var movable = RootMenu.Add(new MenuCheckBox("MenuMovable", false));
             var lang = new MenuList("Language", EnumCache<Language>.Names);
-            var button = RootMenu.Add(new MenuKeyBind("MenuButton", Keys.Shift));
+            var button = RootMenu.Add(new MenuKeyBind("MenuButton", System.Windows.Forms.Keys.Shift));
             var toggle = RootMenu.Add(new MenuCheckBox("MenuToggle", false));
             RootMenu.Add(new MenuButton("SaveTemplate", SaveTemplate));
 
@@ -115,7 +118,7 @@
             Subscribe(LangChanged, lang);
             Subscribe(ClockUpdated, clock["DrawClock"], clock["x"], clock["y"]);
             Subscribe(() => Hacks.AntiAFK = antiAfk.GetValue<bool>(), antiAfk);
-            Subscribe(() => SdkSetup.RootMenu.IsMovable = movable.GetValue<bool>(), movable);
+            Subscribe(() => RootMenu.IsMovable = movable.GetValue<bool>(), movable);
             Subscribe(() => GameTick.TicksPerSecond = ticks.GetValue<int>(), ticks);
 
             button.PropertyChanged += (o, args) => ControlChanged(args.PropertyName == "Key");
@@ -124,7 +127,7 @@
 
             CreateTest();
 
-            Logging.Log("Entropy.SDK - loaded!");
+            Log.Info("SparkTech.SDK - loaded!");
 
             void Subscribe(Action callback, params MenuValue[] notifiers)
             {
@@ -135,7 +138,7 @@
 
             #region Callbacks
 
-            async void SaveTemplate()
+            static async void SaveTemplate()
             {
                 await RootMenu.SaveTranslationTemplate(
                     Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), RootMenu.Id + ".json"));
@@ -163,7 +166,7 @@
 
                 if (resource == null)
                 {
-                    Logging.Log($"Translation file for {Menu.Language} language couldn't be found in Entropy.SDK!", LogLevels.Warn);
+                    Log.Warn($"Translation file for {Menu.Language} language couldn't be found in SparkTech.SDK!");
 
                     return;
                 }
@@ -206,18 +209,18 @@
                 new MenuColor("xdColor", Color.Magenta).SetDisplayName("Circle color")
             }.SetDisplayName("SDK test menu");
 
-            GameLoading.OnLoad += () => Renderer.OnRender += TestRender;
+            GameLoading.OnLoad += () => Render.OnRender += TestRender;
         }
 
         private static readonly PlayerSpell Q = new PlayerSpell(SpellSlot.Q);
 
-        private static void TestRender(EntropyEventArgs args)
+        private static void TestRender()
         {
             var text = "Q ready in: " + Q.GetTimeUntilReady();
 
-            var pos = Renderer.WorldToScreen(LocalPlayer.Instance.Position).ToPoint();
+            var pos = ObjectManager.Player.Position();
 
-            Theme.Draw(new DrawData(pos, Theme.MeasureSize(text)) { Text = text, ForceTextCentered = true });
+            Text.Draw(text, SharpDX.Color.Red, pos.WorldToScreen());
         }
 
         #endregion
@@ -235,12 +238,11 @@
 
         internal static async Task SaveToFileAsync(string targetPath, JToken token)
         {
-            using (var fileStream = new FileStream(targetPath, File.Exists(targetPath) ? FileMode.Truncate : FileMode.Create, FileAccess.Write, FileShare.None))
-            using (var streamWriter = new StreamWriter(fileStream))
-            using (var testWriter = new JsonTextWriter(streamWriter) { Formatting = Formatting.Indented })
-            {
-                await token.WriteToAsync(testWriter);
-            }
+            await using var fileStream = new FileStream(targetPath, File.Exists(targetPath) ? FileMode.Truncate : FileMode.Create, FileAccess.Write, FileShare.None);
+            await using var streamWriter = new StreamWriter(fileStream);
+            using var testWriter = new JsonTextWriter(streamWriter) { Formatting = Formatting.Indented };
+
+            await token.WriteToAsync(testWriter);
         }
 
         private static string GetDisplayableTypeName<T>()
@@ -378,9 +380,11 @@
                 }
                 catch (Exception ex)
                 {
-                    ex.LogException(
+                    Log.Error(
                         $"Couldn't create an instance of the menu selected module \"{moduleType.FullName}\". "
                         + "This is the script dev's fault. Please contact him about this error.");
+
+                    ex.Log();
 
                     return;
                 }
@@ -404,7 +408,7 @@
 
                 if (menu != null)
                 {
-                    var target = Path.Combine(ModulesDirectory, this.GetUniqueInstanceName() + ".json");
+                    var target = ModulesDirectory.GetFile(this.GetUniqueInstanceName() + ".json");
 
                     if (File.Exists(target))
                     {
@@ -414,7 +418,8 @@
                         }
                         catch (Exception ex)
                         {
-                            ex.LogException($"Couldn't parse the JSON config for ModuleMenu \"{menu.DisplayName}\"!");
+                            Log.Error($"Couldn't parse the JSON config for ModuleMenu \"{menu.DisplayName}\"!");
+                            ex.Log();
                         }
                     }
 
@@ -447,9 +452,9 @@
 
                 var name = this.GetUniqueInstanceName();
 
-                Logging.Log("Saving the updated config for " + name + "...");
+                Log.Info("Saving the updated config for " + name + "...");
 
-                var target = Path.Combine(ModulesDirectory, name + ".json");
+                var target = ModulesDirectory.GetFile(name + ".json");
                 var token = menu.GetModuleToken();
 
                 if (token == null)
@@ -459,13 +464,13 @@
                         File.Delete(target);
                     }
 
-                    Logging.Log("Module data was at the default values.");
+                    Log.Info("Module data was at the default values.");
                 }
                 else
                 {
                     await SaveToFileAsync(target, token);
 
-                    Logging.Log("Saved the module data successfully.");
+                    Log.Info("Saved the module data successfully.");
                 }
             }
 

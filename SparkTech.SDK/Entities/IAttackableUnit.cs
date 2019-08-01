@@ -1,5 +1,7 @@
 ﻿namespace SparkTech.SDK.Entities
 {
+    using System;
+
     public interface IAttackableUnit : IGameObject
     {
         float Health();
@@ -26,10 +28,11 @@
         // float OverrideCollisionHeight
         // float OverrideCollisionRadius
 
-        // OnDamage
+        //Action<OnDamageEventArgs> OnDamage { get; set; }
 
-        // OnLeaveVisiblityClient
-        // OnLeaveTeamVisiblity
+        //Action<IAttackableUnit> OnLeaveVisiblityClient { get; set; }
+        
+        OnLeaveTeamVisiblity
         // OnLeaveLocalVisiblityClient
         // ^x2 for enter
     }

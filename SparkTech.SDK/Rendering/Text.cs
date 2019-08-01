@@ -53,7 +53,7 @@ namespace SparkTech.SDK.Rendering
         {
             // Intialize the default font now so we don't have to intialize it with every frame
             Font = new Font(
-                Renderer.Direct3DDevice,
+                Render.Direct3DDevice,
                 20,
                 0,
                 FontWeight.Normal,
@@ -65,12 +65,9 @@ namespace SparkTech.SDK.Rendering
                 FontPitchAndFamily.Default | FontPitchAndFamily.DontCare,
                 "Arial");
 
-            // Listen to events            
-            Renderer.OnReset += args =>
-            {
-                Font.OnLostDevice();
-                Font.OnResetDevice();
-            };
+            Render.OnResetDevice += Font.OnResetDevice;
+            Render.OnLostDevice += Font.OnLostDevice;
+            Render.OnDispose += Font.Dispose;
         }
 
         #endregion
@@ -83,9 +80,9 @@ namespace SparkTech.SDK.Rendering
         /// <param name="content">The content.</param>
         /// <param name="color">The color.</param>
         /// <param name="worldPositions">The world positions.</param>
-        public static void Render(string content, Color color, params Vector3[] worldPositions)
+        public static void Draw(string content, Color color, params Vector3[] worldPositions)
         {
-            Render(content, color, Array.ConvertAll(worldPositions, Renderer.WorldToScreen));
+            Draw(content, color, Array.ConvertAll(worldPositions, Render.WorldToScreen));
         }
 
         /// <summary>
@@ -94,7 +91,7 @@ namespace SparkTech.SDK.Rendering
         /// <param name="content">The content.</param>
         /// <param name="color">The color.</param>
         /// <param name="screenPositions">The screen positions.</param>
-        public static void Render(string content, Color color, params Vector2[] screenPositions)
+        public static void Draw(string content, Color color, params Vector2[] screenPositions)
         {
             foreach (var screenPosition in screenPositions)
             {
@@ -109,7 +106,7 @@ namespace SparkTech.SDK.Rendering
         /// <param name="color">The color.</param>
         /// <param name="flags">The flags.</param>
         /// <param name="rectangles">The rectangles.</param>
-        public static void Render(string content, Color color, FontDrawFlags flags, params Rectangle[] rectangles)
+        public static void Draw(string content, Color color, FontDrawFlags flags, params Rectangle[] rectangles)
         {
             foreach (var rectangle in rectangles)
             {
@@ -124,9 +121,9 @@ namespace SparkTech.SDK.Rendering
         /// <param name="color">The color.</param>
         /// <param name="font">The font.</param>
         /// <param name="worldPositions">The world positions.</param>
-        public static void Render(string content, Color color, Font font, params Vector3[] worldPositions)
+        public static void Draw(string content, Color color, Font font, params Vector3[] worldPositions)
         {
-            Render(content, color, font, Array.ConvertAll(worldPositions, Renderer.WorldToScreen));
+            Draw(content, color, font, Array.ConvertAll(worldPositions, Render.WorldToScreen));
         }
 
         /// <summary>
@@ -136,7 +133,7 @@ namespace SparkTech.SDK.Rendering
         /// <param name="color">The color.</param>
         /// <param name="font">The font.</param>
         /// <param name="screenPositions">The screen positions.</param>
-        public static void Render(string content, Color color, Font font, params Vector2[] screenPositions)
+        public static void Draw(string content, Color color, Font font, params Vector2[] screenPositions)
         {
             foreach (var screenPosition in screenPositions)
             {
@@ -152,7 +149,7 @@ namespace SparkTech.SDK.Rendering
         /// <param name="font">The font.</param>
         /// <param name="flags">The flags.</param>
         /// <param name="rectangles">The rectangles.</param>
-        public static void Render(
+        public static void Draw(
             string content,
             Color color,
             Font font,

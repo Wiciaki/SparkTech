@@ -1,6 +1,6 @@
 ﻿namespace SparkTech.SDK.Entities
 {
-    public interface IMinion : IUnit
+    public interface IMinion : IAIBase
     {
 
     }

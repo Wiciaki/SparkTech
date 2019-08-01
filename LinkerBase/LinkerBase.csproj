@@ -9,9 +9,4 @@
     <ProjectReference Include="..\SparkTech.SDK\SparkTech.SDK.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="API_Implementation\" />
-    <Folder Include="Entities_Implementation\" />
-  </ItemGroup>
-
 </Project>

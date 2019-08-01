@@ -7,6 +7,21 @@
 
     public static class EventExtensions
     {
+        public static void SafeInvoke(this Action e)
+        {
+            foreach (var callback in e.GetInvocationList().Cast<Action>())
+            {
+                try
+                {
+                    callback();
+                }
+                catch (Exception ex)
+                {
+                    ex.Log();
+                }
+            }
+        }
+
         public static void SafeInvoke<T>(this Action<T> e, T arg)
         {
             foreach (var callback in e.GetInvocationList().Cast<Action<T>>())

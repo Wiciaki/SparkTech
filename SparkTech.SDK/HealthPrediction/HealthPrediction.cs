@@ -26,7 +26,7 @@
             Picker.Add<T>(moduleName);
         }
 
-        public static float PredictHealth(this IUnit unit, float time)
+        public static float PredictHealth(this IAIBase unit, float time)
         {
             return Picker.Current.Predict(unit, time);
         }

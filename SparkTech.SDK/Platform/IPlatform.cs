@@ -5,5 +5,13 @@
     public interface IPlatform
     {
         IObjectManager GetObjectManager();
+
+        IRender GetRender();
+
+        ISpellbook GetSpellbook();
+
+        IGame GetGame();
+
+        IEntityEvents GetEntityEvents();
     }
 }

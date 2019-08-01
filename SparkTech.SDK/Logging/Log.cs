@@ -1,46 +1,54 @@
 ﻿namespace SparkTech.SDK.Logging
 {
-    using SparkTech.SDK.Platform;
+    using System;
 
     public static class Log
     {
+        internal static ILogger Logger = new ConsoleLogger();
+
+        internal static Func<LogLevel> GetLogLevel; 
+
         public static void Error(object obj)
         {
-            if (obj != null)
-            {
-                Error(obj.ToString());
-            }
+            Error(obj?.ToString());
         }
 
         public static void Warn(object obj)
         {
-            if (obj != null)
-            {
-                Warn(obj.ToString());
-            }
+            Warn(obj?.ToString());
         }
 
         public static void Info(object obj)
         {
-            if (obj != null)
-            {
-                Info(obj.ToString());
-            }
+            Info(obj?.ToString());
         }
 
         public static void Error(string msg)
         {
-            VendorSetup.Logger.Write(msg, LogLevel.Error);
+            Write(msg, LogLevel.Error);
         }
 
         public static void Warn(string msg)
         {
-            VendorSetup.Logger.Write(msg, LogLevel.Warn);
+            Write(msg, LogLevel.Warn);
         }
 
         public static void Info(string msg)
         {
-            VendorSetup.Logger.Write(msg, LogLevel.Info);
+            Write(msg, LogLevel.Info);
+        }
+
+        private static void Write(string msg, LogLevel level)
+        {
+            if (msg == null)
+            {
+                return;
+            }
+
+            if (GetLogLevel == null || level >= GetLogLevel())
+            {
+                Logger.Write(msg, level);
+            }
         }
     }
 }

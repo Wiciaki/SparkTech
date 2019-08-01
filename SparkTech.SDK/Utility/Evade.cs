@@ -1,6 +1,6 @@
 ﻿namespace SparkTech.SDK.Utility
 {
-    class Evade
+    public class Evade
     {
 
     }

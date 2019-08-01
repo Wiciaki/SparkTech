@@ -34,29 +34,18 @@ namespace SparkTech.SDK.Entities
 
     public static class ObjectManager
     {
+        private static readonly Dictionary<Type, CacheEntry> Container = new Dictionary<Type, CacheEntry>
+                                                                         {
+                                                                             [typeof(IGameObject)] = new CacheEntry(
+                                                                                 new HashSet<IGameObject>(
+                                                                                     new GameObjectComparer()))
+                                                                         };
 
-        private static readonly Dictionary<Type, ObjectCacheEntry> Container = new Dictionary<Type, ObjectCacheEntry>
-                                                                               {
-                                                                                   [typeof(IGameObject)] =
-                                                                                       new ObjectCacheEntry(
-                                                                                           new HashSet<IGameObject>(
-                                                                                               new GameObjectComparer<
-                                                                                                   IGameObject>()))
-                                                                               };
-
-        public static event Action<IGameObject> OnCreate;
-
-        public static event Action<IGameObject> OnDelete;
+        public static event Action<IGameObject> OnCreate, OnDelete;
 
         internal static void Initialize(IObjectManager mgr)
         {
-            Log.Info("ObjectManager - starting!");
-
             Player = mgr.GetPlayer();
-
-            PlayerId = Player.Id();
-
-            playerTeam = Player.Team();
 
             mgr.Create = HandleCreate;
             mgr.Delete = HandleDelete;
@@ -64,11 +53,7 @@ namespace SparkTech.SDK.Entities
             Array.ForEach(mgr.GetUnits(), HandleCreate);
         }
 
-        public static int PlayerId { get; private set; }
-
         public static IPlayer Player { get; private set; }
-
-        private static GameObjectTeam playerTeam;
 
         public static HashSet<TGameObject> Get<TGameObject>() where TGameObject : IGameObject
         {
@@ -77,105 +62,79 @@ namespace SparkTech.SDK.Entities
                 return (HashSet<TGameObject>)entry.HashSet;
             }
 
-            Log.Info($"ObjectCache - Adding {typeof(TGameObject).Name}!");
+            Log.Info($"ObjectManager - now caching {typeof(TGameObject).Name}!");
 
-            var hashset = Container[typeof(IGameObject)].HashSet.OfType<TGameObject>().ToHashSet(new GameObjectComparer<TGameObject>());
+            var hashset = Container[typeof(IGameObject)].HashSet.OfType<TGameObject>().ToHashSet(new EntityComparer<TGameObject>());
 
-            Container.Add(typeof(TGameObject), new ObjectCacheEntry(hashset));
+            Container.Add(typeof(TGameObject), new CacheEntry(hashset));
 
             return hashset;
         }
 
-        public static bool IsAlly(this IGameObject o)
-        {
-            return o.Team() == playerTeam;
-        }
+        public static bool IsMe(this IGameObject o) => o.Id() == Player.Id();
 
-        public static bool IsEnemy(this IGameObject o)
-        {
-            return !o.IsAlly();
-        }
+        public static bool IsAlly(this IGameObject o) => o.Team() == Player.Team();
 
-        public static IGameObject GetById(int id)
-        {
-            return Get<IGameObject>().FirstOrDefault(o => o.Id() == id);
-        }
+        public static bool IsEnemy(this IGameObject o) => !o.IsAlly();
 
-        private static void HandleCreate(IGameObject sender)
-        {
-            ProcessItem(sender, true);
-        }
+        public static IGameObject GetById(int id) => Get<IGameObject>().FirstOrDefault(o => o.Id() == id);
 
-        private static void HandleDelete(IGameObject sender)
-        {
-            ProcessItem(sender, false);
-        }
+        private static void HandleCreate(IGameObject sender) => ProcessItem(sender, true);
 
-        private static void ProcessItem(IGameObject sender, bool @new)
+        private static void HandleDelete(IGameObject sender) => ProcessItem(sender, false);
+
+        private static readonly object[] Args = new object[1];
+
+        private static void ProcessItem(IGameObject sender, bool add)
         {
             var senderType = sender.GetType();
 
-            foreach (var (key, value) in Container)
+            foreach (var (_, entry) in Container.Where(p => p.Key.IsAssignableFrom(senderType)))
             {
-                if (key.IsAssignableFrom(senderType))
+                MethodBase method;
+                Action<IGameObject> action;
+
+                if (add)
                 {
-                    value.Process(sender, @new);
+                    method = entry.AddMethod;
+                    action = OnCreate;
                 }
+                else
+                {
+                    method = entry.RemoveMethod;
+                    action = OnDelete;
+                }
+
+                Args[0] = sender;
+
+                method.Invoke(entry.HashSet, Args);
+                action.SafeInvoke(sender);
             }
         }
 
-        private class ObjectCacheEntry
+        private class CacheEntry
         {
             #region Fields
 
             public readonly IEnumerable HashSet;
 
-            private readonly MethodInfo add;
+            public readonly MethodBase AddMethod;
 
-            private readonly MethodInfo remove;
-
-            private readonly object[] args;
+            public readonly MethodBase RemoveMethod;
 
             #endregion
 
             #region Constructors and Destructors
 
-            public ObjectCacheEntry(IEnumerable hashSet)
+            public CacheEntry(IEnumerable hashSet)
             {
                 var type = hashSet.GetType();
 
-                this.add = type.GetMethod("Add");
+                this.AddMethod = type.GetMethod("Add");
 
-                this.remove = type.GetMethod("Remove");
-
-                this.args = new object[1];
+                this.RemoveMethod = type.GetMethod("Remove");
 
                 this.HashSet = hashSet;
-            }
-
-            #endregion
-
-            #region Public Methods and Operators
-
-            public void Process(IGameObject o, bool @new)
-            {
-                this.args[0] = o;
-
-                if (@new)
-                {
-                    Process(this.add, OnCreate);
-                }
-                else
-                {
-                    Process(this.remove, OnDelete);
-                }
-
-                void Process(MethodBase method, Action<IGameObject> evt)
-                {
-                    method.Invoke(this.HashSet, this.args);
-
-                    evt.SafeInvoke(o);
-                }
             }
 
             #endregion
