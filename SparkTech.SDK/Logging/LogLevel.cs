@@ -6,6 +6,6 @@
 
         Warn,
 
-        Info
+        Debug
     }
 }

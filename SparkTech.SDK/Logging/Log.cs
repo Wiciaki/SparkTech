@@ -18,7 +18,7 @@
             Warn(obj?.ToString());
         }
 
-        public static void Info(object obj)
+        public static void Debug(object obj)
         {
             Info(obj?.ToString());
         }
@@ -35,7 +35,7 @@
 
         public static void Info(string msg)
         {
-            Write(msg, LogLevel.Info);
+            Write(msg, LogLevel.Debug);
         }
 
         private static void Write(string msg, LogLevel level)

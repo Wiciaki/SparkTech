@@ -93,7 +93,7 @@ namespace SparkTech.SDK.Rendering
             Render.OnLostDevice += Effect.OnLostDevice;
             Render.OnResetDevice += Effect.OnResetDevice;
 
-            Render.OnDispose += delegate
+            Render.OnDispose += () =>
             {
                 Effect.Dispose();
                 Technique.Dispose();
@@ -166,7 +166,6 @@ namespace SparkTech.SDK.Rendering
             Render.Direct3DDevice.SetStreamSource(0, VertexBuffer, 0, Utilities.SizeOf<Vector4>());
             Render.Direct3DDevice.VertexDeclaration = VertexDeclaration;
 
-            // todo
             var multiplier = Render.ViewMatrix() * Render.ProjectionMatrix();
 
             // Loop through the world-space positions to draw the circle

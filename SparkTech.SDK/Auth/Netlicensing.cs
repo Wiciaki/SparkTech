@@ -5,7 +5,7 @@
     using System.IO;
     using System.Linq;
     using System.Net;
-    using System.Security.Cryptography;
+    using System.Security;
     using System.Text;
     using System.Threading.Tasks;
 
@@ -15,15 +15,20 @@
     using SparkTech.SDK.Logging;
     using SparkTech.SDK.Security;
 
-    public sealed class Netlicensing : IAuth
+    public class Netlicensing : IAuth
     {
-        private static readonly string LicenseeNumber = WebUtility.UrlEncode(Machine.HardwareBasedUserId);
+        protected virtual string LicenseeNumber => WebUtility.UrlEncode(Machine.HardwareBasedUserId);
 
         private readonly NetworkCredential crendentials;
 
         static Netlicensing()
         {
             ServicePointManager.Expect100Continue = false;
+        }
+
+        public Netlicensing(SecureString apiKey)
+        {
+            this.crendentials = new NetworkCredential("apiKey", apiKey);
         }
 
         public Netlicensing(string apiKey)
@@ -33,45 +38,21 @@
 
         public async Task<string> GetShopUrl()
         {
-            var licenseeNumber = "licenseeNumber=" + LicenseeNumber;
+            var licenseeNumber = "licenseeNumber=" + this.LicenseeNumber;
 
-            var json = await this.MakePostRequest("token", "tokenType=SHOP", licenseeNumber);
+            var json = await this.SendPost("token", "tokenType=SHOP", licenseeNumber);
 
             return json == null ? null : GetResponseObjects(json)["shopURL"];
         }
 
         public async Task<AuthResult> Auth(string productNumber)
         {
-            var ending = $"licensee/{LicenseeNumber}/validate";
+            var ending = $"licensee/{this.LicenseeNumber}/validate";
             var param = "productNumber=" + productNumber;
 
-            var json = await this.MakePostRequest(ending, param);
+            var json = await this.SendPost(ending, param);
 
-            if (json != null)
-            {
-                // inspect to add more models
-                //Console.WriteLine(json);
-
-                var r = GetResponseObjects(json);
-
-                if (bool.Parse(r["valid"]))
-                {
-                    switch (r["licensingModel"])
-                    {
-                        case "Subscription":
-                            var exp = DateTime.Parse(r["expires"]);
-
-                            if (exp > DateTime.Now)
-                            {
-                                return new AuthResult(true) { Expiry = exp };
-                            }
-
-                            break;
-                    }
-                }
-            }
-
-            return new AuthResult(false);
+            return json == null ? new AuthResult(false) : ReadAuthFromResponse(json);
         }
 
         private static Dictionary<string, string> GetResponseObjects(JObject json)
@@ -91,7 +72,33 @@
             return jObjects.ToDictionary(j => j["name"].Value<string>(), j => j["value"].Value<string>());
         }
 
-        private async Task<JObject> MakePostRequest(string ending, params string[] reqParams)
+        private static AuthResult ReadAuthFromResponse(JObject json)
+        {
+            // inspect to add more models
+            // Console.WriteLine(json);
+
+            var r = GetResponseObjects(json);
+
+            if (bool.Parse(r["valid"]))
+            {
+                switch (r["licensingModel"])
+                {
+                    case "Subscription":
+                        var exp = DateTime.Parse(r["expires"]);
+
+                        if (exp > DateTime.Now)
+                        {
+                            return new AuthResult(true) { Expiry = exp };
+                        }
+
+                        break;
+                }
+            }
+
+            return new AuthResult(false);
+        }
+
+        private async Task<JObject> SendPost(string ending, params string[] reqParams)
         {
             var request = (HttpWebRequest)WebRequest.Create("https://go.netlicensing.io/core/v2/rest/" + ending);
 
@@ -133,7 +140,7 @@
             catch (WebException ex)
             {
                 Log.Info("Auth failed");
-                Log.Info(ex);
+                Log.Debug(ex);
 
                 return null;
             }
