@@ -50,9 +50,7 @@
             var ending = $"licensee/{this.LicenseeNumber}/validate";
             var param = "productNumber=" + productNumber;
 
-            var json = await this.SendPost(ending, param);
-
-            return json == null ? new AuthResult(false) : ReadAuthFromResponse(json);
+            return GetAuth(await this.SendPost(ending, param));
         }
 
         private static Dictionary<string, string> GetResponseObjects(JObject json)
@@ -72,26 +70,29 @@
             return jObjects.ToDictionary(j => j["name"].Value<string>(), j => j["value"].Value<string>());
         }
 
-        private static AuthResult ReadAuthFromResponse(JObject json)
+        private static AuthResult GetAuth(JObject json)
         {
-            // inspect to add more models
-            // Console.WriteLine(json);
-
-            var r = GetResponseObjects(json);
-
-            if (bool.Parse(r["valid"]))
+            if (json != null)
             {
-                switch (r["licensingModel"])
+                // inspect to add more models
+                // Console.WriteLine(json);
+
+                var r = GetResponseObjects(json);
+
+                if (bool.Parse(r["valid"]))
                 {
-                    case "Subscription":
-                        var exp = DateTime.Parse(r["expires"]);
+                    switch (r["licensingModel"])
+                    {
+                        case "Subscription":
+                            var exp = DateTime.Parse(r["expires"]);
 
-                        if (exp > DateTime.Now)
-                        {
-                            return new AuthResult(true) { Expiry = exp };
-                        }
+                            if (exp > DateTime.Now)
+                            {
+                                return new AuthResult(true) { Expiry = exp };
+                            }
 
-                        break;
+                            break;
+                    }
                 }
             }
 
@@ -100,7 +101,9 @@
 
         private async Task<JObject> SendPost(string ending, params string[] reqParams)
         {
-            var request = (HttpWebRequest)WebRequest.Create("https://go.netlicensing.io/core/v2/rest/" + ending);
+            const string BaseLink = "https://go.netlicensing.io/core/v2/rest/";
+
+            var request = (HttpWebRequest)WebRequest.Create(BaseLink + ending);
 
             request.UserAgent = "SparkTech.SDK: .NET " + Environment.Version;
             request.Method = "POST";

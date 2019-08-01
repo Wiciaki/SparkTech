@@ -2,11 +2,11 @@
 {
     public abstract class BlockableEventArgs
     {
-        public bool Process { get; private set; } = true;
+        public bool IsBlocked { get; private set; }
 
         public void Block()
         {
-            this.Process = false;
+            this.IsBlocked = true;
         }
     }
 }

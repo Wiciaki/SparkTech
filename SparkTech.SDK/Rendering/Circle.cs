@@ -27,9 +27,6 @@ namespace SparkTech.SDK.Rendering
 
     using SparkTech.SDK.Properties;
 
-    /// <summary>
-    ///     Class Circle
-    /// </summary>
     public static class Circle
     {
         #region Constants
@@ -38,6 +35,8 @@ namespace SparkTech.SDK.Rendering
         ///     The maximum radius a circle can be drawn with
         /// </summary>
         private const float MaxRadius = 20000f;
+
+        private const float AntiAlias = 0.65f;
 
         #endregion
 
@@ -104,50 +103,18 @@ namespace SparkTech.SDK.Rendering
 
         #region Properties
 
-        /// <summary>
-        ///     Gets or sets the effect.
-        /// </summary>
-        /// <value>
-        ///     The effect.
-        /// </value>
         private static readonly Effect Effect;
 
-        /// <summary>
-        ///     Gets or sets the technique.
-        /// </summary>
-        /// <value>
-        ///     The technique.
-        /// </value>
         private static readonly EffectHandle Technique;
 
-        /// <summary>
-        ///     Gets or sets the vertex buffer.
-        /// </summary>
-        /// <value>
-        ///     The vertex buffer.
-        /// </value>
         private static readonly VertexBuffer VertexBuffer;
 
-        /// <summary>
-        ///     Gets or sets the vertex declaration.
-        /// </summary>
-        /// <value>
-        ///     The vertex declaration.
-        /// </value>
         private static readonly VertexDeclaration VertexDeclaration;
 
         #endregion
 
         #region Public Methods and Operators
 
-        /// <summary>
-        ///     Renders a circle.
-        /// </summary>
-        /// <param name="color">The color.</param>
-        /// <param name="radius">The radius.</param>
-        /// <param name="thickness">The thickness.</param>
-        /// <param name="filled">if set to <c>true</c> [filled].</param>
-        /// <param name="worldPositions">The world positions.</param>
         public static void Draw(
             Color color,
             float radius,
@@ -156,7 +123,7 @@ namespace SparkTech.SDK.Rendering
             params Vector3[] worldPositions)
         {
             // Save the current VertexDecleration for restoring later
-            var decleration = Render.Direct3DDevice.VertexDeclaration;
+            var declaration = Render.Direct3DDevice.VertexDeclaration;
 
             // Set the current effect technique and begin the shading process
             Effect.Technique = Technique;
@@ -173,6 +140,7 @@ namespace SparkTech.SDK.Rendering
             {
                 // Send all the global variables to the shader
                 Effect.BeginPass(0);
+
                 Effect.SetValue(
                     "ProjectionMatrix",
                     Matrix.Translation(worldPosition) * multiplier);
@@ -181,7 +149,8 @@ namespace SparkTech.SDK.Rendering
                 Effect.SetValue("Width", thickness);
                 Effect.SetValue("Filled", filled);
                 Effect.SetValue("EnableZ", false);
-                Effect.SetValue("antiAlias", 0.65f);
+                Effect.SetValue("antiAlias", AntiAlias);
+
                 Effect.EndPass();
 
                 // Draw the primitives in the shader
@@ -192,18 +161,17 @@ namespace SparkTech.SDK.Rendering
             Effect.End();
 
             // Restore the previous VertexDecleration
-            Render.Direct3DDevice.VertexDeclaration = decleration;
+            Render.Direct3DDevice.VertexDeclaration = declaration;
         }
 
-        /// <summary>
-        ///     Renders a circle.
-        /// </summary>
-        /// <param name="color">The color.</param>
-        /// <param name="radius">The radius.</param>
-        /// <param name="worldPositions">The world positions.</param>
+        public static void Draw(Color color, float radius, float thickness, params Vector3[] worldPositions)
+        {
+            Draw(color, radius, thickness, false, worldPositions);
+        }
+
         public static void Draw(Color color, float radius, params Vector3[] worldPositions)
         {
-            Draw(color, radius, 1f, false, worldPositions);
+            Draw(color, radius, 1f, worldPositions);
         }
 
         #endregion

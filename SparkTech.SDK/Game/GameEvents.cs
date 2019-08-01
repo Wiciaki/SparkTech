@@ -4,7 +4,7 @@
 
     public static class GameEvents
     {
-        public static event Action<GameWndProcEventArgs> OnWndProc;
+        public static event Action<WndProcEventArgs> OnWndProc;
 
 
     }
