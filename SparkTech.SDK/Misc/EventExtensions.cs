@@ -9,6 +9,11 @@
     {
         public static void SafeInvoke(this Action e)
         {
+            if (e == null)
+            {
+                return;
+            }
+
             foreach (var callback in e.GetInvocationList().Cast<Action>())
             {
                 try
@@ -24,6 +29,11 @@
 
         public static void SafeInvoke<T>(this Action<T> e, T arg)
         {
+            if (e == null)
+            {
+                return;
+            }
+
             foreach (var callback in e.GetInvocationList().Cast<Action<T>>())
             {
                 try

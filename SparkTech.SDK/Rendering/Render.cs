@@ -1,6 +1,8 @@
 ﻿namespace SparkTech.SDK.Rendering
 {
     using System;
+    using System.Drawing;
+    using System.Runtime.CompilerServices;
 
     using SharpDX;
     using SharpDX.Direct3D9;
@@ -12,65 +14,46 @@
     {
         public static Device Direct3DDevice { get; private set; }
 
-        public static event Action OnRender;
+        public static event Action OnDraw, OnBeginScene, OnEndScene, OnLostDevice, OnResetDevice, OnDispose, OnResolutionChanged;
 
-        public static event Action OnBeginScene;
+        public static Size Resolution() => api.Resolution();
 
-        public static event Action OnEndScene;
+        public static Matrix ProjectionMatrix() => api.ProjectionMatrix();
 
-        public static event Action OnLostDevice;
-        
-        public static event Action OnResetDevice;
-        
-        public static event Action OnDispose;
+        public static Matrix ViewMatrix() => api.ViewMatrix();
 
-        private static void OnDisposeEventHandler(object o, EventArgs args) => OnDispose.SafeInvoke();
+        public static Vector2 WorldToScreen(this Vector3 pos) => api.WorldToScreen(pos);
 
-        private static IRender r;
+        public static Vector2 WorldToMinimap(this Vector3 pos) => api.WorldToMinimap(pos);
+
+        public static Vector3 ScreenToWorld(this Vector3 pos) => api.ScreenToWorld(pos);
+
+        private static IRender api;
 
         internal static void Initialize(IRender render)
         {
-            r = render;
+            api = render;
 
-            Direct3DDevice = r.GetDevice();
+            Direct3DDevice = api.GetDevice();
 
-            r.Render = OnRender.SafeInvoke;
-            r.BeginScene = OnBeginScene.SafeInvoke;
-            r.EndScene = OnEndScene.SafeInvoke;
-            r.LostDevice = OnLostDevice.SafeInvoke;
-            r.ResetDevice = OnResetDevice.SafeInvoke;
+            api.Draw = OnDraw.SafeInvoke;
+            api.BeginScene = OnBeginScene.SafeInvoke;
+            api.EndScene = OnEndScene.SafeInvoke;
+            api.LostDevice = OnLostDevice.SafeInvoke;
+            api.ResetDevice = OnResetDevice.SafeInvoke;
+            api.ResolutionChanged = OnResolutionChanged.SafeInvoke;
+
+            static void OnDisposeEventHandler(object o, EventArgs args) => OnDispose.SafeInvoke();
 
             AppDomain.CurrentDomain.DomainUnload += OnDisposeEventHandler;
             AppDomain.CurrentDomain.ProcessExit += OnDisposeEventHandler;
+
+            var triggerable = new[] { typeof(Vector), typeof(Circle), typeof(Text), typeof(Picture) };
+
+            foreach (var type in triggerable)
+            {
+                RuntimeHelpers.RunClassConstructor(type.TypeHandle);
+            }
         }
-
-        public static int Height() => r.Height();
-
-        public static int Width() => r.Width();
-
-        public static Matrix ProjectionMatrix() => r.ProjectionMatrix();
-
-        public static Matrix ViewMatrix() => r.ViewMatrix();
-
-        public static Vector2 WorldToScreen(this Vector3 pos) => r.WorldToScreen(pos);
-
-        public static Vector2 WorldToMinimap(this Vector3 pos) => r.WorldToMinimap(pos);
-
-        public static Vector3 ScreenToWorld(this Vector3 pos) => r.ScreenToWorld(pos);
-
-        /*public static void DrawLine(Vector2 start, Vector2 end, float thickness, Color color)
-        {
-
-        }
-
-        public static void DrawCircle(Vector2 pos, float radius, Color color)
-        {
-
-        }
-
-        public static void DrawText(Vector2 pos, string text, int size, Color color)
-        {
-
-        }*/
     }
 }

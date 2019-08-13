@@ -5,7 +5,7 @@
     using SparkTech.SDK.Entities;
     using SparkTech.SDK.HealthPrediction.Ported;
     using SparkTech.SDK.Modules;
-    using SparkTech.SDK.UI.Menu;
+    using SparkTech.SDK.UI_Old.Menu;
 
     public class DefaultHealthPrediction : IHealthPredition
     {

@@ -30,7 +30,7 @@ namespace SparkTech.SDK.Entities.Buffs
 
         public static bool IsMovementImpairing(this IBuff buff)
         {
-            return buff.Type.IsMovementImpairing();
+            return buff.Type().IsMovementImpairing();
         }
 
         public static bool IsMovementImpairing(this BuffType buffType)
@@ -49,9 +49,9 @@ namespace SparkTech.SDK.Entities.Buffs
             }
         }
 
-        public static bool PreventsCasting(this BuffInstance buff)
+        public static bool PreventsCasting(this IBuff buff)
         {
-            return buff.Type.PreventsCasting();
+            return buff.Type().PreventsCasting();
         }
 
         public static bool PreventsCasting(this BuffType buffType) // todo review?
@@ -74,12 +74,12 @@ namespace SparkTech.SDK.Entities.Buffs
             }
         }
 
-        public static bool IsValid(this BuffInstance buff)
+        public static bool IsValid(this IBuff buff)
         {
-            return buff != null && Game.ClockTime >= buff.StartTime && Game.ClockTime < buff.ExpireTime;
+            return buff != null && Game.ClockTime >= buff.StartTime() && Game.ClockTime < buff.EndTime();
         }
 
-        public static float TimeLeft(this BuffInstance buff)
+        public static float TimeLeft(this IBuff buff)
         {
             return Math.Max(0, buff.ExpireTime - Game.ClockTime);
         }

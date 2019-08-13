@@ -24,22 +24,30 @@ namespace SparkTech.SDK.TargetSelection
 {
     using System.Collections.Generic;
 
+    using SparkTech.SDK.Entities;
     using SparkTech.SDK.Modules;
+    using SparkTech.SDK.Platform;
     using SparkTech.SDK.TargetSelection.Default;
 
     public static class TargetSelector
     {
         #region Static Fields
 
-        private static readonly IModulePicker<ITargetSelector> Picker = EntropySetup.CreatePicker<ITargetSelector, DefaultTargetSelector>();
+        private static readonly IModulePicker<ITargetSelector> Picker = SdkSetup.CreatePicker<ITargetSelector, DefaultTargetSelector>();
 
         #endregion
 
         #region Public Methods and Operators
 
-        public static void Add<T>(string moduleName) where T : ITargetSelector, new() => Picker.Add<T>(moduleName);
+        public static void Add<T>(string moduleName) where T : ITargetSelector, new()
+        {
+            Picker.Add<T>(moduleName);
+        }
 
-        public static AIHeroClient SelectTarget(this IEnumerable<AIHeroClient> heroes) => Picker.Current.SelectTarget(heroes);
+        public static IHero SelectTarget(this IEnumerable<IHero> heroes)
+        {
+            return Picker.Current.SelectTarget(heroes);
+        }
 
         #endregion
     }

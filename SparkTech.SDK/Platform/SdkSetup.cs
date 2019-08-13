@@ -12,6 +12,7 @@
     using Newtonsoft.Json.Linq;
 
     using SparkTech.SDK.Entities;
+    using SparkTech.SDK.Game;
     using SparkTech.SDK.Logging;
     using SparkTech.SDK.Misc;
     using SparkTech.SDK.Modules;
@@ -20,12 +21,10 @@
     using SparkTech.SDK.Security;
     using SparkTech.SDK.SpellDatabase;
     using SparkTech.SDK.TickOperations;
-    using SparkTech.SDK.UI.Menu;
-    using SparkTech.SDK.UI.Menu.Values;
-    using SparkTech.SDK.UI.Notifications;
+    using SparkTech.SDK.UI_Old.Menu;
+    using SparkTech.SDK.UI_Old.Menu.Values;
+    using SparkTech.SDK.UI_Old.Notifications;
     using SparkTech.SDK.Util;
-
-    using Keys = System.Windows.Forms.Keys;
 
     internal static class SdkSetup
     {
@@ -49,8 +48,6 @@
 
         static SdkSetup()
         {
-            Keys a = Keys.A;
-
             ModulesDirectory = Folder.MenuFolder.GetFolder("Modules");
 
             SaveDirectory = Path.Combine(folder, "MenuData");
@@ -69,7 +66,7 @@
             var ticks = RootMenu.Add(new MenuSlider("Ticks", 25, 10, 50));
             var movable = RootMenu.Add(new MenuCheckBox("MenuMovable", false));
             var lang = new MenuList("Language", EnumCache<Language>.Names);
-            var button = RootMenu.Add(new MenuKeyBind("MenuButton", System.Windows.Forms.Keys.Shift));
+            var button = RootMenu.Add(new MenuKeyBind("MenuButton", Keys.Shift));
             var toggle = RootMenu.Add(new MenuCheckBox("MenuToggle", false));
             RootMenu.Add(new MenuButton("SaveTemplate", SaveTemplate));
 
@@ -154,7 +151,7 @@
             {
                 if (b)
                 {
-                    Menu.SetBehavior(button.GetValue<WindowMessageWParam>(), toggle.GetValue<bool>());
+                    Menu.SetBehavior(button.GetValue<WindowsMessagesWParam>(), toggle.GetValue<bool>());
                 }
             }
 
@@ -184,7 +181,7 @@
 
             new RootMenu("sdkTest")
             {
-                new MenuButton("btn", () => GameConsole.Print($"You pressed a button {++i} times!", false))
+                new MenuButton("btn", () => GameInterface.Show($"You pressed a button {++i} times!"))
                     .SetDisplayName("Some button"),
                 new Menu("xd")
                 {
@@ -192,7 +189,7 @@
                     new MenuLabel("xd2").SetDisplayName("hoooooly shit this is so important"),
                     new MenuButton(
                             "xd4",
-                            () => GameConsole.Print($"Button pressed! Game.ClockTime equals {Game.ClockTime}", false))
+                            () => GameInterface.Print($"Button pressed! Game.ClockTime equals {SDK.Game.ClockTime}", false))
                         .SetDisplayName("Press me! :)"),
                     new MenuButton("xdNotif", () => n.Send()).SetDisplayName("Spawn notification"),
                     new MenuList(
@@ -205,11 +202,11 @@
                     .SetTooltipText("This is a useful information."),
                 new MenuCheckBox("xd3", true).SetDisplayName("Button test"),
                 new MenuSlider("xd4", 20).SetDisplayName("Select a value"),
-                new MenuKeyBind("xd10", WindowMessageWParam.Z) { Toggle = true }.SetDisplayName("Press a button"),
+                new MenuKeyBind("xd10", WindowsMessagesWParam.Z) { Toggle = true }.SetDisplayName("Press a button"),
                 new MenuColor("xdColor", Color.Magenta).SetDisplayName("Circle color")
             }.SetDisplayName("SDK test menu");
 
-            GameLoading.OnLoad += () => Render.OnRender += TestRender;
+            GameLoading.OnLoad += () => Render.OnDraw += TestRender;
         }
 
         private static readonly PlayerSpell Q = new PlayerSpell(SpellSlot.Q);

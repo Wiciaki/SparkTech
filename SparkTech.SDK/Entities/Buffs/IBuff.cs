@@ -10,6 +10,8 @@
 
         string DisplayName();
 
+        float StartTime();
+
         float EndTime();
 
         bool IsActive();

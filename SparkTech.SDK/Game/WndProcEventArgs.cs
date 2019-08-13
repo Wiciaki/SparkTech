@@ -2,15 +2,15 @@
 {
     public class WndProcEventArgs : BlockableEventArgs
     {
-        public readonly uint Msg;
+        public readonly WindowsMessages Message;
 
-        public readonly uint WParam;
+        public readonly WindowsMessagesWParam WParam;
 
         public readonly int LParam;
 
-        public WndProcEventArgs(uint msg, uint wparam, int lparam)
+        public WndProcEventArgs(WindowsMessages message, WindowsMessagesWParam wparam, int lparam)
         {
-            this.Msg = msg;
+            this.Message = message;
 
             this.WParam = wparam;
 

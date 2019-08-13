@@ -24,13 +24,14 @@ namespace SparkTech.SDK.TargetSelection
 {
     using System.Collections.Generic;
 
+    using SparkTech.SDK.Entities;
     using SparkTech.SDK.Modules;
 
     public interface ITargetSelector : IModule
     {
         #region Public Methods and Operators
 
-        AIHeroClient SelectTarget(IEnumerable<AIHeroClient> heroes);
+        IHero SelectTarget(IEnumerable<IHero> heroes);
 
         #endregion
     }

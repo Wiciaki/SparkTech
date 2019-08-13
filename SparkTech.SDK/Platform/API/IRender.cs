@@ -1,19 +1,18 @@
 ﻿namespace SparkTech.SDK.Platform.API
 {
     using System;
+    using System.Drawing;
 
     using SharpDX;
     using SharpDX.Direct3D9;
 
     public interface IRender
     {
-        int Width();
-
-        int Height();
+        Size Resolution();
 
         Device GetDevice();
 
-        Action Render { get; set; }
+        Action Draw { get; set; }
 
         Action BeginScene { get; set; }
 
@@ -22,6 +21,8 @@
         Action LostDevice { get; set; }
         
         Action ResetDevice { get; set; }
+
+        Action ResolutionChanged { get; set; }
 
         Vector2 WorldToScreen(Vector3 pos);
 

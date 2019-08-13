@@ -10,7 +10,7 @@
 
         ISpellbook GetSpellbook();
 
-        IGame GetGame();
+        IGameInterface GetGame();
 
         IEntityEvents GetEntityEvents();
     }

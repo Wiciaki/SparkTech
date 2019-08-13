@@ -170,7 +170,7 @@ namespace SparkTech.SDK.Geometry
         /// <param name="thickness">The thickness.</param>
         public override void Render(Color color, float thickness = 1)
         {
-            Rendering.Line.Render(color, thickness, true, this.WorldPoints);
+            Rendering.Vector.Render(color, thickness, true, this.WorldPoints);
         }
 
         #endregion

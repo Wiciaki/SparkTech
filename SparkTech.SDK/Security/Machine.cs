@@ -2,6 +2,7 @@
 {
     using System;
     using System.Security.Cryptography;
+    using System.Security.Principal;
     using System.Text;
 
     using Microsoft.Win32;
@@ -9,6 +10,13 @@
     public static class Machine
     {
         public static readonly string Hwid, HardwareBasedUserId;
+
+        public static bool IsProcessElevated()
+        {
+            var principal = new WindowsPrincipal(WindowsIdentity.GetCurrent());
+
+            return principal.IsInRole(WindowsBuiltInRole.Administrator);
+        }
 
         static Machine()
         {

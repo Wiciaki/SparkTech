@@ -7,7 +7,7 @@
     using SparkTech.SDK.Logging;
     using SparkTech.SDK.Rendering;
     using SparkTech.SDK.Security;
-    using SparkTech.SDK.UI;
+    using SparkTech.SDK.UI_Old;
 
     public sealed class VendorSetup
     {
@@ -33,11 +33,9 @@
             return new VendorSetup();
         }
 
-
-
-        public void StartGame()
+        public void Boot(IPlatform platform)
         {
-            //if (state )
+            if (state )
 
             ObjectManager.Initialize(platform.GetObjectManager());
 
@@ -58,16 +56,11 @@
             get => Log.Logger;
             set
             {
-                if (true)
+                if (state == 1 && value != null)
                 {
                     Log.Logger = value;
                 }
             } 
-        }
-
-        public void Boot()
-        {
-
         }
     }
 }

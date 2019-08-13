@@ -4,20 +4,20 @@
     using System.Collections.Generic;
     using System.Linq;
 
+    using SparkTech.SDK.Entities;
+    using SparkTech.SDK.GUI.Menu;
+    using SparkTech.SDK.Modules;
     using SparkTech.SDK.TargetSelection.Default.Weights;
-    using SparkTech.SDK.UI.Menu;
-    using SparkTech.SDK.UI.Menu.Values;
-    using SparkTech.SDK.Util;
 
     internal sealed class DefaultTargetSelector : ITargetSelector
     {
-        ModuleMenu IEntropyModule.Menu => Menu;
+        ModuleMenu IModule.Menu => Menu;
 
         private static readonly ModuleMenu Menu;
 
         private static readonly List<Weight> Weights;
 
-        private static readonly IEqualityComparer<AIHeroClient> EqualityComparer;
+        private static readonly IEqualityComparer<IHero> EqualityComparer;
 
         static DefaultTargetSelector()
         {
@@ -26,15 +26,16 @@
 
             Menu = new ModuleMenu("TargetSelector")
                    {
-                       new MenuLabel("Notice")
+                       new MenuText("Notice")
                    };
 
             // TODO: other weights
             Register<DistanceWeight>();
 
-            void Register<TWeight>() where TWeight : Weight, new()
+            static void Register<TWeight>() where TWeight : Weight, new()
             {
                 var weight = new TWeight();
+                
                 Weights.Add(weight);
 
                 foreach (var component in weight.CreateItems())
@@ -44,9 +45,9 @@
             }
         }
 
-        AIHeroClient ITargetSelector.SelectTarget(IEnumerable<AIHeroClient> heroes)
+        IHero ITargetSelector.SelectTarget(IEnumerable<IHero> heroes)
         {
-            var enemies = heroes.Where(hero => hero.IsEnemy()).ToList();
+            var enemies = heroes.Where(hero => hero.IsEnemy()).Distinct(EqualityComparer).ToList();
 
             if (enemies.Count == 0)
             {
@@ -54,7 +55,7 @@
             }
 
             var sortedEnemies = enemies.ToArray();
-            var weightCollection = new Dictionary<AIHeroClient, int>(enemies.Count, EqualityComparer);
+            var weightCollection = new Dictionary<IHero, int>(enemies.Count, EqualityComparer);
             enemies.ForEach(enemy => weightCollection.Add(enemy, 0));
 
             foreach (var weight in Weights)
@@ -77,7 +78,7 @@
             return weightCollection.OrderByDescending(pair => pair.Value).Select(pair => pair.Key).First();
         }
 
-        void IEntropyModule.Release()
+        void IModule.Release()
         {
 
         }

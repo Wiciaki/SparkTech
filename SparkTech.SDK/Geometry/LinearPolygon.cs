@@ -125,8 +125,8 @@ namespace SparkTech.SDK.Geometry
         /// <param name="thickness">The thickness.</param>
         public virtual void Render(Color color, float thickness = 1f)
         {
-            Rendering.Line.Render(color, thickness, true, this.WorldPoints);
-            Rendering.Line.Render(
+            Rendering.Vector.Render(color, thickness, true, this.WorldPoints);
+            Rendering.Vector.Render(
                 color,
                 thickness,
                 true,

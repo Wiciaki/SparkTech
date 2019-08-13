@@ -48,35 +48,16 @@ namespace SparkTech.SDK.Rendering
         static Circle()
         {
             // Initialize the vertex buffer, specifying its size, usage, format and pool
-            VertexBuffer = new VertexBuffer(
-                Render.Direct3DDevice,
-                Utilities.SizeOf<Vector4>() * 3,
-                Usage.WriteOnly,
-                VertexFormat.None,
-                Pool.Managed);
+            VertexBuffer = new VertexBuffer(Render.Direct3DDevice, Utilities.SizeOf<Vector4>() * 3, Usage.WriteOnly, VertexFormat.None, Pool.Managed);
 
             // Lock and write the vertices onto the vertex buffer
             VertexBuffer.Lock(0, 0, LockFlags.None).WriteRange(
-                new[]
-                {
-                    new Vector4(-MaxRadius, 0f, -MaxRadius, 1.0f), new Vector4(0f, 0f, MaxRadius, 1.0f),
-                    new Vector4(MaxRadius, 0f, -MaxRadius, 1.0f)
-                });
+                new[] { new Vector4(-MaxRadius, 0f, -MaxRadius, 1.0f), new Vector4(0f, 0f, MaxRadius, 1.0f), new Vector4(MaxRadius, 0f, -MaxRadius, 1.0f) });
 
             VertexBuffer.Unlock();
 
             // Specify the vertex elements to be used by the shader
-            var vertexElements = new[]
-                                 {
-                                     new VertexElement(
-                                         0,
-                                         0,
-                                         DeclarationType.Float4,
-                                         DeclarationMethod.Default,
-                                         DeclarationUsage.Position,
-                                         0),
-                                     VertexElement.VertexDeclarationEnd
-                                 };
+            var vertexElements = new[] { new VertexElement(0, 0, DeclarationType.Float4, DeclarationMethod.Default, DeclarationUsage.Position, 0), VertexElement.VertexDeclarationEnd };
 
             // Initialize the vertex decleration using the previously created vertex elements
             VertexDeclaration = new VertexDeclaration(Render.Direct3DDevice, vertexElements);
@@ -141,9 +122,7 @@ namespace SparkTech.SDK.Rendering
                 // Send all the global variables to the shader
                 Effect.BeginPass(0);
 
-                Effect.SetValue(
-                    "ProjectionMatrix",
-                    Matrix.Translation(worldPosition) * multiplier);
+                Effect.SetValue("ProjectionMatrix", Matrix.Translation(worldPosition) * multiplier);
                 Effect.SetValue("Color", new Vector4(color.R / 255f, color.G / 255f, color.B / 255f, color.A / 255f));
                 Effect.SetValue("Radius", radius);
                 Effect.SetValue("Width", thickness);

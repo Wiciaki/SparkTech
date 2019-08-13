@@ -5,8 +5,7 @@
 
     using SparkTech.SDK.Entities;
     using SparkTech.SDK.Modules;
-    using SparkTech.SDK.UI.Menu;
-    using SparkTech.SDK.UI.Menu.Values;
+    using SparkTech.SDK.UI_Old.Menu;
 
     public class DefaultOrbwalker : IOrbwalker
     {

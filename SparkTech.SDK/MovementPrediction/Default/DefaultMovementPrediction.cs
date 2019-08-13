@@ -5,7 +5,7 @@
 
     using SharpDX;
 
-    using SparkTech.SDK.UI.Menu;
+    using SparkTech.SDK.UI_Old.Menu;
     using SparkTech.SDK.Util.Vector;
 
     using Collision = SparkTech.SDK.MovementPrediction.Collision;

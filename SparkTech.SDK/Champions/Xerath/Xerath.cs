@@ -1,28 +1,16 @@
 ﻿namespace SparkTech.SDK.Champions.Xerath
 {
-    public class Xerath
-    {
+    /*
+    using System;
+    using System.Collections.Generic;
 
-    }
-}
+    using SharpDX;
 
-/*#region
+    using SparkTech.SDK.Entities;
+    using SparkTech.SDK.Rendering;
+    using SparkTech.SDK.TargetSelection;
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.AccessControl;
-using System.Threading;
-using LeagueSharp;
-using LeagueSharp.Common;
-using SharpDX;
-using Color = System.Drawing.Color;
-
-#endregion
-
-namespace Xerath
-{
-    internal class Program
+    internal class Xerath
     {
         public const string ChampionName = "Xerath";
 
@@ -40,8 +28,6 @@ namespace Xerath
         //Menu
         public static Menu Config;
 
-        private static Obj_AI_Hero Player;
-
         private static Vector2 PingLocation;
         private static int LastPingT = 0;
         private static bool AttacksEnabled
@@ -54,7 +40,7 @@ namespace Xerath
                 }
 
 
-                if (!ObjectManager.Player.CanAttack)
+                if (!ObjectManager.Player.CanAttack())
                 {
                     return false;
                 }
@@ -598,6 +584,5 @@ namespace Xerath
                     Render.Circle.DrawCircle(Player.Position, spell.Range, menuItem.Color);
             }
         }
-    }
+    }*/
 }
-*/

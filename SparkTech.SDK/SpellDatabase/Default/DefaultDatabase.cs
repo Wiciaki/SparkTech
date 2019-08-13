@@ -1,7 +1,7 @@
 ﻿namespace SparkTech.SDK.SpellDatabase.Default
 {
     using SparkTech.SDK.Enumerations;
-    using SparkTech.SDK.UI.Menu;
+    using SparkTech.SDK.UI_Old.Menu;
 
     internal sealed class DefaultDatabase : IDatabase
     {
