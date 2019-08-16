@@ -21,9 +21,6 @@
     using SparkTech.SDK.Security;
     using SparkTech.SDK.SpellDatabase;
     using SparkTech.SDK.TickOperations;
-    using SparkTech.SDK.UI_Old.Menu;
-    using SparkTech.SDK.UI_Old.Menu.Values;
-    using SparkTech.SDK.UI_Old.Notifications;
     using SparkTech.SDK.Util;
 
     internal static class SdkSetup
@@ -246,7 +243,7 @@
         {
             var name = typeof(T).Name;
 
-            return Regex.IsMatch(name, "^I[A-Z]") ? name.Substring(1) : name;
+            return Regex.IsMatch(name, "^I[A-Z]") ? name[1..] : name;
         }
 
         #endregion
@@ -267,8 +264,7 @@
             }
         }
 
-        private sealed class MenuItemPicker<TModuleBase> : IModulePicker<TModuleBase>
-            where TModuleBase : class, IModule
+        private sealed class ModulePicker<TModuleBase> : IModulePicker<TModuleBase> where TModuleBase : class, IModule
         {
             #region Fields
 

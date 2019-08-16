@@ -1,7 +1,6 @@
 ﻿namespace SparkTech.SDK.GUI
 {
     using System;
-    using System.Collections.Generic;
     using System.Drawing;
 
     using Color = SharpDX.Color;
@@ -14,10 +13,10 @@
 
         Size MeasureText(string text);
 
-        void DrawBox(Color color, Point point, Size size);
+        void DrawBox(Point point, Size size, Color color);
 
-        void DrawTextBox(string text, Point point, Size size);
+        void DrawTextBox(Point point, Size size, string text, Color? color);
 
-        void DrawBorders(IEnumerable<Size> sizes, Point point);
+        void DrawBorders(Point point, params Size[] sizes);
     }
 }

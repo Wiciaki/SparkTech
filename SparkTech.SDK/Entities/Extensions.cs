@@ -129,7 +129,7 @@
         {
             return GameObjectComparer.Equals(left, right);
         }
-
+        /*
         public static bool HasItem(this IEnumerable<InventorySlot> inventorySlot, params uint[] itemIds)
         {
             return inventorySlot.Any(i => itemIds.Contains(i.ItemID));
@@ -154,7 +154,7 @@
                 return false;
             }
 
-            */
+            
 
             return t != null && t.IsVisible && !t.IsDead && t.IsTargetable && !t.IsInvulnerable && (!mustBeEnemy || t.IsEnemy());
         }
@@ -180,6 +180,6 @@
         public static float TotalMagicalShieldHealth(this AIBaseClient unit)
         {
             return unit.HP + unit.MagicalShield;
-        }
+        }*/
     }
 }

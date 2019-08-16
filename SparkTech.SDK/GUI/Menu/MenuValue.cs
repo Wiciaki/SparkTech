@@ -1,7 +1,6 @@
 ﻿namespace SparkTech.SDK.GUI.Menu
 {
     using System;
-    using System.ComponentModel;
 
     using Newtonsoft.Json.Linq;
 
@@ -21,12 +20,6 @@
         {
             this.defaultValue = defaultValue ?? throw new ArgumentNullException(nameof(defaultValue));
         }
-
-        #endregion
-
-        #region Public Events
-
-        public event PropertyChangedEventHandler PropertyChanged;
 
         #endregion
 
@@ -81,27 +74,6 @@
 
                 this.Token = this.defaultValue;
             }
-        }
-
-        private bool shouldSave;
-
-        protected internal override bool ShouldSave()
-        {
-            var b = this.shouldSave;
-
-            this.shouldSave = false;
-
-            return b;
-        }
-
-        protected void OnPropertyChanged(string memberName, bool requiresSaving = true)
-        {
-            if (requiresSaving)
-            {
-                this.shouldSave = true;
-            }
-
-            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(memberName));
         }
 
         #endregion

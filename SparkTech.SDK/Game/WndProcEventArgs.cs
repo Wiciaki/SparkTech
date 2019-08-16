@@ -1,5 +1,7 @@
 ﻿namespace SparkTech.SDK.Game
 {
+    using SparkTech.SDK.Misc;
+
     public class WndProcEventArgs : BlockableEventArgs
     {
         public readonly WindowsMessages Message;

@@ -54,14 +54,14 @@
             }
         }
 
-        public void DrawTextBox(string text, Point point, Size size)
+        public void DrawTextBox(Point point, Size size, string text, Color? color)
         {
-            this.DrawBox(this.BackgroundColor, point, size);
+            this.DrawBox(point, size, color ?? this.BackgroundColor);
 
             this.font.DrawText(null, text, this.GetTextRectangle(point, size), DrawFlags, Color.White);
         }
 
-        public void DrawBox(Color color, Point point, Size size)
+        public void DrawBox(Point point, Size size, Color color)
         {
             Vector.Draw(color, size.Height, point.ToVector2(), new Vector2(point.X + size.Width, point.Y));
         }

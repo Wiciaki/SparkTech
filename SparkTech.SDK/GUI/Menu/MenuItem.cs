@@ -6,10 +6,19 @@
     using Newtonsoft.Json.Linq;
 
     using SparkTech.SDK.Game;
+    using SparkTech.SDK.Logging;
 
     public abstract class MenuItem
     {
         public readonly string Id;
+
+        public event BeforeValueChange BeforeValueChange;
+
+        public virtual bool IsVisible { get; set; } = true;
+
+        public Size Size { get; private set; }
+
+        private bool save;
 
         protected MenuItem(string id)
         {
@@ -21,36 +30,91 @@
             }
         }
 
-        public bool IsVisible { get; set; } = true;
+        public TMenuItem Cast<TMenuItem>() where TMenuItem : MenuItem
+        {
+            return (TMenuItem)this;
+        }
 
-        protected internal virtual void UpdateSize()
+        protected abstract Size GetSize();
+
+        protected internal void UpdateSize()
         {
             this.Size = this.GetSize();
         }
 
-        public Size Size { get; private set; }
+        protected internal abstract void OnEndScene(Point point, int width);
 
-        protected abstract Size GetSize();
+        protected internal virtual void OnWndProc(Point point, int width, WndProcEventArgs args)
+        {
 
-        protected internal abstract void OnEndScene(Point point, int groupWidth);
-
-        protected internal virtual void OnWndProc(Point point, int groupWidth, WndProcEventArgs args)
-        { }
-
-        protected internal virtual bool ShouldSave() => false;
+        }
 
         protected internal virtual JToken GetToken() => null;
 
         protected internal virtual void SetToken(JToken token)
-        { }
+        {
 
-        public T GetValue<T>() => this.MenuValueCast<T>().Value;
+        }
 
-        public void SetValue<T>(T value) => this.MenuValueCast<T>().Value = value;
+        protected internal virtual bool ConsumeSaveToken()
+        {
+            var b = this.save;
 
-        private IMenuValue<T> MenuValueCast<T>()
+            this.save = false;
+
+            return b;
+        }
+
+        protected internal virtual void SetTranslations(JObject o)
+        {
+
+        }
+
+        private IMenuValue<T> ValueCast<T>()
         {
             return this as IMenuValue<T> ?? throw new InvalidOperationException($"\"{this.Id}\" doesn't implement IMenuValue<{typeof(T).Name}>!");
+        }
+
+        public T GetValue<T>()
+        {
+            return this.ValueCast<T>().Value;
+        }
+
+        public void SetValue<T>(T value)
+        {
+            this.ValueCast<T>().Value = value;
+        }
+
+        protected bool UpdateValue<T>(T @new)
+        {
+            var t = this.ValueCast<T>();
+
+            if (this.BeforeValueChange != null)
+            {
+                var type = typeof(T);
+                var args = new BeforeValueChangeEventArgs(t.Value, @new);
+
+                foreach (var callback in this.BeforeValueChange.GetInvocationList())
+                {
+                    try
+                    {
+                        ((BeforeValueChange)callback)(type, args);
+                    }
+                    catch (Exception ex)
+                    {
+                        ex.Log();
+                    }
+                }
+
+                if (args.IsBlocked)
+                {
+                    return false;
+                }
+            }
+
+            this.save = true;
+
+            return true;
         }
     }
 }

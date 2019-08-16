@@ -14,6 +14,8 @@
 
         public static Vector2 CursorPosition() => api.CursorPosition();
 
+        public static float Time() => 0f;
+
         public static bool IsChatOpen() => api.IsChatOpen();
 
         public static bool IsShopOpen() => api.IsShopOpen();

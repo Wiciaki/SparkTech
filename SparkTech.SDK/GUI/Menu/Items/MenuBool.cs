@@ -5,7 +5,6 @@
     using Newtonsoft.Json.Linq;
 
     using SparkTech.SDK.Game;
-    using SparkTech.SDK.Rendering;
 
     using Color = SharpDX.Color;
 
@@ -18,57 +17,47 @@
 
         private bool value;
 
-        private Size buttonSize;
-
-        protected internal override void OnEndScene(Point point, int groupWidth)
-        {
-            base.OnEndScene(point, groupWidth);
-
-            point.X += groupWidth - this.buttonSize.Width;
-
-            Theme.DrawBox(this.Value ? Color.Green : Color.Red, point, this.buttonSize);
-        }
-
-        protected override void UpdateTextBasedSize()
-        {
-            this.buttonSize = new Size(this.TextSize.Height, this.TextSize.Height);
-        }
-
-        #region Public Properties
+        private Size size;
 
         public bool Value
         {
             get => this.value;
-            set
-            {
-                if (this.value == value)
-                {
-                    return;
-                }
-
-                this.value = value;
-
-                this.OnPropertyChanged("IsActive");
-            }
+            set => this.value ^= this.value != value && this.UpdateValue(value);
         }
 
-        #endregion
-
-        protected internal override void OnWndProc(Point point, int groupWidth, WndProcEventArgs args)
+        protected internal override void OnEndScene(Point point, int width)
         {
-            point.X += groupWidth - this.buttonSize.Width;
+            width -= this.size.Width;
 
-            this.Value ^= point.ToRectangle(this.buttonSize).IsCursorInside() && args.Message.IsLeftClick();
+            base.OnEndScene(point, width);
+
+            point.X += width;
+
+            Theme.DrawBox(point, this.size, this.Value ? Color.Green : Color.Red);
         }
 
-        #region Properties
+        protected internal override void OnWndProc(Point point, int width, WndProcEventArgs args)
+        {
+            point.X += width - this.size.Width;
+
+            this.Value ^= Menu.IsCursorInside(point, this.size) && Menu.IsLeftClick(args.Message);
+        }
+
+        protected override Size GetSize()
+        {
+            var s = base.GetSize();
+
+            this.size = new Size(28, s.Height);
+
+            s.Width += this.size.Width;
+
+            return s;
+        }
 
         protected override JToken Token
         {
             get => this.value;
             set => this.value = value.Value<bool>();
         }
-
-        #endregion
     }
 }

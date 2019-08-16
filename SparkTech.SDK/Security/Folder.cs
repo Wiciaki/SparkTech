@@ -1,18 +1,25 @@
 ﻿namespace SparkTech.SDK.Security
 {
     using System.IO;
+    using System.Threading.Tasks;
+
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Linq;
 
     public class Folder
     {
         public static Folder RootFolder { get; private set; }
 
-        public static Folder ScriptsFolder => RootFolder.GetFolder("Scripts");
+        public static Folder ThirdPartyFolder { get; private set; }
 
-        public static Folder MenuFolder => RootFolder.GetFolder("Scripts");
+        public static Folder MenuFolder { get; private set; }
 
         internal void Initialize(string root)
         {
             RootFolder = new Folder(root);
+
+            ThirdPartyFolder = RootFolder.GetFolder("ThirdParty");
+            MenuFolder = RootFolder.GetFolder("Menu");
         }
 
         private readonly string path;
@@ -40,5 +47,14 @@
         }
 
         public static implicit operator string(Folder folder) => folder.path;
+
+        internal static async Task SaveMenuTokenAsync(string targetPath, JToken token)
+        {
+            await using var fileStream = new FileStream(targetPath, File.Exists(targetPath) ? FileMode.Truncate : FileMode.Create, FileAccess.Write, FileShare.None);
+            await using var streamWriter = new StreamWriter(fileStream);
+            using var testWriter = new JsonTextWriter(streamWriter) { Formatting = Formatting.Indented };
+
+            await token.WriteToAsync(testWriter);
+        }
     }
 }

@@ -3,21 +3,23 @@
     using Newtonsoft.Json.Linq;
     using System.Drawing;
 
+    using SparkTech.SDK.Game;
     using SparkTech.SDK.Misc;
 
     public class MenuColor : MenuValue, IMenuValue<Color>, IMenuValue<SharpDX.Color>
     {
-        #region Fields
-
         private Color color;
-
-        #endregion
 
         private bool picking;
 
+        private Size buttonSize;
+
         #region Constructors and Destructors
 
-        public MenuColor(string id, Color defaultValue) : base(id, ColorToJArray(defaultValue))
+        public MenuColor(string id, Color defaultValue) : this(id, ColorToJArray(defaultValue))
+        { }
+
+        protected MenuColor(string id, JToken defaultValue) : base(id, defaultValue)
         { }
 
         #endregion
@@ -27,17 +29,7 @@
         public Color Value
         {
             get => this.color;
-            set
-            {
-                if (value == this.color)
-                {
-                    return;
-                }
-
-                this.color = value;
-
-                this.OnPropertyChanged(nameof(this.Value));
-            }
+            set => this.color = value != this.color && this.UpdateValue(value) ? value : this.color;
         }
 
         SharpDX.Color IMenuValue<SharpDX.Color>.Value
@@ -46,44 +38,45 @@
             set => this.Value = value.ToSystemColor();
         }
 
-        private Size buttonSize;
-
         protected override Size GetSize()
         {
             var size = base.GetSize();
 
-            this.buttonSize = new Size(size.Height, size.Height);
+            this.buttonSize = new Size(28, size.Height);
 
             size.Width += size.Height;
 
             return size;
         }
 
-        protected internal override void OnEndScene(Point point, int groupWidth)
+        protected internal override void OnEndScene(Point point, int width)
         {
-            size.Width -= this.buttonSize.Width;
+            width -= this.buttonSize.Width;
 
-            base.OnEndScene(point, size);
+            base.OnEndScene(point, width);
 
-            point.X += size.Width;
+            point.X += width;
 
-            Theme.Draw(new DrawData(point, this.buttonSize) { BackgroundColor = this.color });
+            Theme.DrawBox(this.GetValue<SharpDX.Color>(), point, this.buttonSize);
 
             if (!this.picking)
             {
                 return;
             }
 
+            point.X += this.buttonSize.Width + Theme.ItemGroupDistance + 20;
 
+            // todo this is temp
+            Rendering.Text.Draw("You dont know how hard it's to make a color picker ffs", SharpDX.Color.White, point);
         }
 
-        protected internal override void OnWndProc(Point point, Size size, GameWndProcEventArgs args)
+        protected internal override void OnWndProc(Point point, int width, WndProcEventArgs args)
         {
-            point.X += size.Width - this.buttonSize.Width;
+            point.X += width - this.buttonSize.Width;
 
-            if (args.Message.IsLeftClick() && Mouse.IsInside(point, this.buttonSize))
+            if (Menu.IsLeftClick(args.Message) && Menu.IsCursorInside(point, this.buttonSize))
             {
-                this.picking = true;
+                this.picking ^= true;
             }
         }
 
@@ -101,7 +94,7 @@
 
         #region Methods
 
-        private static Color JArrayToColor(JArray array)
+        protected static Color JArrayToColor(JArray array)
         {
             var a = array[0].Value<byte>();
             var r = array[1].Value<byte>();
@@ -111,7 +104,7 @@
             return Color.FromArgb(a, r, g, b);
         }
 
-        private static JArray ColorToJArray(Color color)
+        protected static JArray ColorToJArray(Color color)
         {
             return new JArray { color.A, color.R, color.G, color.B };
         }

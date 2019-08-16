@@ -23,10 +23,10 @@ namespace SparkTech.SDK.Rendering
 {
     #region Using Directives
 
-    using System;
-
     using SharpDX;
     using SharpDX.Direct3D9;
+
+    using SparkTech.SDK.Misc;
 
     #endregion
 
@@ -46,9 +46,6 @@ namespace SparkTech.SDK.Rendering
 
         #region Constructors and Destructors
 
-        /// <summary>
-        ///     Initializes static members of the <see cref="Text" /> class.
-        /// </summary>
         static Text()
         {
             // Intialize the default font now so we don't have to intialize it with every frame
@@ -74,92 +71,19 @@ namespace SparkTech.SDK.Rendering
 
         #region Public Methods and Operators
 
-        /// <summary>
-        ///     Renders text.
-        /// </summary>
-        /// <param name="content">The content.</param>
-        /// <param name="color">The color.</param>
-        /// <param name="worldPositions">The world positions.</param>
-        public static void Draw(string content, Color color, params Vector3[] worldPositions)
+        public static void Draw(string text, Color color, Vector2 screenPosition)
         {
-            Draw(content, color, Array.ConvertAll(worldPositions, Render.WorldToScreen));
+            Draw(text, color, screenPosition.ToPoint());
         }
 
-        /// <summary>
-        ///     Renders text.
-        /// </summary>
-        /// <param name="content">The content.</param>
-        /// <param name="color">The color.</param>
-        /// <param name="screenPositions">The screen positions.</param>
-        public static void Draw(string content, Color color, params Vector2[] screenPositions)
+        public static void Draw(string text, Color color, System.Drawing.Point point)
         {
-            foreach (var screenPosition in screenPositions)
-            {
-                Font.DrawText(null, content, (int)screenPosition.X, (int)screenPosition.Y, color);
-            }
+            Font.DrawText(null, text, point.X, point.Y, color);
         }
 
-        /// <summary>
-        ///     Renders text.
-        /// </summary>
-        /// <param name="content">The content.</param>
-        /// <param name="color">The color.</param>
-        /// <param name="flags">The flags.</param>
-        /// <param name="rectangles">The rectangles.</param>
-        public static void Draw(string content, Color color, FontDrawFlags flags, params Rectangle[] rectangles)
+        public static void Draw(string text, Color color, FontDrawFlags flags, Rectangle rectangle)
         {
-            foreach (var rectangle in rectangles)
-            {
-                Font.DrawText(null, content, rectangle, flags, color);
-            }
-        }
-
-        /// <summary>
-        ///     Renders text.
-        /// </summary>
-        /// <param name="content">The content.</param>
-        /// <param name="color">The color.</param>
-        /// <param name="font">The font.</param>
-        /// <param name="worldPositions">The world positions.</param>
-        public static void Draw(string content, Color color, Font font, params Vector3[] worldPositions)
-        {
-            Draw(content, color, font, Array.ConvertAll(worldPositions, Render.WorldToScreen));
-        }
-
-        /// <summary>
-        ///     Renders text.
-        /// </summary>
-        /// <param name="content">The content.</param>
-        /// <param name="color">The color.</param>
-        /// <param name="font">The font.</param>
-        /// <param name="screenPositions">The screen positions.</param>
-        public static void Draw(string content, Color color, Font font, params Vector2[] screenPositions)
-        {
-            foreach (var screenPosition in screenPositions)
-            {
-                font.DrawText(null, content, (int)screenPosition.X, (int)screenPosition.Y, color);
-            }
-        }
-
-        /// <summary>
-        ///     Renders text.
-        /// </summary>
-        /// <param name="content">The content.</param>
-        /// <param name="color">The color.</param>
-        /// <param name="font">The font.</param>
-        /// <param name="flags">The flags.</param>
-        /// <param name="rectangles">The rectangles.</param>
-        public static void Draw(
-            string content,
-            Color color,
-            Font font,
-            FontDrawFlags flags,
-            params Rectangle[] rectangles)
-        {
-            foreach (var rectangle in rectangles)
-            {
-                font.DrawText(null, content, rectangle, flags, color);
-            }
+            Font.DrawText(null, text, rectangle, flags, color);
         }
 
         #endregion

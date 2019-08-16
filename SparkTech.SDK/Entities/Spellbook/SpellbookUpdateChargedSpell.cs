@@ -2,6 +2,8 @@
 {
     using SharpDX;
 
+    using SparkTech.SDK.Misc;
+
     public class SpellbookUpdateChargedSpell : BlockableEventArgs
     {
         public readonly SpellSlot Slot;

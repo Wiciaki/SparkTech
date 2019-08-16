@@ -32,8 +32,8 @@ namespace SparkTech.SDK.GUI
         [Description("zh")]
         Chinese,
 
-        [Description("pl")]
-        Polish,
+        //[Description("pl")]
+        //Polish,
 
         //[Description("de")]
         //German,

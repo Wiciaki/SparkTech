@@ -1,8 +1,5 @@
 ﻿namespace SparkTech.SDK.GUI
 {
-    using System.Collections.Generic;
-    using System.Linq;
-
     using SharpDX;
 
     using Size = System.Drawing.Size;
@@ -16,12 +13,8 @@
         {
             theme = t;
 
-            var roots = Menu.Menu.GetRootMenus();
-
-            foreach (var item in roots.Concat(roots.SelectMany(menu => menu.GetDescensants())))
-            {
-                item.UpdateSize();
-            }
+            Clock.UpdateSize();
+            Menu.Menu.UpdateAllSizes();
         }
 
         public static int ItemGroupDistance => theme.ItemGroupDistance;
@@ -30,10 +23,10 @@
 
         public static Size MeasureText(string text) => theme.MeasureText(text);
 
-        public static void DrawTextBox(string text, Point point, Size size) => theme.DrawTextBox(text, point, size);
+        public static void DrawTextBox(Point point, Size size, string text, Color? color = null) => theme.DrawTextBox(point, size, text, color);
 
-        public static void DrawBox(Color color, Point point, Size size) => theme.DrawBox(color, point, size);
+        public static void DrawBox(Point point, Size size, Color color) => theme.DrawBox(point, size, color);
         
-        public static void DrawBorders(IEnumerable<Size> sizes, Point point) => theme.DrawBorders(sizes, point);
+        public static void DrawBorders(Point point, params Size[] sizes) => theme.DrawBorders(point, sizes);
     }
 }

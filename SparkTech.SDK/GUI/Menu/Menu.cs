@@ -4,21 +4,25 @@
     using System.Collections;
     using System.Collections.Generic;
     using System.Drawing;
+    using System.IO;
     using System.Linq;
 
+    using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
 
     using SparkTech.SDK.Game;
+    using SparkTech.SDK.Logging;
     using SparkTech.SDK.Misc;
     using SparkTech.SDK.Rendering;
+    using SparkTech.SDK.Security;
 
     public class Menu : MenuText, IEnumerable<MenuItem>
     {
         private readonly List<MenuItem> items = new List<MenuItem>();
 
-        protected JObject Settings;
+        private JObject settings;
 
-        private Size arrowBoxSize;
+        private Size size;
 
         private const string ExpandText = ">>";
 
@@ -27,67 +31,76 @@
 
         }
 
-        protected override void UpdateTextBasedSize()
-        {
-            var width = Math.Max(this.TextSize.Height, Theme.MeasureText(ExpandText).Width);
+        public bool IsExpanded { get; private set; }
 
-            this.arrowBoxSize = new Size(width, this.TextSize.Height);
+        #region Accessors
+
+        public IEnumerable<TMenuItem> GetItems<TMenuItem>() where TMenuItem : MenuItem
+        {
+            return this.OfType<TMenuItem>();
         }
+
+        public MenuItem this[string id] => this.items.Find(item => item.Id == id);
+
+        public Menu GetMenu(string id)
+        {
+            return this.GetItems<Menu>().FirstOrDefault(item => item.Id == id);
+        }
+
+        public IEnumerable<MenuItem> GetDescensants()
+        {
+            return this.Concat(this.GetItems<Menu>().SelectMany(menu => menu.GetDescensants()));
+        }
+
+        public static void Root(Menu menu, JObject translations = null)
+        {
+            void Set() => menu.SetTranslations(translations);
+
+            Set();
+            LanguageChanged += Set;
+
+            RootEntries.Add(new RootEntry(menu));
+        }
+
+        #endregion
+
+        #region Overrides
 
         protected override Size GetSize()
         {
-            var b = base.GetSize();
+            var width = Math.Max(28, Theme.MeasureText(ExpandText).Width);
 
-            b.Width += this.arrowBoxSize.Width;
+            var b = base.GetSize();
+            b.Width += width;
+
+            this.size = new Size(width, b.Height);
 
             return b;
         }
 
-        public bool IsExpanded { get; private set; }
-
-        public IEnumerable<TMenuItem> GetItems<TMenuItem>() where TMenuItem : MenuItem => this.OfType<TMenuItem>();
-
-        public MenuItem this[string id] => this.items.Find(item => item.Id == id);
-
-        public Menu GetMenu(string id) => this.GetItems<Menu>().FirstOrDefault(item => item.Id == id);
-
-        public IEnumerable<MenuItem> GetDescensants() => this.Concat(this.GetItems<Menu>().SelectMany(menu => menu.GetDescensants()));
-
-        protected internal override void OnEndScene(Point point, int groupWidth)
+        protected internal override void OnEndScene(Point point, int width)
         {
-            base.OnEndScene(point, groupWidth);
+            width -= this.size.Width;
+            base.OnEndScene(point, width);
+            point.X += width;
 
-            point.X += this.TextSize.Width;
-
-            Theme.DrawTextBox(ExpandText, point, this.arrowBoxSize);
+            Theme.DrawTextBox(point, this.size, ExpandText);
 
             if (!this.IsExpanded)
             {
                 return;
             }
 
-            point.X += Theme.ItemGroupDistance;
+            point.X += this.size.Width + Theme.ItemGroupDistance;
 
             DrawGroup(this.items, point);
         }
 
-        protected internal override void OnWndProc(Point point, int groupWidth, WndProcEventArgs args)
+        protected internal override void OnWndProc(Point point, int width, WndProcEventArgs args)
         {
-            point.X += groupWidth - this.arrowBoxSize.Width;
+            point.X += width - this.size.Width;
 
-            switch (args.Message)
-            {
-                case WindowsMessages.LBUTTONDOWN:
-                case WindowsMessages.LBUTTONDBLCLK:
-                    break;
-                default:
-                    return;
-            }
-
-            if (IsCursorInside(point, this.arrowBoxSize))
-            {
-                this.IsExpanded ^= true;
-            }
+            this.IsExpanded ^= IsLeftClick(args.Message) && IsCursorInside(point, this.size);
         }
 
         public void Add(MenuItem item)
@@ -99,21 +112,26 @@
 
             this.items.Add(item);
 
-            if (this.Settings == null)
+            if (this.settings != null)
             {
-                return;
+                item.SetToken(this.settings[item.Id]);
             }
-
-            item.SetToken(this.Settings[item.Id]);
         }
 
-        protected internal override bool ShouldSave()
+        public bool IsSaving { get; set; } = true;
+
+        protected internal override bool ConsumeSaveToken()
         {
-            return this.Count(item => item.ShouldSave()) > 0;
+            return this.IsSaving && this.Count(item => item.ConsumeSaveToken()) != 0;
         }
 
         protected internal override JToken GetToken()
         {
+            if (!this.IsSaving)
+            {
+                return null;
+            }
+
             var addable = new Dictionary<string, JToken>();
 
             foreach (var item in this)
@@ -143,23 +161,74 @@
 
         protected internal override void SetToken(JToken token)
         {
-            this.Settings = (JObject)token ?? new JObject();
-
-            // todo translation stuffs using JObject.Merge
-
-            foreach (var item in this.items)
+            if (!this.IsSaving)
             {
-                item.SetToken(this.Settings[item.Id]);
+                return;
+            }
+
+            this.settings = (JObject)token ?? new JObject();
+
+            foreach (var item in this)
+            {
+                item.SetToken(this.settings[item.Id]);
             }
         }
 
-        private static readonly List<Menu> Roots = new List<Menu>();
+        protected internal override void SetTranslations(JObject json)
+        {
+            if (json == null)
+            {
+                return;
+            }
 
-        public static WindowsMessagesWParam ActivationButton { get; private set; }
+            base.SetTranslations(LanguageAccess(json));
+
+            foreach (var item in this)
+            {
+                var o = (JObject)json[item.Id];
+
+                if (o == null)
+                {
+                    continue;
+                }
+
+                if (!(item is Menu))
+                {
+                    o = LanguageAccess(o);
+                }
+
+                if (o != null)
+                {
+                    item.SetTranslations(o);
+                }
+            }
+
+            static JObject LanguageAccess(JObject o) => (JObject)(o[LanguageTag] ?? o["en"]);
+        }
+
+        public IEnumerator<MenuItem> GetEnumerator()
+        {
+            return this.items.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return this.GetEnumerator();
+        }
+
+        #endregion
+
+        private static readonly List<RootEntry> RootEntries = new List<RootEntry>();
+
+        public static WindowsMessagesWParam ActivationButton { get; private set; } = WindowsMessagesWParam.Shift;
 
         public static bool IsOpen { get; private set; }
 
-        public static event Action VisibilityChanged;
+        public static Language Language { get; private set; }
+
+        public static string LanguageTag { get; private set; }
+
+        public static event Action VisibilityChanged, LanguageChanged;
 
         private static bool released;
 
@@ -171,16 +240,6 @@
             GameEvents.OnWndProc += OnWndProc;
         }
 
-        public static IReadOnlyList<Menu> GetRootMenus()
-        {
-            return Roots.AsReadOnly();
-        }
-
-        public static void AddToRoot(Menu menu)
-        {
-            Roots.Add(menu);
-        }
-
         private static void OnEndScene()
         {
             if (!IsOpen)
@@ -188,7 +247,9 @@
                 return;
             }
 
-            DrawGroup(Roots, GetRootPoint());
+            cursor = GameInterface.CursorPosition().ToPoint();
+
+            DrawGroup(RootEntries.ConvertAll(e => e.Menu), GetRootPoint());
         }
 
         private static void OnWndProc(WndProcEventArgs args)
@@ -213,24 +274,19 @@
             {
                 var point = GetRootPoint();
 
-                var visibleRoots = Roots.FindAll(item => item.IsVisible);
+                var visibleRoots = RootEntries.ConvertAll(e => e.Menu).FindAll(item => item.IsVisible);
                 var width = visibleRoots.Max(item => item.Size.Width);
 
-                visibleRoots.ForEach(item => item.OnWndProc(point, width, args));
+                visibleRoots.ForEach(item =>
+                {
+                    item.OnWndProc(point, width, args);
+
+                    point.Y += item.Size.Height;
+                });
             }
         }
 
-        private static void SetMenuVisibility(bool open)
-        {
-            if (IsOpen == open)
-            {
-                return;
-            }
-
-            IsOpen = open;
-
-            VisibilityChanged.SafeInvoke();
-        }
+        #region Menu Settings
 
         internal static void SetMenuTriggers(WindowsMessagesWParam button, bool toggleBehaviour)
         {
@@ -248,29 +304,32 @@
             SetMenuVisibility(false);
         }
 
-        private static void DrawGroup<T>(List<T> items, Point point) where T : MenuItem
+        internal static void SetLanguage(Language language)
         {
-            items = items.FindAll(item => item.IsVisible);
+            if (Language == language)
+            {
+                return;
+            }
 
-            var width = items.Max(item => item.Size.Width);
+            Language = language;
 
-            items.ForEach(item => item.OnEndScene(point, width));
+            LanguageTag = EnumCache<Language>.Description(language);
+
+            LanguageChanged.SafeInvoke();
         }
+
+        #endregion
+
+        #region Menu Position
 
         private static Point GetRootPoint()
         {
             return new Point(25, 25);
         }
 
-        IEnumerator<MenuItem> IEnumerable<MenuItem>.GetEnumerator()
-        {
-            return this.items.GetEnumerator();
-        }
+        #endregion
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return ((IEnumerable<MenuItem>)this).GetEnumerator();
-        }
+        #region Static Helper Methods
 
         private static Point cursor;
 
@@ -280,5 +339,129 @@
 
             return cursor.X >= rectangle.Left && cursor.X <= rectangle.Right && cursor.Y >= rectangle.Bottom && cursor.Y <= rectangle.Top;
         }
+
+        internal static bool IsLeftClick(WindowsMessages message)
+        {
+            switch (message)
+            {
+                case WindowsMessages.LBUTTONDOWN:
+                case WindowsMessages.LBUTTONDBLCLK:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
+        public static void UpdateAllSizes()
+        {
+            var roots = RootEntries.ConvertAll(entry => entry.Menu);
+
+            foreach (var item in roots.Concat(roots.SelectMany(menu => menu.GetDescensants())))
+            {
+                item.UpdateSize();
+            }
+        }
+
+        private static void SetMenuVisibility(bool open)
+        {
+            if (IsOpen == open)
+            {
+                return;
+            }
+
+            IsOpen = open;
+
+            RootEntries.ForEach(r => r.Save());
+
+            VisibilityChanged.SafeInvoke();
+        }
+
+        private static void DrawGroup<T>(List<T> items, Point point) where T : MenuItem
+        {
+            items = items.FindAll(item => item.IsVisible);
+
+            var width = items.Max(item => item.Size.Width);
+
+            items.ForEach(item =>
+            {
+                item.OnEndScene(point, width);
+
+                point.Y += item.Size.Height;
+            });
+        }
+
+        #endregion
+
+        #region RootEntry
+
+        private class RootEntry
+        {
+            public readonly Menu Menu;
+
+            private readonly string targetPath;
+
+            private JToken lastSaved;
+
+            public RootEntry(Menu menu)
+            {
+                this.Menu = menu;
+
+                this.targetPath = Folder.MenuFolder.GetFile(menu.Id + ".json");
+
+                var o = new JObject();
+
+                if (File.Exists(this.targetPath))
+                {
+                    using var sr = new StreamReader(this.targetPath);
+                    using var reader = new JsonTextReader(sr);
+
+                    try
+                    {
+                        o = (JObject)JToken.ReadFrom(reader);
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error($"Failed to load JSON file for \"{this.Menu.Id}\"");
+                        ex.Log();
+                    }
+                }
+
+                this.Menu.settings = o;
+            }
+
+            public async void Save()
+            {
+                if (!this.Menu.ConsumeSaveToken())
+                {
+                    return;
+                }
+
+                Log.Info($"Saving the updated values for \"{this.Menu.Id}\"...");
+
+                var token = this.Menu.GetToken();
+
+                if (token == null)
+                {
+                    Log.Info("All values are default, nothing to save...");
+                    this.lastSaved = null;
+                    File.Delete(this.targetPath);
+                    return;
+                }
+
+                if (JToken.DeepEquals(this.lastSaved, token))
+                {
+                    Log.Info("Nothing needs saving, aborting...");
+                    return;
+                }
+
+                this.lastSaved = token;
+
+                await Folder.SaveMenuTokenAsync(this.targetPath, token);
+
+                Log.Info($"Saving completed for \"{this.Menu.Id}\"!");
+            }
+        }
+
+        #endregion
     }
 }

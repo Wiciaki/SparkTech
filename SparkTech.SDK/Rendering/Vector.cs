@@ -67,19 +67,9 @@ namespace SparkTech.SDK.Rendering
 
         #region Public Methods and Operators
 
-        /// <summary>
-        ///     Renders a line.
-        /// </summary>
-        /// <param name="color">The color.</param>
-        /// <param name="thickness">The thickness.</param>
-        /// <param name="worldPositions">The world positions.</param>
-        public static void Draw(Color color, float thickness, params Vector3[] worldPositions)
+        public static void Draw(Color color, float thickness, params System.Drawing.Point[] screenPositions)
         {
-            // Convert the world space positions to screen space positions
-            var screenPositions = Array.ConvertAll(worldPositions, Render.WorldToScreen);
-
-            // Draw the screen space positions
-            Draw(color, thickness, screenPositions);
+            Draw(color, thickness, Array.ConvertAll(screenPositions, v => new RawVector2(v.X, v.Y)));
         }
 
         public static void Draw(Color color, float thickness, params Vector2[] screenPositions)

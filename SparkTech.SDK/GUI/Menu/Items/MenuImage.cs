@@ -24,25 +24,37 @@
             {
                 if (value == null)
                 {
-                    this.Texture = null;
+                    this.Value = null;
                     return;
                 }
 
-                this.texture = value.ToTexture();
-                this.size = value.Size;
-                this.UpdateSize();
+                this.UpdateTexture(value.ToTexture(), value.Size);
             }
         }
 
-        public Texture Texture
+        public Texture Value
         {
             get => this.texture;
             set
             {
-                this.texture = value;
-                this.size = this.texture.GetSize();
-                this.UpdateSize();
+                if (this.texture != value)
+                {
+                    this.UpdateTexture(value, value?.GetSize() ?? Size.Empty);
+                }
             }
+        }
+
+        private void UpdateTexture(Texture t, Size s)
+        {
+            if (!this.UpdateValue(t))
+            {
+                return;
+            }
+
+            this.texture = t;
+            this.size = s;
+
+            this.UpdateSize();
         }
 
         protected override Size GetSize()
@@ -50,15 +62,10 @@
             return this.size;
         }
 
-        protected internal override void OnEndScene(Point point, int groupWidth)
+        protected internal override void OnEndScene(Point point, int width)
         {
+            // todo background before and after
             Picture.Draw(point.ToVector2(), this.texture, Theme.BackgroundColor);
-        }
-
-        Texture IMenuValue<Texture>.Value
-        {
-            get => this.Texture;
-            set => this.Texture = value;
         }
     }
 }

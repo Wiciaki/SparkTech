@@ -1,7 +1,8 @@
 ﻿namespace SparkTech.SDK.GUI.Menu
 {
-    using System;
     using System.Drawing;
+
+    using Newtonsoft.Json.Linq;
 
     using SparkTech.SDK.Rendering;
 
@@ -14,15 +15,25 @@
 
         private const string HelpBoxText = "[?]";
 
-        private string text;
+        private string text, helpText;
 
-        private string helpText;
+        private Size textSize, helpSize, helpTextSize;
 
         public string Text
         {
-            get => this.text;
+            get => this.text ?? "PLACEHOLDER";
             set
             {
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    value = null;
+                }
+
+                if (this.text == value)
+                {
+                    return;
+                }
+
                 this.text = value;
                 this.UpdateSize();
             }
@@ -33,79 +44,64 @@
             get => this.helpText;
             set
             {
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    value = null;
+                }
+
+                if (this.helpText == value)
+                {
+                    return;
+                }
+
                 this.helpText = value;
-                this.UpdateHelpTextBoxSize();
+
+                this.UpdateHelpTextSize();
             }
         }
 
-        protected Size TextSize { get; private set; }
+        protected internal override void SetTranslations(JObject o)
+        {
+            this.Text = o["text"].Value<string>();
 
-        protected Size HelpBoxSize { get; private set; }
-
-        protected Size HelpTextBoxSize { get; private set; }
+            this.HelpText = o["helpText"]?.Value<string>();
+        }
 
         protected override Size GetSize()
         {
-            var size = this.TextSize;
+            this.UpdateHelpTextSize();
 
-            if (this.HasHelpText())
-            {
-                size.Width += this.HelpBoxSize.Width;
-            }
+            this.textSize = Theme.MeasureText(this.Text);
 
-            return size;
+            var hSize = Theme.MeasureText(HelpBoxText);
+            hSize.Width = this.textSize.Width;
+
+            this.helpSize = hSize;
+
+            return new Size(this.helpSize.Width + this.textSize.Width, this.textSize.Height);
         }
 
-        private bool HasHelpText()
+        private void UpdateHelpTextSize()
         {
-            return !string.IsNullOrWhiteSpace(this.HelpText);
+            this.helpTextSize = this.HelpText != null ? Theme.MeasureText(this.HelpText) : default;
         }
 
-        protected virtual void UpdateTextBasedSize()
+        protected internal override void OnEndScene(Point point, int width)
         {
+            var size = new Size(width - this.helpSize.Width, this.textSize.Height);
 
-        }
+            Theme.DrawTextBox(point, size, this.Text);
 
-        protected internal sealed override void UpdateSize()
-        {
-            this.UpdateHelpTextBoxSize();
-
-            var helpBoxSize = Theme.MeasureText(HelpBoxText);
-            var textSize = Theme.MeasureText(this.Text);
-            
-            helpBoxSize.Height = textSize.Height = Math.Max(helpBoxSize.Height, textSize.Height);
-
-            this.HelpBoxSize = helpBoxSize;
-            this.TextSize = textSize;
-
-            this.UpdateTextBasedSize();
-
-            base.UpdateSize();
-        }
-
-        private void UpdateHelpTextBoxSize()
-        {
-            this.HelpTextBoxSize = Theme.MeasureText(this.HelpText);
-        }
-
-        protected internal override void OnEndScene(Point point, int groupWidth)
-        {
-            var size = this.TextSize;
-
-            size.Width = groupWidth - (this.Size.Width - this.TextSize.Width);
-
-            Theme.DrawTextBox(this.Text, point, size);
-
-            if (!this.HasHelpText())
+            if (this.HelpText == null)
             {
                 return;
             }
 
             point.X += size.Width;
 
-            Theme.DrawTextBox(HelpBoxText, point, this.HelpBoxSize);
+            Theme.DrawTextBox(point, this.helpSize, HelpBoxText);
 
-            if (!point.ToRectangle(this.HelpBoxSize).IsCursorInside())
+            if (!Menu.IsCursorInside(point, this.helpSize))
             {
                 return;
             }
@@ -113,10 +109,11 @@
             // todo maybe non centered?
             var res = Render.Resolution();
 
-            point.X = (res.Width - this.HelpTextBoxSize.Width) / 2;
-            point.Y = (res.Height - this.HelpTextBoxSize.Height) / 2;
+            point.X = (res.Width - this.helpTextSize.Width) / 2;
+            point.Y = (res.Height - this.helpTextSize.Height) / 2;
 
-            Theme.DrawTextBox(this.HelpText, point, this.HelpTextBoxSize);
+            Theme.DrawTextBox(point, this.helpTextSize, this.HelpText);
+            Theme.DrawBorders(point, this.helpTextSize);
         }
     }
 }

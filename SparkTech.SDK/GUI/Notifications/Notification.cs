@@ -3,12 +3,89 @@
     using System;
     using System.Collections.Generic;
     using System.Drawing;
-    using System.Linq;
 
+    using SharpDX.Direct3D9;
+
+    using SparkTech.SDK.Game;
     using SparkTech.SDK.Rendering;
+
+    using Font = SharpDX.Direct3D9.Font;
 
     public class Notification
     {
+        public readonly string Content, Header;
+
+        public Notification(string content, string header = null)
+        {
+            if (string.IsNullOrWhiteSpace(content))
+            {
+                throw new ArgumentException("No content provided", nameof(content));
+            }
+
+            this.Content = content;
+
+            this.Header = header ?? "Notification";
+        }
+
+        private static readonly List<Entry> ActiveNotifications = new List<Entry>();
+
+        public void Send(float time)
+        {
+            ActiveNotifications.Add(new Entry(this) { Time = GameInterface.Time() + time });
+        }
+
+        public static void Send(string content, string header = null)
+        {
+            Send(content, header, 3f);
+        }
+
+        public static void Send(string content, string header, float time)
+        {
+            new Notification(content, header).Send(time);
+        }
+
+        private Size headerSize, contentSize;
+
+        private void UpdateSizes()
+        {
+            this.contentSize = Theme.MeasureText(this.Content);
+
+            this.headerSize = new Size(this.contentSize.Width, 56);
+        }
+
+        private static readonly Font Font;
+
+        static Notification()
+        {
+            var description = new FontDescription { Height = 20, FaceName = "Arial" };
+
+            Font = new Font(Render.Direct3DDevice, description);
+
+            Render.OnDispose += Font.Dispose;
+            Render.OnLostDevice += Font.OnLostDevice;
+            Render.OnResetDevice += Font.OnResetDevice;
+
+            Render.OnEndScene += OnEndScene;
+        }
+
+        private static void OnEndScene()
+        {
+
+        }
+
+        private class Entry
+        {
+            public readonly Notification Notification;
+
+            public float Time;
+
+            public Entry(Notification n)
+            {
+                this.Notification = n;
+            }
+        }
+
+        /*
         internal static bool DrawClock;
 
         internal static Size ExtraClockSize;
@@ -164,6 +241,6 @@
                     }
                 }
             }
-        }
+        }*/
     }
 }
