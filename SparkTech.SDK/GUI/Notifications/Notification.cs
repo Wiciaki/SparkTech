@@ -2,14 +2,12 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Drawing;
 
+    using SharpDX;
     using SharpDX.Direct3D9;
 
     using SparkTech.SDK.Game;
     using SparkTech.SDK.Rendering;
-
-    using Font = SharpDX.Direct3D9.Font;
 
     public class Notification
     {
@@ -27,11 +25,11 @@
             this.Header = header ?? "Notification";
         }
 
-        private static readonly List<Entry> ActiveNotifications = new List<Entry>();
+        private static readonly List<NotificationEntry> ActiveNotifications = new List<NotificationEntry>();
 
         public void Send(float time)
         {
-            ActiveNotifications.Add(new Entry(this) { Time = GameInterface.Time() + time });
+            ActiveNotifications.Add(new NotificationEntry(this) { Time = GameInterface.Time() + time });
         }
 
         public static void Send(string content, string header = null)
@@ -44,13 +42,13 @@
             new Notification(content, header).Send(time);
         }
 
-        private Size headerSize, contentSize;
+        private Size2 headerSize, contentSize;
 
         private void UpdateSizes()
         {
             this.contentSize = Theme.MeasureText(this.Content);
 
-            this.headerSize = new Size(this.contentSize.Width, 56);
+            this.headerSize = new Size2(this.contentSize.Width, 56);
         }
 
         private static readonly Font Font;
@@ -73,13 +71,18 @@
 
         }
 
-        private class Entry
+        internal static void UpdateAllSizes()
+        {
+            ActiveNotifications.ForEach(n => n.Notification.UpdateSizes());
+        }
+
+        private class NotificationEntry
         {
             public readonly Notification Notification;
 
             public float Time;
 
-            public Entry(Notification n)
+            public NotificationEntry(Notification n)
             {
                 this.Notification = n;
             }

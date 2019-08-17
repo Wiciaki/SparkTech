@@ -1,18 +1,10 @@
 ﻿namespace SparkTech.SDK.GUI
 {
-    using System.Collections.Generic;
-    using System.Drawing;
-
     using SharpDX;
     using SharpDX.Direct3D9;
     using SharpDX.Mathematics.Interop;
 
-    using SparkTech.SDK.Misc;
     using SparkTech.SDK.Rendering;
-
-    using Color = SharpDX.Color;
-    using Font = SharpDX.Direct3D9.Font;
-    using Point = System.Drawing.Point;
 
     public sealed class ClassicTheme : ITheme
     {
@@ -35,16 +27,16 @@
 
         private const FontDrawFlags DrawFlags = FontDrawFlags.VerticalCenter | FontDrawFlags.Left;
 
-        private readonly Size extraTextSize = new Size(10,16);
+        private readonly Size2 extraTextSize = new Size2(10,16);
 
-        public Size MeasureText(string text)
+        public Size2 MeasureText(string text)
         {
             var r = this.font.MeasureText(null, text, DrawFlags);
 
             var height = MultipleOf(r.Bottom - r.Top + this.extraTextSize.Height, 28);
             var width = MultipleOf(r.Right - r.Left + this.extraTextSize.Width, 2);
 
-            return new Size(width, height);
+            return new Size2(width, height);
 
             static int MultipleOf(int num, int multipleOf)
             {
@@ -54,24 +46,24 @@
             }
         }
 
-        public void DrawTextBox(Point point, Size size, string text, Color? color)
+        public void DrawTextBox(Point point, Size2 size, string text, Color? color)
         {
             this.DrawBox(point, size, color ?? this.BackgroundColor);
 
             this.font.DrawText(null, text, this.GetTextRectangle(point, size), DrawFlags, Color.White);
         }
 
-        public void DrawBox(Point point, Size size, Color color)
+        public void DrawBox(Point point, Size2 size, Color color)
         {
-            Vector.Draw(color, size.Height, point.ToVector2(), new Vector2(point.X + size.Width, point.Y));
+            Vector.Draw(color, size.Height, point, new Point(point.X + size.Width, point.Y));
         }
 
-        public void DrawBorders(IEnumerable<Size> sizes, Point point)
+        public void DrawBorders(Point point, params Size2[] sizes)
         {
 
         }
 
-        private RawRectangle GetTextRectangle(Point point, Size size)
+        private RawRectangle GetTextRectangle(Point point, Size2 size)
         {
             var ew = this.extraTextSize.Width / 2;
             var eh = this.extraTextSize.Height / 2;

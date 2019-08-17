@@ -1,8 +1,8 @@
 ﻿namespace SparkTech.SDK.GUI.Menu
 {
-    using System.Drawing;
-
     using Newtonsoft.Json.Linq;
+
+    using SharpDX;
 
     using SparkTech.SDK.Rendering;
 
@@ -17,7 +17,7 @@
 
         private string text, helpText;
 
-        private Size textSize, helpSize, helpTextSize;
+        private Size2 textSize, helpSize, helpTextSize;
 
         public string Text
         {
@@ -67,7 +67,7 @@
             this.HelpText = o["helpText"]?.Value<string>();
         }
 
-        protected override Size GetSize()
+        protected override Size2 GetSize()
         {
             this.UpdateHelpTextSize();
 
@@ -78,7 +78,7 @@
 
             this.helpSize = hSize;
 
-            return new Size(this.helpSize.Width + this.textSize.Width, this.textSize.Height);
+            return new Size2(this.helpSize.Width + this.textSize.Width, this.textSize.Height);
         }
 
         private void UpdateHelpTextSize()
@@ -88,7 +88,7 @@
 
         protected internal override void OnEndScene(Point point, int width)
         {
-            var size = new Size(width - this.helpSize.Width, this.textSize.Height);
+            var size = new Size2(width - this.helpSize.Width, this.textSize.Height);
 
             Theme.DrawTextBox(point, size, this.Text);
 

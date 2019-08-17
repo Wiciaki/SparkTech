@@ -31,7 +31,7 @@ namespace SparkTech.SDK.Geometry
     using SparkTech.SDK.Util.Vector;
 
     #endregion
-
+    /*
     /// <summary>
     ///     Class Arc
     /// </summary>
@@ -204,5 +204,5 @@ namespace SparkTech.SDK.Geometry
         }
 
         #endregion
-    }
+    }*/
 }

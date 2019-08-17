@@ -1,12 +1,14 @@
 ﻿namespace SparkTech.SDK.Modules
 {
+    using SparkTech.SDK.GUI.Menu;
+
     public interface IModule
     {
         #region Public Methods and Operators
 
         void Release();
 
-        ModuleMenu Menu { get; }
+        Menu Menu { get; }
 
         #endregion
     }

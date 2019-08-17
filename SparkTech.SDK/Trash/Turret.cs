@@ -15,17 +15,16 @@
         #endregion
 
         #region Public Methods and Operators
-
+        /*
         public static bool IsUnderTurret(this Vector3 position, ObjectTeam team = ObjectTeam.Enemy)
         {
-            return ObjectManager.Get<AITurret>().Any(
-                t => t.Team() == team && position.Distance(t.Position) < TurretRange + t.BoundingRadius);
+            return ObjectManager.Get<ITurret>().Any(t => t.Team() == team && position.Distance(t.Position) < TurretRange + t.BoundingRadius);
         }
 
-        public static bool IsUnderTurret(this AIBaseClient target, ObjectTeam team = ObjectTeam.Enemy)
+        public static bool IsUnderTurret(this IAIBase target, GameObjectTeam team = GameObjectTeam.)
         {
             return IsUnderTurret(target.Position, team);
-        }
+        }*/
 
         #endregion
     }

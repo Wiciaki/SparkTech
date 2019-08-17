@@ -1,4 +1,4 @@
-﻿namespace SparkTech.SDK.SpellDatabase
+﻿/*namespace SparkTech.SDK.SpellDatabase
 {
     using SparkTech.SDK.Enumerations;
 
@@ -26,4 +26,4 @@
 
         float SummonerSpellDamage(AIHeroClient attacker, AIBaseClient target, SummonerSpell spell, DamageStage stage);
     }
-}
+}*/

@@ -35,7 +35,7 @@ namespace SparkTech.SDK.Orbwalking
 
         static Orbwalker()
         {
-            Picker = SdkSetup.CreatePicker<IOrbwalker, DefaultOrbwalker>();
+            //Picker = SdkSetup.CreatePicker<IOrbwalker, DefaultOrbwalker>();
 
             Picker.ModuleSelected += () =>
             {

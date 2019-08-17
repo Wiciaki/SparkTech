@@ -4,7 +4,7 @@
     using System.Collections.Generic;
 
     using SparkTech.SDK.Util;
-
+    /*
     public static class GameLoading
     {
         #region Static Fields
@@ -78,5 +78,5 @@
         public static bool IsLoaded { get; private set; }
 
         #endregion
-    }
+    }*/
 }

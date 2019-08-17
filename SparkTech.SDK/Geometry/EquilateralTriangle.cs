@@ -20,6 +20,7 @@
 // 
 //  -------------------------------------------------------------------
 
+/*
 namespace SparkTech.SDK.Geometry
 {
     #region Using Directives
@@ -101,4 +102,4 @@ namespace SparkTech.SDK.Geometry
 
         #endregion
     }
-}
+}*/

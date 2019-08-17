@@ -25,6 +25,7 @@
 
     internal static class SdkSetup
     {
+        /*
         #region Static Fields
 
         private static readonly Folder ModulesDirectory;
@@ -473,6 +474,6 @@
             }
 
             #endregion
-        }
+        }*/
     }
 }

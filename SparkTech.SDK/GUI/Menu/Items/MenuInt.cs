@@ -1,14 +1,13 @@
 ﻿namespace SparkTech.SDK.GUI.Menu.Items
 {
     using System;
-    using System.Drawing;
 
     using Newtonsoft.Json.Linq;
 
+    using SharpDX;
+
     using SparkTech.SDK.Game;
     using SparkTech.SDK.Rendering;
-
-    using Color = SharpDX.Color;
 
     public class MenuSlider : MenuValue, IMenuValue<int>
     {
@@ -77,9 +76,9 @@
 
         private const int SliderHeight = 20;
 
-        private Size size;
+        private Size2 size;
 
-        protected override Size GetSize()
+        protected override Size2 GetSize()
         {
             var s = base.GetSize();
             s.Height += SliderHeight;
@@ -103,21 +102,30 @@
 
             if (this.dragging)
             {
-                var x = (int)GameInterface.CursorPosition().X;
+                var diff = GameInterface.CursorPosition().X - point.X;
 
-                var diff = x - point.X;
-
-                displayNum = diff <= 0 ? this.Min : x >= point.X + barWidth ? this.Max : this.Min + (int)((float)diff * range / barWidth);
+                if (diff <= 0)
+                {
+                    displayNum = this.Min;
+                }
+                else if (diff >= barWidth)
+                {
+                    displayNum = this.Max;
+                }
+                else
+                {
+                    displayNum = this.Min + (int)((float)diff * range / barWidth);
+                }
 
                 this.draggingVal = displayNum;
             }
 
             point.X += width;
-            Theme.DrawTextBox($"[{displayNum}]", point, this.size);
+            Theme.DrawTextBox(point, this.size, $"[{displayNum}]");
             point.X -= width;
 
             point.Y += this.size.Height;
-            Theme.DrawBox(Theme.BackgroundColor, point, new Size(barWidth, SliderHeight));
+            Theme.DrawBox(point, new Size2(barWidth, SliderHeight), Theme.BackgroundColor);
 
             var offset = (int)(barWidth / ((float)range / (this.Value - this.Min)));
 
@@ -135,7 +143,7 @@
         {
             point.Y += this.size.Height;
 
-            if (!this.dragging && !Menu.IsCursorInside(point, new Size(width, SliderHeight)))
+            if (!this.dragging && !Menu.IsCursorInside(point, new Size2(width, SliderHeight)))
             {
                 return;
             }

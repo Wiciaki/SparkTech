@@ -3,9 +3,8 @@
     using System;
     using System.Collections.Generic;
     using SparkTech.SDK.Entities;
-    using SparkTech.SDK.UI_Old.Menu;
     using SparkTech.SDK.Util;
-
+    /*
     public class PortedPrediction : IHealthPredition
     {
         public PortedPrediction()
@@ -78,7 +77,8 @@
                                    + 1000 * Math.Max(0, unit.Distance(attack.Source) - attack.Source.BoundingRadius)
                                    / attack.ProjectileSpeed + delay;
 
-                    if ( /*Utils.GameTimeTickCount < landTime - delay &&*/ landTime < Utils.GameTimeTickCount + time)
+                    if ( //Utils.GameTimeTickCount < landTime - delay &&
+    landTime < Utils.GameTimeTickCount + time)
                     {
                         attackDamage = attack.Damage;
                     }
@@ -363,5 +363,5 @@
 
             #endregion
         }
-    }
+    }*/
 }

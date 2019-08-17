@@ -1,5 +1,6 @@
 ﻿namespace SparkTech.SDK.SpellDatabase
 {
+    /*
     public class SpellLink
     {
         public virtual string ChampionName { get; }
@@ -26,5 +27,5 @@
         {
             this.ChampionName = championName;
         }
-    }
+    }*/
 }

@@ -8,9 +8,8 @@
     using SharpDX;
 
     using SparkTech.SDK.Entities;
-    using SparkTech.SDK.Enumerations;
     using SparkTech.SDK.Util.Vector;
-
+    /*
     //TODO Plz sparky make this dynamic
     public class CustomCollisionObject
     {
@@ -68,46 +67,46 @@
 
             foreach (var position in positions)
             {
-                /*
-                if (input.CollisionObjects.HasFlag(CollisionableObjects.Minions))
-                {
-                    foreach (var minion in ObjectCache.Get<AIMinion>().Where(
-                        minion => minion.IsValidTarget(
-                            Math.Min(input.Range + input.Radius + 100, 2000),
-                            checkRangeFrom: input.RangeCheckFrom)))
-                    {
-                        input.Target = minion;
-                        var minionPrediction = SDK.MovementPrediction.Instance.GetPrediction(input, false, false);
-                        if (((Vector2)minionPrediction.UnitPosition).DistanceSquared(
-                            (Vector2)input.From,
-                            (Vector2)position,
-                            true) <= Math.Pow(input.Radius + 15 + minion.BoundingRadius, 2))
-                        {
-                            result.Add(minion);
-                        }
-                    }
-                }
-                */
-                /*
-                if (input.CollisionObjects.HasFlag(CollisionableObjects.Heroes))
-                {
-                    foreach (var hero in ObjectCache.Get<AIHeroClient>().Where(
-                        hero => hero.IsValidTarget(
-                            Math.Min(input.Range + input.Radius + 100, 2000),
-                            checkRangeFrom: input.RangeCheckFrom)))
-                    {
-                        input.Target = hero;
-                        var prediction = SDK.MovementPrediction.Instance.GetPrediction(input, false, false);
-                        if (((Vector2)prediction.UnitPosition).DistanceSquared(
-                            (Vector2)input.From,
-                            (Vector2)position,
-                            false) <= Math.Pow(input.Radius + 50 + hero.BoundingRadius, 2))
-                        {
-                            result.Add(hero);
-                        }
-                    }
-                }
-                */
+                
+                //if (input.CollisionObjects.HasFlag(CollisionableObjects.Minions))
+                //{
+                //    foreach (var minion in ObjectCache.Get<AIMinion>().Where(
+                //        minion => minion.IsValidTarget(
+                //            Math.Min(input.Range + input.Radius + 100, 2000),
+                //            checkRangeFrom: input.RangeCheckFrom)))
+                //    {
+                //        input.Target = minion;
+                //        var minionPrediction = SDK.MovementPrediction.Instance.GetPrediction(input, false, false);
+                //        if (((Vector2)minionPrediction.UnitPosition).DistanceSquared(
+                //            (Vector2)input.From,
+                //            (Vector2)position,
+                //            true) <= Math.Pow(input.Radius + 15 + minion.BoundingRadius, 2))
+                //        {
+                //            result.Add(minion);
+                //        }
+                //    }
+                //}
+                
+                
+                //if (input.CollisionObjects.HasFlag(CollisionableObjects.Heroes))
+                //{
+                //    foreach (var hero in ObjectCache.Get<AIHeroClient>().Where(
+                //        hero => hero.IsValidTarget(
+                //            Math.Min(input.Range + input.Radius + 100, 2000),
+                //            checkRangeFrom: input.RangeCheckFrom)))
+                //    {
+                //        input.Target = hero;
+                //        var prediction = SDK.MovementPrediction.Instance.GetPrediction(input, false, false);
+                //        if (((Vector2)prediction.UnitPosition).DistanceSquared(
+                //            (Vector2)input.From,
+                //            (Vector2)position,
+                //            false) <= Math.Pow(input.Radius + 50 + hero.BoundingRadius, 2))
+                //        {
+                //            result.Add(hero);
+                //        }
+                //    }
+                //}
+                
                 if (input.CollisionObjects.HasFlag(CollisionableObjects.Walls))
                 {
                 }
@@ -194,5 +193,5 @@
         }
 
         #endregion
-    }
+    }*/
 }

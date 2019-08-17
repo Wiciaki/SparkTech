@@ -12,6 +12,6 @@
 
         bool IsChatOpen();
 
-        Vector2 CursorPosition();
+        Point CursorPosition();
     }
 }

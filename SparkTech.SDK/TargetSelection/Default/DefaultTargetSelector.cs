@@ -11,9 +11,9 @@
 
     internal sealed class DefaultTargetSelector : ITargetSelector
     {
-        ModuleMenu IModule.Menu => Menu;
+        Menu IModule.Menu => Menu;
 
-        private static readonly ModuleMenu Menu;
+        private static readonly Menu Menu;
 
         private static readonly List<Weight> Weights;
 
@@ -24,7 +24,7 @@
             EqualityComparer = new GameObjectComparer();
             Weights = new List<Weight>();
 
-            Menu = new ModuleMenu("TargetSelector")
+            Menu = new Menu("TargetSelector")
                    {
                        new MenuText("Notice")
                    };

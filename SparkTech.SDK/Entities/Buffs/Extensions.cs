@@ -24,6 +24,8 @@ namespace SparkTech.SDK.Entities.Buffs
 {
     using System;
 
+    using SparkTech.SDK.Game;
+
     public static class Extensions
     {
         #region Public Methods and Operators
@@ -76,12 +78,19 @@ namespace SparkTech.SDK.Entities.Buffs
 
         public static bool IsValid(this IBuff buff)
         {
-            return buff != null && Game.ClockTime >= buff.StartTime() && Game.ClockTime < buff.EndTime();
+            if (buff == null)
+            {
+                return false;
+            }
+
+            var t = GameInterface.Time();
+
+            return t >= buff.StartTime() && t < buff.EndTime();
         }
 
         public static float TimeLeft(this IBuff buff)
         {
-            return Math.Max(0, buff.ExpireTime - Game.ClockTime);
+            return Math.Max(0, buff.EndTime() - GameInterface.Time());
         }
 
         #endregion

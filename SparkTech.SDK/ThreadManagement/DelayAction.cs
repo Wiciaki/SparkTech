@@ -28,6 +28,7 @@ namespace SparkTech.SDK.TickOperations
 
     using SparkTech.SDK.Util;
 
+    /*
     public class DelayAction
     {
         #region Static Fields
@@ -132,5 +133,5 @@ namespace SparkTech.SDK.TickOperations
 
             #endregion
         }
-    }
+    }*/
 }

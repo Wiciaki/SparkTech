@@ -1,8 +1,8 @@
 ﻿namespace SparkTech.SDK.GUI.Menu.Items
 {
-    using System.Drawing;
-
     using Newtonsoft.Json.Linq;
+
+    using SharpDX;
 
     using SparkTech.SDK.Game;
 
@@ -32,17 +32,17 @@
 
             point.X += width;
 
-            Theme.DrawBox(this.Value ? SharpDX.Color.Green : SharpDX.Color.Red, point, this.buttonSize);
+            Theme.DrawBox(point, this.buttonSize, this.Value ? Color.Green : Color.Red);
         }
 
-        private Size buttonSize;
+        private Size2 buttonSize;
 
-        protected override Size GetSize()
+        protected override Size2 GetSize()
         {
             var s = base.GetSize();
             s.Width += s.Height;
 
-            this.buttonSize = new Size(28, s.Height);
+            this.buttonSize = new Size2(28, s.Height);
 
             return s;
         }

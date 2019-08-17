@@ -1,5 +1,6 @@
 ﻿namespace SparkTech.SDK.SpellDatabase
 {
+    /*
     using SparkTech.SDK.TickOperations;
 
     public class Spell : SpellLink
@@ -112,5 +113,5 @@
         {
             return this.IsInRange(obj.Position);
         }
-    }
+    }*/
 }

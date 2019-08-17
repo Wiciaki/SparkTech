@@ -29,7 +29,7 @@ namespace SparkTech.SDK.Geometry
     using SharpDX;
 
     #endregion
-
+    /*
     /// <summary>
     ///     Class Line
     /// </summary>
@@ -186,5 +186,5 @@ namespace SparkTech.SDK.Geometry
         }
 
         #endregion
-    }
+    }*/
 }

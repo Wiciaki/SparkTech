@@ -10,7 +10,7 @@
 
         protected override IComparable GetComparable(IHero target)
         {
-            return target.DistanceToPlayer();
+            return 0; //ObjectManager.Player.Distance(target);
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace SparkTech.SDK.SpellDatabase
+﻿/*namespace SparkTech.SDK.SpellDatabase
 {
     using SparkTech.SDK.Modules;
     using SparkTech.SDK.SpellDatabase.Default;
@@ -21,4 +21,4 @@
             obtainer();
         }
     }
-}
+}*/

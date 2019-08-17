@@ -19,7 +19,7 @@
 //  along with SparkTech. If not, see <http://www.gnu.org/licenses/>.
 // 
 //  -------------------------------------------------------------------
-
+/*
 namespace SparkTech.SDK.Geometry
 {
     #region Using Directives
@@ -186,4 +186,4 @@ namespace SparkTech.SDK.Geometry
 
         #endregion
     }
-}
+}*/

@@ -5,6 +5,7 @@
 
     using SparkTech.SDK.Entities;
     using SparkTech.SDK.GUI.Menu;
+    using SparkTech.SDK.GUI.Menu.Items;
 
     internal abstract class Weight : IComparer<IHero>
     {

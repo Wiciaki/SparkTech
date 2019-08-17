@@ -2,9 +2,6 @@
 {
     using SharpDX;
 
-    using Size = System.Drawing.Size;
-    using Point = System.Drawing.Point;
-
     public static class Theme
     {
         private static ITheme theme;
@@ -14,6 +11,7 @@
             theme = t;
 
             Clock.UpdateSize();
+            Notifications.Notification.UpdateAllSizes();
             Menu.Menu.UpdateAllSizes();
         }
 
@@ -21,12 +19,12 @@
 
         public static Color BackgroundColor => theme.BackgroundColor;
 
-        public static Size MeasureText(string text) => theme.MeasureText(text);
+        public static Size2 MeasureText(string text) => theme.MeasureText(text);
 
-        public static void DrawTextBox(Point point, Size size, string text, Color? color = null) => theme.DrawTextBox(point, size, text, color);
+        public static void DrawTextBox(Point point, Size2 size, string text, Color? color = null) => theme.DrawTextBox(point, size, text, color);
 
-        public static void DrawBox(Point point, Size size, Color color) => theme.DrawBox(point, size, color);
+        public static void DrawBox(Point point, Size2 size, Color color) => theme.DrawBox(point, size, color);
         
-        public static void DrawBorders(Point point, params Size[] sizes) => theme.DrawBorders(point, sizes);
+        public static void DrawBorders(Point point, params Size2[] sizes) => theme.DrawBorders(point, sizes);
     }
 }

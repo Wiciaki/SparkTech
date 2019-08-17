@@ -27,12 +27,12 @@ namespace SparkTech.SDK.Geometry
     using System;
     using System.Collections.Generic;
     using System.Linq;
-
+    using ClipperLib;
     using SharpDX;
-    using SparkTech.SDK.Clipper;
-    using SparkTech.SDK.Util.Vector;
 
     #endregion
+
+    /*
 
     public abstract class LinearPolygon : IPolygon
     {
@@ -125,11 +125,10 @@ namespace SparkTech.SDK.Geometry
         /// <param name="thickness">The thickness.</param>
         public virtual void Render(Color color, float thickness = 1f)
         {
-            Rendering.Vector.Render(color, thickness, true, this.WorldPoints);
-            Rendering.Vector.Render(
+            Rendering.Vector.Draw(color, thickness, this.WorldPoints);
+            Rendering.Vector.Draw(
                 color,
                 thickness,
-                true,
                 this.WorldPoints[0],
                 this.WorldPoints[^1]);
         }
@@ -155,5 +154,5 @@ namespace SparkTech.SDK.Geometry
         protected abstract void Update();
 
         #endregion
-    }
+    }*/
 }

@@ -5,8 +5,7 @@
 
     using SparkTech.SDK.Entities;
     using SparkTech.SDK.Modules;
-    using SparkTech.SDK.UI_Old.Menu;
-
+    /*
     public class DefaultOrbwalker : IOrbwalker
     {
         ModuleMenu IModule.Menu => Menu;
@@ -17,7 +16,7 @@
 
         static DefaultOrbwalker()
         {
-            /*Modes = new List<Mode> { Mode.Combo, Mode.Lasthit, Mode.Mixed, Mode.Laneclear, Mode.Flee };
+            Modes = new List<Mode> { Mode.Combo, Mode.Lasthit, Mode.Mixed, Mode.Laneclear, Mode.Flee };
 
             KeysMenu = new Menu("Keys")
                        {
@@ -26,9 +25,9 @@
                            //new MenuKeyBind("Mixed", WindowMessageWParam.C),
                            //new MenuKeyBind("Laneclear", WindowMessageWParam.V),
                            //new MenuKeyBind("Flee", WindowMessageWParam.Z)
-                       };*/
+                       };
 
-            Menu = new ModuleMenu("Orbwalker") { /*KeysMenu*/ };
+            Menu = new ModuleMenu("Orbwalker") { KeysMenu };
         }
 
         protected virtual IAIBase Unit => ObjectManager.Player;
@@ -54,8 +53,8 @@
         private void OnEndScene(EventArgs args)
         {
 
-        }*/
-        /*
+        }
+
         private void OnProcessBasicAttack(AIBaseClientCastEventArgs args)
         {
             if (args.Caster.IsMe())
@@ -72,7 +71,7 @@
         {
             return Modes.Find(n => KeysMenu[n.ToString()].GetValue<bool>());
         }
-        */
+        
         #endregion
 
         #region Explicit Interface Methods
@@ -95,5 +94,5 @@
         Action<BeforeAttackEventArgs> IOrbwalker.BeforeAttack { get; set; }
 
         Action<IAttackableUnit> IOrbwalker.AfterAttack { get; set; }
-    }
+    }*/
 }

@@ -19,7 +19,7 @@
 //  along with SparkTech. If not, see <http://www.gnu.org/licenses/>.
 //
 //  -------------------------------------------------------------------
-
+/*
 namespace SparkTech.SDK.SpellDatabase
 {
     using SparkTech.SDK.Enumerations;
@@ -66,4 +66,4 @@ namespace SparkTech.SDK.SpellDatabase
 
         #endregion
     }
-}
+}*/

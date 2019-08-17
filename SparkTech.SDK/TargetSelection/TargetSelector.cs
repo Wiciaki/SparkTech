@@ -33,7 +33,7 @@ namespace SparkTech.SDK.TargetSelection
     {
         #region Static Fields
 
-        private static readonly IModulePicker<ITargetSelector> Picker = SdkSetup.CreatePicker<ITargetSelector, DefaultTargetSelector>();
+        private static readonly IModulePicker<ITargetSelector> Picker; //= SdkSetup.CreatePicker<ITargetSelector, DefaultTargetSelector>();
 
         #endregion
 

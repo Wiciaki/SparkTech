@@ -9,7 +9,7 @@ namespace SparkTech.SDK.Geometry.AOE
     using SharpDX;
 
     using SparkTech.SDK.Util.Vector;
-
+    /*
     public class MEC
     {
         #region Public Properties
@@ -511,5 +511,5 @@ namespace SparkTech.SDK.Geometry.AOE
 
             #endregion
         }
-    }
+    }*/
 }

@@ -1,4 +1,4 @@
-﻿namespace SparkTech.SDK.SpellDatabase.Default
+﻿/*namespace SparkTech.SDK.SpellDatabase.Default
 {
     using SparkTech.SDK.Enumerations;
     using SparkTech.SDK.UI_Old.Menu;
@@ -97,4 +97,4 @@
             return attacker.CharIntermediate.BaseAttackDamage + attacker.CharIntermediate.FlatPhysicalDamageMod;
         }
     }
-}
+}*/

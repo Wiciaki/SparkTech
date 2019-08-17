@@ -1,9 +1,8 @@
 ﻿namespace SparkTech.SDK.GUI
 {
     using System;
-    using System.Drawing;
 
-    using Color = SharpDX.Color;
+    using SharpDX;
 
     public interface ITheme : IDisposable
     {
@@ -11,12 +10,12 @@
 
         int ItemGroupDistance { get; }
 
-        Size MeasureText(string text);
+        Size2 MeasureText(string text);
 
-        void DrawBox(Point point, Size size, Color color);
+        void DrawBox(Point point, Size2 size, Color color);
 
-        void DrawTextBox(Point point, Size size, string text, Color? color);
+        void DrawTextBox(Point point, Size2 size, string text, Color? color);
 
-        void DrawBorders(Point point, params Size[] sizes);
+        void DrawBorders(Point point, params Size2[] sizes);
     }
 }

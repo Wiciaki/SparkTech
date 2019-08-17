@@ -1,17 +1,15 @@
 ﻿namespace SparkTech.SDK.HealthPrediction.Default
 {
-    using System;
-
     using SparkTech.SDK.Entities;
+    using SparkTech.SDK.GUI.Menu;
     using SparkTech.SDK.HealthPrediction.Ported;
     using SparkTech.SDK.Modules;
-    using SparkTech.SDK.UI_Old.Menu;
-
+    /*
     public class DefaultHealthPrediction : IHealthPredition
     {
         private readonly IHealthPredition tempSolution = new PortedPrediction();
 
-        ModuleMenu IModule.Menu => null;
+        Menu IModule.Menu => null;
 
         public void Release()
         {
@@ -105,6 +103,6 @@
             throw new NotImplementedException();
         }
 
-        #endregion*/
-    }
+        #endregion
+    }*/
 }

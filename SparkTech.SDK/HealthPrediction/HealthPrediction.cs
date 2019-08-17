@@ -13,7 +13,7 @@
 
         static HealthPrediction()
         {
-            Picker = SdkSetup.CreatePicker<IHealthPredition, DefaultHealthPrediction>();
+            //Picker = SdkSetup.CreatePicker<IHealthPredition, DefaultHealthPrediction>();
         }
 
         #endregion

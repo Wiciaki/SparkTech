@@ -1,7 +1,8 @@
 ﻿namespace SparkTech.SDK.GUI
 {
     using System;
-    using System.Drawing;
+
+    using SharpDX;
 
     using SparkTech.SDK.Rendering;
 
@@ -10,13 +11,11 @@
         static Clock()
         {
             Render.OnEndScene += OnEndScene;
-
-            UpdateSize();
         }
 
         public static bool Enabled;
 
-        private static Size size;
+        private static Size2 size;
 
         private static Point point;
 

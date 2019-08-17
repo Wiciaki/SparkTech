@@ -12,7 +12,7 @@
 
         public static void ChatPrint(string text) => api.ChatPrint(text);
 
-        public static Vector2 CursorPosition() => api.CursorPosition();
+        public static Point CursorPosition() => api.CursorPosition();
 
         public static float Time() => 0f;
 

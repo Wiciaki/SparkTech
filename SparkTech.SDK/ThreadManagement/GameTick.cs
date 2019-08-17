@@ -2,6 +2,7 @@
 {
     using System;
 
+    /*
     public static class GameTick
     {
         internal static int TicksPerSecond = 25;
@@ -36,5 +37,5 @@
                 callback.TryExecute("Couldn't invoke a GameTick.OnUpdate callback!");
             }
         }
-    }
+    }*/
 }

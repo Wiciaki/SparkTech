@@ -1,14 +1,13 @@
 ﻿namespace SparkTech.SDK.Platform.API
 {
     using System;
-    using System.Drawing;
 
     using SharpDX;
     using SharpDX.Direct3D9;
 
     public interface IRender
     {
-        Size Resolution();
+        Size2 Resolution();
 
         Device GetDevice();
 

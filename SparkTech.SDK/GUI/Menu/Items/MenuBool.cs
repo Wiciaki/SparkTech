@@ -1,12 +1,10 @@
 ﻿namespace SparkTech.SDK.GUI.Menu.Items
 {
-    using System.Drawing;
-
     using Newtonsoft.Json.Linq;
 
-    using SparkTech.SDK.Game;
+    using SharpDX;
 
-    using Color = SharpDX.Color;
+    using SparkTech.SDK.Game;
 
     public class MenuBool : MenuValue, IMenuValue<bool>
     {
@@ -17,7 +15,7 @@
 
         private bool value;
 
-        private Size size;
+        private Size2 size;
 
         public bool Value
         {
@@ -43,11 +41,11 @@
             this.Value ^= Menu.IsCursorInside(point, this.size) && Menu.IsLeftClick(args.Message);
         }
 
-        protected override Size GetSize()
+        protected override Size2 GetSize()
         {
             var s = base.GetSize();
 
-            this.size = new Size(28, s.Height);
+            this.size = new Size2(28, s.Height);
 
             s.Width += this.size.Width;
 

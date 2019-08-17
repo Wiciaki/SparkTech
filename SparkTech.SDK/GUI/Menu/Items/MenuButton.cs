@@ -1,12 +1,11 @@
 ﻿namespace SparkTech.SDK.GUI.Menu.Items
 {
     using System;
-    using System.Drawing;
+
+    using SharpDX;
 
     using SparkTech.SDK.Game;
     using SparkTech.SDK.Misc;
-
-    using Color = SharpDX.Color;
 
     public class MenuButton : MenuText
     {
@@ -19,14 +18,14 @@
 
         private bool pressing;
 
-        private Size size;
-
-        protected override Size GetSize()
+        private Size2 size;
+        
+        protected override Size2 GetSize()
         {
             var s = base.GetSize();
             s.Width += 28;
 
-            this.size = new Size(28, s.Height);
+            this.size = new Size2(28, s.Height);
 
             return s;
         }
@@ -39,7 +38,7 @@
 
             point.X += width;
 
-            Theme.DrawBox(this.pressing ? Color.Gray : Color.DarkGray, point, this.size);
+            Theme.DrawBox(point, this.size, this.pressing ? Color.Gray : Color.DarkGray);
         }
 
         protected internal override void OnWndProc(Point point, int width, WndProcEventArgs args)

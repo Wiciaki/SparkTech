@@ -3,12 +3,13 @@
     using System;
     using System.Collections;
     using System.Collections.Generic;
-    using System.Drawing;
     using System.IO;
     using System.Linq;
 
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
+
+    using SharpDX;
 
     using SparkTech.SDK.Game;
     using SparkTech.SDK.Logging;
@@ -22,7 +23,7 @@
 
         private JObject settings;
 
-        private Size size;
+        private Size2 size;
 
         private const string ExpandText = ">>";
 
@@ -66,14 +67,14 @@
 
         #region Overrides
 
-        protected override Size GetSize()
+        protected override Size2 GetSize()
         {
             var width = Math.Max(28, Theme.MeasureText(ExpandText).Width);
 
             var b = base.GetSize();
             b.Width += width;
 
-            this.size = new Size(width, b.Height);
+            this.size = new Size2(width, b.Height);
 
             return b;
         }
@@ -247,7 +248,7 @@
                 return;
             }
 
-            cursor = GameInterface.CursorPosition().ToPoint();
+            cursor = GameInterface.CursorPosition();
 
             DrawGroup(RootEntries.ConvertAll(e => e.Menu), GetRootPoint());
         }
@@ -333,7 +334,7 @@
 
         private static Point cursor;
 
-        internal static bool IsCursorInside(Point point, Size size)
+        internal static bool IsCursorInside(Point point, Size2 size)
         {
             var rectangle = point.ToRectangle(size);
 

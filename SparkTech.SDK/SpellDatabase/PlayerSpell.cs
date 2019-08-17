@@ -1,4 +1,4 @@
-﻿namespace SparkTech.SDK.SpellDatabase
+﻿/*namespace SparkTech.SDK.SpellDatabase
 {
     using SparkTech.SDK.Entities;
 
@@ -19,4 +19,4 @@
             return this.SelectTarget(ObjectManager.Get<AIHeroClient>());
         }
     }
-}
+}*/

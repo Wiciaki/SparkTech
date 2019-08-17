@@ -1,18 +1,18 @@
 ﻿namespace SparkTech.SDK.GUI.Menu.Items
 {
     using Newtonsoft.Json.Linq;
-    using System.Drawing;
+
+    using SharpDX;
 
     using SparkTech.SDK.Game;
-    using SparkTech.SDK.Misc;
 
-    public class MenuColor : MenuValue, IMenuValue<Color>, IMenuValue<SharpDX.Color>
+    public class MenuColor : MenuValue, IMenuValue<Color>
     {
         private Color color;
 
         private bool picking;
 
-        private Size buttonSize;
+        private Size2 buttonSize;
 
         #region Constructors and Destructors
 
@@ -32,17 +32,11 @@
             set => this.color = value != this.color && this.UpdateValue(value) ? value : this.color;
         }
 
-        SharpDX.Color IMenuValue<SharpDX.Color>.Value
-        {
-            get => this.Value.ToSharpDXColor();
-            set => this.Value = value.ToSystemColor();
-        }
-
-        protected override Size GetSize()
+        protected override Size2 GetSize()
         {
             var size = base.GetSize();
 
-            this.buttonSize = new Size(28, size.Height);
+            this.buttonSize = new Size2(28, size.Height);
 
             size.Width += size.Height;
 
@@ -57,7 +51,7 @@
 
             point.X += width;
 
-            Theme.DrawBox(this.GetValue<SharpDX.Color>(), point, this.buttonSize);
+            Theme.DrawBox(point, this.buttonSize, this.GetValue<Color>());
 
             if (!this.picking)
             {
@@ -67,7 +61,7 @@
             point.X += this.buttonSize.Width + Theme.ItemGroupDistance + 20;
 
             // todo this is temp
-            Rendering.Text.Draw("You dont know how hard it's to make a color picker ffs", SharpDX.Color.White, point);
+            Rendering.Text.Draw("You dont know how hard it's to make a color picker ffs", Color.White, point);
         }
 
         protected internal override void OnWndProc(Point point, int width, WndProcEventArgs args)
@@ -96,17 +90,17 @@
 
         protected static Color JArrayToColor(JArray array)
         {
-            var a = array[0].Value<byte>();
-            var r = array[1].Value<byte>();
-            var g = array[2].Value<byte>();
-            var b = array[3].Value<byte>();
-
-            return Color.FromArgb(a, r, g, b);
+            var r = array[0].Value<byte>();
+            var g = array[1].Value<byte>();
+            var b = array[2].Value<byte>();
+            var a = array[3].Value<byte>();
+            
+            return new Color(r, g, b, a);
         }
 
         protected static JArray ColorToJArray(Color color)
         {
-            return new JArray { color.A, color.R, color.G, color.B };
+            return new JArray { color.R, color.G, color.B, color.A };
         }
 
         #endregion

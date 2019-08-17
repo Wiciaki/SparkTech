@@ -9,7 +9,7 @@
     {
         #region Static Fields
 
-        private static readonly IModulePicker<IMovementPrediction> Picker = SdkSetup.CreatePicker<IMovementPrediction, DefaultMovementPrediction>();
+        private static readonly IModulePicker<IMovementPrediction> Picker /*= SdkSetup.CreatePicker<IMovementPrediction, DefaultMovementPrediction>()*/;
 
         #endregion
 
@@ -17,7 +17,7 @@
 
         static MovementPrediction()
         {
-            Picker.Add<DefaultMovementPrediction>("Default");
+            //Picker.Add<DefaultMovementPrediction>("Default");
         }
 
         #endregion

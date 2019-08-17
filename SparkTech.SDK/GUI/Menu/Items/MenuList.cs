@@ -2,10 +2,11 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Drawing;
     using System.Linq;
 
     using Newtonsoft.Json.Linq;
+
+    using SharpDX;
 
     using SparkTech.SDK.Game;
 
@@ -15,11 +16,11 @@
 
         private int index;
 
-        private Size size;
+        private Size2 size;
 
         private readonly List<string> options;
 
-        private List<Size> sizes;
+        private List<Size2> sizes;
 
         public IReadOnlyList<string> GetOptions()
         {
@@ -67,14 +68,14 @@
             base.SetTranslations(o);
         }
 
-        protected override Size GetSize()
+        protected override Size2 GetSize()
         {
             var width = Math.Max(28, Theme.MeasureText(ArrowText).Width);
 
             var s = base.GetSize();
             s.Width += width;
 
-            this.size = new Size(width, s.Height);
+            this.size = new Size2(width, s.Height);
 
             this.RecalculateItems();
 
@@ -85,7 +86,7 @@
         {
             this.sizes = this.options.ConvertAll(Theme.MeasureText);
             var width = this.sizes.Max(iS => iS.Width);
-            this.sizes = this.sizes.ConvertAll(iS => new Size(width, iS.Height));
+            this.sizes = this.sizes.ConvertAll(iS => new Size2(width, iS.Height));
         }
 
         private bool selecting;
@@ -144,7 +145,7 @@
             {
                 var s = this.sizes[i];
 
-                Theme.DrawTextBox(point, s, this.options[i], this.Value == i ? SharpDX.Color.Green : Theme.BackgroundColor);
+                Theme.DrawTextBox(point, s, this.options[i], this.Value == i ? Color.LightGreen : Theme.BackgroundColor);
 
                 point.Y += s.Height;
             }

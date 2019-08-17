@@ -1,12 +1,10 @@
 ﻿namespace SparkTech.SDK.Logging
 {
-    using System;
-
     public static class Log
     {
         internal static ILogger Logger = new ConsoleLogger();
 
-        internal static Func<LogLevel> GetLogLevel; 
+        internal static LogLevel LogLevel;
 
         public static void Error(object obj)
         {
@@ -40,12 +38,7 @@
 
         private static void Write(string msg, LogLevel level)
         {
-            if (msg == null)
-            {
-                return;
-            }
-
-            if (GetLogLevel == null || level >= GetLogLevel())
+            if (msg != null && level >= LogLevel)
             {
                 Logger.Write(msg, level);
             }

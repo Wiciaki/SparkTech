@@ -1,29 +1,29 @@
 ﻿namespace SparkTech.SDK.GUI.Menu.Items
 {
-    using System.Drawing;
+    using SharpDX;
 
     public class MenuSeparator : MenuItem
     {
-        private readonly Size size;
+        private readonly Size2 size;
 
-        public MenuSeparator(string id) : base(id)
+        public MenuSeparator(string id) : this(id, new Size2(28, 28))
         {
 
         }
 
-        public MenuSeparator(string id, Size size) : this(id)
+        public MenuSeparator(string id, Size2 size) : base(id)
         {
             this.size = size;
         }
 
-        protected override Size GetSize()
+        protected override Size2 GetSize()
         {
-            return this.size.Height != 0 ? this.size : new Size(28, 28);
+            return this.size;
         }
 
         protected internal override void OnEndScene(Point point, int width)
         {
-            Theme.DrawBox(Theme.BackgroundColor, point, new Size(width, this.size.Height));
+            Theme.DrawBox(point, new Size2(width, this.size.Height), Theme.BackgroundColor);
         }
     }
 }

@@ -1,10 +1,8 @@
 ﻿namespace SparkTech.SDK.GUI.Menu.Items
 {
-    using System.Drawing;
-
+    using SharpDX;
     using SharpDX.Direct3D9;
 
-    using SparkTech.SDK.Misc;
     using SparkTech.SDK.Rendering;
 
     public class MenuImage : MenuItem, IMenuValue<Texture>
@@ -16,8 +14,8 @@
 
         private Texture texture;
 
-        private Size size;
-
+        private Size2 size;
+        /*
         public Bitmap Bitmap
         {
             set
@@ -30,7 +28,7 @@
 
                 this.UpdateTexture(value.ToTexture(), value.Size);
             }
-        }
+        }*/
 
         public Texture Value
         {
@@ -39,12 +37,12 @@
             {
                 if (this.texture != value)
                 {
-                    this.UpdateTexture(value, value?.GetSize() ?? Size.Empty);
+                    this.UpdateTexture(value, value?.GetSize() ?? Size2.Empty);
                 }
             }
         }
 
-        private void UpdateTexture(Texture t, Size s)
+        private void UpdateTexture(Texture t, Size2 s)
         {
             if (!this.UpdateValue(t))
             {
@@ -57,15 +55,22 @@
             this.UpdateSize();
         }
 
-        protected override Size GetSize()
+        protected override Size2 GetSize()
         {
             return this.size;
         }
 
         protected internal override void OnEndScene(Point point, int width)
         {
-            // todo background before and after
-            Picture.Draw(point.ToVector2(), this.texture, Theme.BackgroundColor);
+            var s = new Size2((width - this.size.Width) / 2, this.size.Height);
+
+            Theme.DrawBox(point, s, Theme.BackgroundColor);
+            point.X += s.Width;
+
+            Picture.Draw(point, this.texture, Theme.BackgroundColor);
+
+            point.X += this.size.Width;
+            Theme.DrawBox(point, this.size, Theme.BackgroundColor);
         }
     }
 }

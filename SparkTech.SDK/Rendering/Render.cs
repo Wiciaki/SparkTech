@@ -1,7 +1,6 @@
 ﻿namespace SparkTech.SDK.Rendering
 {
     using System;
-    using System.Drawing;
     using System.Runtime.CompilerServices;
 
     using SharpDX;
@@ -16,7 +15,7 @@
 
         public static event Action OnDraw, OnBeginScene, OnEndScene, OnLostDevice, OnResetDevice, OnDispose, OnResolutionChanged;
 
-        public static Size Resolution() => api.Resolution();
+        public static Size2 Resolution() => api.Resolution();
 
         public static Matrix ProjectionMatrix() => api.ProjectionMatrix();
 

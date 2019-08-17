@@ -1,9 +1,10 @@
 ﻿namespace SparkTech.SDK.GUI.Menu
 {
     using System;
-    using System.Drawing;
 
     using Newtonsoft.Json.Linq;
+
+    using SharpDX;
 
     using SparkTech.SDK.Game;
     using SparkTech.SDK.Logging;
@@ -16,7 +17,7 @@
 
         public virtual bool IsVisible { get; set; } = true;
 
-        public Size Size { get; private set; }
+        public Size2 Size { get; private set; }
 
         private bool save;
 
@@ -35,7 +36,7 @@
             return (TMenuItem)this;
         }
 
-        protected abstract Size GetSize();
+        protected abstract Size2 GetSize();
 
         protected internal void UpdateSize()
         {
@@ -49,7 +50,10 @@
 
         }
 
-        protected internal virtual JToken GetToken() => null;
+        protected internal virtual JToken GetToken()
+        {
+            return null;
+        }
 
         protected internal virtual void SetToken(JToken token)
         {

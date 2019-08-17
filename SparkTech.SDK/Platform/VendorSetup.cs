@@ -4,10 +4,10 @@
 
     using SparkTech.SDK.Auth;
     using SparkTech.SDK.Entities;
+    using SparkTech.SDK.GUI;
     using SparkTech.SDK.Logging;
     using SparkTech.SDK.Rendering;
     using SparkTech.SDK.Security;
-    using SparkTech.SDK.UI_Old;
 
     public sealed class VendorSetup
     {
@@ -35,7 +35,7 @@
 
         public void Boot(IPlatform platform)
         {
-            if (state )
+            //if (state )
 
             ObjectManager.Initialize(platform.GetObjectManager());
 

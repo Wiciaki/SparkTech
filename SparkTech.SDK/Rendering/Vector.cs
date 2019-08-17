@@ -67,14 +67,10 @@ namespace SparkTech.SDK.Rendering
 
         #region Public Methods and Operators
 
-        public static void Draw(Color color, float thickness, params System.Drawing.Point[] screenPositions)
-        {
-            Draw(color, thickness, Array.ConvertAll(screenPositions, v => new RawVector2(v.X, v.Y)));
-        }
-
         public static void Draw(Color color, float thickness, params Vector2[] screenPositions)
         {
-            Draw(color, thickness, Array.ConvertAll(screenPositions, v => new RawVector2(v.X, v.Y)));
+            // todo test what happens when we remove this method
+            Draw(color, thickness, Array.ConvertAll(screenPositions, v => (RawVector2)v));
         }
 
         /// <summary>
@@ -86,7 +82,7 @@ namespace SparkTech.SDK.Rendering
         public static void Draw(Color color, float thickness, params RawVector2[] screenPositions)
         {
             // Make sure we can draw the line
-            if (screenPositions.Length < 2 || thickness < float.Epsilon)
+            if (screenPositions.Length < 2 || thickness <= 0f)
             {
                 return;
             }

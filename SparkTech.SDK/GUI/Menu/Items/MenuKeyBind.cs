@@ -1,8 +1,8 @@
 ﻿namespace SparkTech.SDK.GUI.Menu.Items
 {
-    using System.Drawing;
-
     using Newtonsoft.Json.Linq;
+
+    using SharpDX;
 
     using SparkTech.SDK.Game;
     using SparkTech.SDK.Misc;
@@ -20,7 +20,7 @@
 
         private WindowsMessagesWParam key;
 
-        private Size size;
+        private Size2 size;
 
         public bool Value
         {
@@ -101,7 +101,7 @@
             this.UpdateSize();
         }
 
-        protected override Size GetSize()
+        protected override Size2 GetSize()
         {
             this.text = this.selecting ? "Select..." : this.key.ToString();
 
@@ -122,7 +122,7 @@
             base.OnEndScene(point, width);
             point.X += width;
 
-            var color = this.selecting ? Theme.BackgroundColor : this.value ? SharpDX.Color.OrangeRed : SharpDX.Color.DarkRed;
+            var color = this.selecting ? Theme.BackgroundColor : this.value ? Color.OrangeRed : Color.DarkRed;
 
             Theme.DrawTextBox(point, this.size, this.text, color);
         }

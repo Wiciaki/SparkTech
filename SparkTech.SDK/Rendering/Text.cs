@@ -26,8 +26,6 @@ namespace SparkTech.SDK.Rendering
     using SharpDX;
     using SharpDX.Direct3D9;
 
-    using SparkTech.SDK.Misc;
-
     #endregion
 
     /// <summary>
@@ -71,12 +69,7 @@ namespace SparkTech.SDK.Rendering
 
         #region Public Methods and Operators
 
-        public static void Draw(string text, Color color, Vector2 screenPosition)
-        {
-            Draw(text, color, screenPosition.ToPoint());
-        }
-
-        public static void Draw(string text, Color color, System.Drawing.Point point)
+        public static void Draw(string text, Color color, Point point)
         {
             Font.DrawText(null, text, point.X, point.Y, color);
         }
