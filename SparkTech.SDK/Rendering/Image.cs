@@ -25,11 +25,11 @@ namespace SparkTech.SDK.Rendering
     using SharpDX;
     using SharpDX.Direct3D9;
 
-    public static class Picture
+    public static class Image
     {
         private static readonly Sprite Sprite;
 
-        static Picture()
+        static Image()
         {
             Sprite = new Sprite(Render.Direct3DDevice);
 

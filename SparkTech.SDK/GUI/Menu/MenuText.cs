@@ -21,7 +21,7 @@
 
         public string Text
         {
-            get => this.text ?? "PLACEHOLDER";
+            get => this.text ?? this.Id;
             set
             {
                 if (string.IsNullOrWhiteSpace(value))

@@ -1,15 +1,23 @@
 ﻿namespace SparkTech.SDK.Platform
 {
-    using System.Text;
+    using System.Globalization;
+    using System.IO;
+
     using Newtonsoft.Json.Linq;
 
+    using SparkTech.SDK.Game;
+    using SparkTech.SDK.GUI;
     using SparkTech.SDK.GUI.Menu;
     using SparkTech.SDK.GUI.Menu.Items;
+    using SparkTech.SDK.GUI.Notifications;
+    using SparkTech.SDK.Logging;
+    using SparkTech.SDK.Misc;
     using SparkTech.SDK.Properties;
+    using SparkTech.SDK.Security;
 
     internal static class SdkSetup
     {
-        private static readonly Menu Root;
+        private static readonly Menu Menu;
 
         private static readonly JObject Translations;
 
@@ -17,22 +25,114 @@
         {
             Translations = JObject.Parse(Resources.Strings);
 
-            Root = new Menu("sdk")
+            Menu = new Menu("sdk")
             {
-                new Menu("sdk.language")
+                new MenuList("language") { Options = EnumCache<Language>.Names },
+                new Menu("position")
                 {
-                    new MenuList()
+                    new MenuInt("x", 0, 500, 25),
+                    new MenuInt("y", 0, 500, 25)
                 },
-                new Menu("")
+                new Menu("triggers")
+                {
+                    new MenuKeyBool("key", WindowsMessagesWParam.LeftShift),
+                    new MenuBool("toggle", false),
+                    new MenuAction("apply") { Action = UpdateTriggers }
+                },
+                new MenuBool("clock", true)
             };
 
-            Menu.Build(Root, JObject.Parse(Resources.MainMenu));
+            Menu.Build(Menu, JObject.Parse(Resources.MainMenu));
 
+            #region First Run and Language stuff
 
-            //Root = Menu.Build(new Menu("sdk.root") { Text = "", {new Menu("") }, translations);
+            Menu["language"].BeforeValueChange += LanguageChanged;
 
+            var flagFile = Folder.MenuFolder.GetFile(".nofirstrun");
 
+            if (!File.Exists(flagFile))
+            {
+                File.Create(flagFile).Dispose();
+
+                Log.Info("Running SparkTech.SDK for the first time.");
+
+                var culture = CultureInfo.InstalledUICulture;
+                var values = EnumCache<Language>.Values;
+                var i = values.ConvertAll(EnumCache<Language>.Description).IndexOf(culture.TwoLetterISOLanguageName);
+
+                string welcomeMsg;
+
+                if (i == -1)
+                {
+                    Menu.SetLanguage(default);
+
+                    welcomeMsg = GetString("languageUnknown");
+                    welcomeMsg = welcomeMsg.Replace("{language}", culture.EnglishName);
+                }
+                else
+                {
+                    Menu["language"].SetValue(i);
+
+                    welcomeMsg = GetString("firstTimeWelcome");
+                }
+
+                welcomeMsg = welcomeMsg.Replace("{platform}", VendorSetup.PlatformName);
+
+                Notification.Send(welcomeMsg, 10f);
+            }
+            else
+            {
+                Menu.SetLanguage((Language)Menu["language"].GetValue<int>());
+            }
+
+            #endregion
+
+            #region Menu Subscriptions
+
+            static void SubscribeToPositionUpdates(string itemName) => Menu.GetMenu("position")[itemName].BeforeValueChange += a => UpdatePosition();
+
+            SubscribeToPositionUpdates("x");
+            SubscribeToPositionUpdates("y");
+
+            UpdatePosition();
+            UpdateTriggers();
+
+            Menu["clock"].BeforeValueChange += args => Clock.Enabled = args.NewValue<bool>();
+            Clock.Enabled = Menu["clock"].GetValue<bool>();
+
+            #endregion
         }
+
+        #region Menu Settings
+
+        private static void UpdatePosition()
+        {
+            var menu = Menu.GetMenu("position");
+
+            Menu.SetPosition(menu["x"].GetValue<int>(), menu["y"].GetValue<int>());
+        }
+
+        private static void UpdateTriggers()
+        {
+            var menu = Menu.GetMenu("triggers");
+
+            var keyItem = menu["key"];
+            var toggle = menu["toggle"].GetValue<bool>();
+
+            keyItem.Cast<MenuKeyBool>().Toggle = toggle;
+
+            Menu.SetTriggers(keyItem.GetValue<WindowsMessagesWParam>(), toggle);
+        }
+
+        private static void LanguageChanged(BeforeValueChangeEventArgs args)
+        {
+            if (args.ValueIs<int>())
+            {
+                Menu.SetLanguage((Language)args.NewValue<int>());
+            }
+        }
+
+        #endregion
 
         internal static string GetString(string id)
         {

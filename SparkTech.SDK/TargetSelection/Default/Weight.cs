@@ -9,11 +9,11 @@
 
     internal abstract class Weight : IComparer<IHero>
     {
-        private MenuSlider item;
+        private MenuInt item;
 
         protected internal virtual IEnumerable<MenuItem> CreateItems()
         {
-            yield return this.item = new MenuSlider(this.GetId(), this.GetDefaultWeight(), 0, 20);
+            yield return this.item = new MenuInt(this.GetId(), this.GetDefaultWeight(), 0, 20);
         }
 
         internal int GetWeight() => this.item.Value;

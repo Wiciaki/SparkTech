@@ -32,6 +32,11 @@
             ActiveNotifications.Add(new NotificationEntry(this) { Time = GameInterface.Time() + time });
         }
 
+        public static void Send(string content, float time)
+        {
+            Send(content, null, time);
+        }
+
         public static void Send(string content, string header = null)
         {
             Send(content, header, 3f);

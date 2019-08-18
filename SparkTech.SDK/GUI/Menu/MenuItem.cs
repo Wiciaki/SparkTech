@@ -7,13 +7,13 @@
     using SharpDX;
 
     using SparkTech.SDK.Game;
-    using SparkTech.SDK.Logging;
+    using SparkTech.SDK.Misc;
 
     public abstract class MenuItem
     {
         public readonly string Id;
 
-        public event BeforeValueChange BeforeValueChange;
+        public event Action<BeforeValueChangeEventArgs> BeforeValueChange;
 
         public virtual bool IsVisible { get; set; } = true;
 
@@ -95,20 +95,9 @@
 
             if (this.BeforeValueChange != null)
             {
-                var type = typeof(T);
-                var args = new BeforeValueChangeEventArgs(t.Value, @new);
+                var args = BeforeValueChangeEventArgs.Create(t.Value, @new);
 
-                foreach (var callback in this.BeforeValueChange.GetInvocationList())
-                {
-                    try
-                    {
-                        ((BeforeValueChange)callback)(type, args);
-                    }
-                    catch (Exception ex)
-                    {
-                        ex.Log();
-                    }
-                }
+                this.BeforeValueChange.SafeInvoke(args);
 
                 if (args.IsBlocked)
                 {
@@ -116,9 +105,7 @@
                 }
             }
 
-            this.save = true;
-
-            return true;
+            return this.save = true;
         }
     }
 }

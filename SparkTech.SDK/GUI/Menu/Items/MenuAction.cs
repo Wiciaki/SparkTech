@@ -7,11 +7,11 @@
     using SparkTech.SDK.Game;
     using SparkTech.SDK.Misc;
 
-    public class MenuButton : MenuText
+    public class MenuAction : MenuText
     {
-        public Action OnPress { get; set; }
+        public Action Action { get; set; }
 
-        public MenuButton(string id) : base(id)
+        public MenuAction(string id) : base(id)
         {
 
         }
@@ -64,7 +64,7 @@
 
             this.pressing = false;
 
-            this.OnPress.SafeInvoke();
+            this.Action.SafeInvoke();
         }
     }
 }

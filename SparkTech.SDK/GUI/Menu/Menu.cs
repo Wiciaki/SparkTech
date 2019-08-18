@@ -238,7 +238,7 @@
 
         private static bool released;
 
-        private static bool toggle;
+        private static bool toggleBehavior;
 
         static Menu()
         {
@@ -255,7 +255,7 @@
 
             cursor = GameInterface.CursorPosition();
 
-            DrawGroup(RootEntries.ConvertAll(e => e.Menu), GetRootPoint());
+            DrawGroup(RootEntries.ConvertAll(e => e.Menu), position);
         }
 
         private static void OnWndProc(WndProcEventArgs args)
@@ -270,7 +270,7 @@
             {
                 var m = args.Message;
 
-                if (IsOpen ? m == WindowsMessages.KEYUP && (!toggle || !(released ^= true)) : m == WindowsMessages.KEYDOWN)
+                if (IsOpen ? m == WindowsMessages.KEYUP && (!toggleBehavior || !(released ^= true)) : m == WindowsMessages.KEYDOWN)
                 {
                     SetMenuVisibility(!IsOpen);
                     return;
@@ -279,9 +279,11 @@
 
             if (IsOpen)
             {
-                WndProcGroup(RootEntries.ConvertAll(e => e.Menu), GetRootPoint(), args);
+                WndProcGroup(RootEntries.ConvertAll(e => e.Menu), position, args);
             }
         }
+
+        #region Group operations
 
         private static void WndProcGroup<T>(List<T> items, Point point, WndProcEventArgs args) where T : MenuItem
         {
@@ -320,18 +322,27 @@
             });
         }
 
+        #endregion
+
         #region Menu Settings
 
-        internal static void SetMenuTriggers(WindowsMessagesWParam button, bool toggleBehaviour)
+        private static Point position;
+
+        internal static void SetPosition(int x, int y)
         {
-            if (toggleBehaviour == toggle && ActivationButton == button)
+            position = new Point(x, y);
+        }
+
+        internal static void SetTriggers(WindowsMessagesWParam button, bool toggle)
+        {
+            if (toggle == toggleBehavior && ActivationButton == button)
             {
                 return;
             }
 
             ActivationButton = button;
 
-            toggle = toggleBehaviour;
+            toggleBehavior = toggle;
 
             released = false;
 
@@ -350,15 +361,6 @@
             LanguageTag = EnumCache<Language>.Description(language);
 
             LanguageChanged.SafeInvoke();
-        }
-
-        #endregion
-
-        #region Menu Position
-
-        private static Point GetRootPoint()
-        {
-            return new Point(25, 25);
         }
 
         #endregion

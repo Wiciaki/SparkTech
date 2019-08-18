@@ -13,7 +13,7 @@
             Render.OnEndScene += OnEndScene;
         }
 
-        public static bool Enabled;
+        internal static bool Enabled;
 
         private static Size2 size;
 

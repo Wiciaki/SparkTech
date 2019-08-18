@@ -9,10 +9,12 @@
     using SharpDX;
 
     using SparkTech.SDK.Game;
-    using SparkTech.SDK.Logging;
+    using SparkTech.SDK.Platform;
 
-    public class MenuList : MenuValue, IMenuValue<int>, IMenuValue<string>, IMenuValue<List<string>>, IExpandable
+    public class MenuList : MenuValue, IExpandable, IMenuValue<int>, IMenuValue<string>, IMenuValue<List<string>>
     {
+        public bool IsExpanded { get; set; }
+
         private const string ArrowText = ">";
 
         private int index;
@@ -20,8 +22,6 @@
         private Size2 size;
 
         private readonly List<string> options;
-
-        public bool IsExpanded { get; set; }
 
         private List<Size2> sizes;
 
@@ -46,19 +46,17 @@
             base.SetTranslations(o);
         }
 
-        private void SetOptions(IReadOnlyCollection<string> items)
+        private void SetOptions(IList<string> items)
         {
-            if (items.Count == this.options.Count)
+            if (items.Count < 2)
             {
-                this.options.Clear();
-                this.options.AddRange(items);
+                items[0] = SdkSetup.GetString("menuListEmpty");
+            }
 
-                this.RecalculateItems();
-            }
-            else
-            {
-                Log.Warn("Provided options count doesn't match!");
-            }
+            this.options.Clear();
+            this.options.AddRange(items);
+
+            this.RecalculateSizes();
         }
 
         protected override Size2 GetSize()
@@ -70,12 +68,12 @@
 
             this.size = new Size2(width, s.Height);
 
-            this.RecalculateItems();
+            this.RecalculateSizes();
 
             return s;
         }
 
-        private void RecalculateItems()
+        private void RecalculateSizes()
         {
             this.sizes = this.options.ConvertAll(Theme.MeasureText);
             var width = this.sizes.Max(iS => iS.Width);
@@ -178,16 +176,26 @@
 
         #endregion
 
-        List<string> IMenuValue<List<string>>.Value
+        public List<string> Options
         {
             get => this.options.ToList();
             set
             {
-                if (this.options.SequenceEqual(value) && this.UpdateValue(value))
+                if (this.options.SequenceEqual(value) || !this.UpdateValue(value))
                 {
-                    this.SetOptions(value);
+                    return;
                 }
+
+                this.SetOptions(value);
+
+                this.Value = Math.Min(this.Value, value.Count - 1);
             }
+        }
+
+        List<string> IMenuValue<List<string>>.Value
+        {
+            get => this.Options;
+            set => this.Options = value;
         }
     }
 }

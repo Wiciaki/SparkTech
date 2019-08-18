@@ -9,7 +9,7 @@
     using SparkTech.SDK.Game;
     using SparkTech.SDK.Rendering;
 
-    public class MenuSlider : MenuValue, IMenuValue<int>
+    public class MenuInt : MenuValue, IMenuValue<int>
     {
         #region Fields
 
@@ -21,7 +21,7 @@
 
         #region Constructors and Destructors
 
-        public MenuSlider(string id, int min, int max, int defaultValue) : base(id, defaultValue)
+        public MenuInt(string id, int min, int max, int defaultValue) : base(id, defaultValue)
         {
             if (min > max)
             {

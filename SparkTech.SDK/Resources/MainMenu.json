@@ -1,13 +1,56 @@
-{
+﻿{
   "en": {
     "text": "SDK",
     "helpText": "Here you will find all the settings that impact other scripts"
   },
   "zh": {
-
   },
-
-  "item": {
-
+  "language": {
+    "en": {
+      "text": "Language"
+    },
+    "zh": {
+      "text": "语言 (language)"
+    }
+  },
+  "position": {
+    "en": {
+      "text": "Position"
+    },
+    "x": {
+      "en": {
+        "text": "X coord"
+      }
+    },
+    "y": {
+      "en": {
+        "text": "Y coord"
+      }
+    }
+  },
+  "triggers": {
+    "en": {
+      "text": "Menu activation"
+    },
+    "key": {
+      "en": {
+        "text": "Button"
+      }
+    },
+    "toggle": {
+      "en": {
+        "text": "Press to toggle?"
+      }
+    },
+    "apply": {
+      "en": {
+        "text": "Click here to apply above settings"
+      }
+    }
+  },
+  "clock": {
+    "en": {
+      "text": "Clock" 
+    }
   } 
 }

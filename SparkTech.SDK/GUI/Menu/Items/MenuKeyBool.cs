@@ -8,9 +8,9 @@
     using SparkTech.SDK.Misc;
     using SparkTech.SDK.Platform;
 
-    public class MenuKeyBind : MenuValue, IMenuValue<bool>, IMenuValue<WindowsMessagesWParam>
+    public class MenuKeyBool : MenuValue, IMenuValue<bool>, IMenuValue<WindowsMessagesWParam>
     {
-        public MenuKeyBind(string id, WindowsMessagesWParam key) : base(id, key.ToString())
+        public MenuKeyBool(string id, WindowsMessagesWParam key) : base(id, key.ToString())
         {
             GameEvents.OnWndProc += this.WndProc;
         }

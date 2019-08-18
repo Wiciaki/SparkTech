@@ -47,7 +47,7 @@
             AppDomain.CurrentDomain.DomainUnload += OnDisposeEventHandler;
             AppDomain.CurrentDomain.ProcessExit += OnDisposeEventHandler;
 
-            var triggerable = new[] { typeof(Vector), typeof(Circle), typeof(Text), typeof(Picture) };
+            var triggerable = new[] { typeof(Vector), typeof(Circle), typeof(Text), typeof(Image) };
 
             foreach (var type in triggerable)
             {

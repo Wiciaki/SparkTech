@@ -26,9 +26,7 @@
         protected internal override void OnEndScene(Point point, int width)
         {
             width -= this.size.Width;
-
             base.OnEndScene(point, width);
-
             point.X += width;
 
             Theme.DrawBox(point, this.size, this.Value ? Color.Green : Color.Red);

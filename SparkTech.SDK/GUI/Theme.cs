@@ -8,6 +8,8 @@
 
         internal static void SetTheme(ITheme t)
         {
+            theme?.Dispose();
+
             theme = t;
 
             Clock.UpdateSize();

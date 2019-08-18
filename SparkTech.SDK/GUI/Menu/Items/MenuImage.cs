@@ -67,7 +67,7 @@
             Theme.DrawBox(point, s, Theme.BackgroundColor);
             point.X += s.Width;
 
-            Picture.Draw(point, this.texture, Theme.BackgroundColor);
+            Image.Draw(point, this.texture, Theme.BackgroundColor);
 
             point.X += this.size.Width;
             Theme.DrawBox(point, this.size, Theme.BackgroundColor);

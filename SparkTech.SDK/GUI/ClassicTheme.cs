@@ -6,7 +6,7 @@
 
     using SparkTech.SDK.Rendering;
 
-    public sealed class ClassicTheme : ITheme
+    public class ClassicTheme : ITheme
     {
         private readonly Font font;
 
@@ -75,46 +75,5 @@
         {
             this.font.Dispose();
         }
-
-        /*
-        FontDescription ITheme.GetFontDescription()
-        {
-            var desc = new FontDescription();
-
-            desc.FaceName = "Calibri";
-            desc.Height = 12;
-
-            return desc;
-        }
-
-        Size ITheme.ExtraTextBoxSize()
-        {
-            return new Size(20, 20);
-        }
-
-        public Color GetFontColor()
-        {
-            throw new System.NotImplementedException();
-        }
-
-        Color ITheme.GetBackgroundColor()
-        {
-            return Color.Gray;
-        }
-
-        Color? ITheme.GetBorderColor()
-        {
-            return Color.Black;
-        }
-
-        int ITheme.GetItemGroupDistance()
-        {
-            return 15;
-        }
-
-        int ITheme.GetMinItemHeight()
-        {
-            return 25;
-        }*/
     }
 }

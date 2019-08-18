@@ -11,6 +11,8 @@
 
     public sealed class VendorSetup
     {
+        public static string PlatformName { get; private set; }
+
         private VendorSetup()
         { }
 
