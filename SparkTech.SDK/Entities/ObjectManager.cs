@@ -29,7 +29,6 @@ namespace SparkTech.SDK.Entities
     using System.Reflection;
 
     using SparkTech.SDK.Logging;
-    using SparkTech.SDK.Misc;
     using SparkTech.SDK.Platform.API;
 
     public static class ObjectManager

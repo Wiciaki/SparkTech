@@ -1,6 +1,6 @@
 {
   "en": {
-    "keyBindSelector": "Press now...",
+    "keySelector": "Press now...",
     "menuListEmpty": "Less than 2 options provided",
     "firstTimeWelcome": "Welcome to {platform}!\nEnglish language detected.\nYou can change that in the menu.",
 

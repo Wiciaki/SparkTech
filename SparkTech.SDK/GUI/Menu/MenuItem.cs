@@ -6,9 +6,6 @@
 
     using SharpDX;
 
-    using SparkTech.SDK.Game;
-    using SparkTech.SDK.Misc;
-
     public abstract class MenuItem
     {
         public readonly string Id;

@@ -13,7 +13,6 @@
 
     using SparkTech.SDK.Game;
     using SparkTech.SDK.Logging;
-    using SparkTech.SDK.Misc;
     using SparkTech.SDK.Rendering;
     using SparkTech.SDK.Security;
 

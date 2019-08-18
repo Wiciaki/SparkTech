@@ -1,4 +1,4 @@
-﻿namespace SparkTech.SDK.Misc
+﻿namespace SparkTech.SDK
 {
     public abstract class BlockableEventArgs
     {

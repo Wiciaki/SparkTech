@@ -1,4 +1,4 @@
-﻿namespace SparkTech.SDK.Game
+﻿namespace SparkTech.SDK
 {
     public enum WindowsMessagesWParam
     {

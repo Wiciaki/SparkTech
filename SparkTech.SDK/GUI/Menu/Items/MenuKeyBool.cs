@@ -5,12 +5,11 @@
     using SharpDX;
 
     using SparkTech.SDK.Game;
-    using SparkTech.SDK.Misc;
     using SparkTech.SDK.Platform;
 
     public class MenuKeyBool : MenuValue, IMenuValue<bool>, IMenuValue<WindowsMessagesWParam>
     {
-        public MenuKeyBool(string id, WindowsMessagesWParam key) : base(id, key.ToString())
+        public MenuKeyBool(string id, WindowsMessagesWParam defaultValue) : base(id, defaultValue.ToString())
         {
             GameEvents.OnWndProc += this.WndProc;
         }
@@ -104,7 +103,7 @@
 
         protected override Size2 GetSize()
         {
-            this.text = this.selecting ? SdkSetup.GetString("keyBindSelector") : this.key.ToString();
+            this.text = this.selecting ? SdkSetup.GetString("keySelector") : this.key.ToString();
 
             var s = base.GetSize();
 

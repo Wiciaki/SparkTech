@@ -2,8 +2,6 @@
 {
     using System;
 
-    using SparkTech.SDK.Misc;
-
     public class BeforeValueChangeEventArgs : BlockableEventArgs
     {
         public readonly Type Type;

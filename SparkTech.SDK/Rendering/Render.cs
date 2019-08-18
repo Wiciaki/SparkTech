@@ -6,7 +6,6 @@
     using SharpDX;
     using SharpDX.Direct3D9;
 
-    using SparkTech.SDK.Misc;
     using SparkTech.SDK.Platform.API;
 
     public static class Render

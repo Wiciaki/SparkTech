@@ -2,8 +2,6 @@
 {
     using SharpDX;
 
-    using SparkTech.SDK.Misc;
-
     public class SpellbookCastSpellEventArgs : BlockableEventArgs
     {
         public readonly Vector3 StartPosition;

@@ -5,13 +5,11 @@
 
     using Newtonsoft.Json.Linq;
 
-    using SparkTech.SDK.Game;
     using SparkTech.SDK.GUI;
     using SparkTech.SDK.GUI.Menu;
     using SparkTech.SDK.GUI.Menu.Items;
     using SparkTech.SDK.GUI.Notifications;
     using SparkTech.SDK.Logging;
-    using SparkTech.SDK.Misc;
     using SparkTech.SDK.Properties;
     using SparkTech.SDK.Security;
 

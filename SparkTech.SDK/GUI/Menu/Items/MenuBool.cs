@@ -4,8 +4,6 @@
 
     using SharpDX;
 
-    using SparkTech.SDK.Game;
-
     public class MenuBool : MenuValue, IMenuValue<bool>
     {
         public MenuBool(string id, bool defaultValue) : base(id, defaultValue)
@@ -13,9 +11,9 @@
 
         }
 
-        private bool value;
-
         private Size2 size;
+
+        private bool value;
 
         public bool Value
         {
@@ -35,16 +33,13 @@
         protected internal override void OnWndProc(Point point, int width, WndProcEventArgs args)
         {
             point.X += width - this.size.Width;
-
             this.Value ^= Menu.IsCursorInside(point, this.size) && Menu.IsLeftClick(args.Message);
         }
 
         protected override Size2 GetSize()
         {
             var s = base.GetSize();
-
             this.size = new Size2(28, s.Height);
-
             s.Width += this.size.Width;
 
             return s;

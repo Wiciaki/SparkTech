@@ -4,8 +4,6 @@
 
     using SharpDX;
 
-    using SparkTech.SDK.Game;
-
     public class MenuColor : MenuValue, IMenuValue<Color>
     {
         private Color color;

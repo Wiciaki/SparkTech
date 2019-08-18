@@ -1,37 +1,7 @@
-﻿namespace SparkTech.SDK.Misc
+﻿namespace SparkTech.SDK.Geometry
 {
-    using System;
-    using System.Drawing;
-
-    using SharpDX;
-
-    using SparkTech.SDK.Entities;
-
-    using Color = System.Drawing.Color;
-    using Point = System.Drawing.Point;
-
     public static class VectorExtensions
     {
-        public static Color ToSystemColor(this SharpDX.Color color)
-        {
-            return Color.FromArgb(color.A, color.R, color.G, color.B);
-        }
-
-        public static SharpDX.Color ToSharpDXColor(this Color color)
-        {
-            return new SharpDX.Color(color.R, color.G, color.B, color.A);
-        }
-
-        public static Point ToPoint(this Vector2 v)
-        {
-            return new Point((int)v.X, (int)v.Y);
-        }
-
-        public static Vector2 ToVector2(this Point point)
-        {
-            return new Vector2(point.X, point.Y);
-        }
-
         /*
 
         public static bool IsInside(this Vector2 pos, Vector2 boxStart, Size size)

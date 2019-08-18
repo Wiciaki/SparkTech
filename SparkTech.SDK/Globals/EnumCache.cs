@@ -20,7 +20,7 @@
 //
 //  -------------------------------------------------------------------
 
-namespace SparkTech.SDK.Misc
+namespace SparkTech.SDK
 {
     using System;
     using System.Collections.Generic;
