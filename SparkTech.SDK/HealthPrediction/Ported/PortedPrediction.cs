@@ -3,7 +3,6 @@
     using System;
     using System.Collections.Generic;
     using SparkTech.SDK.Entities;
-    using SparkTech.SDK.Util;
     /*
     public class PortedPrediction : IHealthPredition
     {

@@ -28,8 +28,6 @@ namespace SparkTech.SDK.Geometry
 
     using SharpDX;
 
-    using SparkTech.SDK.Util.Vector;
-
     #endregion
     /*
     /// <summary>

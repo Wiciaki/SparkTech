@@ -9,8 +9,9 @@
     using SharpDX;
 
     using SparkTech.SDK.Game;
+    using SparkTech.SDK.Logging;
 
-    public class MenuList : MenuValue, IMenuValue<int>, IMenuValue<string>
+    public class MenuList : MenuValue, IMenuValue<int>, IMenuValue<string>, IMenuValue<List<string>>, IExpandable
     {
         private const string ArrowText = ">";
 
@@ -20,33 +21,15 @@
 
         private readonly List<string> options;
 
-        private List<Size2> sizes;
+        public bool IsExpanded { get; set; }
 
-        public IReadOnlyList<string> GetOptions()
-        {
-            return this.options.AsReadOnly();
-        }
+        private List<Size2> sizes;
 
         #region Constructors and Destructors
 
-        public MenuList(string id, List<string> options, int defaultIndex = 0) : base(id, defaultIndex)
+        public MenuList(string id, int defaultIndex = 0) : base(id, defaultIndex)
         {
-            if (options == null)
-            {
-                throw new ArgumentNullException(nameof(options));
-            }
-
-            if (options.Count < 2)
-            {
-                throw new ArgumentException("Not enough options to choose from", nameof(options));
-            }
-
-            if (defaultIndex < 0 || defaultIndex >= options.Count)
-            {
-                throw new ArgumentException("Index out of bounds", nameof(defaultIndex));
-            }
-
-            this.options = options;
+            this.options = new List<string>();
         }
 
         #endregion
@@ -57,15 +40,25 @@
 
             if (token != null)
             {
-                var iter = token.Value<JArray>().Select(t => t.Value<string>());
-
-                this.options.Clear();
-                this.options.AddRange(iter);
-
-                this.RecalculateItems();
+                this.SetOptions(token.Value<JArray>().Select(t => t.Value<string>()).ToArray());
             }
 
             base.SetTranslations(o);
+        }
+
+        private void SetOptions(IReadOnlyCollection<string> items)
+        {
+            if (items.Count == this.options.Count)
+            {
+                this.options.Clear();
+                this.options.AddRange(items);
+
+                this.RecalculateItems();
+            }
+            else
+            {
+                Log.Warn("Provided options count doesn't match!");
+            }
         }
 
         protected override Size2 GetSize()
@@ -89,22 +82,9 @@
             this.sizes = this.sizes.ConvertAll(iS => new Size2(width, iS.Height));
         }
 
-        private bool selecting;
-
         protected internal override void OnWndProc(Point point, int width, WndProcEventArgs args)
         {
-            if (!Menu.IsLeftClick(args.Message))
-            {
-                return;
-            }
-
-            if (Menu.IsCursorInside(point, this.Size))
-            {
-                this.selecting ^= true;
-                return;
-            }
-
-            if (!this.selecting)
+            if (!this.IsExpanded || !Menu.IsLeftClick(args.Message))
             {
                 return;
             }
@@ -134,7 +114,7 @@
 
             Theme.DrawTextBox(point, this.size, ArrowText);
 
-            if (!this.selecting)
+            if (!this.IsExpanded)
             {
                 return;
             }
@@ -197,5 +177,17 @@
         }
 
         #endregion
+
+        List<string> IMenuValue<List<string>>.Value
+        {
+            get => this.options.ToList();
+            set
+            {
+                if (this.options.SequenceEqual(value) && this.UpdateValue(value))
+                {
+                    this.SetOptions(value);
+                }
+            }
+        }
     }
 }

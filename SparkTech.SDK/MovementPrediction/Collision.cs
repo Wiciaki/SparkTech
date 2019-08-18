@@ -8,7 +8,6 @@
     using SharpDX;
 
     using SparkTech.SDK.Entities;
-    using SparkTech.SDK.Util.Vector;
     /*
     //TODO Plz sparky make this dynamic
     public class CustomCollisionObject

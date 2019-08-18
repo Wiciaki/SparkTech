@@ -1,4 +1,4 @@
-﻿namespace SparkTech.SDK.Champions.Xerath
+﻿namespace SparkTech.SDK.Scripts.Champions
 {
     /*
     using System;

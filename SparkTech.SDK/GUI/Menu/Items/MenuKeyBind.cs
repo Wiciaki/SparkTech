@@ -6,6 +6,7 @@
 
     using SparkTech.SDK.Game;
     using SparkTech.SDK.Misc;
+    using SparkTech.SDK.Platform;
 
     public class MenuKeyBind : MenuValue, IMenuValue<bool>, IMenuValue<WindowsMessagesWParam>
     {
@@ -103,7 +104,7 @@
 
         protected override Size2 GetSize()
         {
-            this.text = this.selecting ? "Select..." : this.key.ToString();
+            this.text = this.selecting ? SdkSetup.GetString("keyBindSelector") : this.key.ToString();
 
             var s = base.GetSize();
 

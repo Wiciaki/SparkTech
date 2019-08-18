@@ -2,8 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-
-    using SparkTech.SDK.Util;
     /*
     public static class GameLoading
     {

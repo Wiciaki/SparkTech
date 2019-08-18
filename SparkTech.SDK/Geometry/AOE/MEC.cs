@@ -7,8 +7,6 @@ namespace SparkTech.SDK.Geometry.AOE
     using System.Linq;
 
     using SharpDX;
-
-    using SparkTech.SDK.Util.Vector;
     /*
     public class MEC
     {

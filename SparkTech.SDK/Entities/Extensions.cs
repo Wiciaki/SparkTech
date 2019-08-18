@@ -129,6 +129,21 @@
         {
             return GameObjectComparer.Equals(left, right);
         }
+
+        /*
+        private const float TurretRange = 950f;
+
+        public static bool IsUnderTurret(this Vector3 position, ObjectTeam team = ObjectTeam.Enemy)
+        {
+            return ObjectManager.Get<ITurret>().Any(t => t.Team() == team && position.Distance(t.Position) < TurretRange + t.BoundingRadius);
+        }
+
+        public static bool IsUnderTurret(this IAIBase target, GameObjectTeam team = GameObjectTeam.)
+        {
+            return IsUnderTurret(target.Position, team);
+        }
+        */
+
         /*
         public static bool HasItem(this IEnumerable<InventorySlot> inventorySlot, params uint[] itemIds)
         {

@@ -6,7 +6,12 @@
     {
         private readonly Size2 size;
 
-        public MenuSeparator(string id) : this(id, new Size2(28, 28))
+        public MenuSeparator(string id) : this(id, 28)
+        {
+
+        }
+
+        public MenuSeparator(string id, int height) : this(id, new Size2(28, height))
         {
 
         }

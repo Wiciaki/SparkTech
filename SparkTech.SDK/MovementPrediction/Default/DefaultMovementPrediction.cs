@@ -4,8 +4,6 @@
     using System.Collections.Generic;
 
     using SharpDX;
-
-    using SparkTech.SDK.Util.Vector;
     /*
     using Collision = SparkTech.SDK.MovementPrediction.Collision;
 

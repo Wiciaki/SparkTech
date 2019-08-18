@@ -1,4 +1,4 @@
-﻿namespace SparkTech.SDK.Utility
+﻿namespace SparkTech.SDK.Scripts.Evade
 {
     public class Evade
     {

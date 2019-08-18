@@ -1,30 +1,44 @@
 ﻿namespace SparkTech.SDK.Platform
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Drawing;
-    using System.Globalization;
-    using System.IO;
     using System.Text;
-    using System.Text.RegularExpressions;
-    using System.Threading.Tasks;
-    using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
 
-    using SparkTech.SDK.Entities;
-    using SparkTech.SDK.Game;
-    using SparkTech.SDK.Logging;
-    using SparkTech.SDK.Misc;
-    using SparkTech.SDK.Modules;
+    using SparkTech.SDK.GUI.Menu;
+    using SparkTech.SDK.GUI.Menu.Items;
     using SparkTech.SDK.Properties;
-    using SparkTech.SDK.Rendering;
-    using SparkTech.SDK.Security;
-    using SparkTech.SDK.SpellDatabase;
-    using SparkTech.SDK.TickOperations;
-    using SparkTech.SDK.Util;
 
     internal static class SdkSetup
     {
+        private static readonly Menu Root;
+
+        private static readonly JObject Translations;
+
+        static SdkSetup()
+        {
+            Translations = JObject.Parse(Resources.Strings);
+
+            Root = new Menu("sdk")
+            {
+                new Menu("sdk.language")
+                {
+                    new MenuList()
+                },
+                new Menu("")
+            };
+
+            Menu.Build(Root, JObject.Parse(Resources.MainMenu));
+
+
+            //Root = Menu.Build(new Menu("sdk.root") { Text = "", {new Menu("") }, translations);
+
+
+        }
+
+        internal static string GetString(string id)
+        {
+            return Translations[Menu.LanguageTag][id].Value<string>();
+        }
+
         /*
         #region Static Fields
 

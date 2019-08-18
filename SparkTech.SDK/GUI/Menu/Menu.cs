@@ -17,7 +17,7 @@
     using SparkTech.SDK.Rendering;
     using SparkTech.SDK.Security;
 
-    public class Menu : MenuText, IEnumerable<MenuItem>
+    public class Menu : MenuText, IEnumerable<MenuItem>, IExpandable
     {
         private readonly List<MenuItem> items = new List<MenuItem>();
 
@@ -32,7 +32,7 @@
 
         }
 
-        public bool IsExpanded { get; private set; }
+        public bool IsExpanded { get; set; }
 
         #region Accessors
 
@@ -53,7 +53,7 @@
             return this.Concat(this.GetItems<Menu>().SelectMany(menu => menu.GetDescensants()));
         }
 
-        public static void Root(Menu menu, JObject translations = null)
+        public static void Build(Menu menu, JObject translations = null)
         {
             void Set() => menu.SetTranslations(translations);
 
@@ -99,9 +99,14 @@
 
         protected internal override void OnWndProc(Point point, int width, WndProcEventArgs args)
         {
-            point.X += width - this.size.Width;
+            if (!this.IsExpanded)
+            {
+                return;
+            }
 
-            this.IsExpanded ^= IsLeftClick(args.Message) && IsCursorInside(point, this.size);
+            point.X += width + Theme.ItemGroupDistance;
+
+            WndProcGroup(this.items, point, args);
         }
 
         public void Add(MenuItem item)
@@ -268,23 +273,51 @@
                 if (IsOpen ? m == WindowsMessages.KEYUP && (!toggle || !(released ^= true)) : m == WindowsMessages.KEYDOWN)
                 {
                     SetMenuVisibility(!IsOpen);
+                    return;
                 }
             }
 
             if (IsOpen)
             {
-                var point = GetRootPoint();
-
-                var visibleRoots = RootEntries.ConvertAll(e => e.Menu).FindAll(item => item.IsVisible);
-                var width = visibleRoots.Max(item => item.Size.Width);
-
-                visibleRoots.ForEach(item =>
-                {
-                    item.OnWndProc(point, width, args);
-
-                    point.Y += item.Size.Height;
-                });
+                WndProcGroup(RootEntries.ConvertAll(e => e.Menu), GetRootPoint(), args);
             }
+        }
+
+        private static void WndProcGroup<T>(List<T> items, Point point, WndProcEventArgs args) where T : MenuItem
+        {
+            items = items.FindAll(item => item.IsVisible);
+
+            var width = items.Max(item => item.Size.Width);
+            var left = IsLeftClick(args.Message);
+
+            items.ForEach(item =>
+            {
+                item.OnWndProc(point, width, args);
+
+                if (left && item is IExpandable && IsCursorInside(point, item.Size))
+                {
+                    foreach (var i in items.OfType<IExpandable>())
+                    {
+                        i.IsExpanded = i == item && !i.IsExpanded;
+                    }
+                }
+
+                point.Y += item.Size.Height;
+            });
+        }
+
+        private static void DrawGroup<T>(List<T> items, Point point) where T : MenuItem
+        {
+            items = items.FindAll(item => item.IsVisible);
+
+            var width = items.Max(item => item.Size.Width);
+
+            items.ForEach(item =>
+            {
+                item.OnEndScene(point, width);
+
+                point.Y += item.Size.Height;
+            });
         }
 
         #region Menu Settings
@@ -375,20 +408,6 @@
             RootEntries.ForEach(r => r.Save());
 
             VisibilityChanged.SafeInvoke();
-        }
-
-        private static void DrawGroup<T>(List<T> items, Point point) where T : MenuItem
-        {
-            items = items.FindAll(item => item.IsVisible);
-
-            var width = items.Max(item => item.Size.Width);
-
-            items.ForEach(item =>
-            {
-                item.OnEndScene(point, width);
-
-                point.Y += item.Size.Height;
-            });
         }
 
         #endregion

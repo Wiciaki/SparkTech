@@ -61,12 +61,30 @@ namespace SparkTech.SDK.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to ൻ ∠湥㨢笠਍††琢硥≴›匢䭄Ⱒ਍††栢汥呰硥≴›䠢牥⁥潹⁵楷汬映湩⁤污⁬桴⁥敳瑴湩獧琠慨⁴浩慰瑣漠桴牥猠牣灩獴ഢ 素ബ ∠桺㨢笠਍਍†ⱽ਍਍†椢整≭›ൻഊ 素ഠ紊.
+        /// </summary>
+        internal static string MainMenu {
+            get {
+                return ResourceManager.GetString("MainMenu", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
         internal static byte[] RenderEffectCompiled {
             get {
                 object obj = ResourceManager.GetObject("RenderEffectCompiled", resourceCulture);
                 return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ൻ ∠湥㨢笠਍††欢祥楂摮敓敬瑣牯㨢∠牐獥⁳潮⹷⸮Ⱒ਍††昢物瑳楔敭敗捬浯≥›圢汥潣敭琠⁯灻慬晴牯絭‡湅汧獩⁨慬杮慵敧搠瑥捥整⹤夠畯挠湡挠慨杮⁥桴瑡椠⁮桴⁥敭畮∮਍†ⱽ਍†稢≨›ൻഊ 素ഠ紊਍.
+        /// </summary>
+        internal static string Strings {
+            get {
+                return ResourceManager.GetString("Strings", resourceCulture);
             }
         }
     }

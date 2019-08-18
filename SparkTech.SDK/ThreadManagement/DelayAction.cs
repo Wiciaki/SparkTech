@@ -26,8 +26,6 @@ namespace SparkTech.SDK.TickOperations
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
 
-    using SparkTech.SDK.Util;
-
     /*
     public class DelayAction
     {

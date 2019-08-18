@@ -1,4 +1,4 @@
-﻿namespace SparkTech.SDK.Scripts.Champions
+﻿namespace SparkTech.SDK.Scripts
 {
     using System;
     using System.Reflection;
