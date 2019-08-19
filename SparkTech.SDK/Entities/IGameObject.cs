@@ -4,7 +4,7 @@
 
     public interface IGameObject
     {
-        int Id();
+        int Id { get; }
 
         GameObjectTeam Team();
 

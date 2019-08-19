@@ -4,9 +4,9 @@
 
     public class BeforeValueChangeEventArgs : BlockableEventArgs
     {
-        public readonly Type Type;
-
         private readonly object oldValue, newValue;
+
+        public readonly Type Type;
 
         public T OldValue<T>()
         {
@@ -18,9 +18,9 @@
             return (T)this.newValue;
         }
 
-        public bool ValueIs<T>()
+        public bool OfType<T>()
         {
-            return this.newValue is T;
+            return typeof(T).IsAssignableFrom(this.Type);
         }
 
         private BeforeValueChangeEventArgs(Type type, object oldValue, object newValue)

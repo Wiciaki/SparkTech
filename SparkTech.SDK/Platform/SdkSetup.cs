@@ -13,15 +13,17 @@
     using SparkTech.SDK.Properties;
     using SparkTech.SDK.Security;
 
-    internal static class SdkSetup
+    public static class SdkSetup
     {
+        public static readonly bool FirstRun;
+
         private static readonly Menu Menu;
 
-        private static readonly JObject Translations;
+        private static readonly JObject Strings;
 
         static SdkSetup()
         {
-            Translations = JObject.Parse(Resources.Strings);
+            Strings = JObject.Parse(Resources.Strings);
 
             Menu = new Menu("sdk")
             {
@@ -33,22 +35,34 @@
                 },
                 new Menu("triggers")
                 {
-                    new MenuKeyBool("key", WindowsMessagesWParam.LeftShift),
+                    new MenuKey("key", WindowsMessagesWParam.LeftShift),
                     new MenuBool("toggle", false),
                     new MenuAction("apply") { Action = UpdateTriggers }
                 },
-                new MenuBool("clock", true)
+                new MenuBool("clock", true),
+                new Menu("humanizer")
+                {
+                    new MenuBool("enable", true)
+                }
             };
 
             Menu.Build(Menu, JObject.Parse(Resources.MainMenu));
+            
+            SetupMenu(out FirstRun);
+        }
 
+        #region Menu Setup
+
+        private static void SetupMenu(out bool firstRun)
+        {
             #region First Run and Language stuff
 
             Menu["language"].BeforeValueChange += LanguageChanged;
 
             var flagFile = Folder.MenuFolder.GetFile(".nofirstrun");
+            firstRun = !File.Exists(flagFile);
 
-            if (!File.Exists(flagFile))
+            if (firstRun)
             {
                 File.Create(flagFile).Dispose();
 
@@ -87,13 +101,17 @@
 
             #region Menu Subscriptions
 
-            static void SubscribeToPositionUpdates(string itemName) => Menu.GetMenu("position")[itemName].BeforeValueChange += a => UpdatePosition();
+            UpdateTriggers();
+
+            static void SubscribeToPositionUpdates(string itemName)
+            {
+                Menu.GetMenu("position")[itemName].BeforeValueChange += a => UpdatePosition();
+            }
 
             SubscribeToPositionUpdates("x");
             SubscribeToPositionUpdates("y");
 
             UpdatePosition();
-            UpdateTriggers();
 
             Menu["clock"].BeforeValueChange += args => Clock.Enabled = args.NewValue<bool>();
             Clock.Enabled = Menu["clock"].GetValue<bool>();
@@ -101,40 +119,43 @@
             #endregion
         }
 
-        #region Menu Settings
-
         private static void UpdatePosition()
         {
             var menu = Menu.GetMenu("position");
 
-            Menu.SetPosition(menu["x"].GetValue<int>(), menu["y"].GetValue<int>());
+            var x = menu["x"].GetValue<int>();
+            var y = menu["y"].GetValue<int>();
+
+            Menu.SetPosition(x, y);
         }
 
         private static void UpdateTriggers()
         {
             var menu = Menu.GetMenu("triggers");
 
-            var keyItem = menu["key"];
+            var key = menu["key"].GetValue<WindowsMessagesWParam>();
             var toggle = menu["toggle"].GetValue<bool>();
 
-            keyItem.Cast<MenuKeyBool>().Toggle = toggle;
-
-            Menu.SetTriggers(keyItem.GetValue<WindowsMessagesWParam>(), toggle);
+            Menu.SetTriggers(key, toggle);
         }
 
         private static void LanguageChanged(BeforeValueChangeEventArgs args)
         {
-            if (args.ValueIs<int>())
+            if (!args.OfType<int>())
             {
-                Menu.SetLanguage((Language)args.NewValue<int>());
+                return;
             }
+
+            var langauge = (Language)args.NewValue<int>();
+
+            Menu.SetLanguage(langauge);
         }
 
         #endregion
 
-        internal static string GetString(string id)
+        internal static string GetString(string str)
         {
-            return Translations[Menu.LanguageTag][id].Value<string>();
+            return Strings[Menu.LanguageTag][str].Value<string>();
         }
 
         /*
@@ -180,45 +201,6 @@
             var toggle = RootMenu.Add(new MenuCheckBox("MenuToggle", false));
             RootMenu.Add(new MenuButton("SaveTemplate", SaveTemplate));
 
-            var flagFile = Path.Combine(folder, ".firstrun");
-
-            if (!File.Exists(flagFile))
-            {
-                File.Create(flagFile).Dispose();
-
-                Logging.Log("Running Entropy.SDK for the first time.");
-
-                var code = CultureInfo.InstalledUICulture.TwoLetterISOLanguageName;
-                var values = EnumCache<Language>.Values;
-                var i = values.ConvertAll(EnumCache<Language>.Description).IndexOf(code);
-
-                if (i == -1)
-                {
-                    Notification.Send(
-                        15f,
-                        $"Welcome to Entropy!\nYour system language,\n\"{code}\" is not supported by the SDK.\n"
-                                                + "English will be used.\nYou can change that inside the menu.");
-                }
-                else
-                {
-                    lang.Value = i;
-
-                    Notification.Send(10f, GetNotificationMessage());
-
-                    string GetNotificationMessage()
-                    {
-                        switch (values[i])
-                        {
-                            case Language.Polish:
-                                return "Witamy na pokładzie!\nWykryto język polski.\nMożesz to zmienić w menu.";
-
-                            default:
-                                return "Welcome to Entropy!\nEnglish was detected as the best language for you.\nYou can always change that in the menu.";
-                        }
-                    }
-                }
-            }
-
             RootMenu.Add(lang);
             RootMenu.Add(new MenuImage("Logo").SetImage(Resources.banner_purple_bright));
 
@@ -235,51 +217,6 @@
             CreateTest();
 
             Log.Info("SparkTech.SDK - loaded!");
-
-            void Subscribe(Action callback, params MenuValue[] notifiers)
-            {
-                Array.ForEach(notifiers, m => m.PropertyChanged += (o, args) => callback());
-
-                callback();
-            }
-
-            #region Callbacks
-
-            static async void SaveTemplate()
-            {
-                await RootMenu.SaveTranslationTemplate(
-                    Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), RootMenu.Id + ".json"));
-            }
-
-            void ClockUpdated()
-            {
-                Notification.DrawClock = clock["DrawClock"].GetValue<bool>();
-                Notification.ExtraClockSize = new Size(clock["x"].GetValue<int>(), clock["y"].GetValue<int>());
-            }
-
-            void ControlChanged(bool b)
-            {
-                if (b)
-                {
-                    Menu.SetBehavior(button.GetValue<WindowsMessagesWParam>(), toggle.GetValue<bool>());
-                }
-            }
-
-            void LangChanged()
-            {
-                Menu.SetLanguage(lang.Enum<Language>());
-
-                var resource = (byte[])Resources.ResourceManager.GetObject(Menu.Language.ToString());
-
-                if (resource == null)
-                {
-                    Log.Warn($"Translation file for {Menu.Language} language couldn't be found in SparkTech.SDK!");
-
-                    return;
-                }
-
-                RootMenu.Translate(JObject.Parse(Encoding.UTF8.GetString(resource)));
-            }
 
             #endregion
         }

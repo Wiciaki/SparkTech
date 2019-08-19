@@ -70,13 +70,13 @@ namespace SparkTech.SDK.Entities
             return hashset;
         }
 
-        public static bool IsMe(this IGameObject o) => o.Id() == Player.Id();
+        public static bool IsMe(this IGameObject o) => o.Id == Player.Id;
 
         public static bool IsAlly(this IGameObject o) => o.Team() == Player.Team();
 
         public static bool IsEnemy(this IGameObject o) => !o.IsAlly();
 
-        public static IGameObject GetById(int id) => Get<IGameObject>().FirstOrDefault(o => o.Id() == id);
+        public static IGameObject GetById(int id) => Get<IGameObject>().FirstOrDefault(o => o.Id == id);
 
         private static void HandleCreate(IGameObject sender) => ProcessItem(sender, true);
 

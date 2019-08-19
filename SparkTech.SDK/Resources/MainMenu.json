@@ -30,11 +30,11 @@
   },
   "triggers": {
     "en": {
-      "text": "Menu activation"
+      "text": "Menu controls"
     },
     "key": {
       "en": {
-        "text": "Button"
+        "text": "Activation button"
       }
     },
     "toggle": {

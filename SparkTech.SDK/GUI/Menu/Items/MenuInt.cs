@@ -1,7 +1,5 @@
 ﻿namespace SparkTech.SDK.GUI.Menu.Items
 {
-    using System;
-
     using Newtonsoft.Json.Linq;
 
     using SharpDX;
@@ -9,6 +7,7 @@
     using SparkTech.SDK.Game;
     using SparkTech.SDK.Rendering;
 
+    // TODO: revisit it when drawings are there and make MenuFLoat
     public class MenuInt : MenuValue, IMenuValue<int>
     {
         #region Fields
@@ -21,35 +20,20 @@
 
         #region Constructors and Destructors
 
-        public MenuInt(string id, int min, int max, int defaultValue) : base(id, defaultValue)
+        public MenuInt(string id, int from, int to, int defaultValue) : base(id, defaultValue)
         {
-            if (min > max)
-            {
-                throw new ArgumentException("The specified min was greater than max");
-            }
+            this.From = from;
 
-            this.Min = min;
-
-            this.Max = max;
-
-            this.CheckBounds(defaultValue);
-        }
-
-        private void CheckBounds(int v)
-        {
-            if (v < this.Min || v > this.Max)
-            {
-                throw new ArgumentException("The specified value was out of range");
-            }
+            this.To = to;
         }
 
         #endregion
 
         #region Public Properties
 
-        public readonly int Max;
+        public readonly int From;
 
-        public readonly int Min;
+        public readonly int To;
 
         public int Value
         {
@@ -61,7 +45,7 @@
                     return;
                 }
 
-                this.CheckBounds(value);
+                // is in bounds?
 
                 if (this.UpdateValue(value))
                 {
@@ -83,7 +67,7 @@
             var s = base.GetSize();
             s.Height += SliderHeight;
 
-            this.size = Theme.MeasureText($"[{this.Max}]");
+            this.size = Theme.MeasureText($"[{this.From}]");
 
             s.Width += this.size.Width;
 
@@ -94,7 +78,7 @@
         {
             var barWidth = width;
             var displayNum = this.Value;
-            var range = this.Max - this.Min;
+            var range = this.To - this.From;
 
             width -= this.size.Width;
 
@@ -106,15 +90,15 @@
 
                 if (diff <= 0)
                 {
-                    displayNum = this.Min;
+                    displayNum = this.From;
                 }
                 else if (diff >= barWidth)
                 {
-                    displayNum = this.Max;
+                    displayNum = this.To;
                 }
                 else
                 {
-                    displayNum = this.Min + (int)((float)diff * range / barWidth);
+                    displayNum = this.From + (int)((float)diff * range / barWidth);
                 }
 
                 this.draggingVal = displayNum;
@@ -127,7 +111,7 @@
             point.Y += this.size.Height;
             Theme.DrawBox(point, new Size2(barWidth, SliderHeight), Theme.BackgroundColor);
 
-            var offset = (int)(barWidth / ((float)range / (this.Value - this.Min)));
+            var offset = (int)(barWidth / ((float)range / (this.Value - this.From)));
 
             var color = Color.White;
 
@@ -141,11 +125,14 @@
 
         protected internal override void OnWndProc(Point point, int width, WndProcEventArgs args)
         {
-            point.Y += this.size.Height;
-
-            if (!this.dragging && !Menu.IsCursorInside(point, new Size2(width, SliderHeight)))
+            if (!this.dragging)
             {
-                return;
+                point.Y += this.size.Height;
+
+                if (!Menu.IsCursorInside(point, new Size2(width, SliderHeight)))
+                {
+                    return;
+                }
             }
 
             if (Menu.IsLeftClick(args.Message))

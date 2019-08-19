@@ -42,7 +42,17 @@ namespace SparkTech.SDK.Entities
         /// <returns>Value indicating whether the GameObjects represented the same underlying game object.</returns>
         public bool Equals(T x, T y)
         {
-            return x != null && y != null && x.Id() == y.Id();
+            if (x == null)
+            {
+                return y == null;
+            }
+
+            if (y == null)
+            {
+                return false;
+            }
+
+            return this.GetHashCode(x) == this.GetHashCode(y);
         }
 
         /// <inheritdoc />
@@ -53,7 +63,7 @@ namespace SparkTech.SDK.Entities
         /// <returns>The HashCode for the specified <see cref="T:Entropy.GameObject" /> instance.</returns>
         public int GetHashCode(T obj)
         {
-            return obj.Id();
+            return obj.Id;
         }
 
         #endregion
