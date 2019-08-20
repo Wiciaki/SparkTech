@@ -7,7 +7,6 @@
 
     using SparkTech.SDK.GUI;
     using SparkTech.SDK.GUI.Menu;
-    using SparkTech.SDK.GUI.Menu.Items;
     using SparkTech.SDK.GUI.Notifications;
     using SparkTech.SDK.Logging;
     using SparkTech.SDK.Properties;
@@ -19,11 +18,11 @@
 
         private static readonly Menu Menu;
 
-        private static readonly JObject Strings;
+        private static readonly Translations Strings;
 
         static SdkSetup()
         {
-            Strings = JObject.Parse(Resources.Strings);
+            Strings = new Translations(JObject.Parse(Resources.Strings));
 
             Menu = new Menu("sdk")
             {
@@ -37,18 +36,28 @@
                 {
                     new MenuKey("key", WindowsMessagesWParam.LeftShift),
                     new MenuBool("toggle", false),
-                    new MenuAction("apply") { Action = UpdateTriggers }
+                    new MenuAction("apply") { Action = SetMenuTriggers }
                 },
                 new MenuBool("clock", true),
-                new Menu("humanizer")
-                {
-                    new MenuBool("enable", true)
-                }
+                //new Menu("humanizer")
+                //{
+                //    new MenuBool("enable", true)
+                //}
             };
 
             Menu.Build(Menu, JObject.Parse(Resources.MainMenu));
             
             SetupMenu(out FirstRun);
+            Menu.SetPosition(80, 80);
+
+            Log.Info("Hello! FirstRun: " + FirstRun);
+
+            Menu.IsExpanded = true;
+            //Menu.GetMenu("position").IsExpanded = true;
+            //Menu.GetMenu("triggers").IsExpanded = true;
+            ((IExpandable)Menu["language"]).IsExpanded = true;
+
+            Menu.SetOpen(true);
         }
 
         #region Menu Setup
@@ -78,14 +87,14 @@
                 {
                     Menu.SetLanguage(default);
 
-                    welcomeMsg = GetString("languageUnknown");
+                    welcomeMsg = GetTranslatedString("languageUnknown");
                     welcomeMsg = welcomeMsg.Replace("{language}", culture.EnglishName);
                 }
                 else
                 {
                     Menu["language"].SetValue(i);
 
-                    welcomeMsg = GetString("firstTimeWelcome");
+                    welcomeMsg = GetTranslatedString("firstTimeWelcome");
                 }
 
                 welcomeMsg = welcomeMsg.Replace("{platform}", VendorSetup.PlatformName);
@@ -94,42 +103,51 @@
             }
             else
             {
-                Menu.SetLanguage((Language)Menu["language"].GetValue<int>());
+                var language = (Language)Menu["language"].GetValue<int>();
+
+                Menu.SetLanguage(language);
+
+                if (language != default)
+                {
+                    Menu.UpdateAllSizes();
+                }
             }
 
             #endregion
 
-            #region Menu Subscriptions
+            HandlePosition();
+            HandleClock();
 
-            UpdateTriggers();
-
-            static void SubscribeToPositionUpdates(string itemName)
-            {
-                Menu.GetMenu("position")[itemName].BeforeValueChange += a => UpdatePosition();
-            }
-
-            SubscribeToPositionUpdates("x");
-            SubscribeToPositionUpdates("y");
-
-            UpdatePosition();
-
-            Menu["clock"].BeforeValueChange += args => Clock.Enabled = args.NewValue<bool>();
-            Clock.Enabled = Menu["clock"].GetValue<bool>();
-
-            #endregion
+            SetMenuTriggers();
         }
 
-        private static void UpdatePosition()
+        public static string GetTranslatedString(string str)
+        {
+            return Strings.GetString(str);
+        }
+
+        private static void HandleClock()
+        {
+            var clockItem = Menu["clock"];
+
+            clockItem.BeforeValueChange += args => Clock.Enabled = args.NewValue<bool>();
+            Clock.Enabled = clockItem.GetValue<bool>();
+        }
+
+        private static void HandlePosition()
         {
             var menu = Menu.GetMenu("position");
 
-            var x = menu["x"].GetValue<int>();
-            var y = menu["y"].GetValue<int>();
+            var xItem = menu["x"];
+            var yItem = menu["y"];
 
-            Menu.SetPosition(x, y);
+            xItem.BeforeValueChange += args => Menu.SetPosition(args.NewValue<int>(), yItem.GetValue<int>());
+            yItem.BeforeValueChange += args => Menu.SetPosition(xItem.GetValue<int>(), args.NewValue<int>());
+
+            Menu.SetPosition(xItem.GetValue<int>(), yItem.GetValue<int>());
         }
 
-        private static void UpdateTriggers()
+        private static void SetMenuTriggers()
         {
             var menu = Menu.GetMenu("triggers");
 
@@ -152,11 +170,6 @@
         }
 
         #endregion
-
-        internal static string GetString(string str)
-        {
-            return Strings[Menu.LanguageTag][str].Value<string>();
-        }
 
         /*
         #region Static Fields

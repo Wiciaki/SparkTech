@@ -12,7 +12,7 @@
 
         public ClassicTheme()
         {
-            var desc = new FontDescription { FaceName = "Calibri", Height = 12 };
+            var desc = new FontDescription { FaceName = "Calibri", Height = 18 };
 
             this.font = new Font(Render.Direct3DDevice, desc);
 
@@ -21,13 +21,23 @@
             Render.OnDispose += this.Dispose;
         }
 
-        public Color BackgroundColor { get; } = Color.Gray;
+        public Color BackgroundColor
+        {
+            get
+            {
+                var c = Color.Black;
+                c.A = 120;
+                return c;
+            }
+        }
 
-        public int ItemGroupDistance { get; } = 10;
+        public int ItemGroupDistance { get; } = 0;
 
-        private const FontDrawFlags DrawFlags = FontDrawFlags.VerticalCenter | FontDrawFlags.Left;
+        private const FontDrawFlags DrawFlags = FontDrawFlags.VerticalCenter | FontDrawFlags.Center;
 
-        private readonly Size2 extraTextSize = new Size2(10,16);
+        private const FontDrawFlags CenteredFlags = FontDrawFlags.VerticalCenter | FontDrawFlags.Center;
+
+        private readonly Size2 extraTextSize = new Size2(6,6);
 
         public Size2 MeasureText(string text)
         {
@@ -36,7 +46,7 @@
             var height = MultipleOf(r.Bottom - r.Top + this.extraTextSize.Height, 28);
             var width = MultipleOf(r.Right - r.Left + this.extraTextSize.Width, 2);
 
-            return new Size2(width, height);
+            return new Size2(width + this.extraTextSize.Width, height + this.extraTextSize.Height);
 
             static int MultipleOf(int num, int multipleOf)
             {
@@ -46,29 +56,44 @@
             }
         }
 
-        public void DrawTextBox(Point point, Size2 size, string text, Color? color)
+        public void DrawTextBox(Point point, Size2 size, string text, bool centered, Color? color)
         {
             this.DrawBox(point, size, color ?? this.BackgroundColor);
 
-            this.font.DrawText(null, text, this.GetTextRectangle(point, size), DrawFlags, Color.White);
+            this.font.DrawText(null, text, this.GetTextRectangle(point, size), centered ? CenteredFlags : DrawFlags, Color.White);
         }
 
         public void DrawBox(Point point, Size2 size, Color color)
         {
+            point.Y += size.Height / 2;
+
             Vector.Draw(color, size.Height, point, new Point(point.X + size.Width, point.Y));
         }
 
         public void DrawBorders(Point point, params Size2[] sizes)
         {
+            foreach (var size in sizes)
+            {
+                var p = new Vector2[5];
 
+                p[0] = new Vector2(point.X, point.Y);
+                p[1] = new Vector2(point.X, point.Y + size.Height);
+                p[2] = new Vector2(point.X + size.Width, point.Y + size.Height);
+                p[3] = new Vector2(point.X + size.Width, point.Y);
+                p[4] = new Vector2(point.X, point.Y);
+
+                Vector.Draw(Color.White, 1f, p);
+
+                point.Y += size.Height;
+            }
         }
 
         private RawRectangle GetTextRectangle(Point point, Size2 size)
         {
-            var ew = this.extraTextSize.Width / 2;
-            var eh = this.extraTextSize.Height / 2;
+            var w = this.extraTextSize.Width / 2;
+            var h = this.extraTextSize.Height / 2;
 
-            return new RawRectangle(point.X + ew, point.Y + eh, point.X + size.Width - ew, point.Y + size.Height - eh);
+            return new RawRectangle(point.X + w, point.Y + h, point.X + size.Width - w, point.Y + size.Height - h);
         }
 
         public void Dispose()

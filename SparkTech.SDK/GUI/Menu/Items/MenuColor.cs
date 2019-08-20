@@ -1,4 +1,4 @@
-﻿namespace SparkTech.SDK.GUI.Menu.Items
+﻿namespace SparkTech.SDK.GUI.Menu
 {
     using Newtonsoft.Json.Linq;
 

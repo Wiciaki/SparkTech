@@ -28,6 +28,8 @@ namespace SparkTech.SDK.Entities
     using System.Linq;
     using System.Reflection;
 
+    using MoreLinq;
+
     using SparkTech.SDK.Logging;
     using SparkTech.SDK.Platform.API;
 
@@ -88,7 +90,7 @@ namespace SparkTech.SDK.Entities
         {
             var senderType = sender.GetType();
 
-            foreach (var (_, entry) in Container.Where(p => p.Key.IsAssignableFrom(senderType)))
+            foreach (var entry in Container.Where(p => p.Key.IsAssignableFrom(senderType)).Select(p => p.Value))
             {
                 MethodBase method;
                 Action<IGameObject> action;

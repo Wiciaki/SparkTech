@@ -34,17 +34,16 @@
 
             Direct3DDevice = api.GetDevice();
 
-            api.Draw = OnDraw.SafeInvoke;
-            api.BeginScene = OnBeginScene.SafeInvoke;
-            api.EndScene = OnEndScene.SafeInvoke;
+            api.Draw = () => OnDraw.SafeInvoke();
+            api.BeginScene = () => OnBeginScene.SafeInvoke();
+            api.EndScene = () => OnEndScene.SafeInvoke();
             api.LostDevice = OnLostDevice.SafeInvoke;
             api.ResetDevice = OnResetDevice.SafeInvoke;
-            api.ResolutionChanged = OnResolutionChanged.SafeInvoke;
 
-            static void OnDisposeEventHandler(object o, EventArgs args) => OnDispose.SafeInvoke();
+            static void OnExit(object o, EventArgs args) => OnDispose.SafeInvoke();
 
-            AppDomain.CurrentDomain.DomainUnload += OnDisposeEventHandler;
-            AppDomain.CurrentDomain.ProcessExit += OnDisposeEventHandler;
+            AppDomain.CurrentDomain.DomainUnload += OnExit;
+            AppDomain.CurrentDomain.ProcessExit += OnExit;
 
             var triggerable = new[] { typeof(Vector), typeof(Circle), typeof(Text), typeof(Image) };
 

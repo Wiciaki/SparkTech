@@ -11,17 +11,15 @@
 
         Device GetDevice();
 
-        Action Draw { get; set; }
-
         Action BeginScene { get; set; }
+
+        Action Draw { get; set; }
 
         Action EndScene { get; set; }
 
         Action LostDevice { get; set; }
         
         Action ResetDevice { get; set; }
-
-        Action ResolutionChanged { get; set; }
 
         Vector2 WorldToScreen(Vector3 pos);
 

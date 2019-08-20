@@ -54,12 +54,12 @@
 
         public static void Build(Menu menu, JObject translations = null)
         {
-            void Set() => menu.SetTranslations(translations);
+            if (RootEntries.Exists(entry => entry.Menu.Id == menu.Id))
+            {
+                throw new InvalidOperationException("Menu with id \"" + menu.Id + "\" already exists as root!");
+            }
 
-            Set();
-            LanguageChanged += Set;
-
-            RootEntries.Add(new RootEntry(menu));
+            RootEntries.Add(new RootEntry(menu, new Translations(translations)));
         }
 
         #endregion
@@ -84,7 +84,7 @@
             base.OnEndScene(point, width);
             point.X += width;
 
-            Theme.DrawTextBox(point, this.size, ExpandText);
+            Theme.DrawTextBox(point, this.size, ExpandText, true);
 
             if (!this.IsExpanded)
             {
@@ -110,6 +110,11 @@
 
         public void Add(MenuItem item)
         {
+            if (item == null)
+            {
+                return;
+            }
+
             if (this.items.Exists(i => i.Id == item.Id))
             {
                 throw new InvalidOperationException($"Id \"{item.Id}\" already exists within this menu instance!");
@@ -156,9 +161,9 @@
 
             var o = new JObject();
 
-            foreach (var (key, value) in addable)
+            foreach (var pair in addable)
             {
-                o.Add(key, value);
+                o.Add(pair.Key, pair.Value);
             }
 
             return o;
@@ -179,36 +184,24 @@
             }
         }
 
-        protected internal override void SetTranslations(JObject json)
+        protected internal override void SetTranslations(Translations t)
         {
-            if (json == null)
+            if (t == null)
             {
                 return;
             }
 
-            base.SetTranslations(LanguageAccess(json));
+            base.SetTranslations(t);
 
             foreach (var item in this)
             {
-                var o = (JObject)json[item.Id];
-
-                if (o == null)
-                {
-                    continue;
-                }
-
-                if (!(item is Menu))
-                {
-                    o = LanguageAccess(o);
-                }
+                var o = t.GetObject(item.Id);
 
                 if (o != null)
                 {
                     item.SetTranslations(o);
                 }
             }
-
-            static JObject LanguageAccess(JObject o) => (JObject)(o[LanguageTag] ?? o["en"]);
         }
 
         public IEnumerator<MenuItem> GetEnumerator()
@@ -225,13 +218,13 @@
 
         private static readonly List<RootEntry> RootEntries = new List<RootEntry>();
 
-        public static WindowsMessagesWParam ActivationButton { get; private set; } = WindowsMessagesWParam.Shift;
+        public static WindowsMessagesWParam ActivationButton { get; private set; }
 
         public static bool IsOpen { get; private set; }
 
         public static Language Language { get; private set; }
 
-        public static string LanguageTag { get; private set; }
+        public static string LanguageTag { get; private set; } = EnumCache<Language>.Description(default);
 
         public static event Action VisibilityChanged, LanguageChanged;
 
@@ -252,18 +245,18 @@
                 return;
             }
 
-            cursor = GameInterface.CursorPosition();
+            cursor = GameEvents.GetCursorPosition();
 
             DrawGroup(RootEntries.ConvertAll(e => e.Menu), position);
         }
 
         private static void OnWndProc(WndProcEventArgs args)
         {
-            if (GameInterface.IsChatOpen() || GameInterface.IsShopOpen())
-            {
-                SetMenuVisibility(false);
-                return;
-            }
+            //if (GameInterface.IsChatOpen() || GameInterface.IsShopOpen())
+            //{
+            //    SetMenuVisibility(false);
+            //    return;
+            //}
 
             if (args.WParam == ActivationButton)
             {
@@ -271,7 +264,7 @@
 
                 if (IsOpen ? m == WindowsMessages.KEYUP && (!toggleBehavior || !(released ^= true)) : m == WindowsMessages.KEYDOWN)
                 {
-                    SetMenuVisibility(!IsOpen);
+                    SetOpen(!IsOpen);
                     return;
                 }
             }
@@ -309,6 +302,8 @@
 
         private static void DrawGroup<T>(List<T> items, Point point) where T : MenuItem
         {
+            var p = point;
+
             items = items.FindAll(item => item.IsVisible);
 
             var width = items.Max(item => item.Size.Width);
@@ -319,6 +314,15 @@
 
                 point.Y += item.Size.Height;
             });
+
+            var sizes = new Size2[items.Count];
+
+            for (var i = 0; i < items.Count; i++)
+            {
+                sizes[i] = new Size2(width, items[i].Size.Height);
+            }
+
+            Theme.DrawBorders(p, sizes);
         }
 
         #endregion
@@ -345,7 +349,7 @@
 
             released = false;
 
-            SetMenuVisibility(false);
+            SetOpen(false);
         }
 
         internal static void SetLanguage(Language language)
@@ -358,6 +362,8 @@
             Language = language;
 
             LanguageTag = EnumCache<Language>.Description(language);
+
+            RootEntries.ForEach(entry => entry.UpdateLanguage());
 
             LanguageChanged.SafeInvoke();
         }
@@ -397,7 +403,7 @@
             }
         }
 
-        private static void SetMenuVisibility(bool open)
+        internal static void SetOpen(bool open)
         {
             if (IsOpen == open)
             {
@@ -406,7 +412,10 @@
 
             IsOpen = open;
 
-            RootEntries.ForEach(r => r.Save());
+            if (!open)
+            {
+                RootEntries.ForEach(r => r.Save());
+            }
 
             VisibilityChanged.SafeInvoke();
         }
@@ -419,17 +428,21 @@
         {
             public readonly Menu Menu;
 
+            private readonly Translations translations;
+
             private readonly string targetPath;
 
             private JToken lastSaved;
 
-            public RootEntry(Menu menu)
+            public RootEntry(Menu menu, Translations translations)
             {
                 this.Menu = menu;
 
+                this.translations = translations;
+
                 this.targetPath = Folder.MenuFolder.GetFile(menu.Id + ".json");
 
-                var o = new JObject();
+                JObject o = null;
 
                 if (File.Exists(this.targetPath))
                 {
@@ -447,7 +460,14 @@
                     }
                 }
 
-                this.Menu.settings = o;
+                this.Menu.SetToken(o);
+
+                this.UpdateLanguage();
+            }
+
+            public void UpdateLanguage()
+            {
+                this.Menu.SetTranslations(this.translations);
             }
 
             public async void Save()
@@ -477,7 +497,7 @@
 
                 this.lastSaved = token;
 
-                await Folder.SaveMenuTokenAsync(this.targetPath, token);
+                await Folder.SaveTokenAsync(this.targetPath, token);
 
                 Log.Info($"Saving completed for \"{this.Menu.Id}\"!");
             }

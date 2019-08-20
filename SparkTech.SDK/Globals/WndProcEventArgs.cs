@@ -6,15 +6,11 @@
 
         public readonly WindowsMessagesWParam WParam;
 
-        public readonly int LParam;
-
-        public WndProcEventArgs(WindowsMessages message, WindowsMessagesWParam wparam, int lparam)
+        public WndProcEventArgs(WindowsMessages message, WindowsMessagesWParam wparam)
         {
             this.Message = message;
 
             this.WParam = wparam;
-
-            this.LParam = lparam;
         }
     }
 }

@@ -6,6 +6,11 @@
     {
         private static ITheme theme;
 
+        static Theme()
+        {
+            theme = new ClassicTheme();
+        }
+
         internal static void SetTheme(ITheme t)
         {
             theme?.Dispose();
@@ -13,8 +18,9 @@
             theme = t;
 
             Clock.UpdateSize();
-            Notifications.Notification.UpdateAllSizes();
+
             Menu.Menu.UpdateAllSizes();
+            Notifications.Notification.UpdateAllSizes();
         }
 
         public static int ItemGroupDistance => theme.ItemGroupDistance;
@@ -23,7 +29,7 @@
 
         public static Size2 MeasureText(string text) => theme.MeasureText(text);
 
-        public static void DrawTextBox(Point point, Size2 size, string text, Color? color = null) => theme.DrawTextBox(point, size, text, color);
+        public static void DrawTextBox(Point point, Size2 size, string text, bool centered = false, Color? color = null) => theme.DrawTextBox(point, size, text, centered, color);
 
         public static void DrawBox(Point point, Size2 size, Color color) => theme.DrawBox(point, size, color);
         

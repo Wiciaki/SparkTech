@@ -117,9 +117,9 @@
 
             request.ContentLength = bytes.Length;
 
-            await using (var requestStream = request.GetRequestStream())
+            using (var requestStream = request.GetRequestStream())
             {
-                requestStream.Write(bytes, 0, bytes.Length);
+                await requestStream.WriteAsync(bytes, 0, bytes.Length);
             }
 
             try

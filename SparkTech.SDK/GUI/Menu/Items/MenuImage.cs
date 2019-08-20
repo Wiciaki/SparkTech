@@ -1,4 +1,4 @@
-﻿namespace SparkTech.SDK.GUI.Menu.Items
+﻿namespace SparkTech.SDK.GUI.Menu
 {
     using SharpDX;
     using SharpDX.Direct3D9;

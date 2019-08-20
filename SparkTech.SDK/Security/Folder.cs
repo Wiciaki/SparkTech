@@ -14,7 +14,7 @@
 
         public static Folder MenuFolder { get; private set; }
 
-        internal void Initialize(string root)
+        internal static void Initialize(string root)
         {
             RootFolder = new Folder(root);
 
@@ -48,10 +48,10 @@
 
         public static implicit operator string(Folder folder) => folder.path;
 
-        internal static async Task SaveMenuTokenAsync(string targetPath, JToken token)
+        internal static async Task SaveTokenAsync(string targetPath, JToken token)
         {
-            await using var fileStream = new FileStream(targetPath, File.Exists(targetPath) ? FileMode.Truncate : FileMode.Create, FileAccess.Write, FileShare.None);
-            await using var streamWriter = new StreamWriter(fileStream);
+            using var fileStream = new FileStream(targetPath, File.Exists(targetPath) ? FileMode.Truncate : FileMode.Create, FileAccess.Write, FileShare.None);
+            using var streamWriter = new StreamWriter(fileStream);
             using var testWriter = new JsonTextWriter(streamWriter) { Formatting = Formatting.Indented };
 
             await token.WriteToAsync(testWriter);

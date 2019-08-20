@@ -1,7 +1,5 @@
 ﻿namespace SparkTech.SDK.GUI.Menu
 {
-    using Newtonsoft.Json.Linq;
-
     using SharpDX;
 
     using SparkTech.SDK.Rendering;
@@ -60,25 +58,30 @@
             }
         }
 
-        protected internal override void SetTranslations(JObject o)
+        protected internal override void SetTranslations(Translations t)
         {
-            this.Text = o["text"].Value<string>();
+            this.Text = t.GetString("text");
 
-            this.HelpText = o["helpText"]?.Value<string>();
+            this.HelpText = t.GetString("helpText");
         }
 
         protected override Size2 GetSize()
         {
             this.UpdateHelpTextSize();
 
-            this.textSize = Theme.MeasureText(this.Text);
+            var s = Theme.MeasureText(this.Text);
+            this.textSize = s;
 
-            var hSize = Theme.MeasureText(HelpBoxText);
-            hSize.Width = this.textSize.Width;
+            if (this.HelpText != null)
+            {
+                var hSize = Theme.MeasureText(HelpBoxText);
+                hSize.Height = this.textSize.Height;
 
-            this.helpSize = hSize;
+                this.helpSize = hSize;
+            }
 
-            return new Size2(this.helpSize.Width + this.textSize.Width, this.textSize.Height);
+            s.Width += this.helpSize.Width;
+            return s;
         }
 
         private void UpdateHelpTextSize()
@@ -99,7 +102,7 @@
 
             point.X += size.Width;
 
-            Theme.DrawTextBox(point, this.helpSize, HelpBoxText);
+            Theme.DrawTextBox(point, this.helpSize, HelpBoxText, true);
 
             if (!Menu.IsCursorInside(point, this.helpSize))
             {
@@ -112,7 +115,7 @@
             point.X = (res.Width - this.helpTextSize.Width) / 2;
             point.Y = (res.Height - this.helpTextSize.Height) / 2;
 
-            Theme.DrawTextBox(point, this.helpTextSize, this.HelpText);
+            Theme.DrawTextBox(point, this.helpTextSize, this.HelpText, true);
             Theme.DrawBorders(point, this.helpTextSize);
         }
     }

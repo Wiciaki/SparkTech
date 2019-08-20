@@ -1,4 +1,4 @@
-﻿namespace SparkTech.SDK.GUI.Menu.Items
+﻿namespace SparkTech.SDK.GUI.Menu
 {
     using Newtonsoft.Json.Linq;
 
@@ -105,20 +105,31 @@
             }
 
             point.X += width;
-            Theme.DrawTextBox(point, this.size, $"[{displayNum}]");
+            Theme.DrawTextBox(point, this.size, $"[{displayNum}]", true);
             point.X -= width;
 
             point.Y += this.size.Height;
-            Theme.DrawBox(point, new Size2(barWidth, SliderHeight), Theme.BackgroundColor);
+
+            var s = new Size2(this.size.Width, SliderHeight);
+            Theme.DrawTextBox(point, s, this.From.ToString(), true);
+            point.X += s.Width;
+
+            var drawSize = new Size2(barWidth - 2 * s.Width, SliderHeight);
+            Theme.DrawBox(point, drawSize, Theme.BackgroundColor);
+            
+            point.X += drawSize.Width;
+            Theme.DrawTextBox(point, s, this.To.ToString(), true);
+            point.X -= drawSize.Width + s.Width;
 
             var offset = (int)(barWidth / ((float)range / (this.Value - this.From)));
-
             var color = Color.White;
 
             if (!this.dragging)
             {
                 color.A = 150;
             }
+
+            point.Y += SliderHeight / 2;
 
             Vector.Draw(color, SliderHeight, point, new Point(point.X + offset, point.Y));
         }

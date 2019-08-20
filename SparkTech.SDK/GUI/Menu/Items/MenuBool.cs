@@ -1,5 +1,7 @@
-﻿namespace SparkTech.SDK.GUI.Menu.Items
+﻿namespace SparkTech.SDK.GUI.Menu
 {
+    using System;
+
     using Newtonsoft.Json.Linq;
 
     using SharpDX;
@@ -39,7 +41,8 @@
         protected override Size2 GetSize()
         {
             var s = base.GetSize();
-            this.size = new Size2(28, s.Height);
+            var extraWidth = Math.Min(56, s.Height);
+            this.size = new Size2(extraWidth, s.Height);
             s.Width += this.size.Width;
 
             return s;

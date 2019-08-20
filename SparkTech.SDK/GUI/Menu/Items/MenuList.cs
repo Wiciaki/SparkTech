@@ -1,4 +1,4 @@
-﻿namespace SparkTech.SDK.GUI.Menu.Items
+﻿namespace SparkTech.SDK.GUI.Menu
 {
     using System;
     using System.Collections.Generic;
@@ -8,13 +8,12 @@
 
     using SharpDX;
 
+    using SparkTech.SDK.Logging;
     using SparkTech.SDK.Platform;
 
-    public class MenuList : MenuValue, IExpandable, IMenuValue<int>, IMenuValue<string>, IMenuValue<List<string>>
+    public class MenuList : MenuValue, IExpandable, IMenuValue<int>, IMenuValue<string>
     {
         public bool IsExpanded { get; set; }
-
-        private const string ArrowText = ">";
 
         private int index;
 
@@ -33,23 +32,23 @@
 
         #endregion
 
-        protected internal override void SetTranslations(JObject o)
+        protected internal override void SetTranslations(Translations t)
         {
-            var token = o["options"];
+            var token = t.GetToken("options");
 
             if (token != null)
             {
-                this.SetOptions(token.Value<JArray>().Select(t => t.Value<string>()).ToArray());
+                this.SetOptions(token.Value<JArray>().Select(o => o.Value<string>()).ToArray());
             }
 
-            base.SetTranslations(o);
+            base.SetTranslations(t);
         }
 
         private void SetOptions(IList<string> items)
         {
             if (items.Count < 2)
             {
-                items[0] = SdkSetup.GetString("menuListEmpty");
+                items[0] = SdkSetup.GetTranslatedString("menuListEmpty");
             }
 
             this.options.Clear();
@@ -60,7 +59,7 @@
 
         protected override Size2 GetSize()
         {
-            var width = Math.Max(28, Theme.MeasureText(ArrowText).Width);
+            var width = Math.Max(28, Theme.MeasureText(">>").Width);
 
             var s = base.GetSize();
             s.Width += width;
@@ -109,7 +108,7 @@
             base.OnEndScene(point, width);
             point.X += width;
 
-            Theme.DrawTextBox(point, this.size, ArrowText);
+            Theme.DrawTextBox(point, this.size, ">", true);
 
             if (!this.IsExpanded)
             {
@@ -122,7 +121,8 @@
             {
                 var s = this.sizes[i];
 
-                Theme.DrawTextBox(point, s, this.options[i], this.Value == i ? Color.LightGreen : Theme.BackgroundColor);
+                Theme.DrawTextBox(point, s, this.options[i], true, this.Value == i ? Color.Green : Theme.BackgroundColor);
+                Theme.DrawBorders(point, s);
 
                 point.Y += s.Height;
             }
@@ -180,7 +180,7 @@
             get => this.options.ToList();
             set
             {
-                if (this.options.SequenceEqual(value) || !this.UpdateValue(value))
+                if (this.options.SequenceEqual(value))
                 {
                     return;
                 }
@@ -189,12 +189,6 @@
 
                 this.Value = Math.Min(this.Value, value.Count - 1);
             }
-        }
-
-        List<string> IMenuValue<List<string>>.Value
-        {
-            get => this.Options;
-            set => this.Options = value;
         }
     }
 }

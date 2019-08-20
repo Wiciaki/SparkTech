@@ -28,11 +28,6 @@
             }
         }
 
-        public TMenuItem Cast<TMenuItem>() where TMenuItem : MenuItem
-        {
-            return (TMenuItem)this;
-        }
-
         protected abstract Size2 GetSize();
 
         protected internal void UpdateSize()
@@ -66,7 +61,7 @@
             return b;
         }
 
-        protected internal virtual void SetTranslations(JObject o)
+        protected internal virtual void SetTranslations(Translations t)
         {
 
         }

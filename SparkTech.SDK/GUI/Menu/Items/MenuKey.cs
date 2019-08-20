@@ -1,4 +1,4 @@
-﻿namespace SparkTech.SDK.GUI.Menu.Items
+﻿namespace SparkTech.SDK.GUI.Menu
 {
     using Newtonsoft.Json.Linq;
 
@@ -70,7 +70,7 @@
 
         protected override Size2 GetSize()
         {
-            this.text = this.selecting ? SdkSetup.GetString("keySelector") : this.value.ToString();
+            this.text = this.selecting ? SdkSetup.GetTranslatedString("keySelector") : this.value.ToString();
 
             var s = base.GetSize();
 
@@ -89,7 +89,7 @@
             base.OnEndScene(point, width);
             point.X += width;
 
-            Theme.DrawTextBox(point, this.size, this.text, this.ButtonColor);
+            Theme.DrawTextBox(point, this.size, this.text, true, this.ButtonColor);
         }
 
         protected override JToken Token

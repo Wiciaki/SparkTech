@@ -1,7 +1,6 @@
 ﻿namespace SparkTech.SDK.Entities
 {
     using System;
-    using System.Collections.Generic;
     using System.Text.RegularExpressions;
 
     using SharpDX;

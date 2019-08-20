@@ -4,6 +4,7 @@
 
     using SharpDX;
 
+    using SparkTech.SDK.Platform;
     using SparkTech.SDK.Rendering;
 
     internal static class Clock
@@ -21,7 +22,7 @@
 
         private static string Text()
         {
-            return DateTime.Now.ToShortTimeString();
+            return "LeonCore" + " - " + DateTime.Now.ToLongTimeString();
         }
 
         public static void UpdateSize()
@@ -35,7 +36,7 @@
         {
             if (Enabled)
             {
-                Theme.DrawTextBox(point, size, Text());
+                Theme.DrawTextBox(point, size, Text(), true, Color.Transparent);
             }
         }
     }

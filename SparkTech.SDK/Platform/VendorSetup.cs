@@ -1,11 +1,18 @@
 ﻿namespace SparkTech.SDK.Platform
 {
+    using System;
     using System.Reflection;
+    using System.Runtime.CompilerServices;
+
+    using SharpDX;
 
     using SparkTech.SDK.Auth;
     using SparkTech.SDK.Entities;
+    using SparkTech.SDK.Game;
     using SparkTech.SDK.GUI;
+    using SparkTech.SDK.GUI.Menu;
     using SparkTech.SDK.Logging;
+    using SparkTech.SDK.Platform.API;
     using SparkTech.SDK.Rendering;
     using SparkTech.SDK.Security;
 
@@ -13,6 +20,28 @@
     {
         public static string PlatformName { get; private set; }
 
+        public static void Init<T>(string platName, T thing) where T : IRender, IGameEvents
+        {
+            PlatformName = platName;
+
+            var desktop = new Folder(Environment.GetFolderPath(Environment.SpecialFolder.Desktop));
+
+            Folder.Initialize(desktop.GetFolder("Shark"));
+            Log.Info("start...");
+
+            Render.Initialize(thing);
+            GameEvents.Initialize(thing);
+
+            //Render.OnDraw += () => Vector.Draw(Color.White, 50f, new Vector2(100, 100), new Vector2(150, 150));
+
+            RuntimeHelpers.RunClassConstructor(typeof(SdkSetup).TypeHandle);
+
+            Clock.UpdateSize();
+
+            Menu.UpdateAllSizes();
+        }
+
+        /*
         private VendorSetup()
         { }
 
@@ -63,6 +92,6 @@
                     Log.Logger = value;
                 }
             } 
-        }
+        }*/
     }
 }

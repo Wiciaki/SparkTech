@@ -42,7 +42,7 @@
                 bytes = sha512.ComputeHash(bytes);
             }
 
-            return Convert.ToBase64String(bytes)[..9].ToUpper();
+            return Convert.ToBase64String(bytes).Substring(0, 9).ToUpper();
         }
     }
 }

@@ -61,7 +61,39 @@ namespace SparkTech.SDK.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ൻ ∠湥㨢笠਍††琢硥≴›匢䭄Ⱒ਍††栢汥呰硥≴›䠢牥⁥潹⁵楷汬映湩⁤污⁬桴⁥敳瑴湩獧琠慨⁴浩慰瑣漠桴牥猠牣灩獴ഢ 素ബ ∠桺㨢笠਍਍†ⱽ਍਍†椢整≭›ൻഊ 素ഠ紊.
+        ///   Looks up a localized string similar to {
+        ///  &quot;en&quot;: {
+        ///    &quot;text&quot;: &quot;SDK&quot;,
+        ///    &quot;helpText&quot;: &quot;Here you will find all the settings that impact other scripts&quot;
+        ///  },
+        ///  &quot;zh&quot;: {
+        ///  },
+        ///  &quot;language&quot;: {
+        ///    &quot;en&quot;: {
+        ///      &quot;text&quot;: &quot;Language&quot;
+        ///    },
+        ///    &quot;zh&quot;: {
+        ///      &quot;text&quot;: &quot;语言 (language)&quot;
+        ///    }
+        ///  },
+        ///  &quot;position&quot;: {
+        ///    &quot;en&quot;: {
+        ///      &quot;text&quot;: &quot;Position&quot;
+        ///    },
+        ///    &quot;x&quot;: {
+        ///      &quot;en&quot;: {
+        ///        &quot;text&quot;: &quot;X coord&quot;
+        ///      }
+        ///    },
+        ///    &quot;y&quot;: {
+        ///      &quot;en&quot;: {
+        ///        &quot;text&quot;: &quot;Y coord&quot;
+        ///      }
+        ///    }
+        ///  },
+        ///  &quot;triggers&quot;: {
+        ///    &quot;en&quot;: {
+        ///      &quot;text&quot; [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string MainMenu {
             get {
@@ -80,7 +112,19 @@ namespace SparkTech.SDK.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ൻ ∠湥㨢笠਍††欢祥楂摮敓敬瑣牯㨢∠牐獥⁳潮⹷⸮Ⱒ਍††昢物瑳楔敭敗捬浯≥›圢汥潣敭琠⁯灻慬晴牯絭‡湅汧獩⁨慬杮慵敧搠瑥捥整⹤夠畯挠湡挠慨杮⁥桴瑡椠⁮桴⁥敭畮∮਍†ⱽ਍†稢≨›ൻഊ 素ഠ紊਍.
+        ///   Looks up a localized string similar to {
+        ///  &quot;en&quot;: {
+        ///    &quot;keySelector&quot;: &quot;Press now...&quot;,
+        ///    &quot;menuListEmpty&quot;: &quot;Less than 2 options provided&quot;,
+        ///    &quot;firstTimeWelcome&quot;: &quot;Welcome to {platform}!\nEnglish language detected.\nYou can change that in the menu.&quot;,
+        ///
+        ///    // special, don&apos;t translate, only change here
+        ///    &quot;languageUnknown&quot;: &quot;Welcome to {platform}!\nYour system language,\n\&quot;{language}\&quot; is not supported by the SDK.\nDefault will be used.\nYou can change that inside the menu.&quot;
+        ///  },
+        ///  &quot;zh&quot;: {
+        ///
+        ///  } 
+        ///}.
         /// </summary>
         internal static string Strings {
             get {

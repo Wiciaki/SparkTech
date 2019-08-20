@@ -1,9 +1,11 @@
 ﻿{
   "en": {
-    "text": "SDK",
+    "text": "SparkTech.SDK",
     "helpText": "Here you will find all the settings that impact other scripts"
   },
   "zh": {
+    "text": "Spark制作",
+    "helpText": "帮助"
   },
   "language": {
     "en": {
@@ -17,40 +19,64 @@
     "en": {
       "text": "Position"
     },
+    "zh": {
+      "text": "位置"
+    },
     "x": {
       "en": {
         "text": "X coord"
-      }
+      },
+      "zh": {
+        "text": "X轴"
+      } 
     },
     "y": {
       "en": {
         "text": "Y coord"
-      }
+      },
+      "zh": {
+        "text": "Y轴"
+      } 
     }
   },
   "triggers": {
     "en": {
       "text": "Menu controls"
     },
+    "zh": {
+      "text": "控制菜单"
+    },
     "key": {
       "en": {
         "text": "Activation button"
-      }
+      },
+      "zh": {
+        "text": "激活按键"
+      } 
     },
     "toggle": {
       "en": {
         "text": "Press to toggle?"
-      }
+      },
+      "zh": {
+        "text": "锁死"
+      } 
     },
     "apply": {
       "en": {
         "text": "Click here to apply above settings"
-      }
+      },
+      "zh": {
+        "text": "应用"
+      } 
     }
   },
   "clock": {
     "en": {
-      "text": "Clock" 
+      "text": "Clock"
+    },
+    "zh": {
+      "text": "钟"
     }
-  } 
-}
+  }
+} 

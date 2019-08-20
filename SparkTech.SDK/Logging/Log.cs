@@ -2,7 +2,7 @@
 {
     public static class Log
     {
-        internal static ILogger Logger = new ConsoleLogger();
+        internal static ILogger Logger = new FileLogger();
 
         internal static LogLevel LogLevel;
 

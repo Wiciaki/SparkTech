@@ -1,4 +1,4 @@
-﻿namespace SparkTech.SDK.GUI.Menu.Items
+﻿namespace SparkTech.SDK.GUI.Menu
 {
     using System;
 
@@ -20,9 +20,10 @@
         protected override Size2 GetSize()
         {
             var s = base.GetSize();
-            s.Width += 28;
 
-            this.size = new Size2(28, s.Height);
+            var extraWidth = Math.Min(56, s.Height);
+            s.Width += extraWidth;
+            this.size = new Size2(extraWidth, s.Height);
 
             return s;
         }
