@@ -60,7 +60,7 @@
 
             RenderLoop.Run(form, () =>
             {
-                device.Clear(ClearFlags.Target, Color.Black, 1.0f, 0);
+                device.Clear(ClearFlags.Target, Color.Gray, 1.0f, 0);
                 
                 device.BeginScene();
                 form.BeginScene();

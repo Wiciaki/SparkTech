@@ -8,7 +8,7 @@
 
         static Theme()
         {
-            theme = new ClassicTheme();
+            theme = new SharkTheme();
         }
 
         internal static void SetTheme(ITheme t)
@@ -22,6 +22,8 @@
             Menu.Menu.UpdateAllSizes();
             Notifications.Notification.UpdateAllSizes();
         }
+
+        public static int MinItemHeight => theme.MinItemHeight;
 
         public static int ItemGroupDistance => theme.ItemGroupDistance;
 

@@ -4,24 +4,31 @@
     using SharpDX.Direct3D9;
     using SharpDX.Mathematics.Interop;
 
+    using SparkTech.SDK.Logging;
     using SparkTech.SDK.Rendering;
 
     public class ClassicTheme : ITheme
     {
-        private readonly Font font;
+        private Font font;
 
         public ClassicTheme()
         {
-            var desc = new FontDescription { FaceName = "Calibri", Height = 18 };
-
-            this.font = new Font(Render.Direct3DDevice, desc);
-
-            Render.OnLostDevice += this.font.OnLostDevice;
-            Render.OnResetDevice += this.font.OnResetDevice;
-            Render.OnDispose += this.Dispose;
+            //Render.OnLostDevice += this.font.OnLostDevice;
+            //Render.OnResetDevice += this.font.OnResetDevice;
+            //Render.OnDispose += this.Dispose;
         }
 
-        public Color BackgroundColor
+        protected Font Font
+        {
+            get
+            {
+                return this.font ??= new Font(Render.Direct3DDevice, this.GetFontDescription());
+            }
+        }
+
+        public virtual FontDescription GetFontDescription() => new FontDescription { FaceName = "Calibri", Height = 18 };
+
+        public virtual Color BackgroundColor
         {
             get
             {
@@ -31,19 +38,21 @@
             }
         }
 
+        public int MinItemHeight { get; } = 28;
+
         public int ItemGroupDistance { get; } = 0;
 
-        private const FontDrawFlags DrawFlags = FontDrawFlags.VerticalCenter | FontDrawFlags.Center;
+        protected virtual FontDrawFlags DrawFlags { get; } = FontDrawFlags.VerticalCenter | FontDrawFlags.Center;
 
         private const FontDrawFlags CenteredFlags = FontDrawFlags.VerticalCenter | FontDrawFlags.Center;
 
-        private readonly Size2 extraTextSize = new Size2(6,6);
+        private readonly Size2 extraTextSize = new Size2(10,0);
 
         public Size2 MeasureText(string text)
         {
-            var r = this.font.MeasureText(null, text, DrawFlags);
+            var r = this.Font.MeasureText(null, text, DrawFlags);
 
-            var height = MultipleOf(r.Bottom - r.Top + this.extraTextSize.Height, 28);
+            var height = MultipleOf(r.Bottom - r.Top + this.extraTextSize.Height, this.MinItemHeight);
             var width = MultipleOf(r.Right - r.Left + this.extraTextSize.Width, 2);
 
             return new Size2(width + this.extraTextSize.Width, height + this.extraTextSize.Height);
@@ -60,17 +69,16 @@
         {
             this.DrawBox(point, size, color ?? this.BackgroundColor);
 
-            this.font.DrawText(null, text, this.GetTextRectangle(point, size), centered ? CenteredFlags : DrawFlags, Color.White);
+            this.Font.DrawText(null, text, this.GetTextRectangle(point, size), centered ? CenteredFlags : this.DrawFlags, Color.White);
         }
 
         public void DrawBox(Point point, Size2 size, Color color)
         {
             point.Y += size.Height / 2;
-
             Vector.Draw(color, size.Height, point, new Point(point.X + size.Width, point.Y));
         }
 
-        public void DrawBorders(Point point, params Size2[] sizes)
+        public virtual void DrawBorders(Point point, params Size2[] sizes)
         {
             foreach (var size in sizes)
             {
@@ -98,7 +106,7 @@
 
         public void Dispose()
         {
-            this.font.Dispose();
+            this.Font.Dispose();
         }
     }
 }

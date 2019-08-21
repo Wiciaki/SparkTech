@@ -22,7 +22,7 @@
 
         private static string Text()
         {
-            return "LeonCore" + " - " + DateTime.Now.ToLongTimeString();
+            return VendorSetup.PlatformName + " - " + DateTime.Now.ToLongTimeString();
         }
 
         public static void UpdateSize()

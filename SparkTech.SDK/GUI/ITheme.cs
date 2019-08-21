@@ -10,6 +10,8 @@
 
         int ItemGroupDistance { get; }
 
+        int MinItemHeight { get; }
+
         Size2 MeasureText(string text);
 
         void DrawBox(Point point, Size2 size, Color color);

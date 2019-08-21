@@ -22,7 +22,7 @@
 
         private JObject settings;
 
-        private Size2 size;
+        private Size2 size, arrowSize;
 
         private const string ExpandText = ">>";
 
@@ -68,14 +68,11 @@
 
         protected override Size2 GetSize()
         {
-            var width = Math.Max(28, Theme.MeasureText(ExpandText).Width);
+            var s = AddButton(base.GetSize(), out this.size);
 
-            var b = base.GetSize();
-            b.Width += width;
+            this.arrowSize = new Size2(Theme.MeasureText("->").Width, s.Height);
 
-            this.size = new Size2(width, b.Height);
-
-            return b;
+            return s;
         }
 
         protected internal override void OnEndScene(Point point, int width)
@@ -92,6 +89,10 @@
             }
 
             point.X += this.size.Width + Theme.ItemGroupDistance;
+
+            Theme.DrawTextBox(point, this.arrowSize, "➜", true);
+
+            point.X += this.arrowSize.Width;
 
             DrawGroup(this.items, point);
         }

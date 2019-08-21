@@ -19,24 +19,17 @@
         
         protected override Size2 GetSize()
         {
-            var s = base.GetSize();
-
-            var extraWidth = Math.Min(56, s.Height);
-            s.Width += extraWidth;
-            this.size = new Size2(extraWidth, s.Height);
-
-            return s;
+            return AddButton(base.GetSize(), out this.size);
         }
 
         protected internal override void OnEndScene(Point point, int width)
         {
             width -= this.size.Width;
-
             base.OnEndScene(point, width);
-
             point.X += width;
 
             Theme.DrawBox(point, this.size, this.pressing ? Color.Gray : Color.DarkGray);
+            Theme.DrawBorders(point, this.size);
         }
 
         protected internal override void OnWndProc(Point point, int width, WndProcEventArgs args)

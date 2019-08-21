@@ -1,7 +1,5 @@
 ﻿namespace SparkTech.SDK.GUI.Menu
 {
-    using System;
-
     using Newtonsoft.Json.Linq;
 
     using SharpDX;
@@ -30,22 +28,19 @@
             point.X += width;
 
             Theme.DrawBox(point, this.size, this.Value ? Color.Green : Color.Red);
+            Theme.DrawBorders(point, this.size);
         }
 
         protected internal override void OnWndProc(Point point, int width, WndProcEventArgs args)
         {
             point.X += width - this.size.Width;
-            this.Value ^= Menu.IsCursorInside(point, this.size) && Menu.IsLeftClick(args.Message);
+
+            this.Value ^= Menu.IsLeftClick(args.Message) && Menu.IsCursorInside(point, this.size);
         }
 
         protected override Size2 GetSize()
         {
-            var s = base.GetSize();
-            var extraWidth = Math.Min(56, s.Height);
-            this.size = new Size2(extraWidth, s.Height);
-            s.Width += this.size.Width;
-
-            return s;
+            return AddButton(base.GetSize(), out this.size);
         }
 
         protected override JToken Token

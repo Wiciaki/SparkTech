@@ -15,6 +15,7 @@
         private Texture texture;
 
         private Size2 size;
+
         /*
         public Bitmap Bitmap
         {

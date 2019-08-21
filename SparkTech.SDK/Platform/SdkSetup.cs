@@ -10,6 +10,7 @@
     using SparkTech.SDK.GUI.Notifications;
     using SparkTech.SDK.Logging;
     using SparkTech.SDK.Properties;
+    using SparkTech.SDK.Rendering;
     using SparkTech.SDK.Security;
 
     public static class SdkSetup
@@ -29,8 +30,8 @@
                 new MenuList("language") { Options = EnumCache<Language>.Names },
                 new Menu("position")
                 {
-                    new MenuInt("x", 0, 500, 25),
-                    new MenuInt("y", 0, 500, 25)
+                    new MenuFloat("x", 0, 500, 25),
+                    new MenuFloat("y", 500, 0, 25)
                 },
                 new Menu("triggers")
                 {
@@ -53,14 +54,59 @@
             Log.Info("Hello! FirstRun: " + FirstRun);
 
             Menu.IsExpanded = true;
-            //Menu.GetMenu("position").IsExpanded = true;
+            
+            Menu.GetMenu("position").IsExpanded = true;
             //Menu.GetMenu("triggers").IsExpanded = true;
-            ((IExpandable)Menu["language"]).IsExpanded = true;
+            //((IExpandable)Menu["language"]).IsExpanded = true;
+
+            //Menu.GetMenu("position")["x"].SetValue(270);
 
             Menu.SetOpen(true);
+
+            SetupTest();
         }
 
         #region Menu Setup
+
+        private static void SetupTest()
+        {
+            var dirX = true;
+            var dirY = false;
+
+            var x = (MenuFloat)Menu.GetMenu("position")["x"];
+            var y = (MenuFloat)Menu.GetMenu("position")["y"];
+
+            Render.OnDraw += () =>
+            {
+                if (x.Value + 1f > x.Max || x.Value - 1f < x.Min)
+                {
+                    dirX ^= true;
+                }
+
+                if (y.Value + 1f > y.Max || y.Value - 1f < y.Min)
+                {
+                    dirY ^= true;
+                }
+
+                if (dirX)
+                {
+                    x.Value += 0.2f;
+                }
+                else
+                {
+                    x.Value -= 0.2f;
+                }
+
+                if (dirY)
+                {
+                    y.Value += 0.2f;
+                }
+                else
+                {
+                    y.Value -= 0.2f;
+                }
+            };
+        }
 
         private static void SetupMenu(out bool firstRun)
         {
@@ -141,10 +187,11 @@
             var xItem = menu["x"];
             var yItem = menu["y"];
 
-            xItem.BeforeValueChange += args => Menu.SetPosition(args.NewValue<int>(), yItem.GetValue<int>());
-            yItem.BeforeValueChange += args => Menu.SetPosition(xItem.GetValue<int>(), args.NewValue<int>());
+            xItem.BeforeValueChange += args => Menu.SetPosition((int)args.NewValue<float>(), (int)yItem.GetValue<float>());
+            yItem.BeforeValueChange += args => Menu.SetPosition((int)xItem.GetValue<float>(), (int)args.NewValue<float>());
 
-            Menu.SetPosition(xItem.GetValue<int>(), yItem.GetValue<int>());
+            //Menu.SetPosition(xItem.GetValue<int>(), yItem.GetValue<int>());
+            Menu.SetPosition(50, 50);
         }
 
         private static void SetMenuTriggers()

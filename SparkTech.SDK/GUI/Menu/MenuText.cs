@@ -1,5 +1,7 @@
 ﻿namespace SparkTech.SDK.GUI.Menu
 {
+    using System;
+
     using SharpDX;
 
     using SparkTech.SDK.Rendering;
@@ -68,20 +70,33 @@
         protected override Size2 GetSize()
         {
             this.UpdateHelpTextSize();
-
-            var s = Theme.MeasureText(this.Text);
-            this.textSize = s;
+            
+            this.textSize = Theme.MeasureText(this.Text);
 
             if (this.HelpText != null)
             {
-                var hSize = Theme.MeasureText(HelpBoxText);
-                hSize.Height = this.textSize.Height;
-
-                this.helpSize = hSize;
+                this.helpSize = new Size2(Theme.MeasureText(HelpBoxText).Width, this.textSize.Height);
             }
 
-            s.Width += this.helpSize.Width;
-            return s;
+            var size = new Size2(this.textSize.Width + this.helpSize.Width, this.textSize.Height);
+
+            var width = Theme.MeasureText("This may be enough").Width;
+
+            if (width > size.Width)
+            {
+                size.Width = width;
+            }
+
+            return size;
+        }
+
+        protected static Size2 AddButton(Size2 size, out Size2 buttonSize)
+        {
+            var width = Math.Min(56, size.Height);
+            size.Width += width;
+
+            buttonSize = new Size2(width, size.Height);
+            return size;
         }
 
         private void UpdateHelpTextSize()
@@ -116,7 +131,6 @@
             point.Y = (res.Height - this.helpTextSize.Height) / 2;
 
             Theme.DrawTextBox(point, this.helpTextSize, this.HelpText, true);
-            Theme.DrawBorders(point, this.helpTextSize);
         }
     }
 }

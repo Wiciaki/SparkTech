@@ -6,11 +6,11 @@
 
     public class MenuColor : MenuValue, IMenuValue<Color>
     {
-        private Color color;
+        private Color value;
 
         private bool picking;
 
-        private Size2 buttonSize;
+        private Size2 size;
 
         #region Constructors and Destructors
 
@@ -26,37 +26,36 @@
 
         public Color Value
         {
-            get => this.color;
-            set => this.color = value != this.color && this.UpdateValue(value) ? value : this.color;
+            get => this.value;
+            set
+            {
+                if (value != this.value && this.UpdateValue(value))
+                {
+                    this.value = value;
+                }
+            }
         }
 
         protected override Size2 GetSize()
         {
-            var size = base.GetSize();
-
-            this.buttonSize = new Size2(28, size.Height);
-
-            size.Width += size.Height;
-
-            return size;
+            return AddButton(base.GetSize(), out this.size);
         }
 
         protected internal override void OnEndScene(Point point, int width)
         {
-            width -= this.buttonSize.Width;
-
+            width -= this.size.Width;
             base.OnEndScene(point, width);
-
             point.X += width;
 
-            Theme.DrawBox(point, this.buttonSize, this.GetValue<Color>());
+            Theme.DrawBox(point, this.size, this.GetValue<Color>());
+            Theme.DrawBorders(point, this.size);
 
             if (!this.picking)
             {
                 return;
             }
 
-            point.X += this.buttonSize.Width + Theme.ItemGroupDistance + 20;
+            point.X += this.size.Width + Theme.ItemGroupDistance + 20;
 
             // todo this is temp
             Rendering.Text.Draw("You dont know how hard it's to make a color picker ffs", Color.White, point);
@@ -64,9 +63,9 @@
 
         protected internal override void OnWndProc(Point point, int width, WndProcEventArgs args)
         {
-            point.X += width - this.buttonSize.Width;
+            point.X += width - this.size.Width;
 
-            if (Menu.IsLeftClick(args.Message) && Menu.IsCursorInside(point, this.buttonSize))
+            if (Menu.IsLeftClick(args.Message) && Menu.IsCursorInside(point, this.size))
             {
                 this.picking ^= true;
             }
@@ -78,8 +77,8 @@
 
         protected override JToken Token
         {
-            get => ColorToJArray(this.color);
-            set => this.color = JArrayToColor((JArray)value);
+            get => ColorToJArray(this.value);
+            set => this.value = JArrayToColor((JArray)value);
         }
 
         #endregion

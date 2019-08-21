@@ -8,7 +8,6 @@
 
     using SharpDX;
 
-    using SparkTech.SDK.Logging;
     using SparkTech.SDK.Platform;
 
     public class MenuList : MenuValue, IExpandable, IMenuValue<int>, IMenuValue<string>
