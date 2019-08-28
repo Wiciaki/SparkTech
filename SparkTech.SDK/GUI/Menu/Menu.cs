@@ -22,7 +22,7 @@
 
         private JObject settings;
 
-        private Size2 size, arrowSize;
+        private Size2 size;
 
         private const string ExpandText = ">>";
 
@@ -68,11 +68,7 @@
 
         protected override Size2 GetSize()
         {
-            var s = AddButton(base.GetSize(), out this.size);
-
-            this.arrowSize = new Size2(Theme.MeasureText("->").Width, s.Height);
-
-            return s;
+            return AddButton(base.GetSize(), out this.size);
         }
 
         protected internal override void OnEndScene(Point point, int width)
@@ -81,18 +77,14 @@
             base.OnEndScene(point, width);
             point.X += width;
 
-            Theme.DrawTextBox(point, this.size, ExpandText, true);
+            Theme.DrawTextBox(point, this.size, ExpandText, true, this.BackgroundColor);
 
             if (!this.IsExpanded)
             {
                 return;
             }
 
-            point.X += this.size.Width + Theme.ItemGroupDistance;
-
-            Theme.DrawTextBox(point, this.arrowSize, "➜", true);
-
-            point.X += this.arrowSize.Width;
+            point.X += this.size.Width;
 
             DrawGroup(this.items, point);
         }
@@ -104,7 +96,7 @@
                 return;
             }
 
-            point.X += width + Theme.ItemGroupDistance;
+            point.X += width;
 
             WndProcGroup(this.items, point, args);
         }
@@ -225,7 +217,7 @@
 
         public static Language Language { get; private set; }
 
-        public static string LanguageTag { get; private set; } = EnumCache<Language>.Description(default);
+        public static string LanguageTag { get; private set; } = "en";
 
         public static event Action VisibilityChanged, LanguageChanged;
 
@@ -246,7 +238,7 @@
                 return;
             }
 
-            cursor = GameEvents.GetCursorPosition();
+            //cursor = GameEvents.CursorPosition();
 
             DrawGroup(RootEntries.ConvertAll(e => e.Menu), position);
         }
@@ -355,14 +347,16 @@
 
         internal static void SetLanguage(Language language)
         {
-            if (Language == language)
+            var tag = EnumCache<Language>.Description(language);
+
+            if (LanguageTag == tag)
             {
                 return;
             }
 
             Language = language;
 
-            LanguageTag = EnumCache<Language>.Description(language);
+            LanguageTag = tag;
 
             RootEntries.ForEach(entry => entry.UpdateLanguage());
 
@@ -396,9 +390,12 @@
 
         public static void UpdateAllSizes()
         {
-            var roots = RootEntries.ConvertAll(entry => entry.Menu);
+            RootEntries.ForEach(entry => entry.Menu.UpdateSizes());
+        }
 
-            foreach (var item in roots.Concat(roots.SelectMany(menu => menu.GetDescensants())))
+        public void UpdateSizes()
+        {
+            foreach (var item in this.GetDescensants().Prepend(this))
             {
                 item.UpdateSize();
             }
@@ -441,7 +438,7 @@
 
                 this.translations = translations;
 
-                this.targetPath = Folder.MenuFolder.GetFile(menu.Id + ".json");
+                this.targetPath = Folder.Menu.GetFile(menu.Id + ".json");
 
                 JObject o = null;
 
@@ -469,6 +466,8 @@
             public void UpdateLanguage()
             {
                 this.Menu.SetTranslations(this.translations);
+
+                this.Menu.UpdateSizes();
             }
 
             public async void Save()
@@ -498,7 +497,13 @@
 
                 this.lastSaved = token;
 
-                await Folder.SaveTokenAsync(this.targetPath, token);
+                using (var fileStream = new FileStream(this.targetPath, FileMode.Create, FileAccess.Write))
+                {
+                    using var streamWriter = new StreamWriter(fileStream);
+                    using var testWriter = new JsonTextWriter(streamWriter) { Formatting = Formatting.Indented };
+
+                    await token.WriteToAsync(testWriter);
+                }
 
                 Log.Info($"Saving completed for \"{this.Menu.Id}\"!");
             }

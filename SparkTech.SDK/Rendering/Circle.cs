@@ -96,12 +96,17 @@ namespace SparkTech.SDK.Rendering
 
         #region Public Methods and Operators
 
-        public static void Draw(
-            Color color,
-            float radius,
-            float thickness,
-            bool filled,
-            params Vector3[] worldPositions)
+        public static void Draw(Color color, float radius, params Vector3[] worldPositions)
+        {
+            Draw(color, radius, 1f, worldPositions);
+        }
+
+        public static void Draw(Color color, float radius, float thickness, params Vector3[] worldPositions)
+        {
+            Draw(color, radius, thickness, false, worldPositions);
+        }
+
+        public static void Draw(Color color, float radius, float thickness, bool filled, params Vector3[] worldPositions)
         {
             // Save the current VertexDecleration for restoring later
             var declaration = Render.Direct3DDevice.VertexDeclaration;
@@ -117,12 +122,12 @@ namespace SparkTech.SDK.Rendering
             var multiplier = Render.ViewMatrix() * Render.ProjectionMatrix();
 
             // Loop through the world-space positions to draw the circle
-            foreach (var worldPosition in worldPositions)
+            foreach (var position in worldPositions)
             {
                 // Send all the global variables to the shader
                 Effect.BeginPass(0);
 
-                Effect.SetValue("ProjectionMatrix", Matrix.Translation(worldPosition) * multiplier);
+                Effect.SetValue("ProjectionMatrix", Matrix.Translation(position) * multiplier);
                 Effect.SetValue("Color", new Vector4(color.R / 255f, color.G / 255f, color.B / 255f, color.A / 255f));
                 Effect.SetValue("Radius", radius);
                 Effect.SetValue("Width", thickness);
@@ -141,16 +146,6 @@ namespace SparkTech.SDK.Rendering
 
             // Restore the previous VertexDecleration
             Render.Direct3DDevice.VertexDeclaration = declaration;
-        }
-
-        public static void Draw(Color color, float radius, float thickness, params Vector3[] worldPositions)
-        {
-            Draw(color, radius, thickness, false, worldPositions);
-        }
-
-        public static void Draw(Color color, float radius, params Vector3[] worldPositions)
-        {
-            Draw(color, radius, 1f, worldPositions);
         }
 
         #endregion

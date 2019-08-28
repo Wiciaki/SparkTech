@@ -10,12 +10,12 @@
 
         public FileLogger()
         {
-            path = Folder.RootFolder.GetFile("log.txt");
+            this.path = Folder.Root.GetFile("log.txt");
         }
 
         public void Write(string msg, LogLevel level)
         {
-            File.AppendAllText(path, level + " | " +msg + "\n");
+            File.AppendAllText(this.path, level + " | " + msg + "\n");
         }
     }
 }

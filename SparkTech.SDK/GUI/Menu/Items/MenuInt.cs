@@ -8,41 +8,36 @@
 
         public MenuInt(string id, int from, int to, int defaultValue) : base(id, from, to, (JToken)defaultValue)
         {
-            this.From = from;
-
-            this.To = to;
+            this.CheckBounds(defaultValue);
         }
 
         #endregion
 
+        public new int From => (int)base.From;
+
+        public new int To => (int)base.To;
+
         #region Public Properties
-
-        public new readonly int From;
-
-        public new readonly int To;
 
         public new int Value
         {
             get => (int)base.Value;
-            set => this.SetFloat(value);
+            set => base.Value = value;
         }
 
-        protected override void SetFloat(float num)
+        protected override bool InvokeNotifier(float num)
         {
-            if (this.UpdateValue((int)num))
-            {
-                base.SetFloat(num);
-            }
+            return this.UpdateValue((int)num);
         }
 
         protected override string GetMaxNumStr()
         {
-            return base.GetMaxNumStr().Replace(".00", "");
+            return base.GetMaxNumStr().Replace(".00", string.Empty);
         }
 
         protected override string GetPrintableStr(float num)
         {
-            return ((int)num).ToString();
+            return "[" + (int)num + "]";
         }
 
         #endregion

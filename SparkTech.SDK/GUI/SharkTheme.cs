@@ -5,9 +5,9 @@
 
     using SparkTech.SDK.Rendering;
 
-    public class SharkTheme : ClassicTheme
+    public class SharkTheme : DefaultTheme
     {
-        protected override FontDrawFlags DrawFlags { get; } = FontDrawFlags.Left | FontDrawFlags.VerticalCenter;
+        protected override FontDrawFlags DrawFlags { get; } = FontDrawFlags.Center | FontDrawFlags.VerticalCenter;
 
         public override Color BackgroundColor
         {
@@ -28,13 +28,9 @@
         {
             foreach (var size in sizes)
             {
-                var p = new Vector2[3];
+                var p = new[] { new Vector2(point.X + size.Width, point.Y), new Vector2(point.X, point.Y), new Vector2(point.X, point.Y + size.Height) };
 
-                p[0] = new Vector2(point.X + size.Width, point.Y);
-                p[1] = new Vector2(point.X, point.Y);
-                p[2] = new Vector2(point.X, point.Y + size.Height);
-
-                Vector.Draw(Color.WhiteSmoke, 2f, p);
+                Vector.Draw(Color.WhiteSmoke, 1.5f, p);
 
                 point.Y += size.Height;
             }

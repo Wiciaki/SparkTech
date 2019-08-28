@@ -20,9 +20,11 @@
     {
         public static string PlatformName { get; private set; }
 
-        public static void Init<T>(string platName, T thing) where T : IRender, IGameEvents
+        public static void Init<T>(string platName, T thing) where T : IRender
         {
             PlatformName = platName;
+
+            AppDomain.CurrentDomain.UnhandledException += (sender, args) => { Log.Error(args.ExceptionObject); };
 
             var desktop = new Folder(Environment.GetFolderPath(Environment.SpecialFolder.Desktop));
 
@@ -30,15 +32,13 @@
             Log.Info("start...");
 
             Render.Initialize(thing);
-            GameEvents.Initialize(thing);
+            Theme.SetTheme(new DefaultTheme());
 
             //Render.OnDraw += () => Vector.Draw(Color.White, 50f, new Vector2(100, 100), new Vector2(150, 150));
 
+
+
             RuntimeHelpers.RunClassConstructor(typeof(SdkSetup).TypeHandle);
-
-            Clock.UpdateSize();
-
-            Menu.UpdateAllSizes();
         }
 
         /*

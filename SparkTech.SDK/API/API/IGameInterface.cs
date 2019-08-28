@@ -12,6 +12,10 @@
 
         bool IsChatOpen();
 
-        Point CursorPosition();
+        Vector2 WorldToScreen(Vector3 pos);
+
+        Vector2 WorldToMinimap(Vector3 pos);
+
+        Vector3 ScreenToWorld(Vector3 pos);
     }
 }

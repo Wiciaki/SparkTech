@@ -21,12 +21,6 @@
         
         Action ResetDevice { get; set; }
 
-        Vector2 WorldToScreen(Vector3 pos);
-
-        Vector2 WorldToMinimap(Vector3 pos);
-
-        Vector3 ScreenToWorld(Vector3 pos);
-
         Matrix ProjectionMatrix();
 
         Matrix ViewMatrix();

@@ -14,43 +14,46 @@
 
         public static event Action OnDraw, OnBeginScene, OnEndScene, OnLostDevice, OnResetDevice, OnDispose, OnResolutionChanged;
 
-        public static Size2 Resolution() => api.Resolution();
+        public static Size2 Resolution()
+        {
+            return r.Resolution();
+        }
 
-        public static Matrix ProjectionMatrix() => api.ProjectionMatrix();
+        public static Matrix ProjectionMatrix()
+        {
+            return r.ProjectionMatrix();
+        }
 
-        public static Matrix ViewMatrix() => api.ViewMatrix();
+        public static Matrix ViewMatrix()
+        {
+            return r.ViewMatrix();
+        }
 
-        public static Vector2 WorldToScreen(this Vector3 pos) => api.WorldToScreen(pos);
-
-        public static Vector2 WorldToMinimap(this Vector3 pos) => api.WorldToMinimap(pos);
-
-        public static Vector3 ScreenToWorld(this Vector3 pos) => api.ScreenToWorld(pos);
-
-        private static IRender api;
+        private static IRender r;
 
         internal static void Initialize(IRender render)
         {
-            api = render;
+            r = render;
 
-            Direct3DDevice = api.GetDevice();
+            Direct3DDevice = r.GetDevice();
 
-            api.Draw = () => OnDraw.SafeInvoke();
-            api.BeginScene = () => OnBeginScene.SafeInvoke();
-            api.EndScene = () => OnEndScene.SafeInvoke();
-            api.LostDevice = OnLostDevice.SafeInvoke;
-            api.ResetDevice = OnResetDevice.SafeInvoke;
+            r.Draw = () => OnDraw.SafeInvoke();
+            r.BeginScene = () => OnBeginScene.SafeInvoke();
+            r.EndScene = () => OnEndScene.SafeInvoke();
+            r.LostDevice = OnLostDevice.SafeInvoke;
+            r.ResetDevice = OnResetDevice.SafeInvoke;
 
             static void OnExit(object o, EventArgs args) => OnDispose.SafeInvoke();
 
             AppDomain.CurrentDomain.DomainUnload += OnExit;
             AppDomain.CurrentDomain.ProcessExit += OnExit;
 
-            var triggerable = new[] { typeof(Vector), typeof(Circle), typeof(Text), typeof(Image) };
+            static void Init(Type type) => RuntimeHelpers.RunClassConstructor(type.TypeHandle);
 
-            foreach (var type in triggerable)
-            {
-                RuntimeHelpers.RunClassConstructor(type.TypeHandle);
-            }
+            Init(typeof(Vector));
+            Init(typeof(Circle));
+            Init(typeof(Text));
+            Init(typeof(Image));
         }
     }
 }

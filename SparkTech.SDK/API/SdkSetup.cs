@@ -10,7 +10,6 @@
     using SparkTech.SDK.GUI.Notifications;
     using SparkTech.SDK.Logging;
     using SparkTech.SDK.Properties;
-    using SparkTech.SDK.Rendering;
     using SparkTech.SDK.Security;
 
     public static class SdkSetup
@@ -28,22 +27,20 @@
             Menu = new Menu("sdk")
             {
                 new MenuList("language") { Options = EnumCache<Language>.Names },
-                new Menu("position")
-                {
-                    new MenuFloat("x", 0, 500, 25),
-                    new MenuFloat("y", 500, 0, 25)
-                },
-                new Menu("triggers")
+                new Menu("menu")
                 {
                     new MenuKey("key", WindowsMessagesWParam.LeftShift),
                     new MenuBool("toggle", false),
-                    new MenuAction("apply") { Action = SetMenuTriggers }
+                    new MenuAction("apply") { Action = SetMenuTriggers },
+                    new MenuSeparator("position"),
+                    new MenuInt("x", 0, 500, 25),
+                    new MenuInt("y", 0, 500, 25)
                 },
                 new MenuBool("clock", true),
-                //new Menu("humanizer")
-                //{
-                //    new MenuBool("enable", true)
-                //}
+                new Menu("humanizer")
+                {
+                    new MenuBool("enable", true)
+                }
             };
 
             Menu.Build(Menu, JObject.Parse(Resources.MainMenu));
@@ -55,58 +52,19 @@
 
             Menu.IsExpanded = true;
             
-            Menu.GetMenu("position").IsExpanded = true;
+            Menu.GetMenu("menu").IsExpanded = true;
             //Menu.GetMenu("triggers").IsExpanded = true;
             //((IExpandable)Menu["language"]).IsExpanded = true;
 
             //Menu.GetMenu("position")["x"].SetValue(270);
 
-            Menu.SetOpen(true);
+            Menu.Build(new Menu("Evade"));
+            Menu.Build(new Menu("Xerath"));
 
-            SetupTest();
+            Menu.SetOpen(true);
         }
 
         #region Menu Setup
-
-        private static void SetupTest()
-        {
-            var dirX = true;
-            var dirY = false;
-
-            var x = (MenuFloat)Menu.GetMenu("position")["x"];
-            var y = (MenuFloat)Menu.GetMenu("position")["y"];
-
-            Render.OnDraw += () =>
-            {
-                if (x.Value + 1f > x.Max || x.Value - 1f < x.Min)
-                {
-                    dirX ^= true;
-                }
-
-                if (y.Value + 1f > y.Max || y.Value - 1f < y.Min)
-                {
-                    dirY ^= true;
-                }
-
-                if (dirX)
-                {
-                    x.Value += 0.2f;
-                }
-                else
-                {
-                    x.Value -= 0.2f;
-                }
-
-                if (dirY)
-                {
-                    y.Value += 0.2f;
-                }
-                else
-                {
-                    y.Value -= 0.2f;
-                }
-            };
-        }
 
         private static void SetupMenu(out bool firstRun)
         {
@@ -114,7 +72,7 @@
 
             Menu["language"].BeforeValueChange += LanguageChanged;
 
-            var flagFile = Folder.MenuFolder.GetFile(".nofirstrun");
+            var flagFile = Folder.Menu.GetFile(".nofirstrun");
             firstRun = !File.Exists(flagFile);
 
             if (firstRun)
@@ -153,7 +111,7 @@
 
                 Menu.SetLanguage(language);
 
-                if (language != default)
+                if (language == default)
                 {
                     Menu.UpdateAllSizes();
                 }
@@ -174,29 +132,42 @@
 
         private static void HandleClock()
         {
-            var clockItem = Menu["clock"];
+            var cItem = Menu["clock"];
 
-            clockItem.BeforeValueChange += args => Clock.Enabled = args.NewValue<bool>();
-            Clock.Enabled = clockItem.GetValue<bool>();
+            cItem.BeforeValueChange += args => Clock.Enabled = args.NewValue<bool>();
+
+            Clock.Enabled = cItem.GetValue<bool>();
         }
 
         private static void HandlePosition()
         {
-            var menu = Menu.GetMenu("position");
+            var menu = Menu.GetMenu("menu");
 
             var xItem = menu["x"];
             var yItem = menu["y"];
 
-            xItem.BeforeValueChange += args => Menu.SetPosition((int)args.NewValue<float>(), (int)yItem.GetValue<float>());
-            yItem.BeforeValueChange += args => Menu.SetPosition((int)xItem.GetValue<float>(), (int)args.NewValue<float>());
+            xItem.BeforeValueChange += args =>
+            {
+                if (args.Is<int>())
+                {
+                    Menu.SetPosition(args.NewValue<int>(), yItem.GetValue<int>());
+                }
+            };
 
-            //Menu.SetPosition(xItem.GetValue<int>(), yItem.GetValue<int>());
-            Menu.SetPosition(50, 50);
+            yItem.BeforeValueChange += args =>
+            {
+                if (args.Is<int>())
+                {
+                    Menu.SetPosition(xItem.GetValue<int>(), args.NewValue<int>());
+                }
+            };
+
+            Menu.SetPosition(xItem.GetValue<int>(), yItem.GetValue<int>());
         }
 
         private static void SetMenuTriggers()
         {
-            var menu = Menu.GetMenu("triggers");
+            var menu = Menu.GetMenu("menu");
 
             var key = menu["key"].GetValue<WindowsMessagesWParam>();
             var toggle = menu["toggle"].GetValue<bool>();
@@ -206,14 +177,14 @@
 
         private static void LanguageChanged(BeforeValueChangeEventArgs args)
         {
-            if (!args.OfType<int>())
+            if (!args.Is<int>())
             {
                 return;
             }
 
-            var langauge = (Language)args.NewValue<int>();
+            var language = (Language)args.NewValue<int>();
 
-            Menu.SetLanguage(langauge);
+            Menu.SetLanguage(language);
         }
 
         #endregion

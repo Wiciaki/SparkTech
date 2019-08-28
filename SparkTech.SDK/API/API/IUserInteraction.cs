@@ -4,10 +4,10 @@
 
     using SharpDX;
 
-    public interface IGameEvents
+    public interface IUserInteraction
     {
         Action<WndProcEventArgs> OnWndProc { get; set; }
 
-        Point GetCursorPosition();
+        Point CursorPosition();
     }
 }

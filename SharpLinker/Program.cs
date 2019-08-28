@@ -93,7 +93,7 @@
             });
         }
 
-        private class HookedForm : RenderForm, IRender, IGameEvents
+        private class HookedForm : RenderForm, IRender//, IGameEvents
         {
             public HookedForm() : base("SharpDX - Test (Spark)")
             {

@@ -1,40 +1,42 @@
 ﻿namespace SparkTech.SDK.GUI.Menu
 {
-    using System;
-
-    public class BeforeValueChangeEventArgs : BlockableEventArgs
+    public abstract class BeforeValueChangeEventArgs : BlockableEventArgs
     {
-        private readonly object oldValue, newValue;
+        private BeforeValueChange<T> Cast<T>()
+        {
+            return (BeforeValueChange<T>)this;
+        }
 
-        public readonly Type Type;
+        public bool Is<T>()
+        {
+            return this is BeforeValueChange<T>;
+        }
 
         public T OldValue<T>()
         {
-            return (T)this.oldValue;
+            return this.Cast<T>().OldT;
         }
 
         public T NewValue<T>()
         {
-            return (T)this.newValue;
-        }
-
-        public bool OfType<T>()
-        {
-            return typeof(T).IsAssignableFrom(this.Type);
-        }
-
-        private BeforeValueChangeEventArgs(Type type, object oldValue, object newValue)
-        {
-            this.Type = type;
-
-            this.oldValue = oldValue;
-
-            this.newValue = newValue;
+            return this.Cast<T>().NewT;
         }
 
         public static BeforeValueChangeEventArgs Create<T>(T oldValue, T newValue)
         {
-            return new BeforeValueChangeEventArgs(typeof(T), oldValue, newValue);
+            return new BeforeValueChange<T>(oldValue, newValue);
+        }
+
+        private class BeforeValueChange<T> : BeforeValueChangeEventArgs
+        {
+            public readonly T OldT, NewT;
+
+            public BeforeValueChange(T oldValue, T newValue)
+            {
+                this.OldT = oldValue;
+
+                this.NewT = newValue;
+            }
         }
     }
 }

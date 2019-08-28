@@ -24,11 +24,8 @@ namespace SparkTech.SDK.Rendering
 {
     #region Using Directives
 
-    using System;
-
     using SharpDX;
     using SharpDX.Direct3D9;
-    using SharpDX.Mathematics.Interop;
 
     #endregion
 
@@ -67,22 +64,16 @@ namespace SparkTech.SDK.Rendering
 
         #region Public Methods and Operators
 
-        public static void Draw(Color color, float thickness, params Vector2[] screenPositions)
-        {
-            // todo test what happens when we remove this method
-            Draw(color, thickness, Array.ConvertAll(screenPositions, v => (RawVector2)v));
-        }
-
         /// <summary>
         ///     Renders a line.
         /// </summary>
         /// <param name="color">The color.</param>
         /// <param name="thickness">The thickness.</param>
-        /// <param name="screenPositions">The screen positions.</param>
-        public static void Draw(Color color, float thickness, params RawVector2[] screenPositions)
+        /// <param name="vertices">The screen positions.</param>
+        public static void Draw(Color color, float thickness, params Vector2[] vertices)
         {
             // Make sure we can draw the line
-            if (screenPositions.Length < 2 || thickness <= 0f)
+            if (vertices.Length < 2 || thickness <= 0f)
             {
                 return;
             }
@@ -90,7 +81,7 @@ namespace SparkTech.SDK.Rendering
             Line.Width = thickness;
 
             Line.Begin();
-            Line.Draw(screenPositions, color);
+            Line.Draw(vertices, color);
             Line.End();
         }
 

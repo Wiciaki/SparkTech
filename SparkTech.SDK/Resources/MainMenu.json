@@ -15,12 +15,36 @@
       "text": "语言 (language)"
     }
   },
-  "position": {
+  "menu": {
     "en": {
-      "text": "Position"
+      "text": "Menu settings"
     },
     "zh": {
-      "text": "位置"
+      "text": "Menu settings ??"
+    },
+    "key": {
+      "en": {
+        "text": "Activation button"
+      },
+      "zh": {
+        "text": "激活按键"
+      }
+    },
+    "toggle": {
+      "en": {
+        "text": "Press to toggle?"
+      },
+      "zh": {
+        "text": "锁死"
+      }
+    },
+    "apply": {
+      "en": {
+        "text": "Click here to apply above settings"
+      },
+      "zh": {
+        "text": "应用"
+      }
     },
     "x": {
       "en": {
@@ -28,7 +52,7 @@
       },
       "zh": {
         "text": "X轴"
-      } 
+      }
     },
     "y": {
       "en": {
@@ -36,7 +60,7 @@
       },
       "zh": {
         "text": "Y轴"
-      } 
+      }
     }
   },
   "triggers": {
@@ -45,30 +69,6 @@
     },
     "zh": {
       "text": "控制菜单"
-    },
-    "key": {
-      "en": {
-        "text": "Activation button"
-      },
-      "zh": {
-        "text": "激活按键"
-      } 
-    },
-    "toggle": {
-      "en": {
-        "text": "Press to toggle?"
-      },
-      "zh": {
-        "text": "锁死"
-      } 
-    },
-    "apply": {
-      "en": {
-        "text": "Click here to apply above settings"
-      },
-      "zh": {
-        "text": "应用"
-      } 
     }
   },
   "clock": {

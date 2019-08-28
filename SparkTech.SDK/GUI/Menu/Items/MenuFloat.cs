@@ -6,7 +6,6 @@
 
     using SharpDX;
 
-    using SparkTech.SDK.Game;
     using SparkTech.SDK.Rendering;
 
     public class MenuFloat : MenuValue, IMenuValue<float>
@@ -23,7 +22,7 @@
 
         public MenuFloat(string id, float from, float to, float defaultValue) : this(id, from, to, (JToken)defaultValue)
         {
-
+            this.CheckBounds(defaultValue);
         }
 
         protected MenuFloat(string id, float from, float to, JToken defaultValue) : base(id, defaultValue)
@@ -31,32 +30,33 @@
             this.From = from;
 
             this.To = to;
-
-            this.CheckBounds(defaultValue.Value<float>());
         }
 
-        public readonly float From;
+        public float From { get; }
 
-        public readonly float To;
+        public float To { get; }
 
         public float Value
         {
             get => this.value;
-            set => this.SetFloat(value);
+            set
+            {
+                this.CheckBounds(value);
+
+                if (Math.Abs(this.value - value) >= 0.01f && this.InvokeNotifier(value))
+                {
+                    this.value = value;
+                }
+            }
         }
 
-        public float Min => this.To > this.From ? this.From : this.To;
+        public float Min => Math.Min(this.From, this.To);
 
-        public float Max => this.To > this.From ? this.To : this.From;
+        public float Max => Math.Max(this.From, this.To);
 
-        protected virtual void SetFloat(float num)
+        protected virtual bool InvokeNotifier(float num)
         {
-            this.CheckBounds(num);
-
-            if (Math.Abs(this.value - num) >= 0.01f && this.UpdateValue(num))
-            {
-                this.value = num;
-            }
+            return this.UpdateValue(num);
         }
 
         protected void CheckBounds(float num)
@@ -83,7 +83,7 @@
 
         protected virtual string GetPrintableStr(float num)
         {
-            return $"{num:F}";
+            return $"[{num:F}]";
         }
 
         private Size2 size;
@@ -112,7 +112,7 @@
 
             if (this.dragging)
             {
-                var diff = GameInterface.CursorPosition().X - point.X;
+                var diff = 0;//GameInterface.CursorPosition().X - point.X;
 
                 if (diff <= 0)
                 {
@@ -131,7 +131,7 @@
             }
 
             point.X += width;
-            Theme.DrawTextBox(point, this.size, "[" + this.GetPrintableStr(displayNum) + "]", true);
+            Theme.DrawTextBox(point, this.size, this.GetPrintableStr(displayNum), true);
             point.X -= width;
 
             point.Y += this.size.Height;

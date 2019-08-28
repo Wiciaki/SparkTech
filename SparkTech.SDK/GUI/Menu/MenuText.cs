@@ -4,6 +4,7 @@
 
     using SharpDX;
 
+    using SparkTech.SDK.Logging;
     using SparkTech.SDK.Rendering;
 
     public class MenuText : MenuItem
@@ -69,6 +70,8 @@
 
         protected override Size2 GetSize()
         {
+            Log.Info("GetSize(): " + this.Id);
+
             this.UpdateHelpTextSize();
             
             this.textSize = Theme.MeasureText(this.Text);
@@ -92,7 +95,7 @@
 
         protected static Size2 AddButton(Size2 size, out Size2 buttonSize)
         {
-            var width = Math.Min(56, size.Height);
+            var width = Math.Min(Theme.MinItemHeight, size.Height);
             size.Width += width;
 
             buttonSize = new Size2(width, size.Height);
@@ -104,11 +107,26 @@
             this.helpTextSize = this.HelpText != null ? Theme.MeasureText(this.HelpText) : default;
         }
 
+        protected Color BackgroundColor
+        {
+            get
+            {
+                var color = Theme.BackgroundColor;
+
+                if (this is IExpandable e && e.IsExpanded)
+                {
+                    color.A = byte.MaxValue;
+                }
+
+                return color;
+            }
+        }
+
         protected internal override void OnEndScene(Point point, int width)
         {
             var size = new Size2(width - this.helpSize.Width, this.textSize.Height);
 
-            Theme.DrawTextBox(point, size, this.Text);
+            Theme.DrawTextBox(point, size, this.Text, false, this.BackgroundColor);
 
             if (this.HelpText == null)
             {
@@ -117,9 +135,11 @@
 
             point.X += size.Width;
 
-            Theme.DrawTextBox(point, this.helpSize, HelpBoxText, true);
+            var cursorInside = Menu.IsCursorInside(point, this.helpSize);
 
-            if (!Menu.IsCursorInside(point, this.helpSize))
+            Theme.DrawTextBox(point, this.helpSize, HelpBoxText, true, this.BackgroundColor);
+
+            if (!cursorInside)
             {
                 return;
             }

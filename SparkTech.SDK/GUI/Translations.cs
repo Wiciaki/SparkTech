@@ -2,18 +2,9 @@
 {
     using Newtonsoft.Json.Linq;
 
-    using SparkTech.SDK.Logging;
-
     public class Translations
     {
-        private static readonly string DefaultTag;
-
         private readonly JObject translations;
-
-        static Translations()
-        {
-            DefaultTag = EnumCache<Language>.Description(default);
-        }
 
         public Translations(JObject o)
         {
@@ -22,7 +13,7 @@
 
         public JToken GetToken(string str)
         {
-            return this.translations[Menu.Menu.LanguageTag]?[str] ?? this.translations[DefaultTag]?[str];
+            return this.translations?[Menu.Menu.LanguageTag]?[str];
         }
 
         public string GetString(string str)
@@ -32,7 +23,7 @@
 
         public Translations GetObject(string id)
         {
-            return new Translations((JObject)this.translations[id]);
+            return new Translations((JObject)this.translations?[id]);
         }
     }
 }

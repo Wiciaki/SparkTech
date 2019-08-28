@@ -8,15 +8,13 @@
     {
         Color BackgroundColor { get; }
 
-        int ItemGroupDistance { get; }
-
         int MinItemHeight { get; }
 
         Size2 MeasureText(string text);
 
         void DrawBox(Point point, Size2 size, Color color);
 
-        void DrawTextBox(Point point, Size2 size, string text, bool centered, Color? color);
+        void DrawTextBox(Point point, Size2 size, string text, bool forceCentered, Color? color);
 
         void DrawBorders(Point point, params Size2[] sizes);
     }

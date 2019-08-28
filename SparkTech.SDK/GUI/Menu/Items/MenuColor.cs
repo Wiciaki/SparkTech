@@ -55,7 +55,7 @@
                 return;
             }
 
-            point.X += this.size.Width + Theme.ItemGroupDistance + 20;
+            point.X += this.size.Width + 20;
 
             // todo this is temp
             Rendering.Text.Draw("You dont know how hard it's to make a color picker ffs", Color.White, point);

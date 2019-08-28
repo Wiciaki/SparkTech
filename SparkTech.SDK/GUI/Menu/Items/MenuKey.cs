@@ -39,7 +39,7 @@
             }
         }
 
-        protected virtual Color ButtonColor => this.selecting ? Color.OrangeRed : Theme.BackgroundColor;
+        protected virtual Color ButtonColor => this.selecting ? Color.OrangeRed : Color.DarkOrange;
 
         protected virtual void WndProc(WndProcEventArgs args)
         {
@@ -90,6 +90,7 @@
             point.X += width;
 
             Theme.DrawTextBox(point, this.size, this.text, true, this.ButtonColor);
+            Theme.DrawBorders(point, this.size);
         }
 
         protected override JToken Token

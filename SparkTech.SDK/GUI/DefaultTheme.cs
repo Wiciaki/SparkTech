@@ -4,45 +4,35 @@
     using SharpDX.Direct3D9;
     using SharpDX.Mathematics.Interop;
 
-    using SparkTech.SDK.Logging;
     using SparkTech.SDK.Rendering;
 
-    public class ClassicTheme : ITheme
+    public class DefaultTheme : ITheme
     {
         private Font font;
 
-        public ClassicTheme()
+        public virtual Color BackgroundColor { get; }
+
+        public int MinItemHeight { get; } = 26;
+
+        public DefaultTheme()
         {
-            //Render.OnLostDevice += this.font.OnLostDevice;
-            //Render.OnResetDevice += this.font.OnResetDevice;
-            //Render.OnDispose += this.Dispose;
+            Render.OnLostDevice += this.Font.OnLostDevice;
+            Render.OnResetDevice += this.Font.OnResetDevice;
+            Render.OnDispose += this.Dispose;
+
+            var color = Color.Black;
+            color.A = 120;
+            this.BackgroundColor = color;
         }
 
-        protected Font Font
+        protected Font Font => this.font ??= new Font(Render.Direct3DDevice, this.GetFontDescription());
+
+        public virtual FontDescription GetFontDescription()
         {
-            get
-            {
-                return this.font ??= new Font(Render.Direct3DDevice, this.GetFontDescription());
-            }
+            return new FontDescription { FaceName = "Arial", Height = 18, Quality = FontQuality.Antialiased };
         }
 
-        public virtual FontDescription GetFontDescription() => new FontDescription { FaceName = "Calibri", Height = 18 };
-
-        public virtual Color BackgroundColor
-        {
-            get
-            {
-                var c = Color.Black;
-                c.A = 120;
-                return c;
-            }
-        }
-
-        public int MinItemHeight { get; } = 28;
-
-        public int ItemGroupDistance { get; } = 0;
-
-        protected virtual FontDrawFlags DrawFlags { get; } = FontDrawFlags.VerticalCenter | FontDrawFlags.Center;
+        protected virtual FontDrawFlags DrawFlags { get; } = FontDrawFlags.VerticalCenter | FontDrawFlags.Left;
 
         private const FontDrawFlags CenteredFlags = FontDrawFlags.VerticalCenter | FontDrawFlags.Center;
 
@@ -50,12 +40,12 @@
 
         public Size2 MeasureText(string text)
         {
-            var r = this.Font.MeasureText(null, text, DrawFlags);
+            var r = this.Font.MeasureText(null, text, this.DrawFlags);
 
             var height = MultipleOf(r.Bottom - r.Top + this.extraTextSize.Height, this.MinItemHeight);
             var width = MultipleOf(r.Right - r.Left + this.extraTextSize.Width, 2);
 
-            return new Size2(width + this.extraTextSize.Width, height + this.extraTextSize.Height);
+            return new Size2(width, height);
 
             static int MultipleOf(int num, int multipleOf)
             {

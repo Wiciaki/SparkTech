@@ -22,6 +22,8 @@
 
         private List<Size2> sizes;
 
+        private const string ArrowText = ">";
+
         #region Constructors and Destructors
 
         public MenuList(string id, int defaultIndex = 0) : base(id, defaultIndex)
@@ -58,7 +60,7 @@
 
         protected override Size2 GetSize()
         {
-            var width = Math.Max(28, Theme.MeasureText(">>").Width);
+            var width = Math.Max(28, Theme.MeasureText(ArrowText).Width);
 
             var s = base.GetSize();
             s.Width += width;
@@ -84,7 +86,7 @@
                 return;
             }
 
-            point.X += width + Theme.ItemGroupDistance;
+            point.X += width;
 
             for (var i = 0; i < this.options.Count; i++)
             {
@@ -107,14 +109,14 @@
             base.OnEndScene(point, width);
             point.X += width;
 
-            Theme.DrawTextBox(point, this.size, ">", true);
+            Theme.DrawTextBox(point, this.size, ArrowText, true);
 
             if (!this.IsExpanded)
             {
                 return;
             }
 
-            point.X += this.size.Width + Theme.ItemGroupDistance;
+            point.X += this.size.Width;
 
             for (var i = 0; i < this.options.Count; i++)
             {
@@ -139,7 +141,7 @@
                     throw new ArgumentException("The specified index was out of range");
                 }
 
-                if (this.index != value && this.UpdateValue(value) && this.UpdateValue(this.options[value]))
+                if (this.index != value && this.UpdateValue(value))
                 {
                     this.index = value;
                 }
