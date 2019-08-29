@@ -6,6 +6,7 @@
     using SharpDX;
     using SharpDX.Direct3D9;
 
+    using SparkTech.SDK.Logging;
     using SparkTech.SDK.Platform.API;
 
     public static class Render
@@ -33,6 +34,12 @@
 
         internal static void Initialize(IRender render)
         {
+            if (render == null)
+            {
+                Log.Error("render == null!");
+                return;
+            }
+
             r = render;
 
             Direct3DDevice = r.GetDevice();
@@ -40,8 +47,8 @@
             r.Draw = () => OnDraw.SafeInvoke();
             r.BeginScene = () => OnBeginScene.SafeInvoke();
             r.EndScene = () => OnEndScene.SafeInvoke();
-            r.LostDevice = OnLostDevice.SafeInvoke;
-            r.ResetDevice = OnResetDevice.SafeInvoke;
+            r.LostDevice = () => OnLostDevice.SafeInvoke();
+            r.ResetDevice = () => OnResetDevice.SafeInvoke();
 
             static void OnExit(object o, EventArgs args) => OnDispose.SafeInvoke();
 

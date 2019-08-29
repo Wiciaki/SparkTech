@@ -1,42 +1,62 @@
-﻿namespace SparkTech.SDK.Platform
+﻿namespace SparkTech.SDK.API
 {
     using System;
-    using System.Reflection;
     using System.Runtime.CompilerServices;
 
-    using SharpDX;
-
-    using SparkTech.SDK.Auth;
-    using SparkTech.SDK.Entities;
-    using SparkTech.SDK.Game;
     using SparkTech.SDK.GUI;
-    using SparkTech.SDK.GUI.Menu;
     using SparkTech.SDK.Logging;
     using SparkTech.SDK.Platform.API;
-    using SparkTech.SDK.Rendering;
     using SparkTech.SDK.Security;
 
-    public sealed class VendorSetup
+    public sealed class Platform
     {
         public static string PlatformName { get; private set; }
 
-        public static void Init<T>(string platName, T thing) where T : IRender
+        public Platform(string name)
         {
-            PlatformName = platName;
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                throw new ArgumentException("Empty platform name", nameof(name));
+            }
 
-            AppDomain.CurrentDomain.UnhandledException += (sender, args) => { Log.Error(args.ExceptionObject); };
+            this.Name = name;
+        }
 
-            var desktop = new Folder(Environment.GetFolderPath(Environment.SpecialFolder.Desktop));
+        public string Name { get; }
 
-            Folder.Initialize(desktop.GetFolder("Shark"));
-            Log.Info("start...");
+        public IRender Render { get; set; }
 
-            Render.Initialize(thing);
-            Theme.SetTheme(new DefaultTheme());
+        public IObjectManager ObjectManager { get; set; }
 
-            //Render.OnDraw += () => Vector.Draw(Color.White, 50f, new Vector2(100, 100), new Vector2(150, 150));
+        public ILogger Logger { get; set; }
 
+        public ITheme Theme { get; set; }
 
+        public string ConfigPath { get; set; }
+
+        public void Boot()
+        {
+            PlatformName = this.Name;
+
+            if (this.ConfigPath == null)
+            {
+                var folder = new Folder(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData));
+
+                this.ConfigPath = folder.GetFolder("SparkTech.SDK");
+            }
+
+            Folder.Initialize(this.ConfigPath);
+
+            Log.Initialize(this.Logger ?? new FileLogger());
+
+            Rendering.Render.Initialize(this.Render);
+
+            if (this.ObjectManager != null)
+            {
+                Entities.ObjectManager.Initialize(this.ObjectManager);
+            }
+
+            GUI.Theme.SetTheme(this.Theme ?? new DefaultTheme());
 
             RuntimeHelpers.RunClassConstructor(typeof(SdkSetup).TypeHandle);
         }

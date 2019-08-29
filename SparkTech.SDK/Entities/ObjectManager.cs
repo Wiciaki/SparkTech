@@ -37,9 +37,7 @@ namespace SparkTech.SDK.Entities
     {
         private static readonly Dictionary<Type, CacheEntry> Container = new Dictionary<Type, CacheEntry>
                                                                          {
-                                                                             [typeof(IGameObject)] = new CacheEntry(
-                                                                                 new HashSet<IGameObject>(
-                                                                                     new GameObjectComparer()))
+                                                                             [typeof(IGameObject)] = new CacheEntry(new HashSet<IGameObject>(new GameObjectComparer()))
                                                                          };
 
         public static event Action<IGameObject> OnCreate, OnDelete;
@@ -84,7 +82,7 @@ namespace SparkTech.SDK.Entities
 
         private static void HandleDelete(IGameObject sender) => ProcessItem(sender, false);
 
-        private static readonly object[] Args = new object[1];
+        private static readonly object[] ArgsHelperArray = new object[1];
 
         private static void ProcessItem(IGameObject sender, bool add)
         {
@@ -106,9 +104,9 @@ namespace SparkTech.SDK.Entities
                     action = OnDelete;
                 }
 
-                Args[0] = sender;
+                ArgsHelperArray[0] = sender;
 
-                method.Invoke(entry.HashSet, Args);
+                method.Invoke(entry.HashSet, ArgsHelperArray);
                 action.SafeInvoke(sender);
             }
         }

@@ -1,10 +1,22 @@
 ﻿namespace SparkTech.SDK.Logging
 {
+    using System;
+
+    using SparkTech.SDK.API;
+
     public static class Log
     {
-        internal static ILogger Logger = new FileLogger();
+        private static ILogger l;
 
-        internal static LogLevel LogLevel;
+        internal static void Initialize(ILogger logger)
+        {
+            l = logger;
+
+            AppDomain.CurrentDomain.UnhandledException += (sender, args) => { Error(args.ExceptionObject); };
+
+            Debug("Started logger");
+            Debug("Platform name: " + Platform.PlatformName);
+        }
 
         public static void Error(object obj)
         {
@@ -38,9 +50,9 @@
 
         private static void Write(string msg, LogLevel level)
         {
-            if (msg != null && level >= LogLevel)
+            if (msg != null)
             {
-                Logger.Write(msg, level);
+                l.Write(msg, level);
             }
         }
     }

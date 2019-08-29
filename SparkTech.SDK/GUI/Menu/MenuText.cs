@@ -4,7 +4,6 @@
 
     using SharpDX;
 
-    using SparkTech.SDK.Logging;
     using SparkTech.SDK.Rendering;
 
     public class MenuText : MenuItem
@@ -56,22 +55,19 @@
                 }
 
                 this.helpText = value;
-
                 this.UpdateHelpTextSize();
             }
         }
 
         protected internal override void SetTranslations(Translations t)
         {
-            this.Text = t.GetString("text");
-
             this.HelpText = t.GetString("helpText");
+
+            this.Text = t.GetString("text");
         }
 
         protected override Size2 GetSize()
         {
-            Log.Info("GetSize(): " + this.Id);
-
             this.UpdateHelpTextSize();
             
             this.textSize = Theme.MeasureText(this.Text);
@@ -83,7 +79,7 @@
 
             var size = new Size2(this.textSize.Width + this.helpSize.Width, this.textSize.Height);
 
-            var width = Theme.MeasureText("This may be enough").Width;
+            var width = Theme.MeasureText("This is enough").Width;
 
             if (width > size.Width)
             {

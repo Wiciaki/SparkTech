@@ -17,7 +17,7 @@
 
     public class Netlicensing : IAuth
     {
-        protected virtual string LicenseeNumber => WebUtility.UrlEncode(Machine.HardwareBasedUserId);
+        protected virtual string LicenseeNumber => WebUtility.UrlEncode("Spark"/*Machine.HardwareBasedUserId*/);
 
         private readonly NetworkCredential crendentials;
 

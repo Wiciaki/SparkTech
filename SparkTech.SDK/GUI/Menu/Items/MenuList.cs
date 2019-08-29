@@ -8,7 +8,7 @@
 
     using SharpDX;
 
-    using SparkTech.SDK.Platform;
+    using SparkTech.SDK.API;
 
     public class MenuList : MenuValue, IExpandable, IMenuValue<int>, IMenuValue<string>
     {
@@ -60,12 +60,7 @@
 
         protected override Size2 GetSize()
         {
-            var width = Math.Max(28, Theme.MeasureText(ArrowText).Width);
-
-            var s = base.GetSize();
-            s.Width += width;
-
-            this.size = new Size2(width, s.Height);
+            var s = AddButton(base.GetSize(), out this.size);
 
             this.RecalculateSizes();
 
@@ -109,7 +104,7 @@
             base.OnEndScene(point, width);
             point.X += width;
 
-            Theme.DrawTextBox(point, this.size, ArrowText, true);
+            Theme.DrawTextBox(point, this.size, ArrowText, true, this.BackgroundColor);
 
             if (!this.IsExpanded)
             {
@@ -130,6 +125,22 @@
         }
 
         #region Public Properties
+
+        public List<string> Options
+        {
+            get => this.options.ToList();
+            set
+            {
+                if (this.options.SequenceEqual(value))
+                {
+                    return;
+                }
+
+                this.SetOptions(value);
+
+                this.Value = Math.Min(this.Value, value.Count - 1);
+            }
+        }
 
         public int Value
         {
@@ -157,7 +168,7 @@
 
                 if (i == -1)
                 {
-                    throw new InvalidOperationException($"The item \"{value}\" was not included in the list! (Translations active?)");
+                    throw new ArgumentException($"The item \"{value}\" was not included in the list! (Translations active?)", nameof(value));
                 }
 
                 this.Value = i;
@@ -175,21 +186,5 @@
         }
 
         #endregion
-
-        public List<string> Options
-        {
-            get => this.options.ToList();
-            set
-            {
-                if (this.options.SequenceEqual(value))
-                {
-                    return;
-                }
-
-                this.SetOptions(value);
-
-                this.Value = Math.Min(this.Value, value.Count - 1);
-            }
-        }
     }
 }

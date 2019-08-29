@@ -1,4 +1,4 @@
-﻿namespace SparkTech.SDK.Security
+﻿/*namespace SparkTech.SDK.Security
 {
     using System;
     using System.Security.Cryptography;
@@ -45,4 +45,4 @@
             return Convert.ToBase64String(bytes).Substring(0, 9).ToUpper();
         }
     }
-}
+}*/

@@ -4,7 +4,7 @@
 
     using SharpDX;
 
-    using SparkTech.SDK.Platform;
+    using SparkTech.SDK.API;
     using SparkTech.SDK.Rendering;
 
     internal static class Clock
@@ -14,7 +14,7 @@
             Render.OnEndScene += OnEndScene;
         }
 
-        internal static bool Enabled;
+        internal static bool Enabled { get; set; }
 
         private static Size2 size;
 
@@ -22,10 +22,10 @@
 
         private static string Text()
         {
-            return VendorSetup.PlatformName + " - " + DateTime.Now.ToLongTimeString();
+            return Platform.PlatformName + " - " + DateTime.Now.ToLongTimeString();
         }
 
-        public static void UpdateSize()
+        internal static void UpdateSize()
         {
             size = Theme.MeasureText(Text() + "0");
 

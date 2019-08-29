@@ -23,7 +23,9 @@
 
         public Translations GetObject(string id)
         {
-            return new Translations((JObject)this.translations?[id]);
+            var o = (JObject)this.translations?[id];
+
+            return o == null ? null : new Translations(o);
         }
     }
 }

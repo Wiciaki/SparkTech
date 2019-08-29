@@ -4,7 +4,7 @@
 
     using SparkTech.SDK.Entities.Buffs;
 
-    public interface IAIBase : IAttackableUnit
+    public interface IUnit : IAttackableUnit
     {
         string BaseSkinName();
 

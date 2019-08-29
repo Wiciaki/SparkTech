@@ -1,4 +1,4 @@
-﻿namespace SparkTech.SDK.Platform
+﻿namespace SparkTech.SDK.API
 {
     using System.Globalization;
     using System.IO;
@@ -33,8 +33,8 @@
                     new MenuBool("toggle", false),
                     new MenuAction("apply") { Action = SetMenuTriggers },
                     new MenuSeparator("position"),
-                    new MenuInt("x", 0, 500, 25),
-                    new MenuInt("y", 0, 500, 25)
+                    new MenuInt("x", 0, 500, 40),
+                    new MenuInt("y", 0, 500, 40)
                 },
                 new MenuBool("clock", true),
                 new Menu("humanizer")
@@ -46,14 +46,12 @@
             Menu.Build(Menu, JObject.Parse(Resources.MainMenu));
             
             SetupMenu(out FirstRun);
-            Menu.SetPosition(80, 80);
 
-            Log.Info("Hello! FirstRun: " + FirstRun);
+            Log.Info("All done! FirstRun: " + FirstRun);
 
             Menu.IsExpanded = true;
             
             Menu.GetMenu("menu").IsExpanded = true;
-            //Menu.GetMenu("triggers").IsExpanded = true;
             //((IExpandable)Menu["language"]).IsExpanded = true;
 
             //Menu.GetMenu("position")["x"].SetValue(270);
@@ -89,8 +87,6 @@
 
                 if (i == -1)
                 {
-                    Menu.SetLanguage(default);
-
                     welcomeMsg = GetTranslatedString("languageUnknown");
                     welcomeMsg = welcomeMsg.Replace("{language}", culture.EnglishName);
                 }
@@ -101,7 +97,7 @@
                     welcomeMsg = GetTranslatedString("firstTimeWelcome");
                 }
 
-                welcomeMsg = welcomeMsg.Replace("{platform}", VendorSetup.PlatformName);
+                welcomeMsg = welcomeMsg.Replace("{platform}", Platform.PlatformName);
 
                 Notification.Send(welcomeMsg, 10f);
             }
@@ -111,10 +107,8 @@
 
                 Menu.SetLanguage(language);
 
-                if (language == default)
-                {
-                    Menu.UpdateAllSizes();
-                }
+                //Notification.Send("Deftsu is so fucking\ngay and deserves to have his\nanus destroyed", "Notification system test");
+                //Notification.Send("Made with <3 by Spark", "Sharing some love");
             }
 
             #endregion
@@ -132,11 +126,11 @@
 
         private static void HandleClock()
         {
-            var cItem = Menu["clock"];
+            var clockItem = Menu["clock"];
 
-            cItem.BeforeValueChange += args => Clock.Enabled = args.NewValue<bool>();
+            clockItem.BeforeValueChange += args => Clock.Enabled = args.NewValue<bool>();
 
-            Clock.Enabled = cItem.GetValue<bool>();
+            Clock.Enabled = clockItem.GetValue<bool>();
         }
 
         private static void HandlePosition()
@@ -146,21 +140,8 @@
             var xItem = menu["x"];
             var yItem = menu["y"];
 
-            xItem.BeforeValueChange += args =>
-            {
-                if (args.Is<int>())
-                {
-                    Menu.SetPosition(args.NewValue<int>(), yItem.GetValue<int>());
-                }
-            };
-
-            yItem.BeforeValueChange += args =>
-            {
-                if (args.Is<int>())
-                {
-                    Menu.SetPosition(xItem.GetValue<int>(), args.NewValue<int>());
-                }
-            };
+            xItem.BeforeValueChange += args => Menu.SetPosition(args.NewValue<int>(), yItem.GetValue<int>());
+            yItem.BeforeValueChange += args => Menu.SetPosition(xItem.GetValue<int>(), args.NewValue<int>());
 
             Menu.SetPosition(xItem.GetValue<int>(), yItem.GetValue<int>());
         }
@@ -177,11 +158,6 @@
 
         private static void LanguageChanged(BeforeValueChangeEventArgs args)
         {
-            if (!args.Is<int>())
-            {
-                return;
-            }
-
             var language = (Language)args.NewValue<int>();
 
             Menu.SetLanguage(language);

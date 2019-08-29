@@ -29,7 +29,7 @@
 
         public virtual FontDescription GetFontDescription()
         {
-            return new FontDescription { FaceName = "Arial", Height = 18, Quality = FontQuality.Antialiased };
+            return new FontDescription { FaceName = "DengXian", Height = 18, Quality = FontQuality.Antialiased };
         }
 
         protected virtual FontDrawFlags DrawFlags { get; } = FontDrawFlags.VerticalCenter | FontDrawFlags.Left;

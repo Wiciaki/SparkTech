@@ -59,6 +59,11 @@
                 throw new InvalidOperationException("Menu with id \"" + menu.Id + "\" already exists as root!");
             }
 
+            if (translations == null)
+            {
+                menu.UpdateSizes();
+            }
+
             RootEntries.Add(new RootEntry(menu, new Translations(translations)));
         }
 
@@ -179,11 +184,6 @@
 
         protected internal override void SetTranslations(Translations t)
         {
-            if (t == null)
-            {
-                return;
-            }
-
             base.SetTranslations(t);
 
             foreach (var item in this)
@@ -193,6 +193,14 @@
                 if (o != null)
                 {
                     item.SetTranslations(o);
+                }
+                else if (item is Menu menu)
+                {
+                    menu.UpdateSizes();
+                }
+                else
+                {
+                    item.UpdateSize();
                 }
             }
         }
@@ -217,7 +225,7 @@
 
         public static Language Language { get; private set; }
 
-        public static string LanguageTag { get; private set; } = "en";
+        public static string LanguageTag { get; private set; }
 
         public static event Action VisibilityChanged, LanguageChanged;
 
@@ -227,6 +235,8 @@
 
         static Menu()
         {
+            LanguageTag = EnumCache<Language>.Description(default);
+
             Render.OnEndScene += OnEndScene;
             GameEvents.OnWndProc += OnWndProc;
         }
@@ -395,7 +405,7 @@
 
         public void UpdateSizes()
         {
-            foreach (var item in this.GetDescensants().Prepend(this))
+            foreach (var item in this.GetDescensants().Append(this))
             {
                 item.UpdateSize();
             }
@@ -466,8 +476,6 @@
             public void UpdateLanguage()
             {
                 this.Menu.SetTranslations(this.translations);
-
-                this.Menu.UpdateSizes();
             }
 
             public async void Save()

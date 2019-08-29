@@ -5,7 +5,7 @@
     using SharpDX;
 
     using SparkTech.SDK.Game;
-    using SparkTech.SDK.Platform;
+    using SparkTech.SDK.API;
 
     public class MenuKey : MenuValue, IMenuValue<WindowsMessagesWParam>
     {
@@ -27,6 +27,12 @@
             get => this.value;
             set
             {
+                if (this.value == 0)
+                {
+                    this.value = value;
+                    return;
+                }
+
                 if (this.value == value || !this.UpdateValue(value))
                 {
                     return;
@@ -76,6 +82,12 @@
 
             var t = Theme.MeasureText(this.text);
             t.Height = s.Height;
+
+            if (Theme.MinItemHeight > t.Width)
+            {
+                t.Width = Theme.MinItemHeight;
+            }
+
             this.size = t;
 
             s.Width += t.Width;

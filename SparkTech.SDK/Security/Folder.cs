@@ -6,6 +6,8 @@
     {
         public static Folder Root { get; private set; }
 
+        public static Folder Logs { get; private set; }
+
         public static Folder ThirdParty { get; private set; }
 
         public static Folder Menu { get; private set; }
@@ -14,6 +16,7 @@
         {
             Root = new Folder(root);
 
+            Logs = Root.GetFolder("Logs");
             ThirdParty = Root.GetFolder("ThirdParty");
             Menu = Root.GetFolder("Menu");
         }

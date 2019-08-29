@@ -2,9 +2,9 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
 
     using SharpDX;
-    using SharpDX.Direct3D9;
 
     using SparkTech.SDK.Game;
     using SparkTech.SDK.Rendering;
@@ -22,7 +22,9 @@
 
             this.Content = content;
 
-            this.Header = header ?? "Notification";
+            this.Header = header;
+
+            this.UpdateSizes();
         }
 
         private static readonly List<NotificationEntry> ActiveNotifications = new List<NotificationEntry>();
@@ -53,27 +55,43 @@
         {
             this.contentSize = Theme.MeasureText(this.Content);
 
-            this.headerSize = new Size2(this.contentSize.Width, 56);
+            this.headerSize = new Size2(this.contentSize.Width, Theme.MinItemHeight);
         }
-
-        private static readonly Font Font;
 
         static Notification()
         {
-            var description = new FontDescription { Height = 20, FaceName = "Arial" };
-
-            Font = new Font(Render.Direct3DDevice, description);
-
-            Render.OnDispose += Font.Dispose;
-            Render.OnLostDevice += Font.OnLostDevice;
-            Render.OnResetDevice += Font.OnResetDevice;
-
             Render.OnEndScene += OnEndScene;
         }
 
         private static void OnEndScene()
         {
+            var point = new Point(1870, 40);
 
+            var width = ActiveNotifications.Max(entry => entry.Notification.contentSize.Width);
+
+            point.X -= width;
+
+            foreach (var entry in ActiveNotifications)
+            {
+                if (entry.Notification.Header != null)
+                {
+                    var headerSize = entry.Notification.headerSize;
+                    headerSize.Width = width;
+
+                    Theme.DrawTextBox(point, headerSize, entry.Notification.Header, true);
+                    Theme.DrawBorders(point, headerSize);
+
+                    point.Y += entry.Notification.headerSize.Height;
+                }
+
+                var contentSize = entry.Notification.contentSize;
+                contentSize.Width = width;
+
+                Theme.DrawTextBox(point, contentSize, entry.Notification.Content);
+                Theme.DrawBorders(point, contentSize);
+
+                point.Y += contentSize.Height + Theme.MinItemHeight;
+            }
         }
 
         internal static void UpdateAllSizes()

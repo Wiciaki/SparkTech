@@ -9,6 +9,7 @@
     using SharpDX.Windows;
 
     using SparkTech.SDK;
+    using SparkTech.SDK.API;
     using SparkTech.SDK.Platform;
     using SparkTech.SDK.Platform.API;
 
@@ -32,7 +33,9 @@
 
             device = new Device(new Direct3D(), 0, DeviceType.Hardware, form.Handle, CreateFlags.HardwareVertexProcessing, new PresentParameters(width, height) { PresentationInterval = PresentInterval.One });
 
-            VendorSetup.Init("Shark", form);
+            var platform = new Platform("Shark") { Render = form };
+
+            platform.Boot();
 
             //// Initialize the Font
             //FontDescription fontDescription = new FontDescription()
@@ -105,7 +108,7 @@
             protected override void WndProc(ref Message m)
             {
                 var message = (WindowsMessages)m.Msg;
-                var wParam = (WindowsMessagesWParam)m.LParam;
+                var wParam = (WindowsMessagesWParam)m.WParam;
 
                 this.OnWndProc?.Invoke(new WndProcEventArgs(message, wParam));
 
