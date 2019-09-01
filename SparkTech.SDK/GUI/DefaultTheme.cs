@@ -21,11 +21,11 @@
             Render.OnDispose += this.Dispose;
 
             var color = Color.Black;
-            color.A = 120;
+            color.A = 130;
             this.BackgroundColor = color;
         }
 
-        protected Font Font => this.font ??= new Font(Render.Direct3DDevice, this.GetFontDescription());
+        protected Font Font => this.font ??= new Font(Render.Device, this.GetFontDescription());
 
         public virtual FontDescription GetFontDescription()
         {

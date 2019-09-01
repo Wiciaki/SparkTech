@@ -2,6 +2,7 @@
 {
     using System;
     using System.Drawing;
+    using System.IO;
     using System.Windows.Forms;
 
     using SharpDX;
@@ -10,7 +11,6 @@
 
     using SparkTech.SDK;
     using SparkTech.SDK.API;
-    using SparkTech.SDK.Platform;
     using SparkTech.SDK.Platform.API;
 
     using Color = SharpDX.Color;
@@ -26,14 +26,17 @@
         [STAThread]
         static void Main()
         {
-            var form = new HookedForm();
+            var form = new HookedForm { StartPosition = FormStartPosition.Manual, Left = 0, Top = 0 };
 
-            int width = form.ClientSize.Width;
-            int height = form.ClientSize.Height;
+            var width = form.ClientSize.Width;
+            var height = form.ClientSize.Height;
 
             device = new Device(new Direct3D(), 0, DeviceType.Hardware, form.Handle, CreateFlags.HardwareVertexProcessing, new PresentParameters(width, height) { PresentationInterval = PresentInterval.One });
 
-            var platform = new Platform("Shark") { Render = form };
+            var path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "league.png");
+            var texture = Texture.FromFile(device, path, 1910, 1082, 0, Usage.None, Format.A1, Pool.Managed, Filter.Default, Filter.Default, 0);
+
+            var platform = new Platform("SharkCore") { Render = form };
 
             platform.Boot();
 
@@ -48,7 +51,7 @@
             //    OutputPrecision = FontPrecision.TrueType,
             //    PitchAndFamily = FontPitchAndFamily.Default,
             //    Quality = FontQuality.ClearType,
-            //    Weight = FontWeight.Bold
+            //    Weight = FontWeight.Bold 
             //};
 
             //var font = new Font(device, fontDescription);
@@ -63,10 +66,12 @@
 
             RenderLoop.Run(form, () =>
             {
-                device.Clear(ClearFlags.Target, Color.Gray, 1.0f, 0);
+                device.Clear(ClearFlags.Target, Color.Transparent, 1.0f, 0);
                 
                 device.BeginScene();
                 form.BeginScene();
+
+                SparkTech.SDK.Rendering.Image.Draw(default, texture);
 
                 //Vector.Draw(Color.White, 50f, new Vector2(100, 100), new Vector2(150, 150));
                 form.Draw();
@@ -98,19 +103,19 @@
 
         private class HookedForm : RenderForm, IRender//, IGameEvents
         {
-            public HookedForm() : base("SharpDX - Test (Spark)")
+            public HookedForm() : base("SharpDX - Render test (Surgeon)")
             {
                 this.Size = new Size(1920, 1080);
-            }
 
-            public override System.Drawing.Color BackColor { get; set; } = System.Drawing.Color.Wheat;
+                //this.FormBorderStyle = FormBorderStyle.None;
+            }
 
             protected override void WndProc(ref Message m)
             {
                 var message = (WindowsMessages)m.Msg;
-                var wParam = (WindowsMessagesWParam)m.WParam;
+                var key = (Key)m.WParam;
 
-                this.OnWndProc?.Invoke(new WndProcEventArgs(message, wParam));
+                this.OnWndProc?.Invoke(new WndProcEventArgs(message, key));
 
                 base.WndProc(ref m);
             }

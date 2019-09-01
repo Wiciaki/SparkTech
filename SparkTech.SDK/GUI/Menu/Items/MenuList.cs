@@ -60,7 +60,7 @@
 
         protected override Size2 GetSize()
         {
-            var s = AddButton(base.GetSize(), out this.size);
+            var s = AddButton(base.GetSize(), out this.size, Menu.ArrowText);
 
             this.RecalculateSizes();
 
@@ -69,6 +69,12 @@
 
         private void RecalculateSizes()
         {
+            if (this.options.Count == 0)
+            {
+                this.sizes = new List<Size2>(0);
+                return;
+            }
+
             this.sizes = this.options.ConvertAll(Theme.MeasureText);
             var width = this.sizes.Max(iS => iS.Width);
             this.sizes = this.sizes.ConvertAll(iS => new Size2(width, iS.Height));
@@ -81,7 +87,7 @@
                 return;
             }
 
-            point.X += width;
+            point.X += width + ArrowWidth;
 
             for (var i = 0; i < this.options.Count; i++)
             {
@@ -90,7 +96,6 @@
                 if (Menu.IsCursorInside(point, s))
                 {
                     this.Value = i;
-
                     break;
                 }
 
@@ -112,6 +117,8 @@
             }
 
             point.X += this.size.Width;
+            AddArrow(point);
+            point.X += ArrowWidth;
 
             for (var i = 0; i < this.options.Count; i++)
             {

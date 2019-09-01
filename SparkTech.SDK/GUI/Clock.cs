@@ -14,7 +14,12 @@
             Render.OnEndScene += OnEndScene;
         }
 
-        internal static bool Enabled { get; set; }
+        private static int mode;
+
+        internal static void SetMode(int m)
+        {
+            mode = m;
+        }
 
         private static Size2 size;
 
@@ -34,7 +39,7 @@
 
         private static void OnEndScene()
         {
-            if (Enabled)
+            if (mode == 0)
             {
                 Theme.DrawTextBox(point, size, Text(), true, Color.Transparent);
             }

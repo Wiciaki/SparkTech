@@ -21,32 +21,31 @@
             }
 
             this.Content = content;
-
             this.Header = header;
 
             this.UpdateSizes();
         }
 
-        private static readonly List<NotificationEntry> ActiveNotifications = new List<NotificationEntry>();
+        private static readonly List<NotificationEntry> Entries = new List<NotificationEntry>();
 
-        public void Send(float time)
+        public void Send(float duration)
         {
-            ActiveNotifications.Add(new NotificationEntry(this) { Time = GameInterface.Time() + time });
+            Entries.Add(new NotificationEntry(this, duration));
         }
 
-        public static void Send(string content, float time)
+        public static void Send(string content, float duration)
         {
-            Send(content, null, time);
+            Send(content, null, duration);
         }
 
         public static void Send(string content, string header = null)
         {
-            Send(content, header, 3f);
+            Send(content, header, 5f);
         }
 
-        public static void Send(string content, string header, float time)
+        public static void Send(string content, string header, float duration)
         {
-            new Notification(content, header).Send(time);
+            new Notification(content, header).Send(duration);
         }
 
         private Size2 headerSize, contentSize;
@@ -65,20 +64,24 @@
 
         private static void OnEndScene()
         {
-            var point = new Point(1870, 40);
+            var point = new Point(1870, 100);
 
-            var width = ActiveNotifications.Max(entry => entry.Notification.contentSize.Width);
+            var t = GameInterface.Time();
+
+            var width = Entries.Max(entry => entry.Notification.contentSize.Width);
 
             point.X -= width;
 
-            foreach (var entry in ActiveNotifications)
+            foreach (var entry in Entries)
             {
+                var color = entry.GetColor(t);
+
                 if (entry.Notification.Header != null)
                 {
                     var headerSize = entry.Notification.headerSize;
                     headerSize.Width = width;
 
-                    Theme.DrawTextBox(point, headerSize, entry.Notification.Header, true);
+                    Theme.DrawTextBox(point, headerSize, entry.Notification.Header, true, color);
                     Theme.DrawBorders(point, headerSize);
 
                     point.Y += entry.Notification.headerSize.Height;
@@ -87,7 +90,7 @@
                 var contentSize = entry.Notification.contentSize;
                 contentSize.Width = width;
 
-                Theme.DrawTextBox(point, contentSize, entry.Notification.Content);
+                Theme.DrawTextBox(point, contentSize, entry.Notification.Content, false, color);
                 Theme.DrawBorders(point, contentSize);
 
                 point.Y += contentSize.Height + Theme.MinItemHeight;
@@ -96,18 +99,32 @@
 
         internal static void UpdateAllSizes()
         {
-            ActiveNotifications.ForEach(n => n.Notification.UpdateSizes());
+            Entries.ForEach(n => n.Notification.UpdateSizes());
         }
 
         private class NotificationEntry
         {
+            private const float DecayTime = 2f;
+
             public readonly Notification Notification;
 
-            public float Time;
+            private float time;
 
-            public NotificationEntry(Notification n)
+            public Color GetColor(float gameTime)
+            {
+                if (this.time + DecayTime > gameTime)
+                {
+                    
+                }
+
+                return Theme.BackgroundColor;
+            }
+
+            public NotificationEntry(Notification n, float duration)
             {
                 this.Notification = n;
+
+                this.time = duration + GameInterface.Time();
             }
         }
 

@@ -13,11 +13,22 @@
 
         }
 
+        private static bool arrows;
+
+        internal static void SetArrows(bool b)
+        {
+            arrows = b;
+        }
+
         private const string HelpBoxText = "[?]";
+
+        private const string Arrow = "➜";
 
         private string text, helpText;
 
         private Size2 textSize, helpSize, helpTextSize;
+
+        private static Size2 arrowSize;
 
         public string Text
         {
@@ -69,7 +80,7 @@
         protected override Size2 GetSize()
         {
             this.UpdateHelpTextSize();
-            
+
             this.textSize = Theme.MeasureText(this.Text);
 
             if (this.HelpText != null)
@@ -89,13 +100,39 @@
             return size;
         }
 
-        protected static Size2 AddButton(Size2 size, out Size2 buttonSize)
+        protected static Size2 AddButton(Size2 size, out Size2 buttonSize, string minWidth = null)
         {
             var width = Math.Min(Theme.MinItemHeight, size.Height);
+
+            if (minWidth != null)
+            {
+                var measuredWidth = Theme.MeasureText(minWidth).Width;
+
+                if (measuredWidth > width)
+                {
+                    width = measuredWidth;
+                }
+            }
+
             size.Width += width;
 
             buttonSize = new Size2(width, size.Height);
             return size;
+        }
+
+        protected static int ArrowWidth => arrows ? arrowSize.Width : 0;
+
+        protected static void AddArrow(Point point)
+        {
+            if (arrows)
+            {
+                Theme.DrawTextBox(point, arrowSize, "➜", true, Color.Transparent);
+            }
+        }
+
+        internal static void UpdateArrowSize()
+        {
+            arrowSize = new Size2(Theme.MeasureText(Arrow).Width, Theme.MinItemHeight);
         }
 
         private void UpdateHelpTextSize()
@@ -109,7 +146,7 @@
             {
                 var color = Theme.BackgroundColor;
 
-                if (this is IExpandable e && e.IsExpanded)
+                if (this is IExpandable expandable && expandable.IsExpanded)
                 {
                     color.A = byte.MaxValue;
                 }

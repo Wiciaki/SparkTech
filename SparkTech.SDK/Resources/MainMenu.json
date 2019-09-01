@@ -1,10 +1,10 @@
 ﻿{
   "en": {
-    "text": "SparkTech.SDK",
+    "text": "Surgical.SDK",
     "helpText": "Here you will find all the settings that impact other scripts"
   },
   "zh": {
-    "text": "Spark制作",
+    "text": "Surgeon制作",
     "helpText": "帮助"
   },
   "language": {
@@ -46,9 +46,17 @@
         "text": "应用"
       }
     },
+    "arrows": {
+      "en": {
+        "text": "Enable arrow indicators"
+      },
+      "zh": {
+        "text":  "asdfsef"
+      }
+    },
     "x": {
       "en": {
-        "text": "X coord"
+        "text": "X coordinate"
       },
       "zh": {
         "text": "X轴"
@@ -56,27 +64,47 @@
     },
     "y": {
       "en": {
-        "text": "Y coord"
+        "text": "Y coordinate"
       },
       "zh": {
         "text": "Y轴"
       }
     }
   },
-  "triggers": {
-    "en": {
-      "text": "Menu controls"
-    },
-    "zh": {
-      "text": "控制菜单"
-    }
-  },
   "clock": {
     "en": {
-      "text": "Clock"
+      "text": "Clock",
+      "helpText": "Smart shows the clock for 5 seconds, every minute",
+      "options": [
+        "On",
+        "Smart",
+        "Off"
+      ]
     },
     "zh": {
-      "text": "钟"
+      "text": "钟",
+      "helpText": "Smart shows the clock for 5 seconds, every minute",
+      "options": [
+        "On",
+        "Smart",
+        "Off"
+      ]
     }
-  }
+  },
+  "humanizer": {
+    "en": {
+      "text": "Humanizer" 
+    },
+    "zh": {
+      "text": "HumanizerZH"
+    },
+    "enable": {
+      "en": {
+        "text": "Enable the global humanizer"
+      },
+      "zh": {
+        "text": "??" 
+      }
+    }
+  } 
 } 

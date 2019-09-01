@@ -48,7 +48,7 @@ namespace SparkTech.SDK.Rendering
         static Circle()
         {
             // Initialize the vertex buffer, specifying its size, usage, format and pool
-            VertexBuffer = new VertexBuffer(Render.Direct3DDevice, Utilities.SizeOf<Vector4>() * 3, Usage.WriteOnly, VertexFormat.None, Pool.Managed);
+            VertexBuffer = new VertexBuffer(Render.Device, Utilities.SizeOf<Vector4>() * 3, Usage.WriteOnly, VertexFormat.None, Pool.Managed);
 
             // Lock and write the vertices onto the vertex buffer
             VertexBuffer.Lock(0, 0, LockFlags.None).WriteRange(
@@ -60,12 +60,12 @@ namespace SparkTech.SDK.Rendering
             var vertexElements = new[] { new VertexElement(0, 0, DeclarationType.Float4, DeclarationMethod.Default, DeclarationUsage.Position, 0), VertexElement.VertexDeclarationEnd };
 
             // Initialize the vertex decleration using the previously created vertex elements
-            VertexDeclaration = new VertexDeclaration(Render.Direct3DDevice, vertexElements);
+            VertexDeclaration = new VertexDeclaration(Render.Device, vertexElements);
 
             #endregion
 
             // Load the effect from memory
-            Effect = Effect.FromMemory(Render.Direct3DDevice, Resources.RenderEffectCompiled, ShaderFlags.None);
+            Effect = Effect.FromMemory(Render.Device, Resources.RenderEffectCompiled, ShaderFlags.None);
 
             // Set the only technique in the shaders
             Technique = Effect.GetTechnique(0);
@@ -109,15 +109,15 @@ namespace SparkTech.SDK.Rendering
         public static void Draw(Color color, float radius, float thickness, bool filled, params Vector3[] worldPositions)
         {
             // Save the current VertexDecleration for restoring later
-            var declaration = Render.Direct3DDevice.VertexDeclaration;
+            var declaration = Render.Device.VertexDeclaration;
 
             // Set the current effect technique and begin the shading process
             Effect.Technique = Technique;
             Effect.Begin();
 
             // Send data to the GPU using the Direct3DDevice
-            Render.Direct3DDevice.SetStreamSource(0, VertexBuffer, 0, Utilities.SizeOf<Vector4>());
-            Render.Direct3DDevice.VertexDeclaration = VertexDeclaration;
+            Render.Device.SetStreamSource(0, VertexBuffer, 0, Utilities.SizeOf<Vector4>());
+            Render.Device.VertexDeclaration = VertexDeclaration;
 
             var multiplier = Render.ViewMatrix() * Render.ProjectionMatrix();
 
@@ -138,14 +138,14 @@ namespace SparkTech.SDK.Rendering
                 Effect.EndPass();
 
                 // Draw the primitives in the shader
-                Render.Direct3DDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, 1);
+                Render.Device.DrawPrimitives(PrimitiveType.TriangleList, 0, 1);
             }
 
             // End the shading process
             Effect.End();
 
             // Restore the previous VertexDecleration
-            Render.Direct3DDevice.VertexDeclaration = declaration;
+            Render.Device.VertexDeclaration = declaration;
         }
 
         #endregion

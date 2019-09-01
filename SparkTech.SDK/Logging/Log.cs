@@ -14,8 +14,8 @@
 
             AppDomain.CurrentDomain.UnhandledException += (sender, args) => { Error(args.ExceptionObject); };
 
-            Debug("Started logger");
-            Debug("Platform name: " + Platform.PlatformName);
+            Info("Started logger");
+            Info("Platform name: " + Platform.PlatformName);
         }
 
         public static void Error(object obj)
@@ -28,7 +28,7 @@
             Warn(obj?.ToString());
         }
 
-        public static void Debug(object obj)
+        public static void Info(object obj)
         {
             Info(obj?.ToString());
         }

@@ -4,26 +4,18 @@
 
     public class MenuSeparator : MenuItem
     {
-        private readonly Size2 size;
+        private readonly int heightMultiplier;
 
-        public MenuSeparator(string id) : this(id, 28)
+        private Size2 size;
+
+        public MenuSeparator(string id, int heightMultiplier = 1) : base(id)
         {
-
-        }
-
-        public MenuSeparator(string id, int height) : this(id, new Size2(28, height))
-        {
-
-        }
-
-        public MenuSeparator(string id, Size2 size) : base(id)
-        {
-            this.size = size;
+            this.heightMultiplier = heightMultiplier;
         }
 
         protected override Size2 GetSize()
         {
-            return this.size;
+            return this.size = new Size2(0, this.heightMultiplier * Theme.MinItemHeight);
         }
 
         protected internal override void OnEndScene(Point point, int width)

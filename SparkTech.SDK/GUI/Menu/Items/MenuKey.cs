@@ -7,9 +7,9 @@
     using SparkTech.SDK.Game;
     using SparkTech.SDK.API;
 
-    public class MenuKey : MenuValue, IMenuValue<WindowsMessagesWParam>
+    public class MenuKey : MenuValue, IMenuValue<Key>
     {
-        public MenuKey(string id, WindowsMessagesWParam defaultValue) : base(id, defaultValue.ToString())
+        public MenuKey(string id, Key defaultValue) : base(id, defaultValue.ToString())
         {
             GameEvents.OnWndProc += this.WndProc;
         }
@@ -20,9 +20,9 @@
 
         private Size2 size;
 
-        private WindowsMessagesWParam value;
+        private Key value;
 
-        public WindowsMessagesWParam Value
+        public Key Value
         {
             get => this.value;
             set
@@ -108,7 +108,7 @@
         protected override JToken Token
         {
             get => this.Value.ToString();
-            set => this.Value = EnumCache<WindowsMessagesWParam>.Parse(value.Value<string>());
+            set => this.Value = EnumCache<Key>.Parse(value.Value<string>());
         }
     }
 }

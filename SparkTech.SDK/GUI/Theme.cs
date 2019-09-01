@@ -2,6 +2,8 @@
 {
     using SharpDX;
 
+    using SparkTech.SDK.GUI.Menu;
+
     public class Theme
     {
         private static ITheme theme;
@@ -10,19 +12,24 @@
         {
             if (theme == null)
             {
-                theme = t;
-                Clock.UpdateSize();
+                Set();
                 return;
             }
 
             theme.Dispose();
 
-            theme = t;
-
-            Clock.UpdateSize();
+            Set();
 
             Menu.Menu.UpdateAllSizes();
             Notifications.Notification.UpdateAllSizes();
+
+            void Set()
+            {
+                theme = t;
+
+                MenuText.UpdateArrowSize();
+                Clock.UpdateSize();
+            }
         }
 
         public static int MinItemHeight => theme.MinItemHeight;

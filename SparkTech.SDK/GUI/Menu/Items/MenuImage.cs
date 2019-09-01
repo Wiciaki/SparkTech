@@ -5,9 +5,9 @@
 
     using SparkTech.SDK.Rendering;
 
-    public class MenuImage : MenuItem, IMenuValue<Texture>
+    public class MenuTexture : MenuItem, IMenuValue<Texture>
     {
-        public MenuImage(string id) : base(id)
+        public MenuTexture(string id) : base(id)
         {
 
         }
@@ -16,22 +16,13 @@
 
         private Size2 size;
 
-        /*
-        public Bitmap Bitmap
+        public Texture Texture
         {
-            set
-            {
-                if (value == null)
-                {
-                    this.Value = null;
-                    return;
-                }
+            get => this.GetValue<Texture>();
+            set => this.SetValue(value);
+        }
 
-                this.UpdateTexture(value.ToTexture(), value.Size);
-            }
-        }*/
-
-        public Texture Value
+        Texture IMenuValue<Texture>.Value
         {
             get => this.texture;
             set
@@ -63,15 +54,8 @@
 
         protected internal override void OnEndScene(Point point, int width)
         {
-            var s = new Size2((width - this.size.Width) / 2, this.size.Height);
-
-            Theme.DrawBox(point, s, Theme.BackgroundColor);
-            point.X += s.Width;
-
-            Image.Draw(point, this.texture, Theme.BackgroundColor);
-
-            point.X += this.size.Width;
-            Theme.DrawBox(point, this.size, Theme.BackgroundColor);
+            Theme.DrawBox(point, new Size2(width, this.size.Height), Theme.BackgroundColor);
+            Image.Draw(point, this.texture);
         }
     }
 }

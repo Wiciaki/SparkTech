@@ -41,7 +41,7 @@ namespace SparkTech.SDK.Rendering
         /// </summary>
         static Vector()
         {
-            Line = new Line(Render.Direct3DDevice) { Antialias = true };
+            Line = new Line(Render.Device) { Antialias = true };
 
             Render.OnDispose += Line.Dispose;
             Render.OnLostDevice += Line.OnLostDevice;

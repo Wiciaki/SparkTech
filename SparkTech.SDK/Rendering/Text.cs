@@ -48,7 +48,7 @@ namespace SparkTech.SDK.Rendering
         {
             // Intialize the default font now so we don't have to intialize it with every frame
             Font = new Font(
-                Render.Direct3DDevice,
+                Render.Device,
                 20,
                 0,
                 FontWeight.Normal,

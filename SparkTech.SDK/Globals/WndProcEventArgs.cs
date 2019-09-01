@@ -4,9 +4,9 @@
     {
         public readonly WindowsMessages Message;
 
-        public readonly WindowsMessagesWParam WParam;
+        public readonly Key WParam;
 
-        public WndProcEventArgs(WindowsMessages message, WindowsMessagesWParam wparam)
+        public WndProcEventArgs(WindowsMessages message, Key wparam)
         {
             this.Message = message;
 

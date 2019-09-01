@@ -143,7 +143,7 @@
             catch (WebException ex)
             {
                 Log.Info("Auth failed");
-                Log.Debug(ex);
+                Log.Info(ex);
 
                 return null;
             }

@@ -24,7 +24,7 @@
 
         private Size2 size;
 
-        private const string ExpandText = ">>";
+        internal const string ArrowText = ">>";
 
         public Menu(string id) : base(id)
         {
@@ -44,7 +44,7 @@
 
         public Menu GetMenu(string id)
         {
-            return this.GetItems<Menu>().FirstOrDefault(item => item.Id == id);
+            return this[id] as Menu;
         }
 
         public IEnumerable<MenuItem> GetDescensants()
@@ -73,7 +73,7 @@
 
         protected override Size2 GetSize()
         {
-            return AddButton(base.GetSize(), out this.size);
+            return AddButton(base.GetSize(), out this.size, ArrowText);
         }
 
         protected internal override void OnEndScene(Point point, int width)
@@ -82,7 +82,7 @@
             base.OnEndScene(point, width);
             point.X += width;
 
-            Theme.DrawTextBox(point, this.size, ExpandText, true, this.BackgroundColor);
+            Theme.DrawTextBox(point, this.size, ArrowText, true, this.BackgroundColor);
 
             if (!this.IsExpanded)
             {
@@ -90,6 +90,8 @@
             }
 
             point.X += this.size.Width;
+            AddArrow(point);
+            point.X += ArrowWidth;
 
             DrawGroup(this.items, point);
         }
@@ -101,7 +103,7 @@
                 return;
             }
 
-            point.X += width;
+            point.X += width + ArrowWidth;
 
             WndProcGroup(this.items, point, args);
         }
@@ -219,7 +221,7 @@
 
         private static readonly List<RootEntry> RootEntries = new List<RootEntry>();
 
-        public static WindowsMessagesWParam ActivationButton { get; private set; }
+        public static Key ActivationButton { get; private set; }
 
         public static bool IsOpen { get; private set; }
 
@@ -339,7 +341,7 @@
             position = new Point(x, y);
         }
 
-        internal static void SetTriggers(WindowsMessagesWParam button, bool toggle)
+        internal static void SetTriggers(Key button, bool toggle)
         {
             if (toggle == toggleBehavior && ActivationButton == button)
             {

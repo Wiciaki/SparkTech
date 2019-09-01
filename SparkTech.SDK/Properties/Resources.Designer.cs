@@ -61,12 +61,24 @@ namespace SparkTech.SDK.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] Banner {
+            get {
+                object obj = ResourceManager.GetObject("Banner", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {
         ///  &quot;en&quot;: {
-        ///    &quot;text&quot;: &quot;SDK&quot;,
+        ///    &quot;text&quot;: &quot;Surgical.SDK&quot;,
         ///    &quot;helpText&quot;: &quot;Here you will find all the settings that impact other scripts&quot;
         ///  },
         ///  &quot;zh&quot;: {
+        ///    &quot;text&quot;: &quot;Surgeon制作&quot;,
+        ///    &quot;helpText&quot;: &quot;帮助&quot;
         ///  },
         ///  &quot;language&quot;: {
         ///    &quot;en&quot;: {
@@ -76,24 +88,18 @@ namespace SparkTech.SDK.Properties {
         ///      &quot;text&quot;: &quot;语言 (language)&quot;
         ///    }
         ///  },
-        ///  &quot;position&quot;: {
+        ///  &quot;menu&quot;: {
         ///    &quot;en&quot;: {
-        ///      &quot;text&quot;: &quot;Position&quot;
+        ///      &quot;text&quot;: &quot;Menu settings&quot;
         ///    },
-        ///    &quot;x&quot;: {
-        ///      &quot;en&quot;: {
-        ///        &quot;text&quot;: &quot;X coord&quot;
-        ///      }
+        ///    &quot;zh&quot;: {
+        ///      &quot;text&quot;: &quot;Menu settings ??&quot;
         ///    },
-        ///    &quot;y&quot;: {
+        ///    &quot;key&quot;: {
         ///      &quot;en&quot;: {
-        ///        &quot;text&quot;: &quot;Y coord&quot;
-        ///      }
-        ///    }
-        ///  },
-        ///  &quot;triggers&quot;: {
-        ///    &quot;en&quot;: {
-        ///      &quot;text&quot; [rest of string was truncated]&quot;;.
+        ///        &quot;text&quot;: &quot;Activation button&quot;
+        ///      },
+        /// [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string MainMenu {
             get {

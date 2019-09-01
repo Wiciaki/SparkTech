@@ -11,7 +11,7 @@
 
     public static class Render
     {
-        public static Device Direct3DDevice { get; private set; }
+        public static Device Device { get; private set; }
 
         public static event Action OnDraw, OnBeginScene, OnEndScene, OnLostDevice, OnResetDevice, OnDispose, OnResolutionChanged;
 
@@ -42,7 +42,7 @@
 
             r = render;
 
-            Direct3DDevice = r.GetDevice();
+            Device = r.GetDevice();
 
             r.Draw = () => OnDraw.SafeInvoke();
             r.BeginScene = () => OnBeginScene.SafeInvoke();

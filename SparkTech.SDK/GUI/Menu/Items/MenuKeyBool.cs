@@ -4,7 +4,7 @@
 
     public class MenuKeyBool : MenuKey, IMenuValue<bool>
     {
-        public MenuKeyBool(string id, WindowsMessagesWParam defaultValue) : base(id, defaultValue)
+        public MenuKeyBool(string id, Key defaultValue) : base(id, defaultValue)
         {
 
         }

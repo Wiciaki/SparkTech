@@ -1,6 +1,6 @@
 ﻿namespace SparkTech.SDK
 {
-    public enum WindowsMessagesWParam
+    public enum Key
     {
         Backspace = 8,
 

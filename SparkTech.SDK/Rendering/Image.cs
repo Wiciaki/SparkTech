@@ -31,20 +31,17 @@ namespace SparkTech.SDK.Rendering
 
         static Image()
         {
-            Sprite = new Sprite(Render.Direct3DDevice);
+            Sprite = new Sprite(Render.Device);
 
             Render.OnDispose += Sprite.Dispose;
             Render.OnLostDevice += Sprite.OnLostDevice;
             Render.OnResetDevice += Sprite.OnResetDevice;
         }
 
+        // todo fix for transparent sprites
         public static void Draw(Vector2 position, Texture texture, Color? color = null, Vector3? center = null, Rectangle? rectangle = null, float? rotation = null, Vector2? scale = null)
         {
-            if (!color.HasValue)
-            {
-                color = Color.Transparent;
-            }
-
+            var c = color ?? Color.White;
             var positionRef = new Vector3(position, 0);
 
             if (center.HasValue)
@@ -52,11 +49,11 @@ namespace SparkTech.SDK.Rendering
                 positionRef += center.Value;
             }
 
-            Sprite.Begin();
+            Sprite.Begin(SpriteFlags.AlphaBlend);
 
             if (!rotation.HasValue || !scale.HasValue)
             {
-                Sprite.Draw(texture, color.Value, rectangle, center, positionRef);
+                Sprite.Draw(texture, c, rectangle, center, positionRef);
             }
             else
             {
@@ -66,7 +63,7 @@ namespace SparkTech.SDK.Rendering
                 // Transform the sprite and draw it
                 Sprite.Transform *= Matrix.Scaling(new Vector3(scale.Value, 0)) * Matrix.RotationZ(rotation.Value) * Matrix.Translation(positionRef);
 
-                Sprite.Draw(texture, color.Value, rectangle, center);
+                Sprite.Draw(texture, c, rectangle, center);
 
                 // Restore the previous transform
                 Sprite.Transform = oldTransform;
