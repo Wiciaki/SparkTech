@@ -1,0 +1,74 @@
+{
+  "key": {
+    "en": {
+      "text": "Activation key"
+    },
+    "zh": {
+      "text": "??"
+    }
+  },
+  "champSpells": {
+    "en": {
+      "text": "Spell usage on champs",
+      "options": [
+        "Don't use spells",
+        "Poke spells only",
+        "All spells"
+      ]
+    }
+  },
+  "champAuto": {
+    "en": {
+      "text": "Autoattack champions" 
+    } 
+  },
+  "minions": {
+    "en": {
+      "text": "Minions",
+      "options": [
+        "Don't attack",
+        "Lasthit",
+        "Push"
+      ]
+    }
+  },
+  "objects": {
+    "en": {
+      "text": "Objects"
+    },
+    "zh": {
+      "text": "??"
+    },
+    "wards": {
+      "en": {
+        "text": "Attack wards"
+      }
+    },
+    "clones": {
+      "en": {
+        "text": "Attack clones"
+      }
+    },
+    "pets": {
+      "en": {
+        "text": "Attack pets"
+      }
+    },
+    "barrel": {
+      "en": {
+        "text": "Attack GP's barrel" 
+      } 
+    } 
+  },
+  "flee": {
+    "en": {
+      "text": "Use spells to flee",
+      "helpText": "Ex. Orianna W on self" 
+    }
+  },
+  "explosives": {
+    "en": {
+      "text": "Hit explosives to escape" 
+    } 
+  } 
+}

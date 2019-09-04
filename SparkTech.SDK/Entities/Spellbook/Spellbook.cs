@@ -2,7 +2,7 @@
 {
     using System;
 
-    using SparkTech.SDK.Platform.API;
+    using SparkTech.SDK.API.Fragments;
 
     public static class Spellbook
     {

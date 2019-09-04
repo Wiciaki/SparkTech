@@ -1,4 +1,4 @@
-﻿namespace SparkTech.SDK.Entities
+﻿namespace SparkTech.SDK.Entities.Events
 {
     public class OnDamageEventArgs
     {
@@ -15,9 +15,13 @@
         public OnDamageEventArgs(int sourceId, int targetId, float damage, DamageHitType hitType, DamageType damageType)
         {
             this.SourceId = sourceId;
+
             this.TargetId = targetId;
+
             this.Damage = damage;
+
             this.HitType = hitType;
+
             this.DamageType = damageType;
         }
     }

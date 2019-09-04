@@ -88,22 +88,34 @@ namespace SparkTech.SDK.Properties {
         ///      &quot;text&quot;: &quot;语言 (language)&quot;
         ///    }
         ///  },
-        ///  &quot;menu&quot;: {
+        ///  &quot;modes&quot;: {
         ///    &quot;en&quot;: {
-        ///      &quot;text&quot;: &quot;Menu settings&quot;
+        ///      &quot;text&quot;: &quot;Modes&quot;
         ///    },
         ///    &quot;zh&quot;: {
-        ///      &quot;text&quot;: &quot;Menu settings ??&quot;
+        ///      &quot;text&quot;: &quot;??&quot;
         ///    },
-        ///    &quot;key&quot;: {
+        ///    &quot;combo&quot;: {
         ///      &quot;en&quot;: {
-        ///        &quot;text&quot;: &quot;Activation button&quot;
+        ///        &quot;text&quot;: &quot;Combo&quot;
         ///      },
-        /// [rest of string was truncated]&quot;;.
+        ///      &quot;zh&quot;: {
+        ///        &quot;text&quot;:  [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string MainMenu {
             get {
                 return ResourceManager.GetString("MainMenu", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
+        ///
+        ///}.
+        /// </summary>
+        internal static string Mode {
+            get {
+                return ResourceManager.GetString("Mode", resourceCulture);
             }
         }
         

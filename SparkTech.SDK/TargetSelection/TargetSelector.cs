@@ -26,7 +26,6 @@ namespace SparkTech.SDK.TargetSelection
 
     using SparkTech.SDK.Entities;
     using SparkTech.SDK.Modules;
-    using SparkTech.SDK.Platform;
     using SparkTech.SDK.TargetSelection.Default;
 
     public static class TargetSelector

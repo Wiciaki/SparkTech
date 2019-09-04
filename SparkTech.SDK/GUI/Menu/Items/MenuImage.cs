@@ -27,24 +27,20 @@
             get => this.texture;
             set
             {
-                if (this.texture != value)
+                if (this.texture == value || !this.UpdateValue(value))
                 {
-                    this.UpdateTexture(value, value?.GetSize() ?? Size2.Empty);
+                    return;
                 }
+
+                var desc = value.GetLevelDescription(0);
+                var s = new Size2(desc.Width, desc.Height);
+
+                this.texture = value;
+                this.size = s;
+
+                this.UpdateSize();
+
             }
-        }
-
-        private void UpdateTexture(Texture t, Size2 s)
-        {
-            if (!this.UpdateValue(t))
-            {
-                return;
-            }
-
-            this.texture = t;
-            this.size = s;
-
-            this.UpdateSize();
         }
 
         protected override Size2 GetSize()

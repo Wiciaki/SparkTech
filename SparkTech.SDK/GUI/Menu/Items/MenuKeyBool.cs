@@ -9,7 +9,7 @@
 
         }
 
-        private bool value, toggle, released;
+        private bool value, toggle, release;
 
         public new bool Value
         {
@@ -29,7 +29,7 @@
 
                 this.toggle = value;
 
-                this.released = false;
+                this.release = false;
                 this.Value = false;
             }
         }
@@ -42,7 +42,7 @@
 
             if (args.WParam == base.Value)
             {
-                this.Value = args.Message == WindowsMessages.KEYDOWN || args.Message == WindowsMessages.KEYUP && (!this.toggle || (this.released ^= true));
+                this.Value = args.Message == WindowsMessages.KEYDOWN || args.Message == WindowsMessages.KEYUP && (!this.toggle || (this.release ^= true));
             }
         }
     }

@@ -20,7 +20,9 @@
         private static readonly IEqualityComparer<IHero> EqualityComparer;
 
         static DefaultTargetSelector()
-        {
+        { 
+            // var modeNames = new[] { "timeToKill", "dealsMostDmg", "distanceChamp", "distanceMouse" };
+
             EqualityComparer = new GameObjectComparer();
             Weights = new List<Weight>();
 

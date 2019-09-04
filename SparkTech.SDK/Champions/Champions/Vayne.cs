@@ -1,4 +1,4 @@
-﻿namespace SparkTech.SDK.Scripts.Champions
+﻿namespace SparkTech.SDK.Champions
 {
     public class Vayne : Champion
     {

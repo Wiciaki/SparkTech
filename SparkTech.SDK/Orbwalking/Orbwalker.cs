@@ -27,7 +27,6 @@ namespace SparkTech.SDK.Orbwalking
     using SparkTech.SDK.Entities;
     using SparkTech.SDK.Modules;
     using SparkTech.SDK.Orbwalking.Default;
-    using SparkTech.SDK.Platform;
 
     public static class Orbwalker
     {

@@ -1,8 +1,8 @@
-﻿namespace SparkTech.SDK.Platform.API
+﻿namespace SparkTech.SDK.API.Fragments
 {
     using System;
 
-    using SparkTech.SDK.Entities;
+    using SparkTech.SDK.Entities.Events;
 
     public interface IEntityEvents
     {

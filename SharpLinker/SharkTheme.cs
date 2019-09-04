@@ -3,10 +3,10 @@
     using SharpDX;
     using SharpDX.Direct3D9;
 
-    using SparkTech.SDK.GUI;
+    using SparkTech.SDK.GUI.Default;
     using SparkTech.SDK.Rendering;
 
-    public class SharkTheme : DefaultTheme
+    public class SharkTheme : Theme
     {
         protected override FontDrawFlags DrawFlags { get; } = FontDrawFlags.Center | FontDrawFlags.VerticalCenter;
 

@@ -3,7 +3,6 @@
     using SparkTech.SDK.Entities;
     using SparkTech.SDK.Modules;
     using SparkTech.SDK.MovementPrediction.Default;
-    using SparkTech.SDK.Platform;
 
     public static class MovementPrediction
     {

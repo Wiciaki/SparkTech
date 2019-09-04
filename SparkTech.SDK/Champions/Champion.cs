@@ -1,4 +1,4 @@
-﻿namespace SparkTech.SDK.Scripts
+﻿namespace SparkTech.SDK.Champions
 {
     using System;
     using System.Reflection;
@@ -18,7 +18,7 @@
 
         internal static void Initialize()
         {
-            var champName = ObjectManager.Player.CharName();
+            var champName = ObjectManager.Player.CharName;
 
             var type = Assembly.GetAssembly(typeof(Champion)).GetType(champName);
 

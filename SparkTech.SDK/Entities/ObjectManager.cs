@@ -30,8 +30,8 @@ namespace SparkTech.SDK.Entities
 
     using MoreLinq;
 
+    using SparkTech.SDK.API.Fragments;
     using SparkTech.SDK.Logging;
-    using SparkTech.SDK.Platform.API;
 
     public static class ObjectManager
     {
@@ -72,7 +72,7 @@ namespace SparkTech.SDK.Entities
 
         public static bool IsMe(this IGameObject o) => o.Id == Player.Id;
 
-        public static bool IsAlly(this IGameObject o) => o.Team() == Player.Team();
+        public static bool IsAlly(this IGameObject o) => o.Team == Player.Team;
 
         public static bool IsEnemy(this IGameObject o) => !o.IsAlly();
 

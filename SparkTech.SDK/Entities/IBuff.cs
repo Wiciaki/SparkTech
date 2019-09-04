@@ -1,5 +1,7 @@
-﻿namespace SparkTech.SDK.Entities.Buffs
+﻿namespace SparkTech.SDK.Entities
 {
+    using SparkTech.SDK.Entities.Buffs;
+
     public interface IBuff
     {
         BuffType Type();

@@ -15,12 +15,68 @@
       "text": "语言 (language)"
     }
   },
+  "modes": {
+    "en": {
+      "text": "Modes"
+    },
+    "zh": {
+      "text": "??"
+    },
+    "combo": {
+      "en": {
+        "text": "Combo"
+      },
+      "zh": {
+        "text": "??"
+      }
+    },
+    "laneclear": {
+      "en": {
+        "text": "Laneclear"
+      },
+      "zh": {
+        "text": "??"
+      }
+    },
+    "harass": {
+      "en": {
+        "text": "Harass"
+      },
+      "zh": {
+        "text": "??"
+      }
+    },
+    "lasthit": {
+      "en": {
+        "text": "Lasthit"
+      },
+      "zh": {
+        "text": "??"
+      }
+    },
+    "custom": {
+      "en": {
+        "text": "Custom mode"
+      },
+      "zh": {
+        "text": "??"
+      }
+    },
+    "flee": {
+      "en": {
+        "text": "Flee"
+      },
+      "zh": {
+        "text": "??"
+      }
+    } 
+  },
   "menu": {
     "en": {
       "text": "Menu settings"
     },
     "zh": {
-      "text": "Menu settings ??"
+      "text": "??"
     },
     "key": {
       "en": {
@@ -51,8 +107,16 @@
         "text": "Enable arrow indicators"
       },
       "zh": {
-        "text":  "asdfsef"
+        "text": "asdfsef"
       }
+    },
+    "position": {
+      "en": {
+        "text":  "Position" 
+      },
+      "zh": {
+        "text":  "???" 
+      } 
     },
     "x": {
       "en": {
@@ -93,18 +157,55 @@
   },
   "humanizer": {
     "en": {
-      "text": "Humanizer" 
+      "text": "Humanizer"
     },
     "zh": {
-      "text": "HumanizerZH"
+      "text": "??"
     },
     "enable": {
       "en": {
         "text": "Enable the global humanizer"
       },
       "zh": {
-        "text": "??" 
+        "text": "??"
       }
     }
-  } 
+  },
+  "license": {
+    "en": {
+      "text": "License"
+    },
+    "zh": {
+      "text": "??"
+    }
+  },
+  "about": {
+    "en": {
+      "text": "About"
+    },
+    "zh": {
+      "text": "??"
+    },
+    "version.sdk": {
+      "en": {
+        "text": "SDK Version {version}"
+      },
+      "zh": {
+        "text": "??"
+      }
+    },
+    "version.core": {
+      "en": {
+        "text": "C"
+      }
+    },
+    "credits": {
+      "en": {
+        "text": "SDK made by @surgeon:matrix.org"
+      },
+      "zh": {
+        "text": "??"
+      }
+    }
+  }
 } 

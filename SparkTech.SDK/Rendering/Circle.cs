@@ -38,6 +38,14 @@ namespace SparkTech.SDK.Rendering
 
         private const float AntiAlias = 0.65f;
 
+        private static readonly Effect Effect;
+
+        private static readonly EffectHandle EffectHandle;
+
+        private static readonly VertexBuffer VertexBuffer;
+
+        private static readonly VertexDeclaration VertexDeclaration;
+
         #endregion
 
         #region Constructors and Destructors
@@ -68,7 +76,7 @@ namespace SparkTech.SDK.Rendering
             Effect = Effect.FromMemory(Render.Device, Resources.RenderEffectCompiled, ShaderFlags.None);
 
             // Set the only technique in the shaders
-            Technique = Effect.GetTechnique(0);
+            EffectHandle = Effect.GetTechnique(0);
 
             Render.OnLostDevice += Effect.OnLostDevice;
             Render.OnResetDevice += Effect.OnResetDevice;
@@ -76,23 +84,11 @@ namespace SparkTech.SDK.Rendering
             Render.OnDispose += () =>
             {
                 Effect.Dispose();
-                Technique.Dispose();
+                EffectHandle.Dispose();
                 VertexBuffer.Dispose();
                 VertexDeclaration.Dispose();
             };
         }
-
-        #region Properties
-
-        private static readonly Effect Effect;
-
-        private static readonly EffectHandle Technique;
-
-        private static readonly VertexBuffer VertexBuffer;
-
-        private static readonly VertexDeclaration VertexDeclaration;
-
-        #endregion
 
         #region Public Methods and Operators
 
@@ -112,7 +108,7 @@ namespace SparkTech.SDK.Rendering
             var declaration = Render.Device.VertexDeclaration;
 
             // Set the current effect technique and begin the shading process
-            Effect.Technique = Technique;
+            Effect.Technique = EffectHandle;
             Effect.Begin();
 
             // Send data to the GPU using the Direct3DDevice

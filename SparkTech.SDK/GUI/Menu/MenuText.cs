@@ -20,9 +20,11 @@
             arrows = b;
         }
 
-        private const string HelpBoxText = "[?]";
+        private const string HelpBoxText = "[?]"; // ❔
 
         private const string Arrow = "➜";
+
+        private const string MinItemWidthText = "This is enough";
 
         private string text, helpText;
 
@@ -83,14 +85,11 @@
 
             this.textSize = Theme.MeasureText(this.Text);
 
-            if (this.HelpText != null)
-            {
-                this.helpSize = new Size2(Theme.MeasureText(HelpBoxText).Width, this.textSize.Height);
-            }
+            this.helpSize = this.HelpText == null ? default : new Size2(Theme.MeasureText(HelpBoxText).Width, this.textSize.Height);
 
             var size = new Size2(this.textSize.Width + this.helpSize.Width, this.textSize.Height);
 
-            var width = Theme.MeasureText("This is enough").Width;
+            var width = Theme.MeasureText(MinItemWidthText).Width;
 
             if (width > size.Width)
             {
@@ -100,18 +99,13 @@
             return size;
         }
 
-        protected static Size2 AddButton(Size2 size, out Size2 buttonSize, string minWidth = null)
+        protected static Size2 AddButton(Size2 size, out Size2 buttonSize, string minWidthText = null)
         {
             var width = Math.Min(Theme.MinItemHeight, size.Height);
 
-            if (minWidth != null)
+            if (minWidthText != null)
             {
-                var measuredWidth = Theme.MeasureText(minWidth).Width;
-
-                if (measuredWidth > width)
-                {
-                    width = measuredWidth;
-                }
+                width = Math.Max(width, Theme.MeasureText(minWidthText).Width);
             }
 
             size.Width += width;
@@ -126,7 +120,7 @@
         {
             if (arrows)
             {
-                Theme.DrawTextBox(point, arrowSize, "➜", true, Color.Transparent);
+                Theme.DrawTextBox(point, arrowSize, Arrow, true, Color.Transparent);
             }
         }
 
@@ -178,10 +172,10 @@
             }
 
             // todo maybe non centered?
-            var res = Render.Resolution();
+            var resolution = Render.Resolution();
 
-            point.X = (res.Width - this.helpTextSize.Width) / 2;
-            point.Y = (res.Height - this.helpTextSize.Height) / 2;
+            point.X = (resolution.Width - this.helpTextSize.Width) / 2;
+            point.Y = (resolution.Height - this.helpTextSize.Height) / 2;
 
             Theme.DrawTextBox(point, this.helpTextSize, this.HelpText, true);
         }

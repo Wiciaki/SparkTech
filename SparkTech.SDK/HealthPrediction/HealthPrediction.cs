@@ -3,7 +3,7 @@
     using SparkTech.SDK.Entities;
     using SparkTech.SDK.HealthPrediction.Default;
     using SparkTech.SDK.Modules;
-    using SparkTech.SDK.Platform;
+    using SparkTech.SDK.API;
 
     public static class HealthPrediction
     {

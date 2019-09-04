@@ -5,7 +5,6 @@
     using SharpDX;
 
     using SparkTech.SDK.Logging;
-    using SparkTech.SDK.Platform.API;
 
     public static class GameEvents
     {

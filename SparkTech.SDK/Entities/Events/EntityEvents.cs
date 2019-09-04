@@ -1,8 +1,8 @@
-﻿namespace SparkTech.SDK.Entities
+﻿namespace SparkTech.SDK.Entities.Events
 {
     using System;
 
-    using SparkTech.SDK.Platform.API;
+    using SparkTech.SDK.API.Fragments;
 
     public static class EntityEvents
     {
@@ -10,7 +10,7 @@
 
         internal static void Initialize(IEntityEvents events)
         {
-            events.Damage = OnDamage.SafeInvoke;
+            events.Damage = args => OnDamage.SafeInvoke(args);
         }
     }
 }

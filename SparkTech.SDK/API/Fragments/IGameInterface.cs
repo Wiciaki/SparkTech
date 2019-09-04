@@ -1,4 +1,4 @@
-﻿namespace SparkTech.SDK.Platform.API
+﻿namespace SparkTech.SDK.API.Fragments
 {
     using SharpDX;
 

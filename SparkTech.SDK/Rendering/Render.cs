@@ -6,12 +6,11 @@
     using SharpDX;
     using SharpDX.Direct3D9;
 
-    using SparkTech.SDK.Logging;
-    using SparkTech.SDK.Platform.API;
+    using SparkTech.SDK.API.Fragments;
 
     public static class Render
     {
-        public static Device Device { get; private set; }
+        public static Device Device => r.Device;
 
         public static event Action OnDraw, OnBeginScene, OnEndScene, OnLostDevice, OnResetDevice, OnDispose, OnResolutionChanged;
 
@@ -34,15 +33,7 @@
 
         internal static void Initialize(IRender render)
         {
-            if (render == null)
-            {
-                Log.Error("render == null!");
-                return;
-            }
-
             r = render;
-
-            Device = r.GetDevice();
 
             r.Draw = () => OnDraw.SafeInvoke();
             r.BeginScene = () => OnBeginScene.SafeInvoke();

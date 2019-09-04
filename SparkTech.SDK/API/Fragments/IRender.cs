@@ -1,4 +1,4 @@
-﻿namespace SparkTech.SDK.Platform.API
+﻿namespace SparkTech.SDK.API.Fragments
 {
     using System;
 
@@ -9,7 +9,7 @@
     {
         Size2 Resolution();
 
-        Device GetDevice();
+        Device Device { get; }
 
         Action BeginScene { get; set; }
 

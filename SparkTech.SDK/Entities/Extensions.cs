@@ -11,17 +11,17 @@
     {
         public static float HealthPercent(this IHero hero)
         {
-            return hero.Health() / hero.MaxHealth() * 100f;
+            return hero.Health / hero.MaxHealth * 100f;
         }
 
         public static float ManaPercent(this IHero hero)
         {
-            return hero.Mana() / hero.MaxMana() * 100f;
+            return hero.Mana / hero.MaxMana * 100f;
         }
 
         public static void DrawCircle(this IGameObject o, Color color, float radius)
         {
-            Circle.Draw(color, radius, o.Position());
+            Circle.Draw(color, radius, o.Position);
         }
 
         #region Static Fields
@@ -41,7 +41,7 @@
                 return MinionType.Unknown;
             }
 
-            var baseSkinName = minion.BaseSkinName();
+            var baseSkinName = minion.BaseSkinName;
             var match = LaneMinionRegex.Match(baseSkinName);
 
             if (match.Success)
@@ -68,7 +68,7 @@
                 return MinionType.Ward;
             }
 
-            var name = minion.Name();
+            var name = minion.Name;
 
             if (name.StartsWith("SRU_", StringComparison.OrdinalIgnoreCase))
             {
@@ -91,7 +91,7 @@
 
         public static bool IsJungleBuff(this IMinion minion)
         {
-            switch (minion.CharName())
+            switch (minion.CharName)
             {
                 case "SRU_Blue":
                 case "SRU_Red":

@@ -2,6 +2,7 @@
 {
     using System.Globalization;
     using System.IO;
+    using System.Linq;
 
     using Newtonsoft.Json.Linq;
 
@@ -11,6 +12,7 @@
     using SparkTech.SDK.GUI.Menu;
     using SparkTech.SDK.GUI.Notifications;
     using SparkTech.SDK.Logging;
+    using SparkTech.SDK.Modes;
     using SparkTech.SDK.Properties;
     using SparkTech.SDK.Rendering;
     using SparkTech.SDK.Security;
@@ -32,13 +34,14 @@
             Menu = new Menu("sdk")
             {
                 new MenuList("language") { Options = EnumCache<Language>.Names },
+                new Menu("modes"),
                 new Menu("menu")
                 {
                     new MenuKey("key", Key.LeftShift),
                     new MenuBool("toggle", false),
                     new MenuAction("apply") { Action = SetMenuTriggers },
                     new MenuBool("arrows", true),
-                    new MenuSeparator("separator1"),
+                    new MenuText("position"),
                     new MenuInt("x", 0, 500, 40),
                     new MenuInt("y", 0, 500, 40)
                 },
@@ -47,25 +50,33 @@
                 {
                     new MenuBool("enable", true)
                 },
+                new Menu("license"),
+                new Menu("about")
+                {
+                    new MenuText("version.sdk"),
+                    new MenuText("credits"),
+                    new MenuSeparator("core"),
+                    new MenuText("version.core")
+                },
                 new MenuTexture("banner") { Texture = texture }
             };
 
-            Menu.Build(Menu, JObject.Parse(Resources.MainMenu));
+            Mode.Initialize(Menu.GetMenu("modes"));
+
+            Menu.Build(Menu, GetMenuTranslations());
             
             SetupMenu(out FirstRun);
 
             Log.Info("SDK building complete!");
 
             Menu.IsExpanded = true;
-            Menu.GetMenu("menu").IsExpanded = true;
+            Menu.GetMenu("modes").IsExpanded = true;
+            Menu.GetMenu("modes").GetMenu("harass").IsExpanded = true;
+            ((IExpandable)Menu.GetMenu("modes").GetMenu("harass")["objects"]).IsExpanded = true;
             //((IExpandable)Menu["clock"]).IsExpanded = true;
-
-            //Menu.GetMenu("position")["x"].SetValue(270);
 
             Menu.Build(new Menu("Evade"));
             Menu.Build(new Menu("Nocturne"));
-
-            //Menu["language"].SetValue(1);
 
             Menu.SetOpen(true);
         }
@@ -74,58 +85,48 @@
 
         private static void SetupMenu(out bool firstRun)
         {
-            #region First Run and Language stuff
-
-            Menu["language"].BeforeValueChange += LanguageChanged;
-
-            var flagFile = Folder.Menu.GetFile(".nofirstrun");
-            firstRun = !File.Exists(flagFile);
-
-            if (firstRun)
-            {
-                File.Create(flagFile).Dispose();
-
-                Log.Info("Running Surgical.SDK for the first time.");
-
-                var culture = CultureInfo.InstalledUICulture;
-                var values = EnumCache<Language>.Values;
-                var i = values.ConvertAll(EnumCache<Language>.Description).IndexOf(culture.TwoLetterISOLanguageName);
-
-                string welcomeMsg;
-
-                if (i == -1)
-                {
-                    welcomeMsg = GetTranslatedString("languageUnknown");
-                    welcomeMsg = welcomeMsg.Replace("{language}", culture.EnglishName);
-                }
-                else
-                {
-                    Menu["language"].SetValue(i);
-
-                    welcomeMsg = GetTranslatedString("firstTimeWelcome");
-                }
-
-                welcomeMsg = welcomeMsg.Replace("{platform}", Platform.PlatformName);
-
-                Notification.Send(welcomeMsg, 10f);
-            }
-            else
-            {
-                var language = (Language)Menu["language"].GetValue<int>();
-
-                Menu.SetLanguage(language);
-
-                Notification.Send("Gandhi is one of\nthe few legit reversers\nleft in the community", "Notification system test");
-                Notification.Send("Made with <3 by S H A R K dev team");
-            }
-
-            #endregion
-
             HandlePosition();
             HandleClock();
             HandleArrows();
 
             SetMenuTriggers();
+
+            Menu["language"].BeforeValueChange += args => Menu.SetLanguage(args.NewValue<int>());;
+
+            var flagFile = Folder.Menu.GetFile(".nofirstrun");
+            firstRun = !File.Exists(flagFile);
+
+            if (!firstRun)
+            {
+                Menu.SetLanguage(Menu["language"].GetValue<int>());
+                return;
+            }
+
+            File.Create(flagFile).Dispose();
+
+            Log.Info("Running Surgical.SDK for the first time.");
+
+            var culture = CultureInfo.InstalledUICulture;
+            var values = EnumCache<Language>.Values;
+            var i = values.ConvertAll(EnumCache<Language>.Description).IndexOf(culture.TwoLetterISOLanguageName);
+
+            string welcomeMsg;
+
+            if (i == -1)
+            {
+                welcomeMsg = GetTranslatedString("languageUnknown");
+                welcomeMsg = welcomeMsg.Replace("{language}", culture.EnglishName);
+            }
+            else
+            {
+                Menu["language"].SetValue(i);
+
+                welcomeMsg = GetTranslatedString("firstTimeWelcome");
+            }
+
+            welcomeMsg = welcomeMsg.Replace("{platform}", Platform.PlatformName);
+
+            Notification.Send(welcomeMsg, 10f);
         }
 
         public static string GetTranslatedString(string str)
@@ -174,11 +175,20 @@
             Menu.SetTriggers(key, toggle);
         }
 
-        private static void LanguageChanged(BeforeValueChangeEventArgs args)
+        private static JObject GetMenuTranslations()
         {
-            var language = (Language)args.NewValue<int>();
+            var mainMenu = JObject.Parse(Resources.MainMenu);
+            var mode = JObject.Parse(Resources.Mode);
 
-            Menu.SetLanguage(language);
+            foreach (var o in mainMenu["modes"].Skip(EnumCache<Language>.Values.Count).Take(Mode.ModeCount).Cast<JProperty>().Select(prop => prop.Value).Cast<JObject>())
+            {
+                foreach (var pair in mode)
+                {
+                    o.Add(pair.Key, pair.Value);
+                }
+            }
+
+            return mainMenu;
         }
 
         #endregion

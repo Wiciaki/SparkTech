@@ -1,4 +1,4 @@
-﻿namespace SparkTech.SDK.GUI
+﻿namespace SparkTech.SDK.GUI.Default
 {
     using SharpDX;
     using SharpDX.Direct3D9;
@@ -6,19 +6,19 @@
 
     using SparkTech.SDK.Rendering;
 
-    public class DefaultTheme : ITheme
+    public class Theme : ITheme
     {
         private Font font;
 
         public virtual Color BackgroundColor { get; }
 
-        public int MinItemHeight { get; } = 26;
+        public int MinItemHeight { get; } = 32;
 
-        public DefaultTheme()
+        public Theme()
         {
-            Render.OnLostDevice += this.Font.OnLostDevice;
-            Render.OnResetDevice += this.Font.OnResetDevice;
-            Render.OnDispose += this.Dispose;
+            //Render.OnLostDevice += this.Font.OnLostDevice;
+            //Render.OnResetDevice += this.Font.OnResetDevice;
+            //Render.OnDispose += this.Dispose;
 
             var color = Color.Black;
             color.A = 130;
@@ -29,23 +29,23 @@
 
         public virtual FontDescription GetFontDescription()
         {
-            return new FontDescription { FaceName = "DengXian", Height = 18, Quality = FontQuality.Antialiased };
+            return new FontDescription { FaceName = "DengXian", Height = 18 };
         }
 
         protected virtual FontDrawFlags DrawFlags { get; } = FontDrawFlags.VerticalCenter | FontDrawFlags.Left;
 
         private const FontDrawFlags CenteredFlags = FontDrawFlags.VerticalCenter | FontDrawFlags.Center;
 
-        private readonly Size2 extraTextSize = new Size2(10,0);
+        private readonly Size2 extraTextSize = new Size2(12, 4);
 
         public Size2 MeasureText(string text)
         {
             var r = this.Font.MeasureText(null, text, this.DrawFlags);
 
-            var height = MultipleOf(r.Bottom - r.Top + this.extraTextSize.Height, this.MinItemHeight);
-            var width = MultipleOf(r.Right - r.Left + this.extraTextSize.Width, 2);
+            var height = MultipleOf(r.Bottom - r.Top, 26);
+            var width = MultipleOf(r.Right - r.Left, 2);
 
-            return new Size2(width, height);
+            return new Size2(width + this.extraTextSize.Width, height + this.extraTextSize.Height);
 
             static int MultipleOf(int num, int multipleOf)
             {
@@ -65,6 +65,7 @@
         public void DrawBox(Point point, Size2 size, Color color)
         {
             point.Y += size.Height / 2;
+
             Vector.Draw(color, size.Height, point, new Point(point.X + size.Width, point.Y));
         }
 

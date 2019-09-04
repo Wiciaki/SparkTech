@@ -38,16 +38,20 @@
 
         protected override Size2 GetSize()
         {
-            return AddButton(base.GetSize(), out this.size);
+            return AddButton(AddButton(base.GetSize(), out this.size), out _);
         }
 
         protected internal override void OnEndScene(Point point, int width)
         {
-            width -= this.size.Width;
+            width -= this.size.Width * 2;
             base.OnEndScene(point, width);
             point.X += width;
 
-            Theme.DrawBox(point, this.size, this.GetValue<Color>());
+            Theme.DrawTextBox(point, this.size, "🎨", true);
+
+            point.X += this.size.Width;
+
+            Theme.DrawBox(point, this.size, this.Value);
             Theme.DrawBorders(point, this.size);
 
             if (!this.picking)
@@ -55,7 +59,7 @@
                 return;
             }
 
-            point.X += this.size.Width + 20;
+            point.X += this.size.Width;
 
             // todo this is temp
             Rendering.Text.Draw("You dont know how hard it's to make a color picker ffs", Color.White, point);

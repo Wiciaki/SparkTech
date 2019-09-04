@@ -2,16 +2,17 @@
 {
     using System;
     using System.Drawing;
-    using System.IO;
     using System.Windows.Forms;
 
     using SharpDX;
     using SharpDX.Direct3D9;
     using SharpDX.Windows;
 
+    using SharpLinker.Properties;
+
     using SparkTech.SDK;
     using SparkTech.SDK.API;
-    using SparkTech.SDK.Platform.API;
+    using SparkTech.SDK.API.Fragments;
 
     using Color = SharpDX.Color;
     using Point = SharpDX.Point;
@@ -33,10 +34,10 @@
 
             device = new Device(new Direct3D(), 0, DeviceType.Hardware, form.Handle, CreateFlags.HardwareVertexProcessing, new PresentParameters(width, height) { PresentationInterval = PresentInterval.One });
 
-            var path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "league.png");
-            var texture = Texture.FromFile(device, path, 1910, 1082, 0, Usage.None, Format.A1, Pool.Managed, Filter.Default, Filter.Default, 0);
+            var bytes = (byte[])new ImageConverter().ConvertTo(Resources.league, typeof(byte[]));
+            var texture = Texture.FromMemory(device, bytes, 1910, 1082, 0, Usage.None, Format.A1, Pool.Managed, Filter.Default, Filter.Default, 0);
 
-            var platform = new Platform("SharkCore") { Render = form };
+            var platform = new Platform("Test render") { Render = form };
 
             platform.Boot();
 
@@ -125,10 +126,7 @@
                 return new Size2(1920, 1080);
             }
 
-            public Device GetDevice()
-            {
-                return device;
-            }
+            public Device Device => device;
 
             public Action BeginScene { get; set; }
 

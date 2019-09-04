@@ -1,10 +1,10 @@
-﻿namespace SparkTech.SDK.GUI
+﻿namespace SparkTech.SDK.GUI.Default
 {
     using SharpDX;
 
     using SparkTech.SDK.Rendering;
 
-    public class ClassicTheme2 : DefaultTheme
+    public class Theme2 : Theme
     {
         public override void DrawBorders(Point point, params Size2[] sizes)
         {

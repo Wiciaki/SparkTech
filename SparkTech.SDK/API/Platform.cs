@@ -3,9 +3,9 @@
     using System;
     using System.Runtime.CompilerServices;
 
+    using SparkTech.SDK.API.Fragments;
     using SparkTech.SDK.GUI;
     using SparkTech.SDK.Logging;
-    using SparkTech.SDK.Platform.API;
     using SparkTech.SDK.Security;
 
     public sealed class Platform
@@ -24,13 +24,17 @@
 
         public string Name { get; }
 
+        public ILogger Logger { get; set; }
+
+        public ITheme Theme { get; set; }
+
         public IRender Render { get; set; }
 
         public IObjectManager ObjectManager { get; set; }
 
-        public ILogger Logger { get; set; }
+        public IEntityEvents EntityEvents { get; set; }
 
-        public ITheme Theme { get; set; }
+        //public IObjectManager ObjectManager { get; set; }
 
         public string ConfigPath { get; set; }
 
@@ -42,21 +46,28 @@
             {
                 var folder = new Folder(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData));
 
-                this.ConfigPath = folder.GetFolder("SparkTech.SDK");
+                this.ConfigPath = folder.GetFolder("Surgical.SDK");
             }
 
             Folder.Initialize(this.ConfigPath);
-
             Log.Initialize(this.Logger ?? new FileLogger());
 
-            Rendering.Render.Initialize(this.Render);
+            if (this.Render != null)
+            {
+                Rendering.Render.Initialize(this.Render);
+            }
 
             if (this.ObjectManager != null)
             {
                 Entities.ObjectManager.Initialize(this.ObjectManager);
             }
 
-            GUI.Theme.SetTheme(this.Theme ?? new DefaultTheme());
+            if (this.EntityEvents != null)
+            {
+                Entities.Events.EntityEvents.Initialize(this.EntityEvents);
+            }
+
+            GUI.Theme.SetTheme(this.Theme ?? new GUI.Default.Theme());
 
             RuntimeHelpers.RunClassConstructor(typeof(SdkSetup).TypeHandle);
         }

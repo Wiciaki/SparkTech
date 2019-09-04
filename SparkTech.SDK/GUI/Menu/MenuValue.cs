@@ -8,6 +8,8 @@
 
     public abstract class MenuValue : MenuText
     {
+        public bool IsChampSpecific { get; set; } // todo
+
         #region Fields
 
         private readonly JToken defaultValue;

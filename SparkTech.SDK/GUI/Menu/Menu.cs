@@ -22,6 +22,8 @@
 
         private JObject settings;
 
+        private Translations translations;
+
         private Size2 size;
 
         internal const string ArrowText = ">>";
@@ -42,9 +44,14 @@
 
         public MenuItem this[string id] => this.items.Find(item => item.Id == id);
 
+        public TMenuItem Get<TMenuItem>(string id) where TMenuItem : MenuItem
+        {
+            return (TMenuItem)this[id];
+        }
+
         public Menu GetMenu(string id)
         {
-            return this[id] as Menu;
+            return this.Get<Menu>(id);
         }
 
         public IEnumerable<MenuItem> GetDescensants()
@@ -64,7 +71,9 @@
                 menu.UpdateSizes();
             }
 
-            RootEntries.Add(new RootEntry(menu, new Translations(translations)));
+            menu.translations = new Translations(translations);
+
+            RootEntries.Add(new RootEntry(menu));
         }
 
         #endregion
@@ -122,10 +131,14 @@
 
             this.items.Add(item);
 
-            if (this.settings != null)
+            if (this.settings == null)
             {
-                item.SetToken(this.settings[item.Id]);
+                return;
             }
+
+            item.SetToken(this.settings[item.Id]);
+
+            UpdateItemSize(item, this.translations);
         }
 
         public bool IsSaving { get; set; } = true;
@@ -184,26 +197,38 @@
             }
         }
 
+        private void UpdateLanguage()
+        {
+            this.SetTranslations(this.translations);
+        }
+
+        private static void UpdateItemSize(MenuItem item, Translations t)
+        {
+            var o = t.GetObject(item.Id);
+
+            if (o != null)
+            {
+                item.SetTranslations(o);
+            }
+            else if (item is Menu menu)
+            {
+                menu.UpdateSizes();
+            }
+            else
+            {
+                item.UpdateSize();
+            }
+        }
+
         protected internal override void SetTranslations(Translations t)
         {
+            this.translations = t;
+
             base.SetTranslations(t);
 
             foreach (var item in this)
             {
-                var o = t.GetObject(item.Id);
-
-                if (o != null)
-                {
-                    item.SetTranslations(o);
-                }
-                else if (item is Menu menu)
-                {
-                    menu.UpdateSizes();
-                }
-                else
-                {
-                    item.UpdateSize();
-                }
+                UpdateItemSize(item, t);
             }
         }
 
@@ -259,7 +284,7 @@
         {
             //if (GameInterface.IsChatOpen() || GameInterface.IsShopOpen())
             //{
-            //    SetMenuVisibility(false);
+            //    SetOpen(false);
             //    return;
             //}
 
@@ -357,8 +382,9 @@
             SetOpen(false);
         }
 
-        internal static void SetLanguage(Language language)
+        internal static void SetLanguage(int languageIndex)
         {
+            var language = EnumCache<Language>.Values[languageIndex];
             var tag = EnumCache<Language>.Description(language);
 
             if (LanguageTag == tag)
@@ -370,7 +396,7 @@
 
             LanguageTag = tag;
 
-            RootEntries.ForEach(entry => entry.UpdateLanguage());
+            RootEntries.ForEach(entry => entry.Menu.UpdateLanguage());
 
             LanguageChanged.SafeInvoke();
         }
@@ -390,14 +416,7 @@
 
         internal static bool IsLeftClick(WindowsMessages message)
         {
-            switch (message)
-            {
-                case WindowsMessages.LBUTTONDOWN:
-                case WindowsMessages.LBUTTONDBLCLK:
-                    return true;
-                default:
-                    return false;
-            }
+            return message == WindowsMessages.LBUTTONDOWN || message == WindowsMessages.LBUTTONDBLCLK;
         }
 
         public static void UpdateAllSizes()
@@ -405,9 +424,9 @@
             RootEntries.ForEach(entry => entry.Menu.UpdateSizes());
         }
 
-        public void UpdateSizes()
+        private void UpdateSizes()
         {
-            foreach (var item in this.GetDescensants().Append(this))
+            foreach (var item in this.GetDescensants().Prepend(this))
             {
                 item.UpdateSize();
             }
@@ -438,17 +457,13 @@
         {
             public readonly Menu Menu;
 
-            private readonly Translations translations;
-
             private readonly string targetPath;
 
             private JToken lastSaved;
 
-            public RootEntry(Menu menu, Translations translations)
+            public RootEntry(Menu menu)
             {
                 this.Menu = menu;
-
-                this.translations = translations;
 
                 this.targetPath = Folder.Menu.GetFile(menu.Id + ".json");
 
@@ -472,12 +487,7 @@
 
                 this.Menu.SetToken(o);
 
-                this.UpdateLanguage();
-            }
-
-            public void UpdateLanguage()
-            {
-                this.Menu.SetTranslations(this.translations);
+                this.Menu.UpdateLanguage();
             }
 
             public async void Save()
