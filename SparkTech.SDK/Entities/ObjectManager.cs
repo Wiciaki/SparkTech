@@ -28,8 +28,6 @@ namespace SparkTech.SDK.Entities
     using System.Linq;
     using System.Reflection;
 
-    using MoreLinq;
-
     using SparkTech.SDK.API.Fragments;
     using SparkTech.SDK.Logging;
 
@@ -63,7 +61,7 @@ namespace SparkTech.SDK.Entities
 
             Log.Info($"ObjectManager - now caching {typeof(TGameObject).Name}!");
 
-            var hashset = Container[typeof(IGameObject)].HashSet.OfType<TGameObject>().ToHashSet(new EntityComparer<TGameObject>());
+            var hashset = new HashSet<TGameObject>(Container[typeof(IGameObject)].HashSet.OfType<TGameObject>(), new EntityComparer<TGameObject>());
 
             Container.Add(typeof(TGameObject), new CacheEntry(hashset));
 

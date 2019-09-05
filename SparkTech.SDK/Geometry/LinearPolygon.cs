@@ -27,7 +27,7 @@ namespace SparkTech.SDK.Geometry
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using ClipperLib;
+    //using ClipperLib;
     using SharpDX;
 
     #endregion
