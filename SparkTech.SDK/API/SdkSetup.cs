@@ -78,6 +78,11 @@
             Menu.Build(new Menu("Evade"));
             Menu.Build(new Menu("Nocturne"));
 
+            //Menu["clock"].SetValue(1);
+            //Menu.GetMenu("modes").GetMenu("harass")["champAuto"].SetValue(false);
+
+            Menu.SetOpen(true);
+            Menu.SetOpen(false);
             Menu.SetOpen(true);
         }
 

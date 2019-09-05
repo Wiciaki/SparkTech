@@ -8,11 +8,15 @@
 
     public abstract class MenuValue : MenuText
     {
-        public bool IsChampSpecific { get; set; } // todo
+        public bool IsChampSpecific { get; set; }
+
+        private static string ChampNameTag => "xerath"; // todo
 
         #region Fields
 
         private readonly JToken defaultValue;
+
+        private JObject fullToken;
 
         #endregion
 
@@ -35,26 +39,55 @@
 
         protected internal sealed override JToken GetToken()
         {
+            JToken t;
+
             try
             {
-                var t = this.Token;
-
-                if (!JToken.DeepEquals(t, this.defaultValue))
-                {
-                    return t;
-                }
+                t = this.Token;
             }
             catch (Exception ex)
             {
                 Log.Error($"Failed to get Token value from item \"{this.Id}\"");
                 ex.Log();
+
+                return this.fullToken;
             }
 
-            return null;
+            var isDefault = JToken.DeepEquals(t, this.defaultValue);
+
+            if (!this.IsChampSpecific)
+            {
+                return isDefault ? null : t;
+            }
+
+            var full = this.fullToken;
+
+            if (isDefault)
+            {
+                full?.Remove(ChampNameTag);
+            }
+            else
+            {
+                if (full == null)
+                {
+                    full = new JObject();
+                }
+
+                full[ChampNameTag] = t;
+            }
+
+            return full;
         }
 
         protected internal sealed override void SetToken(JToken token)
         {
+            if (this.IsChampSpecific)
+            {
+                this.fullToken = (JObject)token;
+
+                token = token?[ChampNameTag];
+            }
+
             if (token == null)
             {
                 if (this.defaultValue != null)
