@@ -4,13 +4,14 @@
 
     using Newtonsoft.Json.Linq;
 
+    using SparkTech.SDK.Entities;
     using SparkTech.SDK.Logging;
 
     public abstract class MenuValue : MenuText
     {
         public bool IsChampSpecific { get; set; }
 
-        private static string ChampNameTag => "xerath"; // todo
+        private static string ChampNameTag => "xerath";//ObjectManager.Player.CharName.ToLower();
 
         #region Fields
 
@@ -64,16 +65,19 @@
 
             if (isDefault)
             {
-                full?.Remove(ChampNameTag);
+                if (full != null)
+                {
+                    full.Remove(ChampNameTag);
+
+                    if (full.Count == 0)
+                    {
+                        this.fullToken = full = null;
+                    }
+                }
             }
             else
             {
-                if (full == null)
-                {
-                    full = new JObject();
-                }
-
-                full[ChampNameTag] = t;
+                (full ??= new JObject())[ChampNameTag] = t;
             }
 
             return full;
