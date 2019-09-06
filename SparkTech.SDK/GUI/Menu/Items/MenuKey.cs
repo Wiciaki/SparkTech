@@ -3,15 +3,14 @@
     using Newtonsoft.Json.Linq;
 
     using SharpDX;
-
-    using SparkTech.SDK.Game;
+    
     using SparkTech.SDK.API;
 
     public class MenuKey : MenuValue, IMenuValue<Key>
     {
         public MenuKey(string id, Key defaultValue) : base(id, defaultValue.ToString())
         {
-            GameEvents.OnWndProc += this.WndProc;
+            Game.OnWndProc += this.WndProc;
         }
 
         private bool selecting;

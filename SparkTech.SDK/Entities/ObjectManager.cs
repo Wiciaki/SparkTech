@@ -35,7 +35,7 @@ namespace SparkTech.SDK.Entities
     {
         private static readonly Dictionary<Type, CacheEntry> Container = new Dictionary<Type, CacheEntry>
                                                                          {
-                                                                             [typeof(IGameObject)] = new CacheEntry(new HashSet<IGameObject>(new GameObjectComparer()))
+                                                                             [typeof(IGameObject)] = new CacheEntry(new HashSet<IGameObject>(new EntityComparer<IGameObject>()))
                                                                          };
 
         public static event Action<IGameObject> OnCreate, OnDelete;
@@ -74,7 +74,9 @@ namespace SparkTech.SDK.Entities
 
         public static bool IsEnemy(this IGameObject o) => !o.IsAlly();
 
-        public static IGameObject GetById(int id) => Get<IGameObject>().FirstOrDefault(o => o.Id == id);
+        public static IGameObject GetById(int id) => GetById<IGameObject>(id);
+
+        public static TGameObject GetById<TGameObject>(int id) where TGameObject : IGameObject => Get<TGameObject>().FirstOrDefault(o => o.Id == id); 
 
         private static void HandleCreate(IGameObject sender) => ProcessItem(sender, true);
 

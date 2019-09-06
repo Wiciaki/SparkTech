@@ -6,11 +6,11 @@
 
     public class MenuAction : MenuText
     {
-        public Action Action { get; set; }
+        private readonly Action action;
 
-        public MenuAction(string id) : base(id)
+        public MenuAction(string id, Action action) : base(id)
         {
-
+            this.action = action;
         }
 
         private bool pressing;
@@ -55,7 +55,7 @@
 
             this.pressing = false;
 
-            this.Action.SafeInvoke();
+            this.action.SafeInvoke();
         }
     }
 }

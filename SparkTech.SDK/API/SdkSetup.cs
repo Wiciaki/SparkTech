@@ -39,7 +39,7 @@
                 {
                     new MenuKey("key", Key.LeftShift),
                     new MenuBool("toggle", false),
-                    new MenuAction("apply") { Action = SetMenuTriggers },
+                    new MenuAction("apply", SetMenuTriggers),
                     new MenuBool("arrows", true),
                     new MenuText("position"),
                     new MenuInt("x", 0, 500, 40),
@@ -58,7 +58,7 @@
                     new MenuSeparator("core"),
                     new MenuText("version.core")
                 },
-                new MenuTexture("banner") { Texture = texture }
+                new MenuTexture("banner", texture)
             };
 
             Mode.Initialize(Menu.GetMenu("modes"));
@@ -72,7 +72,7 @@
             Menu.IsExpanded = true;
             Menu.GetMenu("modes").IsExpanded = true;
             Menu.GetMenu("modes").GetMenu("harass").IsExpanded = true;
-            ((IExpandable)Menu.GetMenu("modes").GetMenu("harass")["objects"]).IsExpanded = true;
+            ((IExpandable)Menu.GetMenu("modes").GetMenu("harass")["minions"]).IsExpanded = true;
             //((IExpandable)Menu["clock"]).IsExpanded = true;
 
             Menu.Build(new Menu("Evade"));
@@ -81,8 +81,6 @@
             //Menu["clock"].SetValue(1);
             //Menu.GetMenu("modes").GetMenu("harass")["champAuto"].SetValue(false);
 
-            Menu.SetOpen(true);
-            Menu.SetOpen(false);
             Menu.SetOpen(true);
         }
 
@@ -96,7 +94,7 @@
 
             SetMenuTriggers();
 
-            Menu["language"].BeforeValueChange += args => Menu.SetLanguage(args.NewValue<int>());;
+            Menu["language"].BeforeValueChange += args => Menu.SetLanguage(args.NewValue<int>());
 
             var flagFile = Folder.Menu.GetFile(".nofirstrun");
             firstRun = !File.Exists(flagFile);

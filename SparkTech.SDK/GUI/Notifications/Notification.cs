@@ -6,7 +6,6 @@
 
     using SharpDX;
 
-    using SparkTech.SDK.Game;
     using SparkTech.SDK.Rendering;
 
     public class Notification
@@ -66,7 +65,7 @@
         {
             var point = new Point(1870, 100);
 
-            var t = GameInterface.Time();
+            var t = Game.Time;
 
             var width = Entries.Max(entry => entry.Notification.contentSize.Width);
 
@@ -124,7 +123,7 @@
             {
                 this.Notification = n;
 
-                this.time = duration + GameInterface.Time();
+                this.time = duration + Game.Time;
             }
         }
 

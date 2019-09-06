@@ -2,9 +2,6 @@
 {
     using SharpDX;
 
-    using SparkTech.SDK.API.Fragments;
-    using SparkTech.SDK.Entities.Buffs;
-
     public interface IUnit : IAttackableUnit
     {
         string BaseSkinName { get; }
@@ -77,24 +74,6 @@
 
         IAttackableUnit Target { get; }
         // ICharacterData CharData { get; }
-
-        // event Obj_AI_BasePlayAnimation OnPlayAnimation
-        // event Obj_AI_BaseProcessSpellCast OnProcessSpellCast
-        // event Obj_AI_BaseDoCast OnDoCast
-        // event Obj_AI_BaseNewPath OnNewPath
-        // event Obj_AI_BaseIssueOrder OnIssueOrder
-        // event Obj_AI_BaseTeleport OnTeleport
-        // event Obj_AI_BaseAggro OnAggro
-        // event Obj_AI_BaseSwapItem OnSwapItem
-        // event Obj_AI_BasePlaceItemInSlot OnPlaceItemInSlot
-        // event Obj_AI_BaseRemoveItem OnRemoveItem
-        // event Obj_AI_BaseBuffAdd OnBuffAdd
-        // event Obj_AI_BaseBuffRemove OnBuffRemove
-        // event Obj_AI_BaseBuffUpdateCount OnBuffUpdateCount
-        // event Obj_AI_BaseLevelUp OnLevelUp
-        // event Obj_AI_BasePauseAnimation OnPauseAnimation
-        // event Obj_AI_BaseTarget OnTarget
-
 
         //?
         //bool PlayerControlled { get; }

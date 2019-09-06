@@ -11,7 +11,6 @@
 
     using SharpDX;
 
-    using SparkTech.SDK.Game;
     using SparkTech.SDK.Logging;
     using SparkTech.SDK.Rendering;
     using SparkTech.SDK.Security;
@@ -265,7 +264,7 @@
             LanguageTag = EnumCache<Language>.Description(default);
 
             Render.OnEndScene += OnEndScene;
-            GameEvents.OnWndProc += OnWndProc;
+            Game.OnWndProc += OnWndProc;
         }
 
         private static void OnEndScene()
@@ -275,7 +274,7 @@
                 return;
             }
 
-            //cursor = GameEvents.CursorPosition();
+            //cursor = Game.CursorPosition;
 
             DrawGroup(RootEntries.ConvertAll(e => e.Menu), position);
         }
@@ -405,7 +404,7 @@
 
         #region Static Helper Methods
 
-        private static Point cursor;
+        private static Vector2 cursor;
 
         internal static bool IsCursorInside(Point point, Size2 size)
         {

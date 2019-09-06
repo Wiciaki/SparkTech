@@ -1,27 +1,25 @@
 ﻿namespace SparkTech.SDK.Entities
 {
-    using SparkTech.SDK.Entities.Buffs;
-
     public interface IBuff
     {
-        BuffType Type();
+        BuffType Type { get; }
 
-        IGameObject CasterId();
+        IGameObject Caster { get; }
 
-        int Count();
+        int Count { get; }
 
-        string DisplayName();
+        string DisplayName { get; }
 
-        float StartTime();
+        float StartTime { get; }
 
-        float EndTime();
+        float EndTime { get; }
 
-        bool IsActive();
+        bool IsActive { get; }
 
-        bool IsValid();
+        bool IsValid { get; }
 
-        string Name();
+        string Name { get; }
 
-        string SourceName();
+        string SourceName { get; }
     }
 }

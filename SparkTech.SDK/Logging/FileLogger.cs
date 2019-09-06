@@ -11,7 +11,7 @@
 
         public FileLogger()
         {
-            this.path = Folder.Logs.GetFile($"log-{DateTime.Now:dd-M-HH.mm}.txt");
+            this.path = Folder.Logs.GetFile($"log {DateTime.Now:dd-M-HH.mm}.txt");
         }
 
         public void Write(string msg, LogLevel level)

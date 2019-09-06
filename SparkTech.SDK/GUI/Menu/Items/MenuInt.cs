@@ -46,8 +46,8 @@
 
         protected override JToken Token
         {
-            get => this.Value;
-            set => this.Value = value.Value<int>();
+            get => (int)base.Token.Value<float>();
+            set => base.Token = value.Value<int>();
         }
 
         #endregion

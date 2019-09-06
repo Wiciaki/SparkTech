@@ -6,6 +6,8 @@
 
     using SharpDX;
 
+    using SparkTech.SDK.Logging;
+
     public abstract class MenuItem
     {
         public readonly string Id;
@@ -55,6 +57,11 @@
         protected internal virtual bool ConsumeSaveToken()
         {
             var b = this.save;
+
+            if (b)
+            {
+                Log.Info("SaveToken" + Id);
+            }
 
             this.save = false;
 

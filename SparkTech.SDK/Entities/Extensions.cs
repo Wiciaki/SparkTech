@@ -1,6 +1,7 @@
 ﻿namespace SparkTech.SDK.Entities
 {
     using System;
+    using System.Collections.Generic;
     using System.Text.RegularExpressions;
 
     using SharpDX;
@@ -122,11 +123,74 @@
 
         #endregion
 
-        private static readonly EntityComparer<IGameObject> GameObjectComparer = new EntityComparer<IGameObject>();
+        private static readonly IEqualityComparer<IGameObject> GameObjectComparer = new EntityComparer<IGameObject>();
 
         public static bool Compare(this IGameObject left, IGameObject right)
         {
             return GameObjectComparer.Equals(left, right);
+        }
+
+        public static bool IsMovementImpairing(this IBuff buff)
+        {
+            return buff.Type.IsMovementImpairing();
+        }
+
+        public static bool IsMovementImpairing(this BuffType buffType)
+        {
+            switch (buffType)
+            {
+                case BuffType.Flee:
+                case BuffType.Charm:
+                case BuffType.Slow:
+                case BuffType.Snare:
+                case BuffType.Stun:
+                case BuffType.Taunt:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
+        public static bool PreventsCasting(this IBuff buff)
+        {
+            return buff.Type.PreventsCasting();
+        }
+
+        public static bool PreventsCasting(this BuffType buffType) // todo review?
+        {
+            switch (buffType)
+            {
+                case BuffType.Silence:
+                case BuffType.Charm:
+                case BuffType.Taunt:
+                case BuffType.Knockup:
+                case BuffType.Flee:
+                case BuffType.Suppression:
+                case BuffType.Stun:
+                case BuffType.Polymorph:
+                case BuffType.Disarm:
+                case BuffType.Knockback:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
+        public static bool IsValid(this IBuff buff)
+        {
+            if (buff == null)
+            {
+                return false;
+            }
+
+            var t = Game.Time;
+
+            return t >= buff.StartTime && t < buff.EndTime;
+        }
+
+        public static float TimeLeft(this IBuff buff)
+        {
+            return Math.Max(0, buff.EndTime - Game.Time);
         }
 
         /*

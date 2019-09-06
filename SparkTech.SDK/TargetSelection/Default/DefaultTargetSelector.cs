@@ -23,7 +23,7 @@
         { 
             // var modeNames = new[] { "timeToKill", "dealsMostDmg", "distanceChamp", "distanceMouse" };
 
-            EqualityComparer = new GameObjectComparer();
+            EqualityComparer = new EntityComparer<IGameObject>();
             Weights = new List<Weight>();
 
             Menu = new Menu("TargetSelector")

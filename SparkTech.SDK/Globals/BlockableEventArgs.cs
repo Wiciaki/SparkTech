@@ -1,6 +1,8 @@
 ﻿namespace SparkTech.SDK
 {
-    public abstract class BlockableEventArgs
+    using System;
+
+    public abstract class BlockableEventArgs : EventArgs
     {
         public bool IsBlocked { get; private set; }
 

@@ -191,8 +191,8 @@
 
         protected override JToken Token
         {
-            get => this.Value;
-            set => this.Value = value.Value<float>();
+            get => this.value;
+            set => this.value = value.Value<float>();
         }
 
         #endregion

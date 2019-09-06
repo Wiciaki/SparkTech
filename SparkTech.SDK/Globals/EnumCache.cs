@@ -37,15 +37,14 @@ namespace SparkTech.SDK
         "ReSharper",
         "StaticMemberInGenericType",
         Justification = "The members differ for every type param provided, therefore the suppression is fine.")]
-    public static class EnumCache<TEnum>
-        where TEnum : struct, IConvertible
+    public static class EnumCache<TEnum> where TEnum : struct, IConvertible
     {
         #region Static Fields
 
         /// <summary>
         ///     The amount of all the values in an enumeration.
         /// </summary>
-        public static readonly int Count;
+        public static int Count => Values.Count;
 
         /// <summary>
         ///     The names of the constants in the enumeration.
@@ -81,13 +80,10 @@ namespace SparkTech.SDK
 
             Names = Values.ConvertAll(@enum => @enum.ToString(CultureInfo.InvariantCulture));
 
-            Count = Values.Count;
-
             Descriptions = Values.ToDictionary(
-                @enum => @enum,
-                @enum => ((DescriptionAttribute)typeof(TEnum).GetMember(@enum.ToString(CultureInfo.InvariantCulture))
-                                 .Single().GetCustomAttributes(typeof(DescriptionAttribute), false).SingleOrDefault())
-                    ?.Description);
+                e => e,
+                e => ((DescriptionAttribute)typeof(TEnum).GetMember(e.ToString(CultureInfo.InvariantCulture)).Single().GetCustomAttributes(typeof(DescriptionAttribute), false)
+                             .SingleOrDefault())?.Description);
         }
 
         #endregion
@@ -100,7 +96,10 @@ namespace SparkTech.SDK
         /// </summary>
         /// <param name="item">The value to have its description read.</param>
         /// <returns></returns>
-        public static string Description(TEnum item) => Descriptions[item];
+        public static string Description(TEnum item)
+        {
+            return Descriptions[item];
+        }
 
         /// <summary>
         ///     Gets the equivalent <see cref="TEnum" /> value.

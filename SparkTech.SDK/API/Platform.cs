@@ -5,12 +5,15 @@
 
     using SparkTech.SDK.API.Fragments;
     using SparkTech.SDK.GUI;
+    using SparkTech.SDK.Licensing;
     using SparkTech.SDK.Logging;
     using SparkTech.SDK.Security;
 
     public sealed class Platform
     {
         public static string PlatformName { get; private set; }
+
+        public static AuthResult AuthResult { get; private set; }
 
         public Platform(string name)
         {
@@ -34,6 +37,10 @@
 
         public IEntityEvents EntityEvents { get; set; }
 
+        public IGame Game { get; set; }
+
+        public IAuth Auth { get; set; }
+
         //public IObjectManager ObjectManager { get; set; }
 
         public string ConfigPath { get; set; }
@@ -50,6 +57,7 @@
             }
 
             Folder.Initialize(this.ConfigPath);
+
             Log.Initialize(this.Logger ?? new FileLogger());
 
             if (this.Render != null)
@@ -64,20 +72,24 @@
 
             if (this.EntityEvents != null)
             {
-                Entities.Events.EntityEvents.Initialize(this.EntityEvents);
+                Entities.EntityEvents.Initialize(this.EntityEvents);
+            }
+
+            if (this.Game != null)
+            {
+                SDK.Game.Initialize(this.Game);
             }
 
             GUI.Theme.SetTheme(this.Theme ?? new GUI.Default.Theme());
 
             RuntimeHelpers.RunClassConstructor(typeof(SdkSetup).TypeHandle);
+
+            // load scripts
+
+            Sandbox.LoadThirdParty();
         }
 
         /*
-        private VendorSetup()
-        { }
-
-        private static int state;
-
         public static VendorSetup GetTrustedInstance()
         {
             if (state != 0)
@@ -93,36 +105,6 @@
             state++;
 
             return new VendorSetup();
-        }
-
-        public void Boot(IPlatform platform)
-        {
-            //if (state )
-
-            ObjectManager.Initialize(platform.GetObjectManager());
-
-            Render.Initialize(platform.GetRender());
-
-            Spellbook.Initialize(platform.GetSpellbook());
-        }
-
-        public void SetDefaultPlatformTheme(ITheme theme)
-        {
-            // Theme = theme;
-        }
-
-        public IAuth Auth { get; set; }
-
-        public ILogger Logger
-        {
-            get => Log.Logger;
-            set
-            {
-                if (state == 1 && value != null)
-                {
-                    Log.Logger = value;
-                }
-            } 
         }*/
     }
 }
