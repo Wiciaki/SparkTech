@@ -13,19 +13,24 @@
     {
         public static string PlatformName { get; private set; }
 
-        public static AuthResult AuthResult { get; private set; }
-
-        public Platform(string name)
+        public static Platform Declare(string platformName)
         {
-            if (string.IsNullOrWhiteSpace(name))
+            if (string.IsNullOrWhiteSpace(platformName))
             {
-                throw new ArgumentException("Empty platform name", nameof(name));
+                throw new ArgumentException("Empty platform name", nameof(platformName));
             }
 
-            this.Name = name;
+            // verify here
+
+            PlatformName = platformName;
+
+            return new Platform();
         }
 
-        public string Name { get; }
+        private Platform()
+        {
+
+        }
 
         public ILogger Logger { get; set; }
 
@@ -45,10 +50,8 @@
 
         public string ConfigPath { get; set; }
 
-        public void Boot()
+        public async void Boot()
         {
-            PlatformName = this.Name;
-
             if (this.ConfigPath == null)
             {
                 var folder = new Folder(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData));
@@ -84,27 +87,16 @@
 
             RuntimeHelpers.RunClassConstructor(typeof(SdkSetup).TypeHandle);
 
+            if (this.Auth != null)
+            {
+                var authResult = await this.Auth.Auth("Surgical.SDK");
+
+
+            }
+
             // load scripts
 
             Sandbox.LoadThirdParty();
         }
-
-        /*
-        public static VendorSetup GetTrustedInstance()
-        {
-            if (state != 0)
-            {
-                return null;
-            }
-
-            if (!VendorValidation.IsTrusted(Assembly.GetCallingAssembly()))
-            {
-                return null;
-            }
-
-            state++;
-
-            return new VendorSetup();
-        }*/
     }
 }

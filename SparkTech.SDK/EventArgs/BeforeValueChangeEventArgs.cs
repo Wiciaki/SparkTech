@@ -1,4 +1,4 @@
-﻿namespace SparkTech.SDK.GUI.Menu
+﻿namespace SparkTech.SDK.EventArgs
 {
     public abstract class BeforeValueChangeEventArgs : BlockableEventArgs
     {

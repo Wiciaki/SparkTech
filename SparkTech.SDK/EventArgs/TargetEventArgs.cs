@@ -1,14 +1,16 @@
-﻿namespace SparkTech.SDK.Entities.EventArgs
+﻿namespace SparkTech.SDK.EventArgs
 {
     using System;
+
+    using SparkTech.SDK.Entities;
 
     public class TargetEventArgs : EventArgs, ISourcedEventArgs<IUnit>
     {
         public IUnit Source { get; }
 
-        public readonly IAttackableUnit Target;
+        public readonly IAttackable Target;
 
-        public TargetEventArgs(IUnit source, IAttackableUnit target)
+        public TargetEventArgs(IUnit source, IAttackable target)
         {
             this.Source = source;
 

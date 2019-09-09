@@ -13,6 +13,7 @@
     using SparkTech.SDK;
     using SparkTech.SDK.API;
     using SparkTech.SDK.API.Fragments;
+    using SparkTech.SDK.EventArgs;
 
     using Color = SharpDX.Color;
     using Point = SharpDX.Point;
@@ -37,7 +38,9 @@
             var bytes = (byte[])new ImageConverter().ConvertTo(Resources.league, typeof(byte[]));
             var texture = Texture.FromMemory(device, bytes, 1910, 1082, 0, Usage.None, Format.A1, Pool.Managed, Filter.Default, Filter.Default, 0);
 
-            var platform = new Platform("Test render") { Render = form };
+            var platform = Platform.Declare("Test render");
+
+            platform.Render = form;
 
             platform.Boot();
 

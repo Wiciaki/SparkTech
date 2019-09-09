@@ -3,8 +3,7 @@
     using System;
 
     using SparkTech.SDK.API.Fragments;
-
-    using SparkTech.SDK.Entities.EventArgs;
+    using SparkTech.SDK.EventArgs;
 
     public static class EntityEvents
     {
@@ -51,6 +50,25 @@
         internal static void Initialize(IEntityEvents events)
         {
             events.Damage = args => OnDamage.SafeInvoke(args);
+            events.PlayAnimation = args => OnPlayAnimation.SafeInvoke(args);
+            events.ProcessSpellCast = args => OnProcessSpellCast.SafeInvoke(args);
+            events.DoCast = args => OnDoCast.SafeInvoke(args);
+            events.NewPath = args => OnNewPath.SafeInvoke(args);
+            events.IssueOrder = args => OnIssueOrder.SafeInvoke(args);
+            events.Teleport = args => OnTeleport.SafeInvoke(args);
+            events.Aggro = args => OnAggro.SafeInvoke(args);
+            events.SwapItem = args => OnSwapItem.SafeInvoke(args);
+            events.PlaceItemInSlot = args => OnPlaceItemInSlot.SafeInvoke(args);
+            events.RemoveItem = args => OnRemoveItem.SafeInvoke(args);
+            events.BuffAdd = args => OnBuffAdd.SafeInvoke(args);
+            events.BuffRemove = args => OnBuffRemove.SafeInvoke(args);
+            events.BuffUpdateCount = args => OnBuffUpdateCount.SafeInvoke(args);
+            events.LevelUp = args => OnLevelUp.SafeInvoke(args);
+            events.PauseAnimation = args => OnPauseAnimation.SafeInvoke(args);
+            events.Target = args => OnTarget.SafeInvoke(args);
+            events.SpellbookCastSpell = args => OnSpellbookCastSpell.SafeInvoke(args);
+            events.SpellbookStopCast = args => OnSpellbookStopCast.SafeInvoke(args);
+            events.SpellbookUpdateChargedSpell = args => OnSpellbookUpdateChargedSpell.SafeInvoke(args);
         }
     }
 }

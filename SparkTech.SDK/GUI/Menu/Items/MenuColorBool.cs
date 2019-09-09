@@ -4,6 +4,8 @@
 
     using SharpDX;
 
+    using SparkTech.SDK.EventArgs;
+
     public class MenuColorBool : MenuColor, IMenuValue<bool>
     {
         public MenuColorBool(string id, Color defaultColor, bool defaultBool) : base(id, ColorBoolToJObject(defaultColor, defaultBool))

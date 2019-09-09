@@ -2,7 +2,7 @@
 {
     using System;
 
-    using SparkTech.SDK.Entities.EventArgs;
+    using SparkTech.SDK.EventArgs;
 
     public interface IEntityEvents
     {

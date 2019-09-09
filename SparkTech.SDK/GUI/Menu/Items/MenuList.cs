@@ -9,6 +9,7 @@
     using SharpDX;
 
     using SparkTech.SDK.API;
+    using SparkTech.SDK.EventArgs;
 
     public class MenuList : MenuValue, IExpandable, IMenuValue<int>, IMenuValue<string>
     {

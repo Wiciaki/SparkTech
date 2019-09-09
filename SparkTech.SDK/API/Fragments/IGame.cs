@@ -4,6 +4,8 @@
 
     using SharpDX;
 
+    using SparkTech.SDK.EventArgs;
+
     public interface IGame
     {
         Vector2 CursorPosition { get; }
@@ -27,5 +29,13 @@
         float Ping { get; }
 
         Action<WndProcEventArgs> WndProc { get; set; }
+
+        Action<EventArgs> Update { get; set; }
+
+        Action<EventArgs> Start { get; set; }
+
+        Action<EventArgs> End { get; set; }
+
+        Action<NotifyEventArgs> Notify { get; set; }
     }
 }

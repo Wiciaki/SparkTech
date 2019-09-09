@@ -11,6 +11,7 @@
 
     using SharpDX;
 
+    using SparkTech.SDK.EventArgs;
     using SparkTech.SDK.Logging;
     using SparkTech.SDK.Rendering;
     using SparkTech.SDK.Security;

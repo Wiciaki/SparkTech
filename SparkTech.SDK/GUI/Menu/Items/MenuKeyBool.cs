@@ -2,6 +2,8 @@
 {
     using SharpDX;
 
+    using SparkTech.SDK.EventArgs;
+
     public class MenuKeyBool : MenuKey, IMenuValue<bool>
     {
         public MenuKeyBool(string id, Key defaultValue) : base(id, defaultValue)

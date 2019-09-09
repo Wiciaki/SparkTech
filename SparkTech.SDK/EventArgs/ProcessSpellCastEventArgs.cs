@@ -1,8 +1,10 @@
-﻿namespace SparkTech.SDK.Entities.EventArgs
+﻿namespace SparkTech.SDK.EventArgs
 {
     using System;
 
     using SharpDX;
+
+    using SparkTech.SDK.Entities;
 
     public class ProcessCastEventArgs : EventArgs, ISourcedEventArgs<IUnit>
     {

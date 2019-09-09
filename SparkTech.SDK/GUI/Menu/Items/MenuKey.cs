@@ -5,6 +5,7 @@
     using SharpDX;
     
     using SparkTech.SDK.API;
+    using SparkTech.SDK.EventArgs;
 
     public class MenuKey : MenuValue, IMenuValue<Key>
     {

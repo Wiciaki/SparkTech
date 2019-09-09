@@ -8,7 +8,7 @@
 
         SpellSlot ActiveSpellSlot { get; }
 
-        int OwnerId { get; }
+        IUnit Owner { get; }
 
         bool HasSpellCaster { get; }
 

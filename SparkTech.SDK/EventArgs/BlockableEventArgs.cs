@@ -1,8 +1,8 @@
-﻿namespace SparkTech.SDK
+﻿namespace SparkTech.SDK.EventArgs
 {
     using System;
 
-    public abstract class BlockableEventArgs : EventArgs
+    public class BlockableEventArgs : EventArgs
     {
         public bool IsBlocked { get; private set; }
 

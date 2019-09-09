@@ -1,6 +1,6 @@
 ﻿namespace SparkTech.SDK.Entities
 {
-    public interface IAttackableUnit : IGameObject
+    public interface IAttackable : IGameObject
     {
         float Health { get; }
         float MaxHealth { get; }

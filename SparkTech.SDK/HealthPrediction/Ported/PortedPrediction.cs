@@ -1,34 +1,35 @@
 ﻿namespace SparkTech.SDK.HealthPrediction.Ported
 {
+    /*
     using System;
     using System.Collections.Generic;
+    using System.Linq;
+
     using SparkTech.SDK.Entities;
-    /*
+    using SparkTech.SDK.EventArgs;
+    using SparkTech.SDK.GUI.Menu;
+
     public class PortedPrediction : IHealthPredition
     {
         public PortedPrediction()
         {
-            Obj_AI_Base.OnProcessSpellCast += ObjAiBaseOnOnProcessSpellCast;
+            EntityEvents.OnProcessSpellCast += ObjAiBaseOnOnProcessSpellCast;
             Game.OnUpdate += Game_OnGameUpdate;
-            Spellbook.OnStopCast += SpellbookOnStopCast;
-            GameObject.OnDelete += MissileClient_OnDelete;
-            Obj_AI_Base.OnDoCast += Obj_AI_Base_OnDoCast;
+            EntityEvents.OnSpellbookStopCast += SpellbookOnStopCast;
+            ObjectManager.OnDelete += MissileClient_OnDelete;
+            EntityEvents.OnDoCast += Obj_AI_Base_OnDoCast;
         }
 
         public void Release()
         {
-            Obj_AI_Base.OnProcessSpellCast -= ObjAiBaseOnOnProcessSpellCast;
-            Game.OnUpdate -= Game_OnGameUpdate;
-            Spellbook.OnStopCast -= SpellbookOnStopCast;
-            GameObject.OnDelete -= MissileClient_OnDelete;
-            Obj_AI_Base.OnDoCast -= Obj_AI_Base_OnDoCast;
+
         }
 
-        public ModuleMenu Menu { get; }
+        public Menu Menu { get; }
 
-        public float Predict(IAIBase unit, float time)
+        public float Predict(IUnit unit, float time)
         {
-            return GetHealthPrediction(unit, time.ToTicks());
+            return GetHealthPrediction(unit, time);
         }
 
         #region Static Fields
@@ -47,12 +48,13 @@
         /// </summary>
         /// <param name="minion"></param>
         /// <returns></returns>
-        public static IAIBase GetAggroTurret(Obj_AI_Minion minion)
+        public static IUnit GetAggroTurret(IMinion minion)
         {
             var ActiveTurret =
                 ActiveAttacks.Values.FirstOrDefault(
-                    m => (m.Source is Obj_AI_Turret) && m.Target.NetworkId == minion.NetworkId);
-            return ActiveTurret != null ? ActiveTurret.Source : null;
+                    m => (m.Source is ITurret) && m.Target.Id == minion.Id);
+
+            return ActiveTurret?.Source;
         }
 
         /// <summary>
@@ -62,7 +64,7 @@
         /// <param name="time">The time.</param>
         /// <param name="delay">The delay.</param>
         /// <returns></returns>
-        public static float GetHealthPrediction(IAIBase unit, int time, int delay = 70)
+        public static float GetHealthPrediction(IUnit unit, int time, int delay = 70)
         {
             var predictedDamage = 0f;
 
@@ -94,9 +96,9 @@
         /// </summary>
         /// <param name="minion">The minion.</param>
         /// <returns></returns>
-        public static bool HasMinionAggro(Obj_AI_Minion minion)
+        public static bool HasMinionAggro(IMinion minion)
         {
-            return ActiveAttacks.Values.Any(m => (m.Source is Obj_AI_Minion) && m.Target.NetworkId == minion.NetworkId);
+            return ActiveAttacks.Values.Any(m => (m.Source is IMinion) && m.Target.Id == minion.Id);
         }
 
         /// <summary>
@@ -104,9 +106,9 @@
         /// </summary>
         /// <param name="minion">The minion</param>
         /// <returns></returns>
-        public static bool HasTurretAggro(Obj_AI_Minion minion)
+        public static bool HasTurretAggro(IMinion minion)
         {
-            return ActiveAttacks.Values.Any(m => (m.Source is Obj_AI_Turret) && m.Target.NetworkId == minion.NetworkId);
+            return ActiveAttacks.Values.Any(m => (m.Source is ITurret) && m.Target.Id == minion.Id);
         }
 
         /// <summary>
@@ -116,7 +118,7 @@
         /// <param name="time">The time.</param>
         /// <param name="delay">The delay.</param>
         /// <returns></returns>
-        public static float LaneClearHealthPrediction(IAIBase unit, int time, int delay = 70)
+        public static float LaneClearHealthPrediction(IUnit unit, int time, int delay = 70)
         {
             var predictedDamage = 0f;
 
@@ -153,11 +155,12 @@
         /// </summary>
         /// <param name="minion"></param>
         /// <returns></returns>
-        public static int TurretAggroStartTick(Obj_AI_Minion minion)
+        public static int TurretAggroStartTick(IMinion minion)
         {
             var ActiveTurret =
                 ActiveAttacks.Values.FirstOrDefault(
-                    m => (m.Source is Obj_AI_Turret) && m.Target.NetworkId == minion.NetworkId);
+                    m => (m.Source is ITurret) && m.Target.Id == minion.Id);
+
             return ActiveTurret != null ? ActiveTurret.StartTick : 0;
         }
 
@@ -182,9 +185,10 @@
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="args">The <see cref="EventArgs" /> instance containing the event data.</param>
-        static void MissileClient_OnDelete(IGameObject sender, EventArgs args)
+        static void MissileClient_OnDelete(IGameObject sender)
         {
-            var missile = sender as MissileClient;
+            var missile = sender as IMissile;
+
             if (missile != null && missile.SpellCaster != null)
             {
                 var casterNetworkId = missile.SpellCaster.NetworkId;
@@ -203,8 +207,10 @@
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="args">The <see cref="GameObjectProcessSpellCastEventArgs" /> instance containing the event data.</param>
-        private static void Obj_AI_Base_OnDoCast(IAIBase sender, GameObjectProcessSpellCastEventArgs args)
+        private static void Obj_AI_Base_OnDoCast(ProcessCastEventArgs args)
         {
+            var sender = args.Source;
+
             if (ActiveAttacks.ContainsKey(sender.Id) && sender.IsMelee)
             {
                 ActiveAttacks[sender.Id].Processed = true;
@@ -216,23 +222,25 @@
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="args">The <see cref="GameObjectProcessSpellCastEventArgs" /> instance containing the event data.</param>
-        private static void ObjAiBaseOnOnProcessSpellCast(IAIBase sender, GameObjectProcessSpellCastEventArgs args)
+        private static void ObjAiBaseOnOnProcessSpellCast(ProcessCastEventArgs args)
         {
+            var sender = args.Source;
+
             if (!sender.IsValidTarget(3000, false) || sender.Team != ObjectManager.Player.Team || sender is IHero
                 || !Orbwalking.IsAutoAttack(args.SData.Name) || !(args.Target is Obj_AI_Base))
             {
                 return;
             }
 
-            var target = (IAIBase)args.Target;
-            ActiveAttacks.Remove(sender.NetworkId);
+            var target = (IUnit)args.Target;
+            ActiveAttacks.Remove(sender.Id);
 
             var attackData = new PredictedDamage(
                 sender,
                 target,
-                Utils.GameTimeTickCount - Game.Ping / 2,
+                Game.Time,
                 sender.AttackCastDelay * 1000,
-                sender.AttackDelay * 1000 - (sender is Obj_AI_Turret ? 70 : 0),
+                sender.AttackDelay * 1000 - (sender is ITurret ? 70 : 0),
                 sender.IsMelee() ? int.MaxValue : (int)args.SData.MissileSpeed,
                 (float)sender.GetAutoAttackDamage(target, true));
             ActiveAttacks.Add(sender.NetworkId, attackData);
@@ -241,15 +249,16 @@
         /// <summary>
         ///     Fired when the spellbooks stops a cast.
         /// </summary>
-        /// <param name="spellbook">The spellbook.</param>
         /// <param name="args">The <see cref="SpellbookStopCastEventArgs" /> instance containing the event data.</param>
-        private static void SpellbookOnStopCast(Spellbook spellbook, SpellbookStopCastEventArgs args)
+        private static void SpellbookOnStopCast(StopCastEventArgs args)
         {
-            if (spellbook.Owner.IsValid && args.StopAnimation)
+            var owner = args.Source.Owner;
+
+            if (owner.IsValid && args.StopAnimation)
             {
-                if (ActiveAttacks.ContainsKey(spellbook.Owner.NetworkId))
+                if (ActiveAttacks.ContainsKey(owner.Id))
                 {
-                    ActiveAttacks.Remove(spellbook.Owner.NetworkId);
+                    ActiveAttacks.Remove(owner.Id);
                 }
             }
         }
@@ -277,15 +286,15 @@
             /// </summary>
             /// <param name="source">The source.</param>
             /// <param name="target">The target.</param>
-            /// <param name="startTick">The start tick.</param>
+            /// <param name="startTime">The start tick.</param>
             /// <param name="delay">The delay.</param>
             /// <param name="animationTime">The animation time.</param>
             /// <param name="projectileSpeed">The projectile speed.</param>
             /// <param name="damage">The damage.</param>
             public PredictedDamage(
-                IAIBase source,
-                IAIBase target,
-                int startTick,
+                IUnit source,
+                IUnit target,
+                float startTime,
                 float delay,
                 float animationTime,
                 int projectileSpeed,
@@ -293,7 +302,7 @@
             {
                 this.Source = source;
                 this.Target = target;
-                this.StartTick = startTick;
+                this.StartTime = startTime;
                 this.Delay = delay;
                 this.ProjectileSpeed = projectileSpeed;
                 this.Damage = damage;
@@ -342,7 +351,7 @@
             /// <value>
             ///     The source.
             /// </value>
-            public IAIBase Source { get; private set; }
+            public IUnit Source { get; private set; }
 
             /// <summary>
             ///     Gets or sets the start tick.
@@ -350,7 +359,7 @@
             /// <value>
             ///     The start tick.
             /// </value>
-            public int StartTick { get; internal set; }
+            public float StartTime { get; internal set; }
 
             /// <summary>
             ///     Gets or sets the target.
@@ -358,7 +367,7 @@
             /// <value>
             ///     The target.
             /// </value>
-            public IAIBase Target { get; private set; }
+            public IUnit Target { get; private set; }
 
             #endregion
         }

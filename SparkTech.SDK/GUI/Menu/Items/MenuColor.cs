@@ -4,6 +4,8 @@
 
     using SharpDX;
 
+    using SparkTech.SDK.EventArgs;
+
     public class MenuColor : MenuValue, IMenuValue<Color>
     {
         private Color value;

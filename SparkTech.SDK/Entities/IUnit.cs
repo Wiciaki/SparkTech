@@ -2,7 +2,7 @@
 {
     using SharpDX;
 
-    public interface IUnit : IAttackableUnit
+    public interface IUnit : IAttackable
     {
         string BaseSkinName { get; }
 
@@ -72,7 +72,7 @@
 
         int BaseSkinId { get; }
 
-        IAttackableUnit Target { get; }
+        IAttackable Target { get; }
         // ICharacterData CharData { get; }
 
         //?

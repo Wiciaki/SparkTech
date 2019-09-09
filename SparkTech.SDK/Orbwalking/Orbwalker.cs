@@ -50,6 +50,6 @@ namespace SparkTech.SDK.Orbwalking
 
         public static event Action<BeforeAttackEventArgs> BeforeAttack;
 
-        public static event Action<IAttackableUnit> AfterAttack;
+        public static event Action<IAttackable> AfterAttack;
     }
 }

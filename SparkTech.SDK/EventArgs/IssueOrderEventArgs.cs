@@ -1,6 +1,8 @@
-﻿namespace SparkTech.SDK.Entities.EventArgs
+﻿namespace SparkTech.SDK.EventArgs
 {
     using SharpDX;
+
+    using SparkTech.SDK.Entities;
 
     public class IssueOrderEventArgs : BlockableEventArgs, ISourcedEventArgs<IUnit>
     {

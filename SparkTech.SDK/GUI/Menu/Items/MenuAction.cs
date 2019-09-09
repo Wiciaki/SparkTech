@@ -4,6 +4,8 @@
 
     using SharpDX;
 
+    using SparkTech.SDK.EventArgs;
+
     public class MenuAction : MenuText
     {
         private readonly Action action;

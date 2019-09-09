@@ -1,6 +1,8 @@
-﻿namespace SparkTech.SDK.Entities.EventArgs
+﻿namespace SparkTech.SDK.EventArgs
 {
     using System;
+
+    using SparkTech.SDK.Entities;
 
     public class TeleportEventArgs : EventArgs, ISourcedEventArgs<IUnit>
     {

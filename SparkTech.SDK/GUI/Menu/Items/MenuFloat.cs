@@ -6,6 +6,7 @@
 
     using SharpDX;
 
+    using SparkTech.SDK.EventArgs;
     using SparkTech.SDK.Rendering;
 
     public class MenuFloat : MenuValue, IMenuValue<float>

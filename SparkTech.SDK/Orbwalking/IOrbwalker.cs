@@ -17,6 +17,6 @@
 
         Action<BeforeAttackEventArgs> BeforeAttack { get; set; }
 
-        Action<IAttackableUnit> AfterAttack { get; set; }
+        Action<IAttackable> AfterAttack { get; set; }
     }
 }

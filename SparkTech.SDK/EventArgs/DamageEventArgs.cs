@@ -1,12 +1,14 @@
-﻿namespace SparkTech.SDK.Entities.EventArgs
+﻿namespace SparkTech.SDK.EventArgs
 {
     using System;
 
-    public class DamageEventArgs : EventArgs, ISourcedEventArgs<IAttackableUnit>
-    {
-        public IAttackableUnit Source { get; }
+    using SparkTech.SDK.Entities;
 
-        public readonly IAttackableUnit Target;
+    public class DamageEventArgs : EventArgs, ISourcedEventArgs<IAttackable>
+    {
+        public IAttackable Source { get; }
+
+        public readonly IAttackable Target;
 
         public readonly DamageHitType HitType;
 
@@ -14,7 +16,7 @@
 
         public readonly float Damage;
 
-        public DamageEventArgs(IAttackableUnit source, IAttackableUnit target, DamageHitType hitType, DamageType damageType, float damage)
+        public DamageEventArgs(IAttackable source, IAttackable target, DamageHitType hitType, DamageType damageType, float damage)
         {
             this.Source = source;
 

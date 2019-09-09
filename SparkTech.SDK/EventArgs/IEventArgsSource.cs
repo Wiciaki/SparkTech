@@ -1,4 +1,4 @@
-﻿namespace SparkTech.SDK.Entities.EventArgs
+﻿namespace SparkTech.SDK.EventArgs
 {
     public interface ISourcedEventArgs<out T>
     {

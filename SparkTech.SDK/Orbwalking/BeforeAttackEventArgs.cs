@@ -4,11 +4,11 @@
 
     public class BeforeAttackEventArgs
     {
-        public readonly IAttackableUnit Target;
+        public readonly IAttackable Target;
 
         public bool Process;
 
-        public BeforeAttackEventArgs(IAttackableUnit target)
+        public BeforeAttackEventArgs(IAttackable target)
         {
             this.Target = target;
         }

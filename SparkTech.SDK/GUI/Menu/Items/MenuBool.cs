@@ -4,6 +4,8 @@
 
     using SharpDX;
 
+    using SparkTech.SDK.EventArgs;
+
     public class MenuBool : MenuValue, IMenuValue<bool>
     {
         public MenuBool(string id, bool defaultValue) : base(id, defaultValue)
