@@ -3,8 +3,8 @@
     using SharpDX;
     using SharpDX.Direct3D9;
 
-    using SparkTech.SDK.GUI.Default;
-    using SparkTech.SDK.Rendering;
+    using Surgical.SDK.GUI.Default;
+    using Surgical.SDK.Rendering;
 
     public class SharkTheme : Theme
     {

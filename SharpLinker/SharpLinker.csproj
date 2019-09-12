@@ -83,9 +83,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SparkTech.SDK\SparkTech.SDK.csproj">
+    <ProjectReference Include="..\Surgical.SDK\Surgical.SDK.csproj">
       <Project>{35284b3e-cdfc-475c-9f90-185e605272cb}</Project>
-      <Name>SparkTech.SDK</Name>
+      <Name>Surgical.SDK</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

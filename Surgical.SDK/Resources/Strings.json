@@ -1,0 +1,14 @@
+{
+  "en": {
+    "keySelector": "Press now...",
+    "menuListEmpty": "Less than 2 options provided",
+    "firstTimeWelcome": "Welcome to {platform}!\nEnglish language detected.\nYou can change that in the menu.",
+    "none": "None", 
+
+    // special, don't translate, only change here
+    "languageUnknown": "Welcome to {platform}!\nYour system language,\n\"{language}\" is not supported by the SDK.\nDefault will be used.\nYou can change that inside the menu."
+  },
+  "zh": {
+
+  } 
+}

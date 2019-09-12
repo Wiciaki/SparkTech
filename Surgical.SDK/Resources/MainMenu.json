@@ -1,0 +1,212 @@
+﻿{
+  "en": {
+    "text": "Surgical SDK",
+    "helpText": "Here you will find all the settings that impact other scripts"
+  },
+  "zh": {
+    "text": "Surgeon制作",
+    "helpText": "帮助"
+  },
+  "language": {
+    "en": {
+      "text": "Language"
+    },
+    "zh": {
+      "text": "语言 (language)"
+    }
+  },
+  "modes": {
+    "en": {
+      "text": "Modes",
+      "helpText": "All the settings besides key are champion-specific" 
+    },
+    "zh": {
+      "text": "??"
+    },
+    "combo": {
+      "en": {
+        "text": "Combo"
+      },
+      "zh": {
+        "text": "??"
+      }
+    },
+    "laneclear": {
+      "en": {
+        "text": "Laneclear"
+      },
+      "zh": {
+        "text": "??"
+      }
+    },
+    "harass": {
+      "en": {
+        "text": "Harass"
+      },
+      "zh": {
+        "text": "??"
+      }
+    },
+    "lasthit": {
+      "en": {
+        "text": "Lasthit"
+      },
+      "zh": {
+        "text": "??"
+      }
+    },
+    "custom": {
+      "en": {
+        "text": "Custom mode"
+      },
+      "zh": {
+        "text": "??"
+      }
+    },
+    "flee": {
+      "en": {
+        "text": "Flee"
+      },
+      "zh": {
+        "text": "??"
+      }
+    } 
+  },
+  "menu": {
+    "en": {
+      "text": "Menu settings"
+    },
+    "zh": {
+      "text": "??"
+    },
+    "key": {
+      "en": {
+        "text": "Activation button"
+      },
+      "zh": {
+        "text": "激活按键"
+      }
+    },
+    "toggle": {
+      "en": {
+        "text": "Press to toggle?"
+      },
+      "zh": {
+        "text": "锁死"
+      }
+    },
+    "apply": {
+      "en": {
+        "text": "Click here to apply above settings"
+      },
+      "zh": {
+        "text": "应用"
+      }
+    },
+    "arrows": {
+      "en": {
+        "text": "Enable arrow indicators"
+      },
+      "zh": {
+        "text": "asdfsef"
+      }
+    },
+    "position": {
+      "en": {
+        "text":  "Position" 
+      },
+      "zh": {
+        "text":  "???" 
+      } 
+    },
+    "x": {
+      "en": {
+        "text": "X coordinate"
+      },
+      "zh": {
+        "text": "X轴"
+      }
+    },
+    "y": {
+      "en": {
+        "text": "Y coordinate"
+      },
+      "zh": {
+        "text": "Y轴"
+      }
+    }
+  },
+  "clock": {
+    "en": {
+      "text": "Clock",
+      "helpText": "Smart shows the clock for 5 seconds, every minute",
+      "options": [
+        "On",
+        "Smart",
+        "Off"
+      ]
+    },
+    "zh": {
+      "text": "钟",
+      "helpText": "Smart shows the clock for 5 seconds, every minute",
+      "options": [
+        "On",
+        "Smart",
+        "Off"
+      ]
+    }
+  },
+  "humanizer": {
+    "en": {
+      "text": "Humanizer"
+    },
+    "zh": {
+      "text": "??"
+    },
+    "enable": {
+      "en": {
+        "text": "Enable the global humanizer"
+      },
+      "zh": {
+        "text": "??"
+      }
+    }
+  },
+  "license": {
+    "en": {
+      "text": "License"
+    },
+    "zh": {
+      "text": "??"
+    }
+  },
+  "about": {
+    "en": {
+      "text": "About"
+    },
+    "zh": {
+      "text": "??"
+    },
+    "version": {
+      "en": {
+        "text": "SDK Version {version}"
+      },
+      "zh": {
+        "text": "??"
+      }
+    },
+    "contact": {
+      "en": {
+        "text": "Find me on riot.im:\n@surgeon:matrix.org"
+      },
+      "zh": {
+        "text": "??"
+      }
+    },
+    "credits": {
+      "en": {
+        "text": "Made possible thanks to AlphaStar team"
+      } 
+    } 
+  }
+} 

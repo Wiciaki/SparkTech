@@ -10,10 +10,9 @@
 
     using SharpLinker.Properties;
 
-    using SparkTech.SDK;
-    using SparkTech.SDK.API;
-    using SparkTech.SDK.API.Fragments;
-    using SparkTech.SDK.EventArgs;
+    using Surgical.SDK.API;
+    using Surgical.SDK.API.Fragments;
+    using Surgical.SDK.Rendering;
 
     using Color = SharpDX.Color;
     using Point = SharpDX.Point;
@@ -75,7 +74,7 @@
                 device.BeginScene();
                 form.BeginScene();
 
-                SparkTech.SDK.Rendering.Image.Draw(default, texture);
+                Picture.Draw(default, texture);
 
                 //Vector.Draw(Color.White, 50f, new Vector2(100, 100), new Vector2(150, 150));
                 form.Draw();
@@ -105,23 +104,13 @@
             });
         }
 
-        private class HookedForm : RenderForm, IRender//, IGameEvents
+        private class HookedForm : RenderForm, IRender
         {
             public HookedForm() : base("SharpDX - Render test (Surgeon)")
             {
                 this.Size = new Size(1920, 1080);
 
                 //this.FormBorderStyle = FormBorderStyle.None;
-            }
-
-            protected override void WndProc(ref Message m)
-            {
-                var message = (WindowsMessages)m.Msg;
-                var key = (Key)m.WParam;
-
-                this.OnWndProc?.Invoke(new WndProcEventArgs(message, key));
-
-                base.WndProc(ref m);
             }
 
             public Size2 Resolution()
@@ -141,6 +130,8 @@
 
             public Action ResetDevice { get; set; }
 
+            public Action SetRenderTarget { get; set; }
+
             public Vector2 WorldToScreen(Vector3 pos)
             {
                 throw new NotImplementedException();
@@ -156,17 +147,9 @@
                 throw new NotImplementedException();
             }
 
-            public Matrix ProjectionMatrix()
-            {
-                throw new NotImplementedException();
-            }
+            public Matrix Projection => throw new NotImplementedException();
 
-            public Matrix ViewMatrix()
-            {
-                throw new NotImplementedException();
-            }
-
-            public Action<WndProcEventArgs> OnWndProc { get; set; }
+            public Matrix View => throw new NotImplementedException();
 
             public Point GetCursorPosition()
             {
