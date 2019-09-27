@@ -1,11 +1,11 @@
 ﻿//  -------------------------------------------------------------------
 //
 //  Last updated: 21/08/2017
-//  Created: 26/07/2017
+//  Created: 29/07/2017
 //
 //  Copyright (c) Entropy, 2017 - 2017
 //
-//  ITargetSelector.cs is a part of SparkTech
+//  TargetSelector.cs is a part of SparkTech
 //
 //  SparkTech is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -20,18 +20,28 @@
 //
 //  -------------------------------------------------------------------
 
-namespace Surgical.SDK.TargetSelection
+namespace Surgical.SDK.TargetSelector
 {
     using System.Collections.Generic;
 
+    using Surgical.SDK.API;
     using Surgical.SDK.Entities;
     using Surgical.SDK.Modules;
 
-    public interface ITargetSelector : IModule
+    public static class TargetSelector
     {
+        #region Static Fields
+
+        private static readonly IModulePicker<ITargetSelector> Picker = new SdkSetup.Picker<ITargetSelector>(new Default.TargetSelector());
+
+        #endregion
+
         #region Public Methods and Operators
 
-        IHero SelectTarget(IEnumerable<IHero> heroes);
+        public static IHero Select(IEnumerable<IHero> heroes)
+        {
+            return Picker.Current.Select(heroes);
+        }
 
         #endregion
     }

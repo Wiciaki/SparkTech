@@ -48,7 +48,7 @@
 
         public IPacket Packet { get; set; }
 
-        public IAuth Auth { get; set; }
+        public ISandbox Sandbox { get; set; }
 
         public string ConfigPath { get; set; }
 
@@ -95,20 +95,18 @@
                 Packets.Packet.Initialize(this.Packet);
             }
 
-            GUI.Theme.SetTheme(this.Theme ?? new GUI.Default.Theme());
+            GUI.Theme.SetTheme(this.Theme ?? new SurgicalTheme());
 
             RuntimeHelpers.RunClassConstructor(typeof(SdkSetup).TypeHandle);
 
-            if (this.Auth != null)
-            {
-                var authResult = await this.Auth.Auth("Surgical.SDK");
+            var auth = new Netlicensing(Machine.UserId, "d1213e7b-0817-4544-aa37-01817170c494");
+            //var authResult = await auth.GetAuth("Surgical.SDK");
 
-
-            }
+            //Log.Info(authResult);
 
             // load scripts
 
-            Sandbox.LoadThirdParty();
+            Security.Sandbox.Initialize(this.Sandbox);
         }
     }
 }

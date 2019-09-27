@@ -8,7 +8,6 @@
 
     using SharpDX;
 
-    using Surgical.SDK.API;
     using Surgical.SDK.EventData;
 
     public class MenuList : MenuValue, IExpandable, IMenuValue<int>, IMenuValue<string>
@@ -48,11 +47,6 @@
 
         private void SetOptions(IList<string> items)
         {
-            if (items.Count < 2)
-            {
-                items[0] = SdkSetup.GetTranslatedString("menuListEmpty");
-            }
-
             this.options.Clear();
             this.options.AddRange(items);
 

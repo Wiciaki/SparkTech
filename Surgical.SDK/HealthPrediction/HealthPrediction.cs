@@ -7,22 +7,11 @@
     {
         #region Static Fields
 
-        private static readonly IModulePicker<IHealthPredition> Picker;
-
-        static HealthPrediction()
-        {
-            //Picker = SdkSetup.CreatePicker<IHealthPredition, DefaultHealthPrediction>();
-        }
+        internal static IModulePicker<IHealthPredition> Picker;
 
         #endregion
 
         #region Public Methods and Operators
-
-        public static void Add<T>(string moduleName)
-            where T : IHealthPredition, new()
-        {
-            Picker.Add<T>(moduleName);
-        }
 
         public static float PredictHealth(this IUnit unit, float time)
         {

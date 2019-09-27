@@ -13,7 +13,7 @@
     {
         public readonly string Id;
 
-        public event Action<BeforeMenuValueChangeEventArgs> BeforeValueChange;
+        public event Action<BeforeValueChangeEventArgs> BeforeValueChange;
 
         public virtual bool IsVisible { get; set; } = true;
 
@@ -95,7 +95,7 @@
 
             if (this.BeforeValueChange != null)
             {
-                var args = BeforeMenuValueChangeEventArgs.Create(t.Value, @new);
+                var args = BeforeValueChangeEventArgs.Create(t.Value, @new);
 
                 this.BeforeValueChange.SafeInvoke(args);
 

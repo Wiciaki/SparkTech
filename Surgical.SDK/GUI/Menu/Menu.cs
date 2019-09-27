@@ -77,6 +77,31 @@
             RootEntries.Add(new RootEntry(menu));
         }
 
+        public static void Radio(MenuBool[] items)
+        {
+            var block = false;
+
+            foreach (var item in items)
+            {
+                item.BeforeValueChange += args =>
+                {
+                    if (block)
+                    {
+                        return;
+                    }
+
+                    block = true;
+
+                    foreach (var i in items)
+                    {
+                        i.Value = i.Id == item.Id;
+                    }
+
+                    block = false;
+                };
+            }
+        }
+
         #endregion
 
         #region Overrides
@@ -149,6 +174,16 @@
             item.SetToken(this.settings[item.Id]);
 
             UpdateItemSize(item, this.translations);
+        }
+
+        public void Add(MenuItem item, JObject value)
+        {
+            if (value != null)
+            {
+                this.translations.Add(item.Id, value);
+            }
+
+            this.Add(item);
         }
 
         public bool IsSaving { get; set; } = true;
@@ -350,6 +385,11 @@
 
         private static void DrawGroup<T>(List<T> items, Point point) where T : MenuItem
         {
+            if (items.Count == 0)
+            {
+                return;
+            }
+
             var p = point;
 
             items = items.FindAll(item => item.IsVisible);

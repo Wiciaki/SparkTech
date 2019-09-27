@@ -2,6 +2,7 @@
 {
     using System;
     using System.Linq;
+    using System.Runtime.CompilerServices;
 
     using SharpDX;
 
@@ -145,6 +146,11 @@
                     Log.Error(ex);
                 }
             }
+        }
+
+        internal static void Trigger(this Type type)
+        {
+            RuntimeHelpers.RunClassConstructor(type.TypeHandle);
         }
     }
 }

@@ -7,6 +7,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Surgical.SDK", "Surgical.SD
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLinker", "SharpLinker\SharpLinker.csproj", "{D1A2821A-864F-499E-84B9-D280704D0E3E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThirdPartyTest", "ThirdPartyTest\ThirdPartyTest.csproj", "{2D4BE9FD-8759-4E47-8517-7F7F3B30C88D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{35284B3E-CDFC-475C-9F90-185E605272CB} = {35284B3E-CDFC-475C-9F90-185E605272CB}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +26,10 @@ Global
 		{D1A2821A-864F-499E-84B9-D280704D0E3E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D1A2821A-864F-499E-84B9-D280704D0E3E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D1A2821A-864F-499E-84B9-D280704D0E3E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2D4BE9FD-8759-4E47-8517-7F7F3B30C88D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2D4BE9FD-8759-4E47-8517-7F7F3B30C88D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2D4BE9FD-8759-4E47-8517-7F7F3B30C88D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2D4BE9FD-8759-4E47-8517-7F7F3B30C88D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

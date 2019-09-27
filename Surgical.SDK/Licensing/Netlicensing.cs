@@ -16,32 +16,39 @@
 
     public class Netlicensing : IAuth, IShop
     {
-        protected virtual string LicenseeNumber => WebUtility.UrlEncode("Spark"/*Machine.HardwareBasedUserId*/);
+        private readonly string licenseeNumber;
 
         private readonly NetworkCredential crendentials;
 
-        public Netlicensing(SecureString apiKey)
+        private Netlicensing(string licenseeNumber, NetworkCredential credentials)
         {
-            this.crendentials = new NetworkCredential("apiKey", apiKey);
+            this.licenseeNumber = WebUtility.UrlEncode(licenseeNumber);
+
+            this.crendentials = credentials;
         }
 
-        public Netlicensing(string apiKey)
+        public Netlicensing(string licenseeNumber, SecureString apiKey) : this(licenseeNumber, new NetworkCredential("apiKey", apiKey))
         {
-            this.crendentials = new NetworkCredential("apiKey", apiKey);
+
+        }
+
+        public Netlicensing(string licenseeNumber, string apiKey) : this(licenseeNumber, new NetworkCredential("apiKey", apiKey))
+        {
+
         }
 
         public async Task<string> GetShopUrl()
         {
-            var licenseeNumber = "licenseeNumber=" + this.LicenseeNumber;
+            var licensee = "licenseeNumber=" + this.licenseeNumber;
 
-            var json = await this.SendPost("token", "tokenType=SHOP", licenseeNumber);
+            var json = await this.SendPost("token", "tokenType=SHOP", licensee);
 
             return json == null ? null : GetResponseObjects(json)["shopURL"];
         }
 
-        public async Task<AuthResult> Auth(string productNumber)
+        public async Task<AuthResult> GetAuth(string productNumber)
         {
-            var ending = $"licensee/{this.LicenseeNumber}/validate";
+            var ending = $"licensee/{this.licenseeNumber}/validate";
             var param = "productNumber=" + productNumber;
 
             return GetAuth(await this.SendPost(ending, param));
@@ -118,16 +125,15 @@
 
             try
             {
-                using var response = await request.GetResponseAsync();
-                var responseStream = response.GetResponseStream();
+                using var response = (HttpWebResponse)await request.GetResponseAsync();
+                using var responseStream = response.GetResponseStream();
 
                 if (responseStream == null)
                 {
-                    Log.Warn("responseStream == null");
-                    return null;
+                    throw new ApplicationException("responseStream == null");
                 }
 
-                Log.Info("Successfully exchanged data with the license server.");
+                Log.Info("Auth OK");
 
                 using var sr = new StreamReader(responseStream);
                 using var textReader = new JsonTextReader(sr);
@@ -136,8 +142,16 @@
             }
             catch (WebException ex)
             {
-                Log.Info("Auth failed");
-                Log.Info(ex);
+                Log.Info("Auth failed!");
+
+                var response = (HttpWebResponse)ex.Response;
+
+                if (response != null)
+                {
+                    var statusCode = (int)response.StatusCode;
+
+                    Log.Info("Response code " + statusCode);
+                }
 
                 return null;
             }

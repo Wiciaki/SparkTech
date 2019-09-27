@@ -1,15 +1,17 @@
 ﻿namespace Surgical.SDK.Modules
 {
+    using Newtonsoft.Json.Linq;
+
     using Surgical.SDK.GUI.Menu;
 
     public interface IModule
     {
-        #region Public Methods and Operators
-
-        void Release();
-
         Menu Menu { get; }
 
-        #endregion
+        JObject GetTranslations();
+
+        void Start();
+
+        void Stop();
     }
 }

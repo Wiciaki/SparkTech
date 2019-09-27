@@ -1,18 +1,29 @@
 ﻿namespace Surgical.SDK.Champions
 {
-    using System;
-    using System.Reflection;
+    using Newtonsoft.Json.Linq;
 
     using Surgical.SDK.Entities;
     using Surgical.SDK.GUI.Menu;
+    using Surgical.SDK.Modules;
 
-    public abstract class Champion
+    public abstract class Champion : IModule
     {
-        protected static readonly Menu Menu;
+        public Menu Menu { get; }
+
+        protected Champion()
+        {
+            var champName = ObjectManager.Player.CharName;
+
+            this.Menu = new Menu(champName.ToLower())
+                        {
+
+                        };
+
+            var a = this.GetTranslations();
+        }
 
         public virtual float GetHealthIndicatorDamage(IHero hero)
         {
-            // 
             return 0;
         }
 
@@ -20,14 +31,34 @@
         {
             var champName = ObjectManager.Player.CharName;
 
-            var type = Assembly.GetAssembly(typeof(Champion)).GetType("" + champName);
+            var champion = GetChampion(champName);
 
-            if (!type.IsSubclassOf(typeof(Champion)))
+
+        }
+
+        private static Champion GetChampion(string champName)
+        {
+            return champName switch
             {
-                return;
-            }
+                "Orianna" => new Orianna(),
+                "Vayne" => new Vayne(),
+                "Viktor" => new Viktor(),
+                "Xerath" => new Xerath(),
+                _ => null as Champion
+            };
+        }
 
-            var champ = (Champion)Activator.CreateInstance(type);
+        //public abstract JObject GetTranslations();
+        public virtual JObject GetTranslations() => null;
+
+        public virtual void Start()
+        {
+
+        }
+
+        public virtual void Stop()
+        {
+
         }
     }
 }

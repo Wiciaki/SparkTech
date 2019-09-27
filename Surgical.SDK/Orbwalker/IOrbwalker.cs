@@ -1,4 +1,4 @@
-﻿namespace Surgical.SDK.Orbwalking
+﻿namespace Surgical.SDK.Orbwalker
 {
     using System;
 
@@ -12,8 +12,6 @@
         bool IsAttacking { get; }
 
         //float LastOrderTime { get; }
-
-        //Mode GetMode();
 
         Action<BeforeAttackEventArgs> BeforeAttack { get; set; }
 

@@ -20,31 +20,21 @@
 //
 //  -------------------------------------------------------------------
 
-namespace Surgical.SDK.Orbwalking
+namespace Surgical.SDK.Orbwalker
 {
     using System;
 
+    using Surgical.SDK.API;
     using Surgical.SDK.Entities;
     using Surgical.SDK.Modules;
 
     public static class Orbwalker
     {
-        private static readonly IModulePicker<IOrbwalker> Picker;
+        public static readonly IModulePicker<IOrbwalker> Picker = new SdkSetup.Picker<IOrbwalker>(new SurgicalOrbwalker());
 
         static Orbwalker()
         {
             //Picker = SdkSetup.CreatePicker<IOrbwalker, DefaultOrbwalker>();
-
-            Picker.ModuleSelected += () =>
-            {
-                Picker.Current.AfterAttack = AfterAttack;
-                Picker.Current.BeforeAttack = BeforeAttack;
-            };
-        }
-
-        public static void Add<TOrbwalker>(string moduleName) where TOrbwalker : IOrbwalker, new()
-        {
-            Picker.Add<TOrbwalker>(moduleName);
         }
 
         public static event Action<BeforeAttackEventArgs> BeforeAttack;

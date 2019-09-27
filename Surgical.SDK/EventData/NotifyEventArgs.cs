@@ -1,6 +1,8 @@
 ﻿namespace Surgical.SDK.EventData
 {
-    public class NotifyEventArgs
+    using System;
+
+    public class NotifyEventArgs : EventArgs
     {
         public int SenderId { get; } // todo
 

@@ -1,19 +1,37 @@
 ﻿namespace Surgical.SDK.Security
 {
     using System;
+    using System.IO;
+    using System.Linq;
+
+    using Surgical.SDK.API.Fragments;
+    using Surgical.SDK.Logging;
 
     public static class Sandbox
     {
-        static Sandbox()
+        internal static void Initialize(ISandbox sandbox)
         {
-            Domain = AppDomain.CreateDomain("boo");
-        }
+            if (sandbox == null)
+            {
+                return;
+            }
 
-        private static readonly AppDomain Domain;
+            foreach (var file in Directory.GetFiles(Folder.ThirdParty).Where(p => Path.GetExtension(p) == ".dll"))
+            {
+                try
+                {
+                    var assembly = sandbox.LoadAssembly(file);
 
-        internal static void LoadThirdParty()
-        {
-            
+                    foreach (var type in assembly.GetTypes()/*.Where(type => type.IsSubclassOf(typeof(IScript)*/)
+                    {
+                        Activator.CreateInstance(type);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex);
+                }
+            }
         }
     }
 }

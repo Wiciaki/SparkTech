@@ -4,6 +4,6 @@
 
     public interface IAuth
     {
-        Task<AuthResult> Auth(string product);
+        Task<AuthResult> GetAuth(string product);
     }
 }

@@ -77,7 +77,6 @@
             this.helpSize = this.HelpText == null ? default : new Size2(Theme.MeasureText(HelpBoxText).Width, this.textSize.Height);
 
             var size = new Size2(this.textSize.Width + this.helpSize.Width, this.textSize.Height);
-
             var width = Theme.MeasureText(MinItemWidthText).Width;
 
             if (width > size.Width)

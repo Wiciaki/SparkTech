@@ -2,7 +2,6 @@
 {
     using System;
     using System.Linq;
-    using System.Runtime.CompilerServices;
 
     using SharpDX;
     using SharpDX.Direct3D9;
@@ -43,12 +42,10 @@
             AppDomain.CurrentDomain.DomainUnload += OnExit;
             AppDomain.CurrentDomain.ProcessExit += OnExit;
 
-            static void Init(Type type) => RuntimeHelpers.RunClassConstructor(type.TypeHandle);
-
-            Init(typeof(Vector));
-            Init(typeof(Circle));
-            Init(typeof(Text));
-            Init(typeof(Picture));
+            typeof(Vector).Trigger();
+            typeof(Circle).Trigger();
+            typeof(Text).Trigger();
+            typeof(Picture).Trigger();
         }
 
         private static void InvokeRenderEvent(Action e)

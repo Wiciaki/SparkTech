@@ -3,10 +3,10 @@
     using SharpDX;
     using SharpDX.Direct3D9;
 
-    using Surgical.SDK.GUI.Default;
+    using Surgical.SDK.GUI;
     using Surgical.SDK.Rendering;
 
-    public class SharkTheme : Theme
+    public class AlphaStarTheme : SurgicalTheme
     {
         protected override FontDrawFlags DrawFlags { get; } = FontDrawFlags.Center | FontDrawFlags.VerticalCenter;
 

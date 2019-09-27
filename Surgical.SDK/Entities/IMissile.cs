@@ -2,7 +2,7 @@
 {
     using SharpDX;
 
-    public interface IMissile
+    public interface IMissile : IGameObject
     {
         ISpellData Spell { get; }
 

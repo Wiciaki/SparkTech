@@ -1,4 +1,4 @@
-﻿namespace Surgical.SDK.Orbwalking
+﻿namespace Surgical.SDK.Orbwalker
 {
     using Surgical.SDK.Entities;
 

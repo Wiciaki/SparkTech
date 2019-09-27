@@ -1,29 +1,27 @@
-﻿namespace Surgical.SDK.TargetSelection.Default
+﻿namespace Surgical.SDK.TargetSelector.Default
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
 
+    using Newtonsoft.Json.Linq;
+
     using Surgical.SDK.Entities;
     using Surgical.SDK.GUI.Menu;
-    using Surgical.SDK.Modules;
-    using Surgical.SDK.TargetSelection.Default.Weights;
 
-    internal sealed class DefaultTargetSelector : ITargetSelector
+    public class TargetSelector : ITargetSelector
     {
-        Menu IModule.Menu => Menu;
+        public Menu Menu { get; }
 
-        private static readonly Menu Menu;
+        private readonly List<Weight> Weights;
 
-        private static readonly List<Weight> Weights;
+        private readonly IEqualityComparer<IHero> EqualityComparer;
 
-        private static readonly IEqualityComparer<IHero> EqualityComparer;
-
-        static DefaultTargetSelector()
+        public TargetSelector()
         { 
             // var modeNames = new[] { "timeToKill", "dealsMostDmg", "distanceChamp", "distanceMouse" };
 
-            EqualityComparer = new EntityComparer<IGameObject>();
+            EqualityComparer = new EntityComparer<IHero>();
             Weights = new List<Weight>();
 
             Menu = new Menu("TargetSelector")
@@ -32,22 +30,22 @@
                    };
 
             // TODO: other weights
-            Register<DistanceWeight>();
+            //Register<DistanceWeight>();
 
-            static void Register<TWeight>() where TWeight : Weight, new()
-            {
-                var weight = new TWeight();
+            //void Register<TWeight>() where TWeight : Weight, new()
+            //{
+            //    var weight = new TWeight();
                 
-                Weights.Add(weight);
+            //    Weights.Add(weight);
 
-                foreach (var component in weight.CreateItems())
-                {
-                    Menu.Add(component);
-                }
-            }
+            //    foreach (var component in weight.CreateItems())
+            //    {
+            //        Menu.Add(component);
+            //    }
+            //}
         }
 
-        IHero ITargetSelector.SelectTarget(IEnumerable<IHero> heroes)
+        IHero ITargetSelector.Select(IEnumerable<IHero> heroes)
         {
             var enemies = heroes.Where(hero => hero.IsEnemy()).Distinct(EqualityComparer).ToList();
 
@@ -62,7 +60,7 @@
 
             foreach (var weight in Weights)
             {
-                var w = weight.GetWeight();
+                var w = weight.Importance;
 
                 if (w == 0)
                 {
@@ -80,7 +78,17 @@
             return weightCollection.OrderByDescending(pair => pair.Value).Select(pair => pair.Key).First();
         }
 
-        void IModule.Release()
+        public JObject GetTranslations()
+        {
+            return null;
+        }
+
+        public void Start()
+        {
+
+        }
+
+        public void Stop()
         {
 
         }

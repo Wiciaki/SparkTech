@@ -33,13 +33,15 @@
             var height = form.ClientSize.Height;
 
             device = new Device(new Direct3D(), 0, DeviceType.Hardware, form.Handle, CreateFlags.HardwareVertexProcessing, new PresentParameters(width, height) { PresentationInterval = PresentInterval.One });
-
+            
             var bytes = (byte[])new ImageConverter().ConvertTo(Resources.league, typeof(byte[]));
             var texture = Texture.FromMemory(device, bytes, 1910, 1082, 0, Usage.None, Format.A1, Pool.Managed, Filter.Default, Filter.Default, 0);
 
-            var platform = Platform.Declare("Test render");
+            var platform = Platform.Declare("Test");
 
+            platform.Sandbox = new Sandbox();
             platform.Render = form;
+            //platform.Theme = new AlphaStarTheme();
 
             platform.Boot();
 
@@ -75,8 +77,8 @@
                 form.BeginScene();
 
                 Picture.Draw(default, texture);
-
-                //Vector.Draw(Color.White, 50f, new Vector2(100, 100), new Vector2(150, 150));
+                
+                // Vector.Draw(Color.White, 50f, new Vector2(100, 100), new Vector2(150, 150));
                 form.Draw();
 
                 //// Make the text boucing on the screen limits

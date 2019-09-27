@@ -1,6 +1,6 @@
 ﻿namespace Surgical.SDK.EventData
 {
-    public abstract class BeforeMenuValueChangeEventArgs : BlockableEventArgs
+    public abstract class BeforeValueChangeEventArgs : BlockableEventArgs
     {
         private BeforeValueChange<T> Cast<T>()
         {
@@ -22,12 +22,12 @@
             return this.Cast<T>().NewT;
         }
 
-        public static BeforeMenuValueChangeEventArgs Create<T>(T oldValue, T newValue)
+        public static BeforeValueChangeEventArgs Create<T>(T oldValue, T newValue)
         {
             return new BeforeValueChange<T>(oldValue, newValue);
         }
 
-        private class BeforeValueChange<T> : BeforeMenuValueChangeEventArgs
+        private class BeforeValueChange<T> : BeforeValueChangeEventArgs
         {
             public readonly T OldT, NewT;
 

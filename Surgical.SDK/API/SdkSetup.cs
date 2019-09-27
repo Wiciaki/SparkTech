@@ -1,5 +1,7 @@
 ﻿namespace Surgical.SDK.API
 {
+    using System;
+    using System.Collections.Generic;
     using System.Globalization;
     using System.IO;
     using System.Linq;
@@ -8,13 +10,18 @@
 
     using SharpDX.Direct3D9;
 
+    using Surgical.SDK.Evade;
+    using Surgical.SDK.EventData;
     using Surgical.SDK.GUI;
     using Surgical.SDK.GUI.Menu;
     using Surgical.SDK.GUI.Notifications;
     using Surgical.SDK.Logging;
+    using Surgical.SDK.Modules;
+    using Surgical.SDK.Orbwalker;
     using Surgical.SDK.Properties;
     using Surgical.SDK.Rendering;
     using Surgical.SDK.Security;
+    using Surgical.SDK.TargetSelector;
 
     public static class SdkSetup
     {
@@ -23,6 +30,8 @@
         private static readonly Menu Menu;
 
         private static readonly Translations Strings;
+
+        #region Menu Setup
 
         static SdkSetup()
         {
@@ -65,26 +74,25 @@
             
             SetupMenu(out FirstRun);
 
-            Log.Info("SDK building complete!");
+            typeof(TargetSelector).Trigger();
+            typeof(Orbwalker).Trigger();
+            typeof(Evade).Trigger();
+
+            Log.Info("Surgical.SDK initialized!");
 
             // test
 
-            Menu.IsExpanded = true;
+            //Menu.IsExpanded = true;
             //Menu.GetMenu("about").IsExpanded = true;
             //Menu.GetMenu("modes").GetMenu("harass").IsExpanded = true;
-            //((IExpandable)Menu.GetMenu("modes").GetMenu("harass")["minions"]).IsExpanded = true;
+            //((IExpandable)Menu.GetMenu("modes").GetMenu("harass")["objects"]).IsExpanded = true;
             //((IExpandable)Menu["clock"]).IsExpanded = true;
-
-            Menu.Build(new Menu("Evade"));
-            Menu.Build(new Menu("Nocturne"));
 
             //Menu["clock"].SetValue(1);
             //Menu.GetMenu("modes").GetMenu("harass")["champAuto"].SetValue(false);
 
             Menu.SetOpen(true);
         }
-
-        #region Menu Setup
 
         private static void SetupMenu(out bool firstRun)
         {
@@ -187,7 +195,7 @@
             var mainMenu = JObject.Parse(str);
             var mode = JObject.Parse(Resources.Mode);
 
-            foreach (var o in mainMenu["modes"].Skip(EnumCache<Language>.Values.Count).Take(Mode.ModeCount).Cast<JProperty>().Select(prop => prop.Value).Cast<JObject>())
+            foreach (var o in mainMenu["modes"].Skip(EnumCache<Language>.Values.Count)/*.Take(6)*/.Cast<JProperty>().Select(prop => prop.Value).OfType<JObject>())
             {
                 foreach (var pair in mode)
                 {
@@ -199,6 +207,88 @@
         }
 
         #endregion
+
+        internal class Picker<TModule> : IModulePicker<TModule> where TModule : class, IModule
+        {
+            private readonly Menu root;
+
+            private readonly MenuList pickerItem;
+
+            private readonly List<TModule> modules;
+
+            public Picker(TModule @default)
+            {
+                this.modules = new List<TModule> { @default };
+
+                var name = typeof(TModule).Name.Substring(1);
+                this.root = new Menu(name) { this.pickerItem };
+                Menu.Build(this.root, JObject.Parse(Resources.Module.Replace("{module}", name)));
+
+                var menu = @default.Menu;
+                this.root.Add(menu, @default.GetTranslations());
+
+                this.pickerItem = new UnsavableList("picker") { IsVisible = false, Options = new List<string> { menu.Text } };
+                this.pickerItem.BeforeValueChange += args => this.Set(args.NewValue<int>());
+
+                this.Current = @default;
+                @default.Start();
+            }
+
+            public event Action<BeforeValueChangeEventArgs> ModuleSelected;
+
+            public TModule Current { get; private set; }
+
+            private void Set(int value)
+            {
+                var module = this.modules[value];
+
+                var args = BeforeValueChangeEventArgs.Create(this.Current, module);
+                this.ModuleSelected.SafeInvoke(args);
+
+                if (args.IsBlocked)
+                {
+                    return;
+                }
+
+                this.Current.Stop();
+                module.Start();
+
+                this.Current = module;
+            }
+
+            public void Add(TModule module)
+            {
+                var menu = module.Menu;
+
+                this.root.Add(menu, module.GetTranslations());
+                this.modules.Add(module);
+
+                var options = this.pickerItem.Options;
+                options.Add(menu.Text);
+
+                this.pickerItem.Options = options;
+                this.pickerItem.IsVisible = true;
+            }
+
+            private class UnsavableList : MenuList
+            {
+                public UnsavableList(string id) : base(id)
+                {
+
+                }
+
+                protected override JToken Token
+                {
+                    get => 0;
+                    set { }
+                }
+
+                protected internal override bool ConsumeSaveToken()
+                {
+                    return false;
+                }
+            }
+        }
 
         /*
                 #region Methods

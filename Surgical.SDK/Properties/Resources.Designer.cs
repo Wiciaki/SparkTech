@@ -73,6 +73,20 @@ namespace Surgical.SDK.Properties {
         /// <summary>
         ///   Looks up a localized string similar to {
         ///  &quot;en&quot;: {
+        ///    &quot;text&quot;: &quot;Surgical Evade&quot; 
+        ///  }
+        ///}
+        ///.
+        /// </summary>
+        internal static string Evade {
+            get {
+                return ResourceManager.GetString("Evade", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
+        ///  &quot;en&quot;: {
         ///    &quot;text&quot;: &quot;Surgical SDK&quot;,
         ///    &quot;helpText&quot;: &quot;Here you will find all the settings that impact other scripts&quot;
         ///  },
@@ -144,6 +158,29 @@ namespace Surgical.SDK.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {
+        ///  &quot;en&quot;: {
+        ///    &quot;text&quot;: &quot;{module}&quot;
+        ///  },
+        ///  &quot;zh&quot;: {
+        ///    &quot;text&quot;: &quot;{module}&quot;
+        ///  },
+        ///  &quot;picker&quot;: {
+        ///    &quot;en&quot;: {
+        ///      &quot;text&quot;: &quot;Selected {module}&quot;,
+        ///      &quot;helpText&quot;: &quot;{module} will be changed immediately&quot; 
+        ///    } 
+        ///  } 
+        ///}
+        ///.
+        /// </summary>
+        internal static string Module {
+            get {
+                return ResourceManager.GetString("Module", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
         internal static byte[] RenderEffectCompiled {
@@ -157,7 +194,6 @@ namespace Surgical.SDK.Properties {
         ///   Looks up a localized string similar to {
         ///  &quot;en&quot;: {
         ///    &quot;keySelector&quot;: &quot;Press now...&quot;,
-        ///    &quot;menuListEmpty&quot;: &quot;Less than 2 options provided&quot;,
         ///    &quot;firstTimeWelcome&quot;: &quot;Welcome to {platform}!\nEnglish language detected.\nYou can change that in the menu.&quot;,
         ///    &quot;none&quot;: &quot;None&quot;, 
         ///

@@ -1,0 +1,14 @@
+{
+  "en": {
+    "text": "{module}"
+  },
+  "zh": {
+    "text": "{module}"
+  },
+  "picker": {
+    "en": {
+      "text": "Selected {module}",
+      "helpText": "{module} will be changed immediately" 
+    } 
+  } 
+}

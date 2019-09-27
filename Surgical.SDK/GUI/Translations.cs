@@ -21,6 +21,11 @@
             return this.GetToken(str)?.Value<string>();
         }
 
+        public void Add(string id, JObject value)
+        {
+            this.translations.Add(id, value);
+        }
+
         public Translations GetObject(string id)
         {
             var o = (JObject)this.translations?[id];

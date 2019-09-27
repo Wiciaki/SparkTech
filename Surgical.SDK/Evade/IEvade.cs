@@ -1,6 +1,8 @@
 ﻿namespace Surgical.SDK.Evade
 {
-    public interface IEvade
+    using Surgical.SDK.Modules;
+
+    public interface IEvade : IModule
     {
 
     }

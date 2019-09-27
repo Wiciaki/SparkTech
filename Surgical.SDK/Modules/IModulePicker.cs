@@ -2,25 +2,25 @@
 {
     using System;
 
-    internal interface IModulePicker<TModuleBase> where TModuleBase : class, IModule
+    using Surgical.SDK.EventData;
+
+    public interface IModulePicker<TModule> where TModule : class, IModule
     {
         #region Public Events
 
-        event Action ModuleSelected;
+        event Action<BeforeValueChangeEventArgs> ModuleSelected;
 
         #endregion
 
         #region Public Properties
 
-        TModuleBase Current { get; }
-
-        string CurrentModuleName { get; }
+        TModule Current { get; }
 
         #endregion
 
         #region Public Methods and Operators
 
-        void Add<TModule>(string moduleName) where TModule : TModuleBase, new();
+        void Add(TModule module);
 
         #endregion
     }

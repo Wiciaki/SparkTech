@@ -32,8 +32,6 @@
 
         public bool AttackBarrel => this.GetSubConfig("objects","barrel");
 
-        internal static int ModeCount => Modes.Count - 1;
-
         private static readonly List<Mode> Modes = new List<Mode>();
 
         private readonly Menu menu;

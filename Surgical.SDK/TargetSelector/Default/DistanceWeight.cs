@@ -1,4 +1,4 @@
-﻿namespace Surgical.SDK.TargetSelection.Default.Weights
+﻿namespace Surgical.SDK.TargetSelector.Default
 {
     using System;
 

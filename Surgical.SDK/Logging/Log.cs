@@ -50,10 +50,12 @@
 
         private static void Write(string msg, LogLevel level)
         {
-            if (msg != null)
+            if (msg == null)
             {
-                l.Write(msg, level);
+                return;
             }
+
+            l.Write(msg, level);
         }
     }
 }

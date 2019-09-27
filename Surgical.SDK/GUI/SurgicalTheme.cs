@@ -1,4 +1,4 @@
-﻿namespace Surgical.SDK.GUI.Default
+﻿namespace Surgical.SDK.GUI
 {
     using SharpDX;
     using SharpDX.Direct3D9;
@@ -6,7 +6,7 @@
 
     using Surgical.SDK.Rendering;
 
-    public class Theme : ITheme
+    public class SurgicalTheme : ITheme
     {
         private Font font;
 
@@ -14,11 +14,11 @@
 
         public int MinItemHeight { get; } = 32;
 
-        public Theme()
+        public SurgicalTheme()
         {
-            //Render.OnLostDevice += this.Font.OnLostDevice;
-            //Render.OnResetDevice += this.Font.OnResetDevice;
-            //Render.OnDispose += this.Dispose;
+            Render.OnLostDevice += this.Font.OnLostDevice;
+            Render.OnResetDevice += this.Font.OnResetDevice;
+            Render.OnDispose += this.Dispose;
 
             var color = Color.Black;
             color.A = 130;
@@ -86,6 +86,32 @@
                 point.Y += size.Height;
             }
         }
+
+        //public override void DrawBorders(Point point, params Size2[] sizes)
+        //{
+        //    var p = new Vector2[3];
+
+        //    var size = sizes[0];
+                
+        //    p[0] = new Vector2(point.X, point.Y + size.Height);
+        //    p[1] = new Vector2(point.X, point.Y);
+        //    p[2] = new Vector2(point.X + size.Width, point.Y);
+
+        //    Vector.Draw(Color.White, 1f, p);
+
+        //    for (var i = 0; i < sizes.Length - 1; ++i)
+        //    {
+        //        point.Y += size.Height;
+
+        //        size = sizes[i + 1];
+        //    }
+
+        //    p[0] = new Vector2(point.X, point.Y + size.Height);
+        //    p[1] = new Vector2(point.X + size.Width, point.Y + size.Height);
+        //    p[2] = new Vector2(point.X + size.Width, point.Y);
+
+        //    Vector.Draw(Color.White, 1f, p);
+        //}
 
         private RawRectangle GetTextRectangle(Point point, Size2 size)
         {

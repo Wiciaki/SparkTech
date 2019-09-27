@@ -1,4 +1,4 @@
-﻿namespace Surgical.SDK.TargetSelection.Default
+﻿namespace Surgical.SDK.TargetSelector.Default
 {
     using System;
     using System.Collections.Generic;
@@ -6,16 +6,16 @@
     using Surgical.SDK.Entities;
     using Surgical.SDK.GUI.Menu;
 
-    internal abstract class Weight : IComparer<IHero>
+    public abstract class Weight : IComparer<IHero>
     {
         private MenuInt item;
 
         protected internal virtual IEnumerable<MenuItem> CreateItems()
         {
-            yield return this.item = new MenuInt(this.GetId(), this.GetDefaultWeight(), 0, 20);
+            yield return this.item = new MenuInt(this.GetId(), 0, 20, this.GetDefaultWeight());
         }
 
-        internal int GetWeight() => this.item.Value;
+        public int Importance => this.item.Value;
 
         protected virtual string GetId()
         {

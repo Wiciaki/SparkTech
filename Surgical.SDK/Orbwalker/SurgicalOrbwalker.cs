@@ -1,5 +1,40 @@
-﻿namespace Surgical.SDK.Orbwalking.Default
+﻿namespace Surgical.SDK.Orbwalker
 {
+    using System;
+
+    using Newtonsoft.Json.Linq;
+
+    using Surgical.SDK.Entities;
+    using Surgical.SDK.GUI.Menu;
+
+    public class SurgicalOrbwalker : IOrbwalker
+    {
+        public Menu Menu { get; } = new Menu("orbwalker");
+
+        public JObject GetTranslations()
+        {
+            return null;
+        }
+
+        public void Start()
+        {
+
+        }
+
+        public void Stop()
+        {
+
+        }
+
+        public float LastAutoAttackStartTime { get; }
+
+        public bool IsAttacking { get; }
+
+        public Action<BeforeAttackEventArgs> BeforeAttack { get; set; }
+
+        public Action<IAttackable> AfterAttack { get; set; }
+    }
+
     /*
     public class DefaultOrbwalker : IOrbwalker
     {
