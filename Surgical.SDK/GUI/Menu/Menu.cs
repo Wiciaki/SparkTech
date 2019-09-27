@@ -62,7 +62,12 @@
 
         public static void Build(Menu menu, JObject translations = null)
         {
-            if (RootEntries.Exists(entry => entry.Menu.Id == menu.Id))
+            Build(menu, translations, true);
+        }
+
+        internal static void Build(Menu menu, JObject translations, bool saveHandler)
+        {
+            if (Roots.Exists(root => root.Id == menu.Id))
             {
                 throw new InvalidOperationException("Menu with id \"" + menu.Id + "\" already exists as root!");
             }
@@ -74,32 +79,23 @@
 
             menu.translations = new Translations(translations);
 
-            RootEntries.Add(new RootEntry(menu));
+            Roots.Add(menu);
+
+            if (saveHandler)
+            {
+                menu.CreateSaveHandler(Folder.Menu);
+            }
+            else
+            {
+                menu.SetToken(null);
+            }
+
+            menu.UpdateTranslations();
         }
 
-        public static void Radio(MenuBool[] items)
+        internal void CreateSaveHandler(Folder folder)
         {
-            var block = false;
-
-            foreach (var item in items)
-            {
-                item.BeforeValueChange += args =>
-                {
-                    if (block)
-                    {
-                        return;
-                    }
-
-                    block = true;
-
-                    foreach (var i in items)
-                    {
-                        i.Value = i.Id == item.Id;
-                    }
-
-                    block = false;
-                };
-            }
+            SaveHandlers.Add(new SaveHandler(this, folder));
         }
 
         #endregion
@@ -242,7 +238,7 @@
             }
         }
 
-        private void UpdateLanguage()
+        private void UpdateTranslations()
         {
             this.SetTranslations(this.translations);
         }
@@ -291,7 +287,9 @@
 
         internal static bool ArrowsEnabled { get; private set; }
 
-        private static readonly List<RootEntry> RootEntries = new List<RootEntry>();
+        private static readonly List<Menu> Roots = new List<Menu>();
+
+        private static readonly List<SaveHandler> SaveHandlers = new List<SaveHandler>();
 
         public static Key ActivationButton { get; private set; }
 
@@ -324,7 +322,7 @@
 
             //cursor = Game.CursorPosition2D;
 
-            DrawGroup(RootEntries.ConvertAll(e => e.Menu), position);
+            DrawGroup(Roots, position);
         }
 
         private static void OnWndProc(WndProcEventArgs args)
@@ -348,7 +346,7 @@
 
             if (IsOpen)
             {
-                WndProcGroup(RootEntries.ConvertAll(e => e.Menu), position, args);
+                WndProcGroup(Roots, position, args);
             }
         }
 
@@ -428,7 +426,7 @@
 
             if (!open)
             {
-                RootEntries.ForEach(r => r.Save());
+                SaveHandlers.ForEach(r => r.Save());
             }
 
             VisibilityChanged.SafeInvoke(EventArgs.Empty);
@@ -460,7 +458,6 @@
         internal static void SetLanguage(int languageIndex)
         {
             SetLanguage(EnumCache<Language>.Values[languageIndex]);
-
         }
 
         internal static void SetLanguage(Language language)
@@ -476,7 +473,7 @@
 
             LanguageTag = tag;
 
-            RootEntries.ForEach(entry => entry.Menu.UpdateLanguage());
+            Roots.ForEach(root => root.UpdateTranslations());
 
             LanguageChanged.SafeInvoke(EventArgs.Empty);
         }
@@ -506,7 +503,7 @@
 
         public static void UpdateAllSizes()
         {
-            RootEntries.ForEach(entry => entry.Menu.UpdateSizes());
+            Roots.ForEach(root => root.UpdateSizes());
         }
 
         private void UpdateSizes()
@@ -535,11 +532,11 @@
 
         #endregion
 
-        #region RootEntry
+        #region SaveHandler
 
-        private class RootEntry
+        private class SaveHandler
         {
-            public readonly Menu Menu;
+            private readonly Menu menu;
 
             private readonly string targetPath;
 
@@ -547,11 +544,11 @@
 
             private JToken lastSaved;
 
-            public RootEntry(Menu menu)
+            public SaveHandler(Menu menu, Folder folder)
             {
-                this.Menu = menu;
+                this.menu = menu;
 
-                this.targetPath = Folder.Menu.GetFile(menu.Id + ".json");
+                this.targetPath = folder.GetFile(menu.Id + ".json");
 
                 JObject o = null;
 
@@ -566,28 +563,26 @@
                     }
                     catch (Exception ex)
                     {
-                        Log.Error($"Failed to load JSON file for \"{this.Menu.Id}\"");
+                        Log.Error($"Failed to load JSON file for \"{this.menu.Id}\"");
                         Log.Error(ex);
                     }
                 }
 
-                this.Menu.SetToken(o);
-
-                this.Menu.UpdateLanguage();
+                this.menu.SetToken(o);
             }
 
             public async void Save()
             {
                 await this.semaphore.WaitAsync();
 
-                if (!this.Menu.ConsumeSaveToken())
+                if (!this.menu.ConsumeSaveToken())
                 {
                     return;
                 }
 
-                Log.Info($"Saving the updated values for \"{this.Menu.Id}\"...");
+                Log.Info($"Saving the updated values for \"{this.menu.Id}\"...");
 
-                var token = this.Menu.GetToken();
+                var token = this.menu.GetToken();
 
                 if (token == null)
                 {
@@ -613,7 +608,7 @@
                     await token.WriteToAsync(testWriter);
                 }
 
-                Log.Info($"Saving completed for \"{this.Menu.Id}\"!");
+                Log.Info($"Saving completed for \"{this.menu.Id}\"!");
 
                 this.semaphore.Release();
             }

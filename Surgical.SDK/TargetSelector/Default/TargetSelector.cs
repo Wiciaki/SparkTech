@@ -8,6 +8,7 @@
 
     using Surgical.SDK.Entities;
     using Surgical.SDK.GUI.Menu;
+    using Surgical.SDK.Logging;
 
     public class TargetSelector : ITargetSelector
     {
@@ -24,10 +25,7 @@
             EqualityComparer = new EntityComparer<IHero>();
             Weights = new List<Weight>();
 
-            Menu = new Menu("TargetSelector")
-                   {
-                       new MenuText("Notice")
-                   };
+            Menu = new Menu("TargetSelector");
 
             // TODO: other weights
             //Register<DistanceWeight>();
@@ -35,7 +33,7 @@
             //void Register<TWeight>() where TWeight : Weight, new()
             //{
             //    var weight = new TWeight();
-                
+
             //    Weights.Add(weight);
 
             //    foreach (var component in weight.CreateItems())

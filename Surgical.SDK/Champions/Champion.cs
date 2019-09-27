@@ -14,12 +14,7 @@
         {
             var champName = ObjectManager.Player.CharName;
 
-            this.Menu = new Menu(champName.ToLower())
-                        {
-
-                        };
-
-            var a = this.GetTranslations();
+            this.Menu = new Menu(champName.ToLower()) { };
         }
 
         public virtual float GetHealthIndicatorDamage(IHero hero)

@@ -208,45 +208,53 @@
 
         #endregion
 
-        internal class Picker<TModule> : IModulePicker<TModule> where TModule : class, IModule
+        internal class Picker<T> : IModulePicker<T> where T : class, IModule
         {
             private readonly Menu root;
 
-            private readonly MenuList pickerItem;
+            private readonly MenuList item;
 
-            private readonly List<TModule> modules;
+            private readonly List<T> modules;
 
-            public Picker(TModule @default)
+            private readonly Folder folder;
+
+            public Picker(T module)
             {
-                this.modules = new List<TModule> { @default };
+                this.modules = new List<T> { module };
 
-                var name = typeof(TModule).Name.Substring(1);
-                this.root = new Menu(name) { this.pickerItem };
-                Menu.Build(this.root, JObject.Parse(Resources.Module.Replace("{module}", name)));
+                var menu = module.Menu;
+                var name = typeof(T).Name.Substring(1);
+                this.folder = Folder.Menu.GetFolder(name);
 
-                var menu = @default.Menu;
-                this.root.Add(menu, @default.GetTranslations());
+                this.item = new MenuList("picker") { IsVisible = false, Options = { menu.Text } };
+                this.item.BeforeValueChange += this.BeforeValueChange;
 
-                this.pickerItem = new UnsavableList("picker") { IsVisible = false, Options = new List<string> { menu.Text } };
-                this.pickerItem.BeforeValueChange += args => this.Set(args.NewValue<int>());
+                this.root = new Menu(name) { this.item };
+                Menu.Build(this.root, JObject.Parse(Resources.Module.Replace("{module}", name)), false);
 
-                this.Current = @default;
-                @default.Start();
+                this.root.Add(menu, module.GetTranslations());
+                menu.CreateSaveHandler(this.folder);
+
+                Menu.LanguageChanged += this.LanguageChanged;
+
+                this.Current = module;
+                module.Start();
             }
 
             public event Action<BeforeValueChangeEventArgs> ModuleSelected;
 
-            public TModule Current { get; private set; }
+            public T Current { get; private set; }
 
-            private void Set(int value)
+            private void BeforeValueChange(BeforeValueChangeEventArgs args)
             {
-                var module = this.modules[value];
+                var module = this.modules[args.NewValue<int>()];
 
-                var args = BeforeValueChangeEventArgs.Create(this.Current, module);
-                this.ModuleSelected.SafeInvoke(args);
+                var detector = BeforeValueChangeEventArgs.Create(this.Current.Menu.Id, module.Menu.Id);
+                this.ModuleSelected.SafeInvoke(detector);
 
-                if (args.IsBlocked)
+                if (detector.IsBlocked)
                 {
+                    args.Block();
                     return;
                 }
 
@@ -256,37 +264,30 @@
                 this.Current = module;
             }
 
-            public void Add(TModule module)
+            void IModulePicker<T>.Add(T module)
             {
                 var menu = module.Menu;
 
                 this.root.Add(menu, module.GetTranslations());
+                menu.CreateSaveHandler(this.folder);
+
                 this.modules.Add(module);
 
-                var options = this.pickerItem.Options;
+                var options = this.item.Options;
                 options.Add(menu.Text);
 
-                this.pickerItem.Options = options;
-                this.pickerItem.IsVisible = true;
+                this.item.Options = options;
+                this.item.IsVisible = true;
             }
 
-            private class UnsavableList : MenuList
+            private void AddItem(Menu menu)
             {
-                public UnsavableList(string id) : base(id)
-                {
 
-                }
+            }
 
-                protected override JToken Token
-                {
-                    get => 0;
-                    set { }
-                }
-
-                protected internal override bool ConsumeSaveToken()
-                {
-                    return false;
-                }
+            private void LanguageChanged(EventArgs args)
+            {
+                this.item.Options = this.modules.ConvertAll(m => m.Menu.Text);
             }
         }
 

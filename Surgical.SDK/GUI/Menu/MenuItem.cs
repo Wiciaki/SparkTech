@@ -11,7 +11,7 @@
 
     public abstract class MenuItem
     {
-        public readonly string Id;
+        public string Id { get; }
 
         public event Action<BeforeValueChangeEventArgs> BeforeValueChange;
 
