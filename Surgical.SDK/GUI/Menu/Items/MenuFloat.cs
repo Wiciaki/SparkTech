@@ -95,7 +95,7 @@
 
             var s = base.GetSize();
 
-            s.Height += Theme.MinItemHeight;
+            s.Height += Theme.MinItemHeight-4;
             s.Width += this.size.Width;
 
             return s;
@@ -104,7 +104,7 @@
         protected internal override void OnEndScene(Point point, int width)
         {
             var barWidth = width;
-            var barHeight = Theme.MinItemHeight;
+            var barHeight = Theme.MinItemHeight - 4;
             var displayNum = this.Value;
             var range = this.Max - this.Min;
 

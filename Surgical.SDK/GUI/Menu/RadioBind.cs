@@ -33,7 +33,7 @@
 
             this.block = true;
 
-            foreach (var i in this.items.OfType<MenuBool>())
+            foreach (var i in this.items.Cast<MenuBool>())
             {
                 i.Value = i.Id == item.Id;
             }

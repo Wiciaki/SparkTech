@@ -148,7 +148,7 @@
             var resolution = Render.Resolution();
 
             point.X = (resolution.Width - this.helpTextSize.Width) / 2;
-            point.Y = (resolution.Height - this.helpTextSize.Height) / 2;
+            point.Y = this.textSize.Height;//(resolution.Height - this.helpTextSize.Height) / 2;
 
             Theme.DrawTextBox(point, this.helpTextSize, this.HelpText, true);
         }

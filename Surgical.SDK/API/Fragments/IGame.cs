@@ -11,21 +11,19 @@
     {
         Vector3 CursorPosition { get; }
 
-        Vector2 CursorPosition2D { get; }
-
         void SendChat(string text);
 
         void ShowChat(string text);
 
         void SendEmote(Emote emote);
 
-        void ShowPing(PingCategory pingCategory, IGameObject target, bool playSound);
+        void ShowPing(PingCategory category, IGameObject target, bool playSound);
 
-        void ShowPing(PingCategory pingCategory, Vector2 target, bool playSound);
+        void ShowPing(PingCategory category, Vector2 target, bool playSound);
 
-        void SendPing(PingCategory pingCategory, IGameObject target);
+        void SendPing(PingCategory category, IGameObject target);
 
-        void SendPing(PingCategory pingCategory, Vector2 target);
+        void SendPing(PingCategory category, Vector2 target);
 
         bool IsShopOpen();
 
@@ -35,7 +33,7 @@
 
         Vector2 WorldToMinimap(Vector3 pos);
 
-        Vector3 ScreenToWorld(Vector3 pos);
+        Vector3 ScreenToWorld(Vector2 pos);
 
         GameMode Mode { get; }
 

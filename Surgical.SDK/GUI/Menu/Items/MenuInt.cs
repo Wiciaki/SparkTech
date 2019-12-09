@@ -1,5 +1,7 @@
 ﻿namespace Surgical.SDK.GUI.Menu
 {
+    using System;
+
     using Newtonsoft.Json.Linq;
 
     public class MenuInt : MenuFloat, IMenuValue<int>
@@ -32,7 +34,7 @@
 
         protected override string GetMaxNumStr()
         {
-            return base.GetMaxNumStr().Replace(".00", string.Empty);
+            return base.GetMaxNumStr().Replace(".00", string.Empty, StringComparison.InvariantCulture);
         }
 
         protected override string GetPrintableStr(float num)

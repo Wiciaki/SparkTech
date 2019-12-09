@@ -1,17 +1,20 @@
 ﻿namespace Surgical.SDK.API
 {
     using System;
-    using System.Runtime.CompilerServices;
+    using System.Collections.Generic;
 
     using Surgical.SDK.API.Fragments;
     using Surgical.SDK.GUI;
     using Surgical.SDK.Licensing;
     using Surgical.SDK.Logging;
+    using Surgical.SDK.Modules;
     using Surgical.SDK.Security;
 
     public sealed class Platform
     {
         public static string PlatformName { get; private set; }
+
+        internal static List<IModule> Modules { get; private set; }
 
         public static Platform Declare(string platformName)
         {
@@ -32,6 +35,8 @@
 
         }
 
+        public AuthResult AuthResult { get; set; }
+
         public ILogger Logger { get; set; }
 
         public ITheme Theme { get; set; }
@@ -50,20 +55,26 @@
 
         public ISandbox Sandbox { get; set; }
 
-        public string ConfigPath { get; set; }
+        public string FolderPath { get; set; }
 
-        public async void Boot()
+        public void Boot()
         {
-            if (this.ConfigPath == null)
+            if (this.FolderPath == null)
             {
-                var folder = new Folder(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData));
+                var appdata = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+                var folder = new Folder(appdata);
 
-                this.ConfigPath = folder.GetFolder("Surgical.SDK");
+                this.FolderPath = folder.GetFolder("Surgical.SDK");
             }
 
-            Folder.Initialize(this.ConfigPath);
+            Folder.Initialize(this.FolderPath);
 
-            Log.Initialize(this.Logger ?? new FileLogger());
+            if (this.Logger == null)
+            {
+                this.Logger = new FileLogger();
+            }
+
+            Log.Initialize(this.Logger);
 
             if (this.Render != null)
             {
@@ -94,19 +105,16 @@
             {
                 Packets.Packet.Initialize(this.Packet);
             }
+            
+            Modules = this.Sandbox?.LoadModules() ?? new List<IModule>();
 
-            GUI.Theme.SetTheme(this.Theme ?? new SurgicalTheme());
+            if (this.Theme == null)
+            {
+                this.Theme = new SurgicalTheme();
+            }
 
-            RuntimeHelpers.RunClassConstructor(typeof(SdkSetup).TypeHandle);
-
-            var auth = new Netlicensing(Machine.UserId, "d1213e7b-0817-4544-aa37-01817170c494");
-            //var authResult = await auth.GetAuth("Surgical.SDK");
-
-            //Log.Info(authResult);
-
-            // load scripts
-
-            Security.Sandbox.Initialize(this.Sandbox);
+            GUI.Theme.SetTheme(this.Theme);
+            SdkSetup.SetupAuth(this.AuthResult);
         }
     }
 }

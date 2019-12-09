@@ -1,6 +1,7 @@
 ﻿namespace Surgical.SDK.Security
 {
     using System;
+    using System.Globalization;
     using System.Linq;
     using System.Management;
     using System.Security.Cryptography;
@@ -67,24 +68,26 @@
 
         private static string GetWmi(string value, string from)
         {
-            var query = "select " + value + " from Win32_" + from;
+            var query = $"select {value} from Win32_{from}";
 
             using var mos = new ManagementObjectSearcher(query);
-            using var result = mos.Get();
+            using var moc = mos.Get();
 
-            return result.Cast<ManagementBaseObject>().Select(mbo => mbo[value]?.ToString()).SingleOrDefault(str => str != null);
+            var results = moc.Cast<ManagementBaseObject>().Select(mbo => mbo[value]?.ToString());
+
+            return results.SingleOrDefault(str => !string.IsNullOrEmpty(str));
         }
 
         private static string RandomizeStr(string str, int length)
         {
             byte[] bytes;
 
-            using (HashAlgorithm sha = new SHA512CryptoServiceProvider())
+            using (HashAlgorithm algo = new SHA512CryptoServiceProvider())
             {
-                bytes = sha.ComputeHash(Encoding.UTF8.GetBytes(str));
+                bytes = algo.ComputeHash(Encoding.UTF8.GetBytes(str));
             }
 
-            return Convert.ToBase64String(bytes).Substring(0, length).Replace('/', '0').Replace('+', '1').ToUpper();
+            return Convert.ToBase64String(bytes).Substring(0, length).Replace('/', '0').Replace('+', '1').ToUpper(CultureInfo.InvariantCulture);
         }
     }
 }

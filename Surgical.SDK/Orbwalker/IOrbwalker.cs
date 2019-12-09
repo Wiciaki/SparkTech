@@ -2,7 +2,7 @@
 {
     using System;
 
-    using Surgical.SDK.Entities;
+    using Surgical.SDK.EventData;
     using Surgical.SDK.Modules;
 
     public interface IOrbwalker : IModule
@@ -15,6 +15,6 @@
 
         Action<BeforeAttackEventArgs> BeforeAttack { get; set; }
 
-        Action<IAttackable> AfterAttack { get; set; }
+        Action<AfterAttackEventArgs> AfterAttack { get; set; }
     }
 }

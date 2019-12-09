@@ -1,7 +1,5 @@
 ﻿namespace Surgical.SDK.API
 {
-    using System;
-    using System.Collections.Generic;
     using System.Globalization;
     using System.IO;
     using System.Linq;
@@ -10,13 +8,15 @@
 
     using SharpDX.Direct3D9;
 
+    using Surgical.SDK.Champion;
     using Surgical.SDK.Evade;
-    using Surgical.SDK.EventData;
     using Surgical.SDK.GUI;
     using Surgical.SDK.GUI.Menu;
     using Surgical.SDK.GUI.Notifications;
+    using Surgical.SDK.HealthPrediction;
+    using Surgical.SDK.Licensing;
     using Surgical.SDK.Logging;
-    using Surgical.SDK.Modules;
+    using Surgical.SDK.MovementPrediction;
     using Surgical.SDK.Orbwalker;
     using Surgical.SDK.Properties;
     using Surgical.SDK.Rendering;
@@ -27,17 +27,18 @@
     {
         public static readonly bool FirstRun;
 
+        public static readonly IAuth SurgicalAuth;
+
         private static readonly Menu Menu;
 
         private static readonly Translations Strings;
-
-        #region Menu Setup
 
         static SdkSetup()
         {
             var texture = Texture.FromMemory(Render.Device, Resources.Banner, 295, 100, 0, Usage.None, Format.Unknown, Pool.Default, Filter.Default, Filter.Default, 0);
 
-            Strings = new Translations(JObject.Parse(Resources.Strings));
+            Strings = new Translations();
+            Strings.Set(JObject.Parse(Resources.Strings));
 
             Menu = new Menu("sdk")
             {
@@ -58,7 +59,12 @@
                 {
                     new MenuBool("enable", true)
                 },
-                new Menu("license"),
+                new Menu("license")
+                {
+                    new MenuText("lifetime"),
+                    new MenuText("valid"),
+                    new MenuText("invalid")
+                },
                 new Menu("about")
                 {
                     new MenuText("version"),
@@ -69,18 +75,26 @@
             };
 
             Mode.Initialize(Menu.GetMenu("modes"));
-
             Menu.Build(Menu, GetMenuTranslations());
             
             SetupMenu(out FirstRun);
 
-            typeof(TargetSelector).Trigger();
-            typeof(Orbwalker).Trigger();
-            typeof(Evade).Trigger();
+            typeof(HealthPredictionService).Trigger();
+            typeof(MovementPredictionService).Trigger();
+            typeof(TargetSelectorService).Trigger();
+            typeof(OrbwalkerService).Trigger();
+            typeof(EvadeService).Trigger();
+            typeof(ChampionService).Trigger();
+
+            SurgicalAuth = new Netlicensing(Machine.UserId, "d1213e7b-0817-4544-aa37-01817170c494");
+            //var AuthTask = SurgicalAuth.GetAuth("Surgical.SDK").ContinueWith(HandleAuth, TaskScheduler.Current);
 
             Log.Info("Surgical.SDK initialized!");
+            
+            // test code
 
-            // test
+            //Menu.IsExpanded = true;
+            Menu.SetOpen(true);
 
             //Menu.IsExpanded = true;
             //Menu.GetMenu("about").IsExpanded = true;
@@ -91,7 +105,20 @@
             //Menu["clock"].SetValue(1);
             //Menu.GetMenu("modes").GetMenu("harass")["champAuto"].SetValue(false);
 
-            Menu.SetOpen(true);
+            //var items = Menu.OfType<IExpandable>().ToList();
+            //var i = 0;
+
+            //var timer = new System.Timers.Timer(1000d) { Enabled = true };
+            //timer.Elapsed += delegate
+            //{
+            //    items.ForEach(item => item.IsExpanded = false);
+            //    items[i++ % items.Count].IsExpanded = true;
+            //};
+        }
+
+        internal static void SetupAuth(AuthResult result)
+        {
+
         }
 
         private static void SetupMenu(out bool firstRun)
@@ -123,16 +150,16 @@
 
             string welcomeMsg;
 
-            if (i == -1)
-            {
-                welcomeMsg = GetTranslatedString("languageUnknown");
-                welcomeMsg = welcomeMsg.Replace("{language}", culture.EnglishName);
-            }
-            else
+            if (i >= 0)
             {
                 Menu["language"].SetValue(i);
 
                 welcomeMsg = GetTranslatedString("firstTimeWelcome");
+            }
+            else
+            {
+                welcomeMsg = GetTranslatedString("languageUnknown");
+                welcomeMsg = welcomeMsg.Replace("{language}", culture.EnglishName);
             }
 
             welcomeMsg = welcomeMsg.Replace("{platform}", Platform.PlatformName);
@@ -147,11 +174,11 @@
 
         private static void HandleClock()
         {
-            var clockItem = Menu["clock"];
+            var item = Menu["clock"];
 
-            clockItem.BeforeValueChange += args => Clock.SetMode(args.NewValue<int>());
+            item.BeforeValueChange += args => Clock.SetMode(args.NewValue<int>());
 
-            Clock.SetMode(clockItem.GetValue<int>());
+            Clock.SetMode(item.GetValue<int>());
         }
 
         private static void HandlePosition()
@@ -205,347 +232,5 @@
 
             return mainMenu;
         }
-
-        #endregion
-
-        internal class Picker<T> : IModulePicker<T> where T : class, IModule
-        {
-            private readonly Menu root;
-
-            private readonly MenuList item;
-
-            private readonly List<T> modules;
-
-            private readonly Folder folder;
-
-            public Picker(T module)
-            {
-                this.modules = new List<T> { module };
-
-                var menu = module.Menu;
-                var name = typeof(T).Name.Substring(1);
-                this.folder = Folder.Menu.GetFolder(name);
-
-                this.item = new MenuList("picker") { IsVisible = false, Options = { menu.Text } };
-                this.item.BeforeValueChange += this.BeforeValueChange;
-
-                this.root = new Menu(name) { this.item };
-                Menu.Build(this.root, JObject.Parse(Resources.Module.Replace("{module}", name)), false);
-
-                this.root.Add(menu, module.GetTranslations());
-                menu.CreateSaveHandler(this.folder);
-
-                Menu.LanguageChanged += this.LanguageChanged;
-
-                this.Current = module;
-                module.Start();
-            }
-
-            public event Action<BeforeValueChangeEventArgs> ModuleSelected;
-
-            public T Current { get; private set; }
-
-            private void BeforeValueChange(BeforeValueChangeEventArgs args)
-            {
-                var module = this.modules[args.NewValue<int>()];
-
-                var detector = BeforeValueChangeEventArgs.Create(this.Current.Menu.Id, module.Menu.Id);
-                this.ModuleSelected.SafeInvoke(detector);
-
-                if (detector.IsBlocked)
-                {
-                    args.Block();
-                    return;
-                }
-
-                this.Current.Stop();
-                module.Start();
-
-                this.Current = module;
-            }
-
-            void IModulePicker<T>.Add(T module)
-            {
-                var menu = module.Menu;
-
-                this.root.Add(menu, module.GetTranslations());
-                menu.CreateSaveHandler(this.folder);
-
-                this.modules.Add(module);
-
-                var options = this.item.Options;
-                options.Add(menu.Text);
-
-                this.item.Options = options;
-                this.item.IsVisible = true;
-            }
-
-            private void AddItem(Menu menu)
-            {
-
-            }
-
-            private void LanguageChanged(EventArgs args)
-            {
-                this.item.Options = this.modules.ConvertAll(m => m.Menu.Text);
-            }
-        }
-
-        /*
-                #region Methods
-        
-                internal static IModulePicker<T> CreatePicker<T, TK>() where T : class, IModule where TK : T, new()
-                {
-                    var picker = new MenuItemPicker<T>(ModuleSelectionMenu.Add(new ModuleList(GetDisplayableTypeName<T>())), new TK());
-        
-                    picker.Add<TK>(DefaultItemName);
-        
-                    return picker;
-                }
-        
-                internal static async Task SaveToFileAsync(string targetPath, JToken token)
-                {
-                    await using var fileStream = new FileStream(targetPath, File.Exists(targetPath) ? FileMode.Truncate : FileMode.Create, FileAccess.Write, FileShare.None);
-                    await using var streamWriter = new StreamWriter(fileStream);
-                    using var testWriter = new JsonTextWriter(streamWriter) { Formatting = Formatting.Indented };
-        
-                    await token.WriteToAsync(testWriter);
-                }
-        
-                private static string GetDisplayableTypeName<T>()
-                {
-                    var name = typeof(T).Name;
-        
-                    return Regex.IsMatch(name, "^I[A-Z]") ? name[1..] : name;
-                }
-        
-                #endregion
-        
-                private sealed class ModuleList : MenuList
-                {
-                    public ModuleList(string id) : base(id, new List<string> { DefaultItemName })
-                    {
-        
-                    }
-        
-                    protected internal override bool ShouldSave() => false;
-        
-                    protected override JToken Token
-                    {
-                        get => 0;
-                        set { }
-                    }
-                }
-        
-                private sealed class ModulePicker<TModuleBase> : IModulePicker<TModuleBase> where TModuleBase : class, IModule
-                {
-                    #region Fields
-        
-                    private readonly string lastSelected, targetPath;
-        
-                    private readonly ModuleList item;
-        
-                    private readonly Dictionary<string, Type> modules;
-        
-                    private bool userOverride;
-        
-                    #endregion
-        
-                    #region Constructors and Destructors
-        
-                    public MenuItemPicker(ModuleList item, TModuleBase @default)
-                    {
-                        this.modules = new Dictionary<string, Type> { { DefaultItemName, typeof(TModuleBase) } };
-        
-                        this.targetPath = Path.Combine(ModulesDirectory, GetDisplayableTypeName<TModuleBase>());
-        
-                        if (File.Exists(this.targetPath))
-                        {
-                            this.lastSelected = File.ReadAllText(this.targetPath);
-                        }
-        
-                        this.Current = @default;
-                        this.CurrentModuleName = DefaultItemName;
-                        ModulesMenu.Add(@default.Menu);
-        
-                        item.PropertyChanged += (sender, args) =>
-                        {
-                            if (args.PropertyName != "Selection")
-                            {
-                                return;
-                            }
-        
-                            this.userOverride = true;
-                            this.Set(item.GetValue<string>());
-                        };
-        
-                        this.item = item;
-        
-                        Menu.VisibilityStateChanged += delegate
-                        {
-                            if (!Menu.IsOpen && this.Current.Menu != null)
-                            {
-                                this.Save(this.Current.Menu);
-                            }
-                        };
-                    }
-        
-                    #endregion
-        
-                    #region Public Events
-        
-                    public event Action ModuleSelected;
-        
-                    #endregion
-        
-                    #region Public Properties
-        
-                    public TModuleBase Current { get; private set; }
-        
-                    public string CurrentModuleName { get; private set; }
-        
-                    #endregion
-        
-                    #region Explicit Interface Methods
-        
-                    public void Add<TModule>(string moduleName) where TModule : TModuleBase, new()
-                    {
-                        if (string.IsNullOrWhiteSpace(moduleName))
-                        {
-                            throw new ArgumentException("The supplied module name was null or white space");
-                        }
-        
-                        if (this.modules.ContainsKey(moduleName))
-                        {
-                            throw new ArgumentException(
-                                $"The module name \"{moduleName}\" was already present in the \"{typeof(TModuleBase).Name}\" picker.");
-                        }
-        
-                        this.modules.Add(moduleName, typeof(TModule));
-                        this.item.List.Add(moduleName);
-        
-                        if (!this.userOverride && moduleName == this.lastSelected)
-                        {
-                            this.Set(moduleName);
-                        }
-                    }
-        
-                    #endregion
-        
-                    #region Methods
-        
-                    private void Set(string moduleName)
-                    {
-                        var moduleType = this.modules[moduleName];
-        
-                        object instance;
-        
-                        try
-                        {
-                            instance = Activator.CreateInstance(moduleType);
-                        }
-                        catch (Exception ex)
-                        {
-                            Log.Error(
-                                $"Couldn't create an instance of the menu selected module \"{moduleType.FullName}\". "
-                                + "This is the script dev's fault. Please contact him about this error.");
-        
-                            ex.Log();
-        
-                            return;
-                        }
-        
-                        var menu = this.Current.Menu;
-        
-                        if (menu != null)
-                        {
-                            this.Save(menu);
-        
-                            ModulesMenu.Remove(menu);
-                        }
-        
-                        this.Current.Release();
-                        this.Current = (TModuleBase)instance;
-                        this.CurrentModuleName = moduleName;
-        
-                        this.item.SetValue(moduleName);
-        
-                        menu = this.Current.Menu;
-        
-                        if (menu != null)
-                        {
-                            var target = ModulesDirectory.GetFile(this.GetUniqueInstanceName() + ".json");
-        
-                            if (File.Exists(target))
-                            {
-                                try
-                                {
-                                    menu.SetToken(JObject.Parse(File.ReadAllText(target)));
-                                }
-                                catch (Exception ex)
-                                {
-                                    Log.Error($"Couldn't parse the JSON config for ModuleMenu \"{menu.DisplayName}\"!");
-                                    ex.Log();
-                                }
-                            }
-        
-                            ModulesMenu.Add(menu);
-                        }
-        
-                        if (moduleName == DefaultItemName)
-                        {
-                            var info = new FileInfo(this.targetPath);
-        
-                            if (info.Exists)
-                            {
-                                info.Delete();
-                            }
-                        }
-                        else
-                        {
-                            File.WriteAllText(this.targetPath, moduleName);
-                        }
-        
-                        this.ModuleSelected.SafeInvoke(nameof(this.ModuleSelected));
-                    }
-        
-                    private async void Save(ModuleMenu menu)
-                    {
-                        if (!menu.ModuleValueChanged())
-                        {
-                            return;
-                        }
-        
-                        var name = this.GetUniqueInstanceName();
-        
-                        Log.Info("Saving the updated config for " + name + "...");
-        
-                        var target = ModulesDirectory.GetFile(name + ".json");
-                        var token = menu.GetModuleToken();
-        
-                        if (token == null)
-                        {
-                            if (File.Exists(target))
-                            {
-                                File.Delete(target);
-                            }
-        
-                            Log.Info("Module data was at the default values.");
-                        }
-                        else
-                        {
-                            await SaveToFileAsync(target, token);
-        
-                            Log.Info("Saved the module data successfully.");
-                        }
-                    }
-        
-                    private string GetUniqueInstanceName()
-                    {
-                        return GetDisplayableTypeName<TModuleBase>() + " - " + this.CurrentModuleName;
-                    }
-        
-                    #endregion
-                }*/
     }
 }

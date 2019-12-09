@@ -4,7 +4,7 @@
 
     using Surgical.SDK.Entities;
 
-    public class PingEventArgs : BlockableEventArgs, ISourcedEventArgs<IGameObject>
+    public class PingEventArgs : BlockableEventArgs, IEventArgsSource<IGameObject>, IEventArgsTarget<IGameObject>
     {
         public IGameObject Source { get; }
 

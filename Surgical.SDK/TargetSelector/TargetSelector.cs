@@ -1,48 +1,73 @@
-﻿//  -------------------------------------------------------------------
-//
-//  Last updated: 21/08/2017
-//  Created: 29/07/2017
-//
-//  Copyright (c) Entropy, 2017 - 2017
-//
-//  TargetSelector.cs is a part of SparkTech
-//
-//  SparkTech is free software: you can redistribute it and/or modify
-//  it under the terms of the GNU General Public License as published by
-//  the Free Software Foundation, either version 3 of the License, or
-//  (at your option) any later version.
-//  SparkTech is distributed in the hope that it will be useful,
-//  but WITHOUT ANY WARRANTY; without even the implied warranty of
-//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-//  GNU General Public License for more details.
-//  You should have received a copy of the GNU General Public License
-//  along with SparkTech. If not, see <http://www.gnu.org/licenses/>.
-//
-//  -------------------------------------------------------------------
-
-namespace Surgical.SDK.TargetSelector
+﻿namespace Surgical.SDK.TargetSelector
 {
+    using System;
     using System.Collections.Generic;
+    using System.Linq;
 
-    using Surgical.SDK.API;
+    using Newtonsoft.Json.Linq;
+
     using Surgical.SDK.Entities;
+    using Surgical.SDK.GUI.Menu;
     using Surgical.SDK.Modules;
+    using Surgical.SDK.Properties;
 
-    public static class TargetSelector
+    public class TargetSelector : ITargetSelector
     {
-        #region Static Fields
+        public Menu Menu { get; }
 
-        private static readonly IModulePicker<ITargetSelector> Picker = new SdkSetup.Picker<ITargetSelector>(new Default.TargetSelector());
+        private readonly List<Weight> weights;
 
-        #endregion
-
-        #region Public Methods and Operators
-
-        public static IHero Select(IEnumerable<IHero> heroes)
+        public TargetSelector()
         {
-            return Picker.Current.Select(heroes);
+            this.Menu = new Menu("TargetSelector");
+
+            this.weights = Weight.GetWeights(this.Menu);
         }
 
-        #endregion
+        IHero ITargetSelector.GetTarget(IEnumerable<IHero> targets)
+        {
+            // experimental, lets see how this performs
+            var enemies = targets.Where(hero => hero.IsEnemy()).ToArray();
+
+            switch (enemies.Length)
+            {
+                case 0:
+                    return null;
+                case 1:
+                    return enemies[0];
+            }
+
+            var dictionary = enemies.ToDictionary(e => e, e => 0, new EntityComparer<IHero>());
+            var query = from w in this.weights let i = w.Importance where i > 0 select (w, i);
+
+            foreach (var (weight, importance) in query)
+            {
+                Array.Sort(enemies, weight);
+
+                for (var i = dictionary.Count; i >= 0; --i)
+                {
+                    dictionary[enemies[i]] += i * importance;
+                }
+            }
+
+            var result = dictionary.OrderByDescending(pair => pair.Value).First();
+
+            return result.Key;
+        }
+
+        public JObject GetTranslations()
+        {
+            return JObject.Parse(Resources.TargetSelector);
+        }
+
+        void IModule.Start()
+        {
+
+        }
+
+        void IModule.Pause()
+        {
+
+        }
     }
 }

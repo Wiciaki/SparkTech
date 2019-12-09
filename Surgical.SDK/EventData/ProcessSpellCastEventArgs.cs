@@ -6,7 +6,7 @@
 
     using Surgical.SDK.Entities;
 
-    public class ProcessCastEventArgs : EventArgs, ISourcedEventArgs<IUnit>
+    public class ProcessCastEventArgs : EventArgs, IEventArgsSource<IUnit>, IEventArgsTarget<IGameObject>
     {
         public IUnit Source { get; }
 

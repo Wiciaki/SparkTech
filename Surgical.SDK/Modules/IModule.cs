@@ -12,6 +12,6 @@
 
         void Start();
 
-        void Stop();
+        void Pause();
     }
 }

@@ -1,42 +1,33 @@
 ﻿namespace Surgical.SDK.EventData
 {
-    public abstract class BeforeValueChangeEventArgs : BlockableEventArgs
+    public class BeforeValueChangeEventArgs : BlockableEventArgs
     {
-        private BeforeValueChange<T> Cast<T>()
+        private readonly object oldValue, newValue;
+
+        private BeforeValueChangeEventArgs(object oldValue, object newValue)
         {
-            return (BeforeValueChange<T>)this;
+            this.oldValue = oldValue;
+            this.newValue = newValue;
         }
 
         public bool ValueIs<T>()
         {
-            return this is BeforeValueChange<T>;
+            return this.oldValue is T && this.newValue is T;
         }
 
         public T OldValue<T>()
         {
-            return this.Cast<T>().OldT;
+            return (T)this.oldValue;
         }
 
         public T NewValue<T>()
         {
-            return this.Cast<T>().NewT;
+            return (T)this.newValue;
         }
 
         public static BeforeValueChangeEventArgs Create<T>(T oldValue, T newValue)
         {
-            return new BeforeValueChange<T>(oldValue, newValue);
-        }
-
-        private class BeforeValueChange<T> : BeforeValueChangeEventArgs
-        {
-            public readonly T OldT, NewT;
-
-            public BeforeValueChange(T oldValue, T newValue)
-            {
-                this.OldT = oldValue;
-
-                this.NewT = newValue;
-            }
+            return new BeforeValueChangeEventArgs(oldValue, newValue);
         }
     }
 }

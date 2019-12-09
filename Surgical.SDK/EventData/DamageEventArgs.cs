@@ -4,7 +4,7 @@
 
     using Surgical.SDK.Entities;
 
-    public class DamageEventArgs : EventArgs, ISourcedEventArgs<IAttackable>
+    public class DamageEventArgs : EventArgs, IEventArgsSource<IAttackable>, IEventArgsTarget<IAttackable>
     {
         public IAttackable Source { get; }
 

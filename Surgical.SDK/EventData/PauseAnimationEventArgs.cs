@@ -4,7 +4,7 @@
 
     using Surgical.SDK.Entities;
 
-    public class PauseAnimationEventArgs : EventArgs, ISourcedEventArgs<IUnit>
+    public class PauseAnimationEventArgs : EventArgs, IEventArgsSource<IUnit>
     {
         public IUnit Source { get; }
 

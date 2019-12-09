@@ -4,7 +4,7 @@
 
     using Surgical.SDK.Entities;
 
-    public class PlayAnimationEventArgs : EventArgs, ISourcedEventArgs<IUnit>
+    public class PlayAnimationEventArgs : EventArgs, IEventArgsSource<IUnit>
     {
         public IUnit Source { get; }
 

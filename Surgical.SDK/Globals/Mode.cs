@@ -8,7 +8,7 @@
 
     public class Mode
     {
-        public static Mode CurrentMode => Modes.Find(mode => mode.IsActive);
+        public static Mode Current => Modes.Find(mode => mode.IsActive);
 
         public virtual string DisplayName => this.menu.Text;
 

@@ -1,10 +1,28 @@
 ﻿namespace Surgical.SDK.Evade
 {
-    using Surgical.SDK.API;
-    using Surgical.SDK.Modules;
+    using Newtonsoft.Json.Linq;
 
-    public static class Evade
+    using Surgical.SDK.GUI.Menu;
+    using Surgical.SDK.Logging;
+    using Surgical.SDK.Properties;
+
+    public class Evade : IEvade
     {
-        public static readonly IModulePicker<IEvade> Picker = new SdkSetup.Picker<IEvade>(new SurgicalEvade());
+        public Menu Menu { get; } = new Menu("evade");
+
+        public JObject GetTranslations()
+        {
+            return JObject.Parse(Resources.Evade);
+        }
+
+        public void Start()
+        {
+            Log.Info("Evade started!");
+        }
+
+        public void Pause()
+        {
+
+        }
     }
 }

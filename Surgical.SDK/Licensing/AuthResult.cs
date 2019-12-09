@@ -2,20 +2,21 @@
 {
     using System;
 
-    public sealed class AuthResult
+    public class AuthResult
     {
-        public readonly bool IsPremium;
+        public bool IsLicensed { get; }
 
-        public AuthResult(bool isPremium)
+        public DateTime Expiry { get; }
+
+        public AuthResult(bool licensed, DateTime expiry = default)
         {
-            this.IsPremium = isPremium;
+            this.IsLicensed = licensed;
+            this.Expiry = expiry;
         }
-
-        public DateTime Expiry;
 
         public override string ToString()
         {
-            return "IsPremium=" + this.IsPremium + ",Expiry=" + this.Expiry;
+            return "IsLicensed=" + this.IsLicensed + ",Expiry=" + this.Expiry;
         }
     }
 }

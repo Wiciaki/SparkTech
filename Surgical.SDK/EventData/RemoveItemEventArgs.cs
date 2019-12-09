@@ -4,7 +4,7 @@
 
     using Surgical.SDK.Entities;
 
-    public class RemoveItemEventArgs : EventArgs, ISourcedEventArgs<IUnit>
+    public class RemoveItemEventArgs : EventArgs, IEventArgsSource<IUnit>
     {
         public IUnit Source { get; }
 

@@ -8,8 +8,6 @@
 
         public static Folder Logs { get; private set; }
 
-        public static Folder ThirdParty { get; private set; }
-
         public static Folder Menu { get; private set; }
 
         internal static void Initialize(string root)
@@ -17,7 +15,6 @@
             Root = new Folder(root);
 
             Logs = Root.GetFolder("Logs");
-            ThirdParty = Root.GetFolder("ThirdParty");
             Menu = Root.GetFolder("Menu");
         }
 
@@ -47,7 +44,12 @@
 
         public static implicit operator string(Folder folder)
         {
-            return folder.path;
+            return folder?.ToString();
+        }
+
+        public override string ToString()
+        {
+            return this.path;
         }
     }
 }

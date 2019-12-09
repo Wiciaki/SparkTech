@@ -4,7 +4,7 @@
 
     using Surgical.SDK.Entities;
 
-    public class CastSpellEventArgs : BlockableEventArgs, ISourcedEventArgs<ISpellbook>
+    public class CastSpellEventArgs : BlockableEventArgs, IEventArgsSource<ISpellbook>, IEventArgsTarget<IGameObject>
     {
         public ISpellbook Source { get; }
 

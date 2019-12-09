@@ -7,7 +7,6 @@
     using SharpDX;
 
     using Surgical.SDK.EventData;
-    using Surgical.SDK.Logging;
 
     public abstract class MenuItem
     {
@@ -15,7 +14,7 @@
 
         public event Action<BeforeValueChangeEventArgs> BeforeValueChange;
 
-        public virtual bool IsVisible { get; set; } = true;
+        public bool IsVisible { get; set; } = true;
 
         public Size2 Size { get; private set; }
 
@@ -57,16 +56,11 @@
 
         protected internal virtual bool ConsumeSaveToken()
         {
-            var b = this.save;
-
-            if (b)
-            {
-                Log.Info("SaveToken" + this.Id);
-            }
+            var s = this.save;
 
             this.save = false;
 
-            return b;
+            return s;
         }
 
         protected internal virtual void SetTranslations(Translations t)
@@ -74,24 +68,24 @@
 
         }
 
-        private IMenuValue<T> ValueCast<T>()
+        private IMenuValue<T> MenuValue<T>()
         {
             return this as IMenuValue<T> ?? throw new InvalidOperationException($"\"{this.Id}\" doesn't implement IMenuValue<{typeof(T).Name}>!");
         }
 
         public T GetValue<T>()
         {
-            return this.ValueCast<T>().Value;
+            return this.MenuValue<T>().Value;
         }
 
         public void SetValue<T>(T value)
         {
-            this.ValueCast<T>().Value = value;
+            this.MenuValue<T>().Value = value;
         }
 
         protected bool UpdateValue<T>(T @new)
         {
-            var t = this.ValueCast<T>();
+            var t = this.MenuValue<T>();
 
             if (this.BeforeValueChange != null)
             {
@@ -105,7 +99,9 @@
                 }
             }
 
-            return this.save = true;
+            this.save = true;
+
+            return true;
         }
     }
 }

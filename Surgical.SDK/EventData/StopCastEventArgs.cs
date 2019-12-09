@@ -4,7 +4,7 @@
 
     using Surgical.SDK.Entities;
 
-    public class StopCastEventArgs : EventArgs, ISourcedEventArgs<ISpellbook>
+    public class StopCastEventArgs : EventArgs, IEventArgsSource<ISpellbook>
     {
         public ISpellbook Source { get; }
 

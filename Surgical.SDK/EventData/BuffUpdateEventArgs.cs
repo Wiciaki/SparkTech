@@ -4,7 +4,7 @@
 
     using Surgical.SDK.Entities;
 
-    public class BuffUpdateEventArgs : EventArgs, ISourcedEventArgs<IUnit>
+    public class BuffUpdateEventArgs : EventArgs, IEventArgsSource<IUnit>
     {
         public IUnit Source { get; }
 

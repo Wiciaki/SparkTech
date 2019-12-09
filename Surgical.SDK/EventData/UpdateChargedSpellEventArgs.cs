@@ -4,7 +4,7 @@
 
     using Surgical.SDK.Entities;
 
-    public class UpdateChargedSpellEventArgs : BlockableEventArgs, ISourcedEventArgs<ISpellbook>
+    public class UpdateChargedSpellEventArgs : BlockableEventArgs, IEventArgsSource<ISpellbook>
     {
         public ISpellbook Source { get; }
 

@@ -1,6 +1,6 @@
 ﻿namespace Surgical.SDK.EventData
 {
-    public interface ISourcedEventArgs<out T>
+    public interface IEventArgsSource<out T>
     {
         T Source { get; }
     }

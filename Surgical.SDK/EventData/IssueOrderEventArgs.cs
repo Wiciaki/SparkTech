@@ -4,7 +4,7 @@
 
     using Surgical.SDK.Entities;
 
-    public class IssueOrderEventArgs : BlockableEventArgs, ISourcedEventArgs<IUnit>
+    public class IssueOrderEventArgs : BlockableEventArgs, IEventArgsSource<IUnit>, IEventArgsTarget<IGameObject>
     {
         public IUnit Source { get; }
 

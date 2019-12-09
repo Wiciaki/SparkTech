@@ -2,15 +2,17 @@
 {
     using System;
 
-    public class NotifyEventArgs : EventArgs
+    using Surgical.SDK.Entities;
+
+    public class NotifyEventArgs : EventArgs, IEventArgsSource<IGameObject>
     {
-        public int SenderId { get; } // todo
+        public IGameObject Source { get; }
 
         public GameEvent Event { get; }
 
-        public NotifyEventArgs(int senderId, GameEvent @event)
+        public NotifyEventArgs(IGameObject source, GameEvent @event)
         {
-            this.SenderId = senderId;
+            this.Source = source;
 
             this.Event = @event;
         }

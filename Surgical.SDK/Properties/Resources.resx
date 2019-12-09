@@ -133,10 +133,16 @@
   <data name="Module" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\module.json;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
+  <data name="Orbwalker" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\orbwalker.json;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
   <data name="RenderEffectCompiled" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\RenderEffectCompiled;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="Strings" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Strings.json;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="TargetSelector" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\targetselector.json;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
 </root>

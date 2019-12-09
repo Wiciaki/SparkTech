@@ -21,9 +21,9 @@
     {
         private readonly List<MenuItem> items = new List<MenuItem>();
 
-        private JObject settings;
+        private readonly Translations translations = new Translations();
 
-        private Translations translations;
+        private JObject settings;
 
         private Size2 size;
 
@@ -65,23 +65,25 @@
             Build(menu, translations, true);
         }
 
-        internal static void Build(Menu menu, JObject translations, bool saveHandler)
+        internal static void Build(Menu menu, JObject translations, bool createSaveHandler)
         {
             if (Roots.Exists(root => root.Id == menu.Id))
             {
                 throw new InvalidOperationException("Menu with id \"" + menu.Id + "\" already exists as root!");
             }
 
-            if (translations == null)
+            Roots.Add(menu);
+
+            if (translations != null)
+            {
+                menu.translations.Set(translations);
+            }
+            else
             {
                 menu.UpdateSizes();
             }
 
-            menu.translations = new Translations(translations);
-
-            Roots.Add(menu);
-
-            if (saveHandler)
+            if (createSaveHandler)
             {
                 menu.CreateSaveHandler(Folder.Menu);
             }
@@ -128,7 +130,7 @@
                 point.X += ArrowWidth;
             }
 
-            DrawGroup(this.items, point);
+            EndSceneGroup(this.items, point);
         }
 
         protected internal override void OnWndProc(Point point, int width, WndProcEventArgs args)
@@ -186,7 +188,19 @@
 
         protected internal override bool ConsumeSaveToken()
         {
-            return this.IsSaving && this.Count(item => item.ConsumeSaveToken()) != 0;
+            if (!this.IsSaving)
+            {
+                return false;
+            }
+
+            var b = false;
+
+            foreach (var item in this.Where(item => item.ConsumeSaveToken()))
+            {
+                b = true;
+            }
+
+            return b;
         }
 
         protected internal override JToken GetToken()
@@ -196,28 +210,20 @@
                 return null;
             }
 
-            var addable = new Dictionary<string, JToken>();
+            // broscience but works rly fast
+            var b = false;
+            var addable = from item in this let token = item.GetToken() where token != null && (b = true) select (item.Id, Token: token);
 
-            foreach (var item in this)
-            {
-                var token = item.GetToken();
-
-                if (token != null)
-                {
-                    addable.Add(item.Id, token);
-                }
-            }
-
-            if (addable.Count == 0)
+            if (!b)
             {
                 return null;
             }
 
             var o = new JObject();
 
-            foreach (var pair in addable)
+            foreach (var (id, token) in addable)
             {
-                o.Add(pair.Key, pair.Value);
+                o.Add(id, token);
             }
 
             return o;
@@ -263,8 +269,6 @@
 
         protected internal override void SetTranslations(Translations t)
         {
-            this.translations = t;
-
             base.SetTranslations(t);
 
             foreach (var item in this)
@@ -285,8 +289,6 @@
 
         #endregion
 
-        internal static bool ArrowsEnabled { get; private set; }
-
         private static readonly List<Menu> Roots = new List<Menu>();
 
         private static readonly List<SaveHandler> SaveHandlers = new List<SaveHandler>();
@@ -299,7 +301,7 @@
 
         public static string LanguageTag { get; private set; }
 
-        public static event Action<EventArgs> VisibilityChanged, LanguageChanged;
+        public static event Action<EventArgs> OnVisibilityChanged, OnLanguageChanged;
 
         private static bool released;
 
@@ -309,11 +311,14 @@
         {
             LanguageTag = EnumCache<Language>.Description(default);
 
-            Render.OnEndScene += OnEndScene;
-            Game.OnWndProc += OnWndProc;
+            //Game.OnStart += delegate
+            {
+                Render.OnEndScene += EndScene;
+                Game.OnWndProc += WndProc;
+            };
         }
 
-        private static void OnEndScene()
+        private static void EndScene()
         {
             if (!IsOpen)
             {
@@ -322,10 +327,10 @@
 
             //cursor = Game.CursorPosition2D;
 
-            DrawGroup(Roots, position);
+            EndSceneGroup(Roots, position);
         }
 
-        private static void OnWndProc(WndProcEventArgs args)
+        private static void WndProc(WndProcEventArgs args)
         {
             //if (GameInterface.IsChatOpen() || GameInterface.IsShopOpen())
             //{
@@ -352,28 +357,22 @@
 
         #region Group operations
 
-        private static void WndProcGroup<T>(List<T> items, Point point, WndProcEventArgs args) where T : MenuItem
+        private static void WndProcGroup<T>(List<T> roots, Point point, WndProcEventArgs args) where T : MenuItem
         {
-            items = items.FindAll(item => item.IsVisible);
+            roots = roots.FindAll(item => item.IsVisible);
 
-            var width = items.Max(item => item.Size.Width);
+            var width = roots.Max(item => item.Size.Width);
             var left = IsLeftClick(args.Message);
 
-            items.ForEach(item =>
+            roots.ForEach(item =>
             {
                 item.OnWndProc(point, width, args);
 
-                if (left && item is IExpandable)
+                if (left && item is IExpandable && IsCursorInside(point, new Size2(width, item.Size.Height)))
                 {
-                    var size = item.Size;
-                    size.Width = width;
-
-                    if (IsCursorInside(point, size))
+                    foreach (var expandable in roots.OfType<IExpandable>())
                     {
-                        foreach (var i in items.OfType<IExpandable>())
-                        {
-                            i.IsExpanded = i == item && !i.IsExpanded;
-                        }
+                        expandable.IsExpanded = expandable == item && !expandable.IsExpanded;
                     }
                 }
 
@@ -381,31 +380,30 @@
             });
         }
 
-        private static void DrawGroup<T>(List<T> items, Point point) where T : MenuItem
+        private static void EndSceneGroup<T>(List<T> roots, Point point) where T : MenuItem
         {
-            if (items.Count == 0)
+            roots = roots.FindAll(item => item.IsVisible);
+
+            if (roots.Count == 0)
             {
                 return;
             }
 
             var p = point;
+            var width = roots.Max(item => item.Size.Width);
 
-            items = items.FindAll(item => item.IsVisible);
-
-            var width = items.Max(item => item.Size.Width);
-
-            items.ForEach(item =>
+            roots.ForEach(item =>
             {
                 item.OnEndScene(point, width);
 
                 point.Y += item.Size.Height;
             });
 
-            var sizes = new Size2[items.Count];
+            var sizes = new Size2[roots.Count];
 
-            for (var i = 0; i < items.Count; i++)
+            for (var i = 0; i < roots.Count; i++)
             {
-                sizes[i] = new Size2(width, items[i].Size.Height);
+                sizes[i] = new Size2(width, roots[i].Size.Height);
             }
 
             Theme.DrawBorders(p, sizes);
@@ -429,7 +427,7 @@
                 SaveHandlers.ForEach(r => r.Save());
             }
 
-            VisibilityChanged.SafeInvoke(EventArgs.Empty);
+            OnVisibilityChanged.SafeInvoke(EventArgs.Empty);
         }
 
         private static Point position;
@@ -447,9 +445,7 @@
             }
 
             ActivationButton = button;
-
             toggleBehavior = toggle;
-
             released = false;
 
             SetOpen(false);
@@ -460,7 +456,7 @@
             SetLanguage(EnumCache<Language>.Values[languageIndex]);
         }
 
-        internal static void SetLanguage(Language language)
+        private static void SetLanguage(Language language)
         {
             var tag = EnumCache<Language>.Description(language);
 
@@ -470,17 +466,16 @@
             }
 
             Language = language;
-
             LanguageTag = tag;
 
             Roots.ForEach(root => root.UpdateTranslations());
 
-            LanguageChanged.SafeInvoke(EventArgs.Empty);
+            OnLanguageChanged.SafeInvoke(EventArgs.Empty);
         }
 
-        internal static void SetArrows(bool b)
+        internal static void SetArrows(bool value)
         {
-            ArrowsEnabled = b;
+            ArrowsEnabled = value;
         }
 
         #endregion
@@ -491,9 +486,9 @@
 
         internal static bool IsCursorInside(Point point, Size2 size)
         {
-            var rectangle = point.ToRectangle(size);
+            var rect = point.ToRectangle(size);
 
-            return cursor.X >= rectangle.Left && cursor.X <= rectangle.Right && cursor.Y >= rectangle.Bottom && cursor.Y <= rectangle.Top;
+            return cursor.X >= rect.Left && cursor.X <= rect.Right && cursor.Y >= rect.Bottom && cursor.Y <= rect.Top;
         }
 
         internal static bool IsLeftClick(WindowsMessages message)
@@ -513,6 +508,8 @@
                 item.UpdateSize();
             }
         }
+
+        internal static bool ArrowsEnabled { get; private set; }
 
         private static Size2 arrowSize;
 
@@ -534,20 +531,19 @@
 
         #region SaveHandler
 
-        private class SaveHandler
+        private class SaveHandler : IDisposable
         {
+            private readonly SemaphoreSlim semaphore = new SemaphoreSlim(1, 1);
+
             private readonly Menu menu;
 
             private readonly string targetPath;
-
-            private readonly SemaphoreSlim semaphore = new SemaphoreSlim(1, 1);
 
             private JToken lastSaved;
 
             public SaveHandler(Menu menu, Folder folder)
             {
                 this.menu = menu;
-
                 this.targetPath = folder.GetFile(menu.Id + ".json");
 
                 JObject o = null;
@@ -575,42 +571,42 @@
             {
                 await this.semaphore.WaitAsync();
 
-                if (!this.menu.ConsumeSaveToken())
+                if (this.menu.ConsumeSaveToken())
                 {
-                    return;
+                    var token = this.menu.GetToken();
+
+                    if (token == null)
+                    {
+                        Log.Info("All values are default, nothing to save...");
+                        this.lastSaved = null;
+                        File.Delete(this.targetPath);
+                    }
+                    else if (JToken.DeepEquals(token, this.lastSaved))
+                    {
+                        Log.Info("Nothing needs saving, aborting...");
+                    }
+                    else
+                    {
+                        this.lastSaved = token;
+
+                        using (var fs = new FileStream(this.targetPath, FileMode.Create, FileAccess.Write))
+                        {
+                            using var sw = new StreamWriter(fs);
+                            using var writer = new JsonTextWriter(sw) { Formatting = Formatting.Indented };
+                            
+                            await token.WriteToAsync(writer);
+                        }
+
+                        Log.Info($"Saved the updated values for \"{this.menu.Id}\"!");
+                    }
                 }
-
-                Log.Info($"Saving the updated values for \"{this.menu.Id}\"...");
-
-                var token = this.menu.GetToken();
-
-                if (token == null)
-                {
-                    Log.Info("All values are default, nothing to save...");
-                    this.lastSaved = null;
-                    File.Delete(this.targetPath);
-                    return;
-                }
-
-                if (JToken.DeepEquals(this.lastSaved, token))
-                {
-                    Log.Info("Nothing needs saving, aborting...");
-                    return;
-                }
-
-                this.lastSaved = token;
-
-                using (var fileStream = new FileStream(this.targetPath, FileMode.Create, FileAccess.Write))
-                {
-                    using var streamWriter = new StreamWriter(fileStream);
-                    using var testWriter = new JsonTextWriter(streamWriter) { Formatting = Formatting.Indented };
-
-                    await token.WriteToAsync(testWriter);
-                }
-
-                Log.Info($"Saving completed for \"{this.menu.Id}\"!");
 
                 this.semaphore.Release();
+            }
+
+            public void Dispose()
+            {
+                this.semaphore.Dispose();
             }
         }
 

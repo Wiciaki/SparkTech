@@ -4,7 +4,7 @@
 
     using Surgical.SDK.Entities;
 
-    public class TeleportEventArgs : EventArgs, ISourcedEventArgs<IUnit>
+    public class TeleportEventArgs : EventArgs, IEventArgsSource<IUnit>
     {
         public IUnit Source { get; }
 

@@ -39,13 +39,13 @@
 
             if (token != null)
             {
-                this.SetOptions(token.Value<JArray>().Select(o => o.Value<string>()).ToArray());
+                this.SetOptions(token.Value<JArray>().Select(o => o.Value<string>()));
             }
 
             base.SetTranslations(t);
         }
 
-        private void SetOptions(IList<string> items)
+        private void SetOptions(IEnumerable<string> items)
         {
             this.options.Clear();
             this.options.AddRange(items);
@@ -127,8 +127,9 @@
             for (var i = 0; i < this.options.Count; i++)
             {
                 var s = this.sizes[i];
+                var color = this.Value == i ? Color.Green : Theme.BackgroundColor;
 
-                Theme.DrawTextBox(point, s, this.options[i], true, this.Value == i ? Color.Green : Theme.BackgroundColor);
+                Theme.DrawTextBox(point, s, this.options[i], true, color);
                 Theme.DrawBorders(point, s);
 
                 point.Y += s.Height;
@@ -142,7 +143,7 @@
             get => this.options.ToList();
             set
             {
-                if (this.options.SequenceEqual(value))
+                if (value == null || this.options.SequenceEqual(value))
                 {
                     return;
                 }

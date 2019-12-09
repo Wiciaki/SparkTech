@@ -2,7 +2,7 @@
 {
     using Surgical.SDK.Entities;
 
-    public class ChatEventArgs : BlockableEventArgs, ISourcedEventArgs<IHero>
+    public class ChatEventArgs : BlockableEventArgs, IEventArgsSource<IHero>
     {
         public IHero Source { get; }
 

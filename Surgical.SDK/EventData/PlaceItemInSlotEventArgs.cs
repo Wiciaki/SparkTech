@@ -4,7 +4,7 @@
 
     using Surgical.SDK.Entities;
 
-    public class PlaceItemInSlotEventArgs : EventArgs, ISourcedEventArgs<IUnit>
+    public class PlaceItemInSlotEventArgs : EventArgs, IEventArgsSource<IUnit>
     {
         public IUnit Source { get; }
 

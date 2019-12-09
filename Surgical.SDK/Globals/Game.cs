@@ -1,15 +1,12 @@
 ﻿namespace Surgical.SDK
 {
     using System;
-    using System.Linq;
-    using System.Runtime.CompilerServices;
 
     using SharpDX;
 
     using Surgical.SDK.API.Fragments;
     using Surgical.SDK.Entities;
     using Surgical.SDK.EventData;
-    using Surgical.SDK.Logging;
 
     public static class Game
     {
@@ -49,8 +46,6 @@
         public static event Action<ChatEventArgs> OnChat;
 
         public static Vector3 CursorPosition => game.CursorPosition;
-
-        public static Vector2 CursorPosition2D => game.CursorPosition2D;
 
         public static GameMode Mode => game.Mode;
 
@@ -98,7 +93,7 @@
             return game.WorldToMinimap(pos);
         }
 
-        public static Vector3 ScreenToWorld(this Vector3 pos)
+        public static Vector3 ScreenToWorld(this Vector2 pos)
         {
             return game.ScreenToWorld(pos);
         }
@@ -108,49 +103,24 @@
             game.SendEmote(emote);
         }
 
-        public static void SendPing(PingCategory pingCategory, IGameObject target)
+        public static void SendPing(PingCategory category, IGameObject target)
         {
-            game.SendPing(pingCategory, target);
+            game.SendPing(category, target);
         }
 
-        public static void SendPing(PingCategory pingCategory, Vector2 target)
+        public static void SendPing(PingCategory category, Vector2 target)
         {
-            game.SendPing(pingCategory, target);
+            game.SendPing(category, target);
         }
 
-        public static void ShowPing(PingCategory pingCategory, IGameObject target, bool playSound)
+        public static void ShowPing(PingCategory category, IGameObject target, bool playSound)
         {
-            game.ShowPing(pingCategory, target, playSound);
+            game.ShowPing(category, target, playSound);
         }
 
-        public static void ShowPing(PingCategory pingCategory, Vector2 target, bool playSound)
+        public static void ShowPing(PingCategory category, Vector2 target, bool playSound)
         {
-            game.ShowPing(pingCategory, target, playSound);
-        }
-
-        internal static void SafeInvoke<T>(this Action<T> evt, T args)
-        {
-            if (evt == null)
-            {
-                return;
-            }
-
-            foreach (var callback in evt.GetInvocationList().Cast<Action<T>>())
-            {
-                try
-                {
-                    callback(args);
-                }
-                catch (Exception ex)
-                {
-                    Log.Error(ex);
-                }
-            }
-        }
-
-        internal static void Trigger(this Type type)
-        {
-            RuntimeHelpers.RunClassConstructor(type.TypeHandle);
+            game.ShowPing(category, target, playSound);
         }
     }
 }

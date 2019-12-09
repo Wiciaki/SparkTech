@@ -4,7 +4,7 @@
 
     using Surgical.SDK.Entities;
 
-    public class LevelUpEventArgs : EventArgs, ISourcedEventArgs<IUnit>
+    public class LevelUpEventArgs : EventArgs, IEventArgsSource<IUnit>
     {
         public IUnit Source { get; }
 

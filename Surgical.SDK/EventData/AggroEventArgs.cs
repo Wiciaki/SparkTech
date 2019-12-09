@@ -4,17 +4,17 @@
 
     using Surgical.SDK.Entities;
 
-    public class AggroEventArgs : EventArgs, ISourcedEventArgs<IUnit>
+    public class AggroEventArgs : EventArgs, IEventArgsSource<IUnit>, IEventArgsTarget<IAttackable>
     {
         public IUnit Source { get; }
 
-        public int TargetId { get; }
+        public IAttackable Target { get; }
 
-        public AggroEventArgs(IUnit source, int targetId)
+        public AggroEventArgs(IUnit source, IAttackable target)
         {
             this.Source = source;
 
-            this.TargetId = targetId;
+            this.Target = target;
         }
     }
 }

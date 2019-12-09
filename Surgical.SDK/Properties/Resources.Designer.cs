@@ -181,6 +181,19 @@ namespace Surgical.SDK.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {
+        ///  &quot;en&quot;: {
+        ///    &quot;text&quot;:  &quot;Surgical&quot; 
+        ///  }
+        ///}.
+        /// </summary>
+        internal static string Orbwalker {
+            get {
+                return ResourceManager.GetString("Orbwalker", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
         internal static byte[] RenderEffectCompiled {
@@ -208,6 +221,19 @@ namespace Surgical.SDK.Properties {
         internal static string Strings {
             get {
                 return ResourceManager.GetString("Strings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
+        ///  &quot;en&quot;: {
+        ///    &quot;text&quot;: &quot;Surgical&quot; 
+        ///  }
+        ///}.
+        /// </summary>
+        internal static string TargetSelector {
+            get {
+                return ResourceManager.GetString("TargetSelector", resourceCulture);
             }
         }
     }

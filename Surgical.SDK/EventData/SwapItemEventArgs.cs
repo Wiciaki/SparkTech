@@ -4,7 +4,7 @@
 
     using Surgical.SDK.Entities;
 
-    public class SwapItemEventArgs : EventArgs, ISourcedEventArgs<IUnit>
+    public class SwapItemEventArgs : EventArgs, IEventArgsSource<IUnit>
     {
         public IUnit Source { get; }
 

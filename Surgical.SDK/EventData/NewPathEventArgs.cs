@@ -6,7 +6,7 @@
 
     using Surgical.SDK.Entities;
 
-    public class NewPathEventArgs : EventArgs, ISourcedEventArgs<IUnit>
+    public class NewPathEventArgs : EventArgs, IEventArgsSource<IUnit>
     {
         public IUnit Source { get; }
 

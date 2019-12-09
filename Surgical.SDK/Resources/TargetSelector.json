@@ -1,0 +1,25 @@
+{
+  "en": {
+    "text": "Surgical"
+  },
+  "timeToKill": {
+    "en": {
+      "text": "Time to kill"
+    }
+  },
+  "distancePlayer": {
+    "en": {
+      "text": "Distance to player"
+    }
+  },
+  "distanceMouse": {
+    "en": {
+      "text": "Distance to mouse"
+    }
+  },
+  "dealsMostDmg": {
+    "en": {
+      "text": "Deals most damage" 
+    } 
+  }
+}

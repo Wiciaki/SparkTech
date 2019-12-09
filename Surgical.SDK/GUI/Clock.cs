@@ -16,9 +16,9 @@
 
         private static int mode;
 
-        internal static void SetMode(int m)
+        internal static void SetMode(int value)
         {
-            mode = m;
+            mode = value;
         }
 
         private static Size2 size;

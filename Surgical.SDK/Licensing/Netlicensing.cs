@@ -89,7 +89,7 @@
 
                             if (expiry > DateTime.Now)
                             {
-                                return new AuthResult(true) { Expiry = expiry };
+                                return new AuthResult(true, expiry);
                             }
 
                             break;

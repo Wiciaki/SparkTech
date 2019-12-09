@@ -1,9 +1,11 @@
 ﻿namespace Surgical.SDK.API.Fragments
 {
-    using System.Reflection;
+    using System.Collections.Generic;
+
+    using Surgical.SDK.Modules;
 
     public interface ISandbox
     {
-        Assembly LoadAssembly(string path);
+        List<IModule> LoadModules();
     }
 }
