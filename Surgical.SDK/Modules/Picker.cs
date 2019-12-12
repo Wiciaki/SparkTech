@@ -73,7 +73,7 @@
         {
             var name = Regex.Replace(input, @"((?<=\p{Ll})\p{Lu})|((?!\A)\p{Lu}(?>\p{Ll}))", " $0");
 
-            return JObject.Parse(Resources.Module.Replace("{module}", name, StringComparison.InvariantCulture));
+            return JObject.Parse(Resources.Module.Replace("{module}", name));
         }
 
         private void BeforeValueChange(BeforeValueChangeEventArgs args)

@@ -105,8 +105,6 @@
             {
                 Packets.Packet.Initialize(this.Packet);
             }
-            
-            Modules = this.Sandbox?.LoadModules() ?? new List<IModule>();
 
             if (this.Theme == null)
             {
@@ -115,6 +113,13 @@
 
             GUI.Theme.SetTheme(this.Theme);
             SdkSetup.SetupAuth(this.AuthResult);
+
+            if (this.Sandbox == null)
+            {
+                this.Sandbox = new Sandbox();
+            }
+
+            this.Sandbox.LoadScripts();
         }
     }
 }

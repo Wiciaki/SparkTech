@@ -8,7 +8,7 @@
 
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
             TargetSelectorService.Picker.Add(new SomeTsIdk());
         }

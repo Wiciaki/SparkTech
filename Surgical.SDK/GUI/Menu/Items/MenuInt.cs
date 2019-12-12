@@ -34,7 +34,7 @@
 
         protected override string GetMaxNumStr()
         {
-            return base.GetMaxNumStr().Replace(".00", string.Empty, StringComparison.InvariantCulture);
+            return base.GetMaxNumStr().Replace(".00", string.Empty);
         }
 
         protected override string GetPrintableStr(float num)
