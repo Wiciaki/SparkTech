@@ -1,0 +1,17 @@
+﻿{
+  "en": {
+    "text": "Alphabetical (sample)"
+  },
+  "zh": {
+    "text": "CHINA BIK COUNTRY"
+  },
+  "sampleItem": {
+    "en": {
+      "text": "Change language to chinese, and see",
+      "helpText": "...how it reacts"
+    },
+    "zh": {
+      "text": "我爱饼干"
+    } 
+  }
+}

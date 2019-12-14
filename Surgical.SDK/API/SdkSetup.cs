@@ -27,7 +27,7 @@
     {
         public static readonly bool FirstRun;
 
-        public static readonly IAuth SurgicalAuth;
+        //public static readonly IAuth SurgicalAuth;
 
         private static readonly Menu Menu;
 
@@ -86,7 +86,7 @@
             typeof(EvadeService).Trigger();
             typeof(ChampionService).Trigger();
 
-            SurgicalAuth = new Netlicensing(Machine.UserId, "d1213e7b-0817-4544-aa37-01817170c494");
+            //SurgicalAuth = new Netlicensing(Machine.UserId, "d1213e7b-0817-4544-aa37-01817170c494");
             //var AuthTask = SurgicalAuth.GetAuth("Surgical.SDK").ContinueWith(HandleAuth, TaskScheduler.Current);
 
             Log.Info("Surgical.SDK initialized!");

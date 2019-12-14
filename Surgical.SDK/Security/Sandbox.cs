@@ -1,9 +1,11 @@
 ﻿namespace Surgical.SDK.Security
 {
     using System;
+    using System.Collections.Generic;
     using System.IO;
     using System.Linq;
     using System.Reflection;
+    using System.Threading.Tasks;
 
     using Surgical.SDK.Champion;
     using Surgical.SDK.Evade;
@@ -21,43 +23,71 @@
             var folder = Folder.Root.GetFolder("ThirdParty");
             var files = Directory.EnumerateFiles(folder).Where(path => Path.GetExtension(path) == ".dll");
 
-            foreach (var path in files)
+            Parallel.ForEach(files, LoadFile);
+
+            void LoadFile(string path)
             {
                 Log.Info($"Loading {Path.GetFileName(path)}...");
 
-                this.ProcessAssembly(Assembly.LoadFrom(path));
+                Assembly assembly;
+
+                try
+                {
+                    assembly = Assembly.LoadFrom(path);
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex);
+                    return;
+                }
+
+                this.ProcessAssembly(assembly);
             }
         }
 
         protected virtual void ProcessAssembly(Assembly assembly)
         {
-            var types = assembly.GetTypes();
+            var constructors = from type in assembly.GetTypes()
+                               where type.IsClass && !type.IsAbstract && typeof(IEntryPoint).IsAssignableFrom(type)
+                               orderby type.Name
+                               let ctor = type.GetConstructor(Type.EmptyTypes)
+                               where ctor != null && ctor.IsPublic
+                               select ctor;
 
-            AddTo(TargetSelectorService.Picker);
-            AddTo(HealthPredictionService.Picker);
-            AddTo(MovementPredictionService.Picker);
-            AddTo(EvadeService.Picker);
-            AddTo(OrbwalkerService.Picker);
-            AddTo(ChampionService.Picker);
+            var modules = new List<IModule>();
 
-            void AddTo<T>(Picker<T> picker) where T : class, IModule
+            foreach (var constructor in constructors)
             {
-                foreach (var type in types.Where(typeof(T).IsAssignableFrom))
+                // ReSharper disable once PossibleNullReferenceException
+                var typeName = constructor.DeclaringType.FullName;
+
+                try
                 {
-                    T module;
-
-                    try
+                    if (constructor.Invoke(Array.Empty<object>()) is IModule module)
                     {
-                        module = (T)Activator.CreateInstance(type);
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.Error($"Couldn't create a new instance of {typeof(T).Name} module from {assembly.GetName().Name}");
-                        Log.Error("Problem launching the parameterless .ctor");
-                        Log.Error(ex);
-                        continue;
+                        modules.Add(module);
                     }
 
+                    Log.Info($"Instantiated {typeName}!");
+                }
+                catch (Exception ex)
+                {
+                    Log.Error($"Couldn't create a new instance of {typeName}! Problem executing the parameterless constructor");
+                    Log.Error(ex);
+                }
+            }
+
+            AddModulesTo(TargetSelectorService.Picker);
+            AddModulesTo(HealthPredictionService.Picker);
+            AddModulesTo(MovementPredictionService.Picker);
+            AddModulesTo(EvadeService.Picker);
+            AddModulesTo(OrbwalkerService.Picker);
+            AddModulesTo(ChampionService.Picker);
+
+            void AddModulesTo<T>(Picker<T> picker) where T : class, IModule
+            {
+                foreach (var module in modules.OfType<T>())
+                {
                     picker.Add(module);
                 }
             }

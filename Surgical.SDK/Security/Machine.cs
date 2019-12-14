@@ -1,4 +1,4 @@
-﻿namespace Surgical.SDK.Security
+﻿/*namespace Surgical.SDK.Security
 {
     using System;
     using System.Globalization;
@@ -90,4 +90,4 @@
             return Convert.ToBase64String(bytes).Substring(0, length).Replace('/', '0').Replace('+', '1').ToUpper(CultureInfo.InvariantCulture);
         }
     }
-}
+}*/

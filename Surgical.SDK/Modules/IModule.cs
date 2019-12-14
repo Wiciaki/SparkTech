@@ -4,7 +4,7 @@
 
     using Surgical.SDK.GUI.Menu;
 
-    public interface IModule
+    public interface IModule : IEntryPoint
     {
         Menu Menu { get; }
 

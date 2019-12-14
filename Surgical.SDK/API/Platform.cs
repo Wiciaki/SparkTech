@@ -1,20 +1,16 @@
 ﻿namespace Surgical.SDK.API
 {
     using System;
-    using System.Collections.Generic;
 
     using Surgical.SDK.API.Fragments;
     using Surgical.SDK.GUI;
     using Surgical.SDK.Licensing;
     using Surgical.SDK.Logging;
-    using Surgical.SDK.Modules;
     using Surgical.SDK.Security;
 
     public sealed class Platform
     {
         public static string PlatformName { get; private set; }
-
-        internal static List<IModule> Modules { get; private set; }
 
         public static Platform Declare(string platformName)
         {
@@ -31,9 +27,7 @@
         }
 
         private Platform()
-        {
-
-        }
+        { }
 
         public AuthResult AuthResult { get; set; }
 
