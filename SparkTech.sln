@@ -5,14 +5,11 @@ VisualStudioVersion = 16.0.28621.142
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Surgical.SDK", "Surgical.SDK\Surgical.SDK.csproj", "{35284B3E-CDFC-475C-9F90-185E605272CB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestLinker", "TestLinker\TestLinker.csproj", "{4D18EF46-7CED-4A29-9270-C1FEE6D08CEA}"
-	ProjectSection(ProjectDependencies) = postProject
-		{35284B3E-CDFC-475C-9F90-185E605272CB} = {35284B3E-CDFC-475C-9F90-185E605272CB}
-	EndProjectSection
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpDX.Desktop", "SharpDX.Desktop\SharpDX.Desktop.csproj", "{C62574AE-5119-458F-A5AF-757552E2B0CA}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SurgicalSample", "SurgicalSample\SurgicalSample.csproj", "{644B62F5-9BEF-430D-8AB3-08E71F7957BA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestLinker", "TestLinker\TestLinker.csproj", "{3CA468B5-855D-4F54-9037-1033639078BD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -24,10 +21,6 @@ Global
 		{35284B3E-CDFC-475C-9F90-185E605272CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{35284B3E-CDFC-475C-9F90-185E605272CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{35284B3E-CDFC-475C-9F90-185E605272CB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4D18EF46-7CED-4A29-9270-C1FEE6D08CEA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4D18EF46-7CED-4A29-9270-C1FEE6D08CEA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4D18EF46-7CED-4A29-9270-C1FEE6D08CEA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4D18EF46-7CED-4A29-9270-C1FEE6D08CEA}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C62574AE-5119-458F-A5AF-757552E2B0CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C62574AE-5119-458F-A5AF-757552E2B0CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C62574AE-5119-458F-A5AF-757552E2B0CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -36,6 +29,10 @@ Global
 		{644B62F5-9BEF-430D-8AB3-08E71F7957BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{644B62F5-9BEF-430D-8AB3-08E71F7957BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{644B62F5-9BEF-430D-8AB3-08E71F7957BA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3CA468B5-855D-4F54-9037-1033639078BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3CA468B5-855D-4F54-9037-1033639078BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3CA468B5-855D-4F54-9037-1033639078BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3CA468B5-855D-4F54-9037-1033639078BD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -26,7 +26,7 @@
 
         public event Action<BeforeValueChangeEventArgs> OnModuleSelected;
 
-        public void Add(TModule module)
+        internal void Add(TModule module)
         {
             this.modules.Add(module);
 
@@ -54,7 +54,7 @@
             this.picker.BeforeValueChange += this.BeforeValueChange;
 
 #pragma warning disable CA1304 // Specify CultureInfo
-            this.root = new Menu(input.ToLower()) { IsVisible = module.Menu.Any(), IsExpanded = true }; //
+            this.root = new Menu(input.ToLower()) { IsVisible = module.Menu.Any() };
 #pragma warning restore CA1304 // Specify CultureInfo
             this.root.Add(this.picker);
             this.root.Add(module.Menu);

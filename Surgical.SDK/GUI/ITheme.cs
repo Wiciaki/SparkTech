@@ -6,6 +6,8 @@
 
     public interface ITheme : IDisposable
     {
+        void Initialize();
+
         Color BackgroundColor { get; }
 
         int MinItemHeight { get; }

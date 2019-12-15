@@ -8,24 +8,19 @@
 
     public class SurgicalTheme : ITheme
     {
-        private Font font;
-
         public virtual Color BackgroundColor { get; }
 
-        public int MinItemHeight { get; } = 32;
+        public int MinItemHeight { get; } = 26;
 
         public SurgicalTheme()
         {
-            Render.OnLostDevice += this.Font.OnLostDevice;
-            Render.OnResetDevice += this.Font.OnResetDevice;
-            Render.OnDispose += this.Dispose;
-
             var color = Color.Black;
             color.A = 130;
+
             this.BackgroundColor = color;
         }
 
-        protected Font Font => this.font ??= new Font(Render.Device, this.GetFontDescription());
+        protected Font Font { get; private set; }
 
         public virtual FontDescription GetFontDescription()
         {
@@ -42,7 +37,7 @@
         {
             var r = this.Font.MeasureText(null, text, this.DrawFlags);
 
-            var height = MultipleOf(r.Bottom - r.Top, 26);
+            var height = MultipleOf(r.Bottom - r.Top, this.MinItemHeight);
             var width = MultipleOf(r.Right - r.Left, 2);
 
             return new Size2(width + this.extraTextSize.Width, height + this.extraTextSize.Height);
@@ -85,6 +80,15 @@
 
                 point.Y += size.Height;
             }
+        }
+
+        public virtual void Initialize()
+        {
+            this.Font = new Font(Render.Device, this.GetFontDescription());
+
+            Render.OnLostDevice += this.Font.OnLostDevice;
+            Render.OnResetDevice += this.Font.OnResetDevice;
+            Render.OnDispose += this.Dispose;
         }
 
         //public override void DrawBorders(Point point, params Size2[] sizes)

@@ -1,4 +1,4 @@
-﻿namespace SharpLinker
+﻿namespace TestLinker
 {
     using SharpDX;
     using SharpDX.Direct3D9;

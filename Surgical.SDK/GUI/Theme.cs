@@ -24,6 +24,7 @@
             void Update()
             {
                 theme = t;
+                t.Initialize();
 
                 Menu.Menu.UpdateArrowSize();
                 Clock.UpdateSize();

@@ -6,6 +6,7 @@
     using Surgical.SDK.GUI;
     using Surgical.SDK.Licensing;
     using Surgical.SDK.Logging;
+    using Surgical.SDK.Modules;
     using Surgical.SDK.Security;
 
     public sealed class Platform
@@ -47,21 +48,21 @@
 
         public IPacket Packet { get; set; }
 
-        public ISandbox Sandbox { get; set; }
+        public IScriptLoader ScriptLoader { get; set; }
 
-        public string FolderPath { get; set; }
+        public Folder Folder { get; set; }
 
         public void Boot()
         {
-            if (this.FolderPath == null)
+            if (this.Folder == null)
             {
                 var appdata = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
                 var folder = new Folder(appdata);
 
-                this.FolderPath = folder.GetFolder("Surgical.SDK");
+                this.Folder = folder.GetFolder("Surgical.SDK");
             }
 
-            Folder.Initialize(this.FolderPath);
+            Folder.Initialize(this.Folder);
 
             if (this.Logger == null)
             {
@@ -108,12 +109,12 @@
             GUI.Theme.SetTheme(this.Theme);
             SdkSetup.SetupAuth(this.AuthResult);
 
-            if (this.Sandbox == null)
+            if (this.ScriptLoader == null)
             {
-                this.Sandbox = new Sandbox();
+                this.ScriptLoader = new ScriptLoader();
             }
 
-            this.Sandbox.LoadScripts();
+            this.ScriptLoader.LoadFrom(this.Folder.GetFolder("Scripts"));
         }
     }
 }

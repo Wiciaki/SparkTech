@@ -8,8 +8,6 @@
     using SharpDX.Direct3D9;
     using SharpDX.Windows;
 
-    using SharpLinker;
-
     using Surgical.SDK.API;
     using Surgical.SDK.API.Fragments;
     using Surgical.SDK.Rendering;
@@ -41,7 +39,7 @@
             var platform = Platform.Declare("Test");
 
             platform.Render = form;
-            //platform.Theme = new AlphaStarTheme();
+            platform.Theme = new AlphaStarTheme();
 
             platform.Boot();
 

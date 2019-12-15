@@ -93,11 +93,10 @@
             
             // test code
 
-            //Menu.IsExpanded = true;
             Menu.SetOpen(true);
 
-            //Menu.IsExpanded = true;
-            //Menu.GetMenu("about").IsExpanded = true;
+            Menu.IsExpanded = true;
+            Menu.GetMenu("menu").IsExpanded = true;
             //Menu.GetMenu("modes").GetMenu("harass").IsExpanded = true;
             //((IExpandable)Menu.GetMenu("modes").GetMenu("harass")["objects"]).IsExpanded = true;
             //((IExpandable)Menu["clock"]).IsExpanded = true;

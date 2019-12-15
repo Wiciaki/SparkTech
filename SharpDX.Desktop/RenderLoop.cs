@@ -55,11 +55,6 @@ namespace SharpDX.Windows
         /// <summary>
         /// Initializes a new instance of the <see cref="RenderLoop"/> class.
         /// </summary>
-        public RenderLoop() {}
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="RenderLoop"/> class.
-        /// </summary>
         public RenderLoop(Control control)
         {
             Control = control;
@@ -179,14 +174,9 @@ namespace SharpDX.Windows
         }
 
         /// <summary>
-        /// Delegate for the rendering loop.
-        /// </summary>
-        public delegate void RenderCallback();
-
-        /// <summary>
         /// Runs the specified main loop in the specified context.
         /// </summary>
-        public static void Run(ApplicationContext context, RenderCallback renderCallback)
+        public static void Run(ApplicationContext context, Action renderCallback)
         {
             Run(context.MainForm, renderCallback);
         }
@@ -200,7 +190,7 @@ namespace SharpDX.Windows
         /// <exception cref="System.ArgumentNullException">form
         /// or
         /// renderCallback</exception>
-        public static void Run(Control form, RenderCallback renderCallback, bool useApplicationDoEvents = false)
+        public static void Run(Control form, Action renderCallback, bool useApplicationDoEvents = false)
         {
             if(form == null) throw new ArgumentNullException("form");
             if(renderCallback == null) throw new ArgumentNullException("renderCallback");

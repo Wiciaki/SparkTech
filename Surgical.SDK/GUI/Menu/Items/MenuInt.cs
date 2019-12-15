@@ -1,7 +1,5 @@
 ﻿namespace Surgical.SDK.GUI.Menu
 {
-    using System;
-
     using Newtonsoft.Json.Linq;
 
     public class MenuInt : MenuFloat, IMenuValue<int>
