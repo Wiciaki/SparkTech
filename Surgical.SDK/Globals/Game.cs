@@ -16,7 +16,6 @@
         {
             game = fragment;
 
-            fragment.WndProc = args => OnWndProc.SafeInvoke(args);
             fragment.Update = args => OnUpdate.SafeInvoke(args);
             fragment.Notify = args => OnNotify.SafeInvoke(args);
             fragment.Start = args => OnStart.SafeInvoke(args);
@@ -26,8 +25,6 @@
             fragment.Input = args => OnInput.SafeInvoke(args);
             fragment.Chat = args => OnChat.SafeInvoke(args);
         }
-
-        public static event Action<WndProcEventArgs> OnWndProc; 
 
         public static event Action<EventArgs> OnUpdate;
 

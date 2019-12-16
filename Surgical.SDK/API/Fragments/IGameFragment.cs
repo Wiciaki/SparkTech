@@ -51,8 +51,6 @@
 
         long Id { get; }
 
-        Action<WndProcEventArgs> WndProc { get; set; }
-
         Action<EventArgs> Update { get; set; }
 
         Action<EventArgs> Start { get; set; }

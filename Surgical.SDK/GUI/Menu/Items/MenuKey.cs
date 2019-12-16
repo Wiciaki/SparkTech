@@ -7,11 +7,11 @@
     using Surgical.SDK.API;
     using Surgical.SDK.EventData;
 
-    public class MenuKey : MenuValue, IMenuValue<Key>
+    public class MenuKey : MenuValue, IMenuValue<Keys>
     {
-        public MenuKey(string id, Key defaultValue) : base(id, defaultValue.ToString())
+        public MenuKey(string id, Keys defaultValue) : base(id, defaultValue.ToString())
         {
-            Game.OnWndProc += this.WndProc;
+            WndProc.OnWndProc += this.KeyWndProc;
         }
 
         private bool selecting;
@@ -20,9 +20,9 @@
 
         private Size2 size;
 
-        private Key value;
+        private Keys value;
 
-        public Key Value
+        public Keys Value
         {
             get => this.value;
             set
@@ -47,11 +47,11 @@
 
         protected virtual Color ButtonColor => this.selecting ? Color.OrangeRed : Color.DarkOrange;
 
-        protected virtual void WndProc(WndProcEventArgs args)
+        protected virtual void KeyWndProc(WndProcEventArgs args)
         {
             if (this.selecting && args.Message == WindowsMessages.KEYUP)
             {
-                this.Value = args.Key;
+                this.Value = args.Keys;
             }
         }
 
@@ -91,7 +91,6 @@
             this.size = t;
 
             s.Width += t.Width;
-
             return s;
         }
 
@@ -108,7 +107,7 @@
         protected override JToken Token
         {
             get => this.Value.ToString();
-            set => this.Value = EnumCache<Key>.Parse(value.Value<string>());
+            set => this.Value = EnumCache<Keys>.Parse(value.Value<string>());
         }
     }
 }

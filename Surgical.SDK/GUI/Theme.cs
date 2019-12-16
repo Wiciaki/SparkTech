@@ -4,7 +4,7 @@
 
     using Surgical.SDK.API;
 
-    public class Theme
+    public static class Theme
     {
         private static ITheme theme;
 

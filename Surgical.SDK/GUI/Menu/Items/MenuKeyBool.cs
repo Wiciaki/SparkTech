@@ -6,7 +6,7 @@
 
     public class MenuKeyBool : MenuKey, IMenuValue<bool>
     {
-        public MenuKeyBool(string id, Key defaultValue) : base(id, defaultValue)
+        public MenuKeyBool(string id, Keys defaultValue) : base(id, defaultValue)
         {
 
         }
@@ -38,11 +38,11 @@
 
         protected override Color ButtonColor => this.Value ? Color.OrangeRed : Color.DarkRed;
 
-        protected override void WndProc(WndProcEventArgs args)
+        protected override void KeyWndProc(WndProcEventArgs args)
         {
-            base.WndProc(args);
+            base.KeyWndProc(args);
 
-            if (args.Key == base.Value)
+            if (args.Keys == base.Value)
             {
                 this.Value = args.Message == WindowsMessages.KEYDOWN || args.Message == WindowsMessages.KEYUP && (!this.toggle || (this.release ^= true));
             }

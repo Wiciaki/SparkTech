@@ -50,7 +50,7 @@
                 new Menu("modes"),
                 new Menu("menu")
                 {
-                    new MenuKey("key", Key.LeftShift),
+                    new MenuKey("key", Keys.ShiftKey),
                     new MenuBool("toggle", false),
                     new MenuAction("apply", SetMenuTriggers),
                     new MenuBool("arrows", true),
@@ -93,14 +93,18 @@
             //SurgicalAuth = new Netlicensing(Machine.UserId, "d1213e7b-0817-4544-aa37-01817170c494");
             //var AuthTask = SurgicalAuth.GetAuth("Surgical.SDK").ContinueWith(HandleAuth, TaskScheduler.Current);
 
+            if (!Platform.HasWndProc)
+            {
+                Menu.SetOpen(true);
+
+                Menu.IsExpanded = true;
+                Menu.GetMenu("menu").IsExpanded = true;
+            }
+
             Log.Info("Surgical.SDK initialized!");
             
             // test code
 
-            Menu.SetOpen(true);
-
-            Menu.IsExpanded = true;
-            Menu.GetMenu("menu").IsExpanded = true;
             //Menu.GetMenu("modes").GetMenu("harass").IsExpanded = true;
             //((IExpandable)Menu.GetMenu("modes").GetMenu("harass")["objects"]).IsExpanded = true;
             //((IExpandable)Menu["clock"]).IsExpanded = true;
@@ -121,7 +125,7 @@
 
         internal static void SetupAuth(AuthResult result)
         {
-
+            // TODO
         }
 
         private static void SetupMenu(out bool firstRun)
@@ -210,7 +214,7 @@
         {
             var menu = Menu.GetMenu("menu");
 
-            var key = menu["key"].GetValue<Key>();
+            var key = menu["key"].GetValue<Keys>();
             var toggle = menu["toggle"].GetValue<bool>();
 
             Menu.SetTriggers(key, toggle);

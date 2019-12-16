@@ -25,19 +25,12 @@ namespace Surgical.SDK.Rendering
     using SharpDX;
     using SharpDX.Direct3D9;
 
-    using Surgical.SDK.API;
-
     public static class Picture
     {
         private static readonly Sprite Sprite;
 
         static Picture()
         {
-            if (!Platform.HasRender)
-            {
-                return;
-            }
-
             Sprite = new Sprite(Render.Device);
 
             Render.OnDispose += () => Sprite.Dispose();
@@ -47,11 +40,6 @@ namespace Surgical.SDK.Rendering
 
         public static void Draw(Vector2 position, Texture texture, Color? color = null, Vector3? center = null, Rectangle? rectangle = null, float? rotation = null, Vector2? scale = null)
         {
-            if (!Platform.HasRender)
-            {
-                return;
-            }
-
             var c = color ?? Color.White;
             var positionRef = new Vector3(position, 0);
 

@@ -4,13 +4,18 @@
     {
         public WindowsMessages Message { get; }
 
-        public Key Key { get; }
+        public Keys Keys { get; }
 
-        public WndProcEventArgs(WindowsMessages message, Key key)
+        public WndProcEventArgs(WindowsMessages message, Keys keys)
         {
             this.Message = message;
 
-            this.Key = key;
+            this.Keys = keys;
+        }
+
+        public override string ToString()
+        {
+            return $"WndProc{{Message={this.Message},Keys={this.Keys}}}";
         }
     }
 }

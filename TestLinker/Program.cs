@@ -8,22 +8,22 @@
     using SharpDX.Direct3D9;
     using SharpDX.Windows;
 
+    using Surgical.SDK;
     using Surgical.SDK.API;
+    using Surgical.SDK.EventData;
+    using Surgical.SDK.Logging;
     using Surgical.SDK.Rendering;
 
     using TestLinker.Properties;
 
     using Color = SharpDX.Color;
 
-    /// <summary>
-    ///   Direct3D9 Font Sample
-    /// </summary>
-    static class Program
+    internal static class Program
     {
         private static Device device;
 
         [STAThread]
-        static void Main()
+        private static void Main()
         {
             var form = new HookedForm { StartPosition = FormStartPosition.Manual, Left = 0, Top = 0, AllowUserResizing = false };
 
@@ -38,72 +38,27 @@
             var platform = Platform.Declare("Test");
 
             platform.Render = form;
+            platform.WndProc = form;
             //platform.Theme = new AlphaStarTheme();
 
             platform.Boot();
 
-            //// Initialize the Font
-            //FontDescription fontDescription = new FontDescription()
-            //{
-            //    Height = 72,
-            //    Italic = false,
-            //    CharacterSet = FontCharacterSet.Ansi,
-            //    FaceName = "Arial",
-            //    MipLevels = 0,
-            //    OutputPrecision = FontPrecision.TrueType,
-            //    PitchAndFamily = FontPitchAndFamily.Default,
-            //    Quality = FontQuality.ClearType,
-            //    Weight = FontWeight.Bold 
-            //};
-
-            //var font = new Font(device, fontDescription);
-
-            //var displayText = "Soon menu test bik";
-
-            //// Measure the text to display
-            //var fontDimension = font.MeasureText(null, displayText, new Rectangle(0, 0, width, height), FontDrawFlags.Center | FontDrawFlags.VerticalCenter);
-
-            //int xDir = 1;
-            //int yDir = 1;
-
             RenderLoop.Run(form, () =>
             {
                 device.Clear(ClearFlags.Target, Color.Transparent, 1.0f, 0);
-                
                 device.BeginScene();
-                form.BeginScene?.Invoke();
 
+                form.BeginScene();
                 Picture.Draw(default, texture);
-                
-                // Vector.Draw(Color.White, 50f, new Vector2(100, 100), new Vector2(150, 150));
-                form.Draw?.Invoke();
-
-                //// Make the text boucing on the screen limits
-                //if ((fontDimension.Right + xDir) > width)
-                //    xDir = -1;
-                //else if ((fontDimension.Left + xDir) <= 0)
-                //    xDir = 1;
-
-                //if ((fontDimension.Bottom + yDir) > height)
-                //    yDir = -1;
-                //else if ((fontDimension.Top + yDir) <= 0)
-                //    yDir = 1;
-
-                //fontDimension.Left += (int)xDir;
-                //fontDimension.Top += (int)yDir;
-                //fontDimension.Bottom += (int)yDir;
-                //fontDimension.Right += (int)xDir;
-
-                //// Draw the text
-                //font.DrawText(null, displayText, fontDimension, FontDrawFlags.Center | FontDrawFlags.VerticalCenter, Color.White);
-                form.EndScene?.Invoke();
+                form.Draw();
+                form.EndScene();
 
                 device.EndScene();
                 device.Present();
             });
         }
 
-        private class HookedForm : RenderForm, IRender
+        private class HookedForm : RenderForm, IRender, IWndProc
         {
             public HookedForm() : base("SharpDX - Render test (Surgeon)")
             {
@@ -115,6 +70,19 @@
             public Size2 Resolution()
             {
                 return new Size2(1920, 1080);
+            }
+
+            protected override void WndProc(ref Message m)
+            {
+                var message = (WindowsMessages)m.Msg;
+                var keys = (Surgical.SDK.Keys)m.WParam;
+
+                var args = new WndProcEventArgs(message, keys);
+
+                if (!this.WndProcBlock(args))
+                {
+                    base.WndProc(ref m);
+                }
             }
 
             public Device Device => device;
@@ -134,6 +102,25 @@
             public Matrix Projection => throw new NotImplementedException();
 
             public Matrix View => throw new NotImplementedException();
+
+            Action<WndProcEventArgs> IWndProc.WndProc { get; set; }
+
+            public Vector2 CursorPosition => new Vector2(Cursor.Position.X, Cursor.Position.Y);
+
+            private bool WndProcBlock(WndProcEventArgs args)
+            {
+                var @this = (IWndProc)this;
+                var wndProc = @this.WndProc;
+
+                if (wndProc == null)
+                {
+                    return false;
+                }
+
+                wndProc(args);
+
+                return args.IsBlocked;
+            }
         }
     }
 }

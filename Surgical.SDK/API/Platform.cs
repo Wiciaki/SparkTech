@@ -15,11 +15,15 @@
 
         public static bool HasAPI { get; private set; }
 
+        public static bool HasWndProc { get; private set; }
+
         public AuthResult AuthResult { get; set; }
 
         public IRender Render { get; set; }
 
         public ICoreAPI CoreAPI { get; set; }
+        
+        public IWndProc WndProc { get; set; }
 
         public ITheme Theme { get; set; }
 
@@ -42,6 +46,17 @@
                 Log.Warn("Render not present!");
             }
 
+            if (this.WndProc != null)
+            {
+                HasWndProc = true;
+
+                SDK.WndProc.Initialize(this.WndProc);
+            }
+            else
+            {
+                Log.Warn("WndProc not present!");
+            }
+
             if (this.CoreAPI != null)
             {
                 HasAPI = true;
@@ -56,7 +71,7 @@
             }
             else
             {
-                Log.Warn("API not present!");
+                Log.Warn("CoreAPI not present!");
             }
 
             GUI.Theme.SetTheme(this.Theme ??= new SurgicalTheme());
@@ -77,8 +92,6 @@
             {
                 throw new ArgumentException("Invalid platform name", nameof(name));
             }
-
-            // verify here
 
             Name = name;
 
