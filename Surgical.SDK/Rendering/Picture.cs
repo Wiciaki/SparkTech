@@ -25,12 +25,19 @@ namespace Surgical.SDK.Rendering
     using SharpDX;
     using SharpDX.Direct3D9;
 
+    using Surgical.SDK.API;
+
     public static class Picture
     {
         private static readonly Sprite Sprite;
 
         static Picture()
         {
+            if (!Platform.HasRender)
+            {
+                return;
+            }
+
             Sprite = new Sprite(Render.Device);
 
             Render.OnDispose += () => Sprite.Dispose();
@@ -40,6 +47,11 @@ namespace Surgical.SDK.Rendering
 
         public static void Draw(Vector2 position, Texture texture, Color? color = null, Vector3? center = null, Rectangle? rectangle = null, float? rotation = null, Vector2? scale = null)
         {
+            if (!Platform.HasRender)
+            {
+                return;
+            }
+
             var c = color ?? Color.White;
             var positionRef = new Vector3(position, 0);
 
@@ -56,19 +68,15 @@ namespace Surgical.SDK.Rendering
             }
             else
             {
-                // Save the old tranformation for restoring later
-                var oldTransform = Sprite.Transform;
+                var transform = Sprite.Transform;
 
-                // Transform the sprite and draw it
                 Sprite.Transform *= Matrix.Scaling(new Vector3(scale.Value, 0)) * Matrix.RotationZ(rotation.Value) * Matrix.Translation(positionRef);
 
                 Sprite.Draw(texture, c, rectangle, center);
 
-                // Restore the previous transform
-                Sprite.Transform = oldTransform;
+                Sprite.Transform = transform;
             }
 
-            // Finish the drawing sequence and release control of the object
             Sprite.End();
         }
     }

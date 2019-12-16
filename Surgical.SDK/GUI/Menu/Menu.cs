@@ -12,10 +12,10 @@
 
     using SharpDX;
 
+    using Surgical.SDK.API;
     using Surgical.SDK.EventData;
     using Surgical.SDK.Logging;
     using Surgical.SDK.Rendering;
-    using Surgical.SDK.Security;
 
     public class Menu : MenuText, IEnumerable<MenuItem>, IExpandable
     {

@@ -6,11 +6,11 @@
 
     public static class Player
     {
-        private static IPlayer player;
+        private static IPlayerFragment player;
 
-        internal static void Initialize(IPlayer p)
+        internal static void Initialize(IPlayerFragment fragment)
         {
-            player = p;
+            player = fragment;
         }
 
         public static void IssueOrder(GameObjectOrder order, Vector3 target)

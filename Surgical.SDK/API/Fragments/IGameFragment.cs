@@ -7,7 +7,7 @@
     using Surgical.SDK.Entities;
     using Surgical.SDK.EventData;
 
-    public interface IGame
+    public interface IGameFragment
     {
         Vector3 CursorPosition { get; }
 

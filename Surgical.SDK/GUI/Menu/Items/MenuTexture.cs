@@ -5,6 +5,7 @@
     using SharpDX;
     using SharpDX.Direct3D9;
 
+    using Surgical.SDK.API;
     using Surgical.SDK.Rendering;
 
     public class MenuTexture : MenuItem
@@ -15,6 +16,11 @@
 
         public MenuTexture(string id, Texture texture) : base(id)
         {
+            if (!Platform.HasRender)
+            {
+                return;
+            }
+
             if (texture == null)
             {
                 throw new ArgumentNullException(nameof(texture));

@@ -20,7 +20,6 @@
     using Surgical.SDK.Orbwalker;
     using Surgical.SDK.Properties;
     using Surgical.SDK.Rendering;
-    using Surgical.SDK.Security;
     using Surgical.SDK.TargetSelector;
 
     public static class SdkSetup
@@ -35,7 +34,12 @@
 
         static SdkSetup()
         {
-            var texture = Texture.FromMemory(Render.Device, Resources.Banner, 295, 100, 0, Usage.None, Format.Unknown, Pool.Default, Filter.Default, Filter.Default, 0);
+            Texture texture = null;
+
+            if (Platform.HasRender)
+            {
+                texture = Texture.FromMemory(Render.Device, Resources.Banner, 295, 100, 0, Usage.None, Format.Unknown, Pool.Default, Filter.Default, Filter.Default, 0);
+            }
 
             Strings = new Translations();
             Strings.Set(JObject.Parse(Resources.Strings));
@@ -161,7 +165,7 @@
                 welcomeMsg = welcomeMsg.Replace("{language}", culture.EnglishName);
             }
 
-            welcomeMsg = welcomeMsg.Replace("{platform}", Platform.PlatformName);
+            welcomeMsg = welcomeMsg.Replace("{platform}", Platform.Name);
 
             Notification.Send(welcomeMsg, 10f);
         }

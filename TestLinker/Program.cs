@@ -9,7 +9,6 @@
     using SharpDX.Windows;
 
     using Surgical.SDK.API;
-    using Surgical.SDK.API.Fragments;
     using Surgical.SDK.Rendering;
 
     using TestLinker.Properties;
@@ -26,7 +25,7 @@
         [STAThread]
         static void Main()
         {
-            var form = new HookedForm { StartPosition = FormStartPosition.Manual, Left = 0, Top = 0 };
+            var form = new HookedForm { StartPosition = FormStartPosition.Manual, Left = 0, Top = 0, AllowUserResizing = false };
 
             var width = form.ClientSize.Width;
             var height = form.ClientSize.Height;
@@ -39,7 +38,7 @@
             var platform = Platform.Declare("Test");
 
             platform.Render = form;
-            platform.Theme = new AlphaStarTheme();
+            //platform.Theme = new AlphaStarTheme();
 
             platform.Boot();
 
@@ -72,12 +71,12 @@
                 device.Clear(ClearFlags.Target, Color.Transparent, 1.0f, 0);
                 
                 device.BeginScene();
-                form.BeginScene();
+                form.BeginScene?.Invoke();
 
                 Picture.Draw(default, texture);
                 
                 // Vector.Draw(Color.White, 50f, new Vector2(100, 100), new Vector2(150, 150));
-                form.Draw();
+                form.Draw?.Invoke();
 
                 //// Make the text boucing on the screen limits
                 //if ((fontDimension.Right + xDir) > width)
@@ -97,7 +96,7 @@
 
                 //// Draw the text
                 //font.DrawText(null, displayText, fontDimension, FontDrawFlags.Center | FontDrawFlags.VerticalCenter, Color.White);
-                form.EndScene();
+                form.EndScene?.Invoke();
 
                 device.EndScene();
                 device.Present();

@@ -40,14 +40,14 @@ namespace Surgical.SDK.Entities
 
         public static event Action<IGameObject> OnCreate, OnDelete;
 
-        internal static void Initialize(IObjectManager mgr)
+        internal static void Initialize(IObjectManagerFragment fragment)
         {
-            Player = mgr.GetPlayer();
+            Player = fragment.GetPlayer();
 
-            mgr.Create = HandleCreate;
-            mgr.Delete = HandleDelete;
+            fragment.Create = HandleCreate;
+            fragment.Delete = HandleDelete;
 
-            Array.ForEach(mgr.GetUnits(), HandleCreate);
+            Array.ForEach(fragment.GetUnits(), HandleCreate);
         }
 
         public static IHero Player { get; private set; }

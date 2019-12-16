@@ -6,7 +6,7 @@
     using SharpDX;
     using SharpDX.Direct3D9;
 
-    using Surgical.SDK.API.Fragments;
+    using Surgical.SDK.API;
     using Surgical.SDK.Logging;
 
     public static class Render

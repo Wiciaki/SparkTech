@@ -2,111 +2,65 @@
 {
     using System;
 
-    using Surgical.SDK.API.Fragments;
     using Surgical.SDK.GUI;
     using Surgical.SDK.Licensing;
     using Surgical.SDK.Logging;
     using Surgical.SDK.Modules;
-    using Surgical.SDK.Security;
 
     public sealed class Platform
     {
-        public static string PlatformName { get; private set; }
+        public static string Name { get; private set; }
 
-        public static Platform Declare(string platformName)
-        {
-            if (string.IsNullOrWhiteSpace(platformName))
-            {
-                throw new ArgumentException("Empty platform name", nameof(platformName));
-            }
+        public static bool HasRender { get; private set; }
 
-            // verify here
-
-            PlatformName = platformName;
-
-            return new Platform();
-        }
-
-        private Platform()
-        { }
+        public static bool HasAPI { get; private set; }
 
         public AuthResult AuthResult { get; set; }
 
-        public ILogger Logger { get; set; }
+        public IRender Render { get; set; }
+
+        public ICoreAPI CoreAPI { get; set; }
 
         public ITheme Theme { get; set; }
 
-        public IRender Render { get; set; }
-
-        public IObjectManager ObjectManager { get; set; }
-
-        public IPlayer Player { get; set; }
-
-        public IEntityEvents EntityEvents { get; set; }
-
-        public IGame Game { get; set; }
-
-        public IPacket Packet { get; set; }
-
         public IScriptLoader ScriptLoader { get; set; }
 
-        public Folder Folder { get; set; }
+        public ILogger Logger { get; set; }
 
         public void Boot()
         {
-            if (this.Folder == null)
-            {
-                var appdata = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-                var folder = new Folder(appdata);
-
-                this.Folder = folder.GetFolder("Surgical.SDK");
-            }
-
-            Folder.Initialize(this.Folder);
-
-            if (this.Logger == null)
-            {
-                this.Logger = new FileLogger();
-            }
-
-            Log.Initialize(this.Logger);
+            Log.SetLogger(this.Logger ??= new FileLogger());
 
             if (this.Render != null)
             {
+                HasRender = true;
+
                 Rendering.Render.Initialize(this.Render);
             }
-
-            if (this.ObjectManager != null)
+            else
             {
-                Entities.ObjectManager.Initialize(this.ObjectManager);
+                Log.Warn("Render not present!");
             }
 
-            if (this.EntityEvents != null)
+            if (this.CoreAPI != null)
             {
-                Entities.EntityEvents.Initialize(this.EntityEvents);
+                HasAPI = true;
+
+                Entities.ObjectManager.Initialize(this.CoreAPI.GetObjectManagerFragment() ?? throw InvalidAPI());
+                Entities.EntityEvents.Initialize(this.CoreAPI.GetEntityEventsFragment() ?? throw InvalidAPI());
+                Entities.Player.Initialize(this.CoreAPI.GetPlayerFragment() ?? throw InvalidAPI());
+                Game.Initialize(this.CoreAPI.GetGameFragment() ?? throw InvalidAPI());
+                Packets.Packet.Initialize(this.CoreAPI.GetPacketFragment() ?? throw InvalidAPI());
+
+                static ArgumentException InvalidAPI() => new ArgumentException("CoreAPI was provided, but one of the fragments was null");
+            }
+            else
+            {
+                Log.Warn("API not present!");
             }
 
-            if (this.Player != null)
-            {
-                Entities.Player.Initialize(this.Player);
-            }
+            GUI.Theme.SetTheme(this.Theme ??= new SurgicalTheme());
 
-            if (this.Game != null)
-            {
-                SDK.Game.Initialize(this.Game);
-            }
-
-            if (this.Packet != null)
-            {
-                Packets.Packet.Initialize(this.Packet);
-            }
-
-            if (this.Theme == null)
-            {
-                this.Theme = new SurgicalTheme();
-            }
-
-            GUI.Theme.SetTheme(this.Theme);
             SdkSetup.SetupAuth(this.AuthResult);
 
             if (this.ScriptLoader == null)
@@ -114,7 +68,24 @@
                 this.ScriptLoader = new ScriptLoader();
             }
 
-            this.ScriptLoader.LoadFrom(this.Folder.GetFolder("Scripts"));
+            this.ScriptLoader.LoadFrom(Folder.Scripts);
         }
+
+        public static Platform Declare(string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                throw new ArgumentException("Invalid platform name", nameof(name));
+            }
+
+            // verify here
+
+            Name = name;
+
+            return new Platform();
+        }
+
+        private Platform()
+        { }
     }
 }

@@ -4,7 +4,7 @@
 
     using Surgical.SDK.EventData;
 
-    public interface IEntityEvents
+    public interface IEntityEventsFragment
     {
         Action<DamageEventArgs> Damage { get; set; }
 

@@ -10,21 +10,21 @@
 
     public static class Game
     {
-        private static IGame game;
+        private static IGameFragment game;
 
-        internal static void Initialize(IGame g)
+        internal static void Initialize(IGameFragment fragment)
         {
-            game = g;
+            game = fragment;
 
-            g.WndProc = args => OnWndProc.SafeInvoke(args);
-            g.Update = args => OnUpdate.SafeInvoke(args);
-            g.Notify = args => OnNotify.SafeInvoke(args);
-            g.Start = args => OnStart.SafeInvoke(args);
-            g.End = args => OnEnd.SafeInvoke(args);
-            g.Afk = args => OnAfk.SafeInvoke(args);
-            g.Ping = args => OnPing.SafeInvoke(args);
-            g.Input = args => OnInput.SafeInvoke(args);
-            g.Chat = args => OnChat.SafeInvoke(args);
+            fragment.WndProc = args => OnWndProc.SafeInvoke(args);
+            fragment.Update = args => OnUpdate.SafeInvoke(args);
+            fragment.Notify = args => OnNotify.SafeInvoke(args);
+            fragment.Start = args => OnStart.SafeInvoke(args);
+            fragment.End = args => OnEnd.SafeInvoke(args);
+            fragment.Afk = args => OnAfk.SafeInvoke(args);
+            fragment.Ping = args => OnPing.SafeInvoke(args);
+            fragment.Input = args => OnInput.SafeInvoke(args);
+            fragment.Chat = args => OnChat.SafeInvoke(args);
         }
 
         public static event Action<WndProcEventArgs> OnWndProc; 

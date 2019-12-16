@@ -18,5 +18,10 @@
         {
             return "IsLicensed=" + this.IsLicensed + ",Expiry=" + this.Expiry;
         }
+
+        public static AuthResult GetLifetime()
+        {
+            return new AuthResult(true);
+        }
     }
 }

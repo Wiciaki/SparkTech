@@ -3,7 +3,7 @@
     using System;
     using System.IO;
 
-    using Surgical.SDK.Security;
+    using Surgical.SDK.API;
 
     public sealed class FileLogger : ILogger
     {

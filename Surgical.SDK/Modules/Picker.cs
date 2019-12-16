@@ -7,10 +7,10 @@
 
     using Newtonsoft.Json.Linq;
 
+    using Surgical.SDK.API;
     using Surgical.SDK.EventData;
     using Surgical.SDK.GUI.Menu;
     using Surgical.SDK.Properties;
-    using Surgical.SDK.Security;
 
     public sealed class Picker<TModule> where TModule : class, IModule
     {

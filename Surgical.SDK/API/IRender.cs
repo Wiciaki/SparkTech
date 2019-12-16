@@ -1,4 +1,4 @@
-﻿namespace Surgical.SDK.API.Fragments
+﻿namespace Surgical.SDK.API
 {
     using System;
 

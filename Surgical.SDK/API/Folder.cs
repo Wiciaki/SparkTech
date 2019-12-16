@@ -1,21 +1,26 @@
-﻿namespace Surgical.SDK.Security
+﻿namespace Surgical.SDK.API
 {
+    using System;
     using System.IO;
 
     public class Folder
     {
-        public static Folder Root { get; private set; }
+        public static Folder Root { get; }
 
-        public static Folder Logs { get; private set; }
+        public static Folder Logs { get; }
 
-        public static Folder Menu { get; private set; }
+        public static Folder Menu { get; }
 
-        internal static void Initialize(string root)
+        public static Folder Scripts { get; }
+
+        static Folder()
         {
-            Root = new Folder(root);
-
+            var appData = new Folder(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData));
+            
+            Root = appData.GetFolder("Surgical.SDK");
             Logs = Root.GetFolder("Logs");
             Menu = Root.GetFolder("Menu");
+            Scripts = Root.GetFolder("Scripts");
         }
 
         private readonly string path;

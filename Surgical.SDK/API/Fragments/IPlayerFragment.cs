@@ -4,7 +4,7 @@
 
     using Surgical.SDK.Entities;
 
-    public interface IPlayer
+    public interface IPlayerFragment
     {
         // todo ??
 

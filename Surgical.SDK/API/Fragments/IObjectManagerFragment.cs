@@ -4,7 +4,7 @@
 
     using Surgical.SDK.Entities;
 
-    public interface IObjectManager
+    public interface IObjectManagerFragment
     {
         IGameObject[] GetUnits();
 

@@ -5,7 +5,7 @@
     using Surgical.SDK.EventData;
     using Surgical.SDK.Packets;
 
-    public interface IPacket
+    public interface IPacketFragment
     {
         Action<PacketEventArgs> Process { get; set; }
 

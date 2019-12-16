@@ -7,14 +7,14 @@
 
     public static class Packet
     {
-        private static IPacket packet;
+        private static IPacketFragment packet;
 
-        internal static void Initialize(IPacket p)
+        internal static void Initialize(IPacketFragment fragment)
         {
-            packet = p;
+            packet = fragment;
 
-            p.Process = args => OnProcess.SafeInvoke(args);
-            p.Send = args => OnSend.SafeInvoke(args);
+            fragment.Process = args => OnProcess.SafeInvoke(args);
+            fragment.Send = args => OnSend.SafeInvoke(args);
         }
 
         public static event Action<PacketEventArgs> OnProcess;

@@ -2,12 +2,20 @@
 {
     using SharpDX;
 
+    using Surgical.SDK.API;
+
     public class Theme
     {
         private static ITheme theme;
 
         internal static void SetTheme(ITheme t)
         {
+            if (!Platform.HasRender)
+            {
+                theme = new NullTheme();
+                return;
+            }
+
             if (theme == null)
             {
                 Update();

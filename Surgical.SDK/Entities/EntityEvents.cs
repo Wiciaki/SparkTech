@@ -47,28 +47,28 @@
         
         public static event Action<UpdateChargedSpellEventArgs> OnSpellbookUpdateChargedSpell;
 
-        internal static void Initialize(IEntityEvents events)
+        internal static void Initialize(IEntityEventsFragment fragment)
         {
-            events.Damage = args => OnDamage.SafeInvoke(args);
-            events.PlayAnimation = args => OnPlayAnimation.SafeInvoke(args);
-            events.ProcessSpellCast = args => OnProcessSpellCast.SafeInvoke(args);
-            events.DoCast = args => OnDoCast.SafeInvoke(args);
-            events.NewPath = args => OnNewPath.SafeInvoke(args);
-            events.IssueOrder = args => OnIssueOrder.SafeInvoke(args);
-            events.Teleport = args => OnTeleport.SafeInvoke(args);
-            events.Aggro = args => OnAggro.SafeInvoke(args);
-            events.SwapItem = args => OnSwapItem.SafeInvoke(args);
-            events.PlaceItemInSlot = args => OnPlaceItemInSlot.SafeInvoke(args);
-            events.RemoveItem = args => OnRemoveItem.SafeInvoke(args);
-            events.BuffAdd = args => OnBuffAdd.SafeInvoke(args);
-            events.BuffRemove = args => OnBuffRemove.SafeInvoke(args);
-            events.BuffUpdateCount = args => OnBuffUpdateCount.SafeInvoke(args);
-            events.LevelUp = args => OnLevelUp.SafeInvoke(args);
-            events.PauseAnimation = args => OnPauseAnimation.SafeInvoke(args);
-            events.Target = args => OnTarget.SafeInvoke(args);
-            events.SpellbookCastSpell = args => OnSpellbookCastSpell.SafeInvoke(args);
-            events.SpellbookStopCast = args => OnSpellbookStopCast.SafeInvoke(args);
-            events.SpellbookUpdateChargedSpell = args => OnSpellbookUpdateChargedSpell.SafeInvoke(args);
+            fragment.Damage = args => OnDamage.SafeInvoke(args);
+            fragment.PlayAnimation = args => OnPlayAnimation.SafeInvoke(args);
+            fragment.ProcessSpellCast = args => OnProcessSpellCast.SafeInvoke(args);
+            fragment.DoCast = args => OnDoCast.SafeInvoke(args);
+            fragment.NewPath = args => OnNewPath.SafeInvoke(args);
+            fragment.IssueOrder = args => OnIssueOrder.SafeInvoke(args);
+            fragment.Teleport = args => OnTeleport.SafeInvoke(args);
+            fragment.Aggro = args => OnAggro.SafeInvoke(args);
+            fragment.SwapItem = args => OnSwapItem.SafeInvoke(args);
+            fragment.PlaceItemInSlot = args => OnPlaceItemInSlot.SafeInvoke(args);
+            fragment.RemoveItem = args => OnRemoveItem.SafeInvoke(args);
+            fragment.BuffAdd = args => OnBuffAdd.SafeInvoke(args);
+            fragment.BuffRemove = args => OnBuffRemove.SafeInvoke(args);
+            fragment.BuffUpdateCount = args => OnBuffUpdateCount.SafeInvoke(args);
+            fragment.LevelUp = args => OnLevelUp.SafeInvoke(args);
+            fragment.PauseAnimation = args => OnPauseAnimation.SafeInvoke(args);
+            fragment.Target = args => OnTarget.SafeInvoke(args);
+            fragment.SpellbookCastSpell = args => OnSpellbookCastSpell.SafeInvoke(args);
+            fragment.SpellbookStopCast = args => OnSpellbookStopCast.SafeInvoke(args);
+            fragment.SpellbookUpdateChargedSpell = args => OnSpellbookUpdateChargedSpell.SafeInvoke(args);
         }
     }
 }

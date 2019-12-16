@@ -8,14 +8,14 @@
     {
         private static ILogger l;
 
-        internal static void Initialize(ILogger logger)
+        internal static void SetLogger(ILogger logger)
         {
             l = logger;
 
             AppDomain.CurrentDomain.UnhandledException += (sender, args) => { Error(args.ExceptionObject); };
 
             Info("Started logger");
-            Info("Platform name: " + Platform.PlatformName);
+            Info("Platform name: " + Platform.Name);
         }
 
         public static void Error(object obj)

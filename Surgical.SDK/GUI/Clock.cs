@@ -27,7 +27,7 @@
 
         private static string Text()
         {
-            return Platform.PlatformName + " - " + DateTime.Now.ToLongTimeString();
+            return Platform.Name + " - " + DateTime.Now.ToLongTimeString();
         }
 
         internal static void UpdateSize()
