@@ -54,8 +54,8 @@
             {
                 var (color, b) = JObjectToColorBool(value);
 
-                base.Value = color;
-                this.Value = b;
+                this.tmValue = color;
+                this.value = b;
             }
         }
 

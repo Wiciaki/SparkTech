@@ -87,12 +87,12 @@
         {
             var dictionary = new Dictionary<string, ModeSettings>
                        {
-                           ["combo"] = new ModeSettings(Keys.Space) { ChampionAuto = true, ChampionSpells = 2 },
-                           ["laneclear"] = new ModeSettings(Keys.V) { ChampionAuto = true, Minions = 2, Pets = true, Wards = true },
-                           ["harass"] = new ModeSettings(Keys.C) { ChampionAuto = true, ChampionSpells = 1, Minions = 1, Wards = true },
-                           ["lasthit"] = new ModeSettings(Keys.X) { Minions = 1, Wards = true },
-                           ["custom"] = new ModeSettings(Keys.Z),
-                           ["flee"] = new ModeSettings(Keys.A) { Flee = true, Explosives = true }
+                           ["combo"] = new ModeSettings(Key.Space) { ChampionAuto = true, ChampionSpells = 2 },
+                           ["laneclear"] = new ModeSettings(Key.V) { ChampionAuto = true, Minions = 2, Pets = true, Wards = true },
+                           ["harass"] = new ModeSettings(Key.C) { ChampionAuto = true, ChampionSpells = 1, Minions = 1, Wards = true },
+                           ["lasthit"] = new ModeSettings(Key.X) { Minions = 1, Wards = true },
+                           ["custom"] = new ModeSettings(Key.Z),
+                           ["flee"] = new ModeSettings(Key.A) { Flee = true, Explosives = true }
                        };
 
             Modes.AddRange(dictionary.Select(pair => new Mode(pair.Key, pair.Value)));
@@ -103,13 +103,13 @@
 
         private class ModeSettings
         {
-            public readonly Keys Keys;
+            public readonly Key Keys;
 
             public int ChampionSpells, Minions;
 
             public bool ChampionAuto, Wards, Pets, Explosives, Flee;
 
-            public ModeSettings(Keys keys)
+            public ModeSettings(Key keys)
             {
                 this.Keys = keys;
             }

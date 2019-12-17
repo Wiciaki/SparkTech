@@ -50,7 +50,7 @@
                 new Menu("modes"),
                 new Menu("menu")
                 {
-                    new MenuKey("key", Keys.ShiftKey),
+                    new MenuKey("key", Key.ShiftKey),
                     new MenuBool("toggle", false),
                     new MenuAction("apply", SetMenuTriggers),
                     new MenuBool("arrows", true),
@@ -214,7 +214,7 @@
         {
             var menu = Menu.GetMenu("menu");
 
-            var key = menu["key"].GetValue<Keys>();
+            var key = menu["key"].GetValue<Key>();
             var toggle = menu["toggle"].GetValue<bool>();
 
             Menu.SetTriggers(key, toggle);

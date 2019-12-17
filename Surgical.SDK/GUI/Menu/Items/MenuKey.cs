@@ -7,9 +7,9 @@
     using Surgical.SDK.API;
     using Surgical.SDK.EventData;
 
-    public class MenuKey : MenuValue, IMenuValue<Keys>
+    public class MenuKey : MenuValue, IMenuValue<Key>
     {
-        public MenuKey(string id, Keys defaultValue) : base(id, defaultValue.ToString())
+        public MenuKey(string id, Key defaultValue) : base(id, defaultValue.ToString())
         {
             WndProc.OnWndProc += this.KeyWndProc;
         }
@@ -20,14 +20,14 @@
 
         private Size2 size;
 
-        private Keys value;
+        private Key value;
 
-        public Keys Value
+        public Key Value
         {
             get => this.value;
             set
             {
-                if (this.value == 0)
+                if (this.value == Key.None)
                 {
                     this.value = value;
                     return;
@@ -51,7 +51,7 @@
         {
             if (this.selecting && args.Message == WindowsMessages.KEYUP)
             {
-                this.Value = args.Keys;
+                this.Value = args.Key;
             }
         }
 
@@ -107,7 +107,7 @@
         protected override JToken Token
         {
             get => this.Value.ToString();
-            set => this.Value = EnumCache<Keys>.Parse(value.Value<string>());
+            set => this.Value = EnumCache<Key>.Parse(value.Value<string>());
         }
     }
 }

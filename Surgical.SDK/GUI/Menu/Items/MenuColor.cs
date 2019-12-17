@@ -8,7 +8,7 @@
 
     public class MenuColor : MenuValue, IMenuValue<Color>
     {
-        private Color value;
+        protected Color tmValue;
 
         private bool picking;
 
@@ -28,19 +28,19 @@
 
         public Color Value
         {
-            get => this.value;
+            get => this.tmValue;
             set
             {
-                if (value != this.value && this.UpdateValue(value))
+                if (value != this.tmValue && this.UpdateValue(value))
                 {
-                    this.value = value;
+                    this.tmValue = value;
                 }
             }
         }
 
         protected override Size2 GetSize()
         {
-            return AddButton(AddButton(base.GetSize(), out this.size), out _);
+            return AddButton(AddButton(base.GetSize(), out this.size, "🎨"), out _);
         }
 
         protected internal override void OnEndScene(Point point, int width)
@@ -83,8 +83,8 @@
 
         protected override JToken Token
         {
-            get => ColorToJArray(this.value);
-            set => this.value = JArrayToColor((JArray)value);
+            get => ColorToJArray(this.tmValue);
+            set => this.tmValue = JArrayToColor((JArray)value);
         }
 
         #endregion

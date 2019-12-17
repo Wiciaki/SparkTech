@@ -6,7 +6,7 @@
 
     public class MenuKeyBool : MenuKey, IMenuValue<bool>
     {
-        public MenuKeyBool(string id, Keys defaultValue) : base(id, defaultValue)
+        public MenuKeyBool(string id, Key defaultValue) : base(id, defaultValue)
         {
 
         }
@@ -42,9 +42,18 @@
         {
             base.KeyWndProc(args);
 
-            if (args.Keys == base.Value)
+            if (args.Key != base.Value)
             {
-                this.Value = args.Message == WindowsMessages.KEYDOWN || args.Message == WindowsMessages.KEYUP && (!this.toggle || (this.release ^= true));
+                return;
+            }
+
+            if (this.Toggle)
+            {
+                this.Value = args.Message == WindowsMessages.KEYUP && (this.release ^= true);
+            }
+            else
+            {
+                this.Value = args.Message == WindowsMessages.KEYDOWN || args.Message == WindowsMessages.CHAR;
             }
         }
     }

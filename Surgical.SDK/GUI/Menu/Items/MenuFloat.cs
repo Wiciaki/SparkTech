@@ -113,7 +113,7 @@
 
             if (this.dragging)
             {
-                var diff = 0;//GameInterface.CursorPosition().X - point.X;
+                var diff = WndProc.CursorPosition.X - point.X;
 
                 if (diff <= 0)
                 {

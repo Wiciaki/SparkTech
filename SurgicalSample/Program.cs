@@ -1,6 +1,7 @@
 ﻿namespace SurgicalSample
 {
     using System;
+    using System.Collections.Generic;
 
     using SharpDX;
 
@@ -32,7 +33,7 @@
                             new MenuInt("SlidersCanBeReverseToo", 500, 100, 350),
                             new MenuList("HaveFun")
                             {
-                                Options = { "Exploring", "All", "The", "SDK", "Possibilities" }
+                                Options = new List<string> { "Exploring", "All", "The", "SDK", "Possibilities" }
                             },
                             new MenuColorBool("TextColor", Color.White, true)
                         };

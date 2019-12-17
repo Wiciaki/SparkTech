@@ -7,6 +7,7 @@
     using SharpDX;
 
     using Surgical.SDK.EventData;
+    using Surgical.SDK.Logging;
 
     public abstract class MenuItem
     {
@@ -59,6 +60,11 @@
             var s = this.save;
 
             this.save = false;
+
+            if (s)
+            {
+                Log.Warn(this.GetType());
+            }
 
             return s;
         }

@@ -28,7 +28,7 @@ namespace SharpDX
     /// <summary>
     /// Internal class to interact with Native Message
     /// </summary>
-    class Win32Native
+    internal static class Win32Native
     {
         [DllImport("kernel32.dll", EntryPoint = "CreateFile", SetLastError = true, CharSet = CharSet.Unicode)]
         internal static extern IntPtr Create(string fileName, NativeFileAccess desiredAccess, NativeFileShare shareMode, IntPtr securityAttributes, NativeFileMode mode,

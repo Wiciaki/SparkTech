@@ -135,6 +135,11 @@
 
         protected internal override void OnWndProc(Point point, int width, WndProcEventArgs args)
         {
+            if (!this.IsExpanded)
+            {
+                return;
+            }
+
             point.X += width;
 
             if (ArrowsEnabled)
@@ -190,9 +195,12 @@
 
             var b = false;
 
-            foreach (var _ in this.Where(item => item.ConsumeSaveToken()))
+            foreach (var item in this)
             {
-                b = true;
+                if (item.ConsumeSaveToken())
+                {
+                    b = true;
+                }
             }
 
             return b;
@@ -205,20 +213,28 @@
                 return null;
             }
 
-            // broscience but works rly fast
-            var b = false;
-            var addable = from item in this let token = item.GetToken() where token != null && (b = true) select (item.Id, Token: token);
+            var addable = new Dictionary<string, JToken>();
 
-            if (!b)
+            foreach (var item in this)
+            {
+                var token = item.GetToken();
+
+                if (token != null)
+                {
+                    addable.Add(item.Id, token);
+                }
+            }
+
+            if (addable.Count == 0)
             {
                 return null;
             }
 
             var o = new JObject();
 
-            foreach (var (id, token) in addable)
+            foreach (var pair in addable)
             {
-                o.Add(id, token);
+                o.Add(pair.Key, pair.Value);
             }
 
             return o;
@@ -288,7 +304,7 @@
 
         private static readonly List<SaveHandler> SaveHandlers = new List<SaveHandler>();
 
-        public static Keys ActivationKeys { get; private set; }
+        public static Key ActivationKeys { get; private set; }
 
         public static bool IsOpen { get; private set; }
 
@@ -309,23 +325,25 @@
             //Game.OnStart += delegate
             {
                 Render.OnEndScene += OnEndScene;
+                Render.OnDraw += OnDraw;
                 WndProc.OnWndProc += OnWndProc;
             };
         }
 
-        private static void OnEndScene()
+        private static void OnDraw()
         {
-            if (!IsOpen)
-            {
-                return;
-            }
-
             if (Platform.HasWndProc)
             {
                 cursor = WndProc.CursorPosition;
             }
+        }
 
-            EndSceneGroup(Roots, position);
+        private static void OnEndScene()
+        {
+            if (IsOpen)
+            {
+                EndSceneGroup(Roots, position);
+            }
         }
 
         private static void OnWndProc(WndProcEventArgs args)
@@ -339,7 +357,7 @@
                 }
             }
 
-            if (args.Keys == ActivationKeys)
+            if (args.Key == ActivationKeys)
             {
                 var m = args.Message;
 
@@ -349,9 +367,6 @@
                     return;
                 }
             }
-
-            Log.Info(args);
-            Log.Info($"CursonPos: {cursor}");
 
             if (IsOpen)
             {
@@ -363,6 +378,8 @@
 
         private static void WndProcGroup<T>(List<T> roots, Point point, WndProcEventArgs args) where T : MenuItem
         {
+            roots = roots.FindAll(item => item.IsVisible);
+
             if (roots.Count == 0)
             {
                 return;
@@ -373,11 +390,6 @@
             roots.ForEach(item =>
             {
                 item.OnWndProc(point, width, args);
-
-                if (!item.IsVisible)
-                {
-                    return;
-                }
 
                 if (IsLeftClick(args.Message) && item is IExpandable && IsCursorInside(point, new Size2(width, item.Size.Height)))
                 {
@@ -448,7 +460,7 @@
             position = new Point(x, y);
         }
 
-        internal static void SetTriggers(Keys keys, bool toggle)
+        internal static void SetTriggers(Key keys, bool toggle)
         {
             if (toggle == toggleBehavior && ActivationKeys == keys)
             {
@@ -497,11 +509,9 @@
 
         internal static bool IsCursorInside(Point point, Size2 size)
         {
-            var rect = point.ToRectangle(size);
 
-            // hello this is bugged af
 
-            return cursor.X >= rect.Left && cursor.X <= rect.Right && cursor.Y <= rect.Bottom && cursor.Y >= rect.Top;
+            return point.X <= cursor.X && point.X + size.Width >= cursor.X && point.Y <= cursor.Y && point.Y + size.Height >= cursor.Y;
         }
 
         internal static bool IsLeftClick(WindowsMessages message)
