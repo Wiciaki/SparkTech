@@ -9,7 +9,7 @@
     ///     Documentation pulled from MSDN.
     /// </summary>
     [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Official names from the winuser.h of the Windows SDK v6.1")]
-    public enum WindowsMessages : uint
+    public enum WindowsMessages
     {
         /// <summary>
         ///     The WM_NULL message performs no operation. An application sends the WM_NULL message if it wants to post a message

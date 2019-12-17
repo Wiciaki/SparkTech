@@ -16,7 +16,7 @@
         public new bool Value
         {
             get => this.value;
-            set => this.value ^= this.value != value && this.UpdateValue(value);
+            set => this.value ^= this.value != value && this.UpdateValue(value, true);
         }
 
         public bool Toggle

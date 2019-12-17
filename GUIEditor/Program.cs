@@ -22,7 +22,7 @@
         [STAThread]
         private static void Main()
         {
-            var form = new MainForm { StartPosition = FormStartPosition.Manual, Left = 0, Top = 0, AllowUserResizing = false };
+            var form = new MainForm { AllowUserResizing = false };
 
             var width = form.ClientSize.Width;
             var height = form.ClientSize.Height;
@@ -51,7 +51,7 @@
                 form.Draw();
 
                 var cursor = WndProc.CursorPosition;
-                Vector.Draw(Color.Purple, 6, new Vector2(cursor.X - 3, cursor.Y), new Vector2(cursor.X + 3, cursor.Y));
+                Vector.Draw(Color.WhiteSmoke, 6, new Vector2(cursor.X - 3, cursor.Y), new Vector2(cursor.X + 3, cursor.Y));
 
                 form.EndScene();
 
@@ -75,7 +75,7 @@
             protected override void WndProc(ref Message m)
             {
                 var message = (WindowsMessages)m.Msg;
-                var key = (Key)m.WParam;
+                var key = (Key)m.WParam.ToInt64();
 
                 var args = new WndProcEventArgs(message, key);
 
@@ -105,7 +105,16 @@
 
             Action<WndProcEventArgs> IWndProc.WndProc { get; set; }
 
-            public Vector2 CursorPosition => new Vector2(Cursor.Position.X - 8, Cursor.Position.Y - 30);
+            public Vector2 CursorPosition
+            {
+                get
+                {
+                    var cursor = Cursor.Position;
+                    var offset = this.DesktopLocation;
+
+                    return new Vector2(cursor.X - offset.X - 8, cursor.Y - offset.Y - 30);
+                }
+            }
 
             private bool WndProcBlock(WndProcEventArgs args)
             {

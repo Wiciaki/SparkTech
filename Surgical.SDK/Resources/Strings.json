@@ -1,4 +1,4 @@
-{
+﻿{
   "en": {
     "keySelector": "Press now...",
     "firstTimeWelcome": "Welcome to {platform}!\nEnglish language detected.\nYou can change that in the menu.",
@@ -8,6 +8,8 @@
     "languageUnknown": "Welcome to {platform}!\nYour system language,\n\"{language}\" is not supported by the SDK.\nDefault will be used.\nYou can change that inside the menu."
   },
   "zh": {
-
+    "keySelector": "现在按...",
+    "firstTimeWelcome": "Welcome to {platform}!\nChinese language detected.\nYou can change that in the menu.",
+    "none": "None"
   } 
 }

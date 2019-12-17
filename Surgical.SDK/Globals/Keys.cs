@@ -6,7 +6,7 @@
     /// <summary>Specifies key codes and modifiers.</summary>
   [Flags]
   [ComVisible(true)]
-  public enum Key
+  public enum Key : long
   {
     /// <summary>The bitmask to extract a key code from a key value.</summary>
     KeyCode = 65535, // 0x0000FFFF

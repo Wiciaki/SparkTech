@@ -6,6 +6,7 @@
 
     using SharpDX;
 
+    using Surgical.SDK.API;
     using Surgical.SDK.Rendering;
 
     public class Notification
@@ -61,11 +62,21 @@
             Render.OnEndScene += OnEndScene;
         }
 
+        private static float GetTime()
+        {
+            if (Platform.HasAPI)
+            {
+                return Game.Time;
+            }
+
+            return Environment.TickCount / 1000f;
+        }
+
         private static void OnEndScene()
         {
             var point = new Point(1870, 100);
 
-            var t = Game.Time;
+            var t = GetTime();
 
             var width = Entries.Max(entry => entry.Notification.contentSize.Width);
 
@@ -123,7 +134,7 @@
             {
                 this.Notification = n;
 
-                this.time = duration + Game.Time;
+                this.time = duration + GetTime();
             }
         }
 

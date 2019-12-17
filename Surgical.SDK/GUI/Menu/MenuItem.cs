@@ -89,7 +89,7 @@
             this.MenuValue<T>().Value = value;
         }
 
-        protected bool UpdateValue<T>(T @new)
+        protected bool UpdateValue<T>(T @new, bool notifyOnly = false)
         {
             var t = this.MenuValue<T>();
 
@@ -105,7 +105,10 @@
                 }
             }
 
-            this.save = true;
+            if (!notifyOnly)
+            {
+                this.save = true;
+            }
 
             return true;
         }
