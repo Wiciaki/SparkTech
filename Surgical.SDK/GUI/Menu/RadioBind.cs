@@ -1,30 +1,21 @@
 ﻿namespace Surgical.SDK.GUI.Menu
 {
-    using System;
     using System.Collections.Generic;
-    using System.Linq;
-
-    using Surgical.SDK.EventData;
 
     public class RadioBind
     {
         private bool block;
 
-        private readonly List<MenuItem> items = new List<MenuItem>();
+        private readonly List<MenuBool> items = new List<MenuBool>();
 
-        public void Add(MenuItem item)
+        public void Add(MenuBool item)
         {
-            if (!(item is MenuBool))
-            {
-                throw new ArgumentException("Added something different than MenuBool to a RadioBind!");
-            }
-
             this.items.Add(item);
 
-            item.BeforeValueChange += args => this.BeforeValueChange(item, args);
+            item.BeforeValueChange += _ => this.BeforeValueChange(item);
         }
 
-        private void BeforeValueChange(MenuItem item, BeforeValueChangeEventArgs args)
+        private void BeforeValueChange(MenuItem item)
         {
             if (this.block)
             {
@@ -33,7 +24,7 @@
 
             this.block = true;
 
-            foreach (var i in this.items.Cast<MenuBool>())
+            foreach (var i in this.items)
             {
                 i.Value = i.Id == item.Id;
             }

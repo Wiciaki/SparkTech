@@ -120,7 +120,7 @@
 
             if (Menu.ArrowsEnabled)
             {
-                Menu.AddArrow(point);
+                Menu.DrawArrow(point);
                 point.X += Menu.ArrowWidth;
             }
 

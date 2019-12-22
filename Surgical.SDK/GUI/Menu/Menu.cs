@@ -12,7 +12,6 @@
 
     using SharpDX;
 
-    using Surgical.SDK.API;
     using Surgical.SDK.EventData;
     using Surgical.SDK.Logging;
     using Surgical.SDK.Rendering;
@@ -76,7 +75,7 @@
 
             if (translations != null)
             {
-                menu.translations.Set(translations);
+                menu.translations.Add(translations);
             }
             else
             {
@@ -126,7 +125,7 @@
 
             if (ArrowsEnabled)
             {
-                AddArrow(point);
+                DrawArrow(point);
                 point.X += ArrowWidth;
             }
 
@@ -322,19 +321,33 @@
         {
             LanguageTag = EnumCache<Language>.Description(default);
 
-            //Game.OnStart += delegate
+            if (!Platform.HasUserInputAPI)
+            {
+                SetOpen(true);
+            }
+
+            if (Platform.HasCoreAPI)
+            {
+                Game.OnStart += Subscribe;
+            }
+            else
+            {
+                Subscribe(null);
+            }
+
+            static void Subscribe(EventArgs _)
             {
                 Render.OnEndScene += OnEndScene;
                 Render.OnDraw += OnDraw;
-                WndProc.OnWndProc += OnWndProc;
-            };
+                UserInput.OnWndProc += OnWndProc;
+            }
         }
 
         private static void OnDraw()
         {
-            if (Platform.HasWndProc)
+            if (Platform.HasUserInputAPI)
             {
-                cursor = WndProc.CursorPosition;
+                cursor = UserInput.CursorPosition;
             }
         }
 
@@ -348,7 +361,7 @@
 
         private static void OnWndProc(WndProcEventArgs args)
         {
-            if (Platform.HasAPI)
+            if (Platform.HasCoreAPI)
             {
                 if (Game.IsChatOpen() || Game.IsShopOpen())
                 {
@@ -436,7 +449,7 @@
 
         #region Menu Settings
 
-        internal static void SetOpen(bool open)
+        private static void SetOpen(bool open)
         {
             if (IsOpen == open)
             {
@@ -447,7 +460,7 @@
 
             if (!open)
             {
-                SaveHandlers.ForEach(r => r.Save());
+                SaveHandlers.ForEach(handler => handler.Save());
             }
 
             OnVisibilityChanged.SafeInvoke(EventArgs.Empty);
@@ -491,7 +504,7 @@
             Language = language;
             LanguageTag = tag;
 
-            Roots.ForEach(root => root.UpdateTranslations());
+            Roots.ForEach(menu => menu.UpdateTranslations());
 
             OnLanguageChanged.SafeInvoke(EventArgs.Empty);
         }
@@ -509,8 +522,6 @@
 
         internal static bool IsCursorInside(Point point, Size2 size)
         {
-
-
             return point.X <= cursor.X && point.X + size.Width >= cursor.X && point.Y <= cursor.Y && point.Y + size.Height >= cursor.Y;
         }
 
@@ -540,7 +551,7 @@
 
         internal static int ArrowWidth => arrowSize.Width;
 
-        internal static void AddArrow(Point point)
+        internal static void DrawArrow(Point point)
         {
             Theme.DrawTextBox(point, arrowSize, ExtraArrowText, true, Color.Transparent);
         }
@@ -596,32 +607,34 @@
 
                 if (this.menu.ConsumeSaveToken())
                 {
+                    string status;
                     var token = this.menu.GetToken();
 
                     if (token == null)
                     {
-                        Log.Info("All values are default, nothing to save...");
+                        status = "All values are default, deleting save file";
+                        
                         this.lastSaved = null;
                         File.Delete(this.targetPath);
                     }
                     else if (JToken.DeepEquals(token, this.lastSaved))
                     {
-                        Log.Info("Nothing needs saving, aborting...");
+                        status = "Nothing needs saving";
                     }
                     else
                     {
+                        status = "Saved the updated values";
+
                         this.lastSaved = token;
 
-                        using (var fs = new FileStream(this.targetPath, FileMode.Create, FileAccess.Write))
-                        {
-                            using var sw = new StreamWriter(fs);
-                            using var writer = new JsonTextWriter(sw) { Formatting = Formatting.Indented };
+                        using var fs = new FileStream(this.targetPath, FileMode.Create, FileAccess.Write);
+                        using var sw = new StreamWriter(fs);
+                        using var writer = new JsonTextWriter(sw) { Formatting = Formatting.Indented };
                             
-                            await token.WriteToAsync(writer);
-                        }
-
-                        Log.Info($"Saved the updated values for \"{this.menu.Id}\"!");
+                        await token.WriteToAsync(writer);
                     }
+
+                    Log.Info($"SaveHandler - \"{this.menu.Id}\" - {status}");
                 }
 
                 this.semaphore.Release();

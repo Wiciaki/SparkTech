@@ -113,11 +113,11 @@
     },
     "position": {
       "en": {
-        "text":  "Position" 
+        "text": "Position"
       },
       "zh": {
-        "text":  "???" 
-      } 
+        "text": "???"
+      }
     },
     "x": {
       "en": {
@@ -135,6 +135,15 @@
         "text": "Y轴"
       }
     }
+  },
+  "theme": {
+    "en": {
+      "text": "Theme",
+      "options": [
+        "Default",
+        "Purplish"
+      ]
+    } 
   },
   "clock": {
     "en": {
@@ -178,7 +187,25 @@
     },
     "zh": {
       "text": "??"
-    }
+    },
+    "licensed": {
+      "en": {
+        "text": "License time left: {expiry}"
+      },
+      "zh": {
+        "text": "??? {expiry}"
+      }
+    },
+    "unlicensed": {
+      "en": {
+        "text": "Not licensed"
+      }
+    },
+    "lifetime": {
+      "en": {
+        "text": "Lifetime license" 
+      } 
+    } 
   },
   "about": {
     "en": {

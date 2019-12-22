@@ -15,7 +15,7 @@
             this.item = new MenuInt(id, 0, 10, defaultValue);
         }
 
-        public static List<Weight> GetWeights(Menu menu)
+        public static List<Weight> CreateWeights(Menu menu)
         {
             return new List<Weight> { I<PlayerDistanceWeight>(), I<MouseDistanceWeight>(), I<DealsMostDmgWeight>(), I<TimeToKillWeight>() };
 
@@ -29,7 +29,7 @@
             }
         }
 
-        public int Importance => this.item.Value;
+        public int Value => this.item.Value;
 
         protected abstract IComparable GetComparable(IHero target);
 
@@ -63,7 +63,7 @@
 
             protected override IComparable GetComparable(IHero target)
             {
-                return Game.CursorPosition.Distance(target);
+                return UserInput.CursorPosition.ScreenToWorld().Distance(target);
             }
         }
 

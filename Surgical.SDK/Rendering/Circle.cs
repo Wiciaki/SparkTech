@@ -104,6 +104,11 @@ namespace Surgical.SDK.Rendering
 
         public static void Draw(Color color, float radius, float thickness, bool filled, params Vector3[] worldPositions)
         {
+            if (!Platform.HasCoreAPI)
+            {
+                return;
+            }
+
             // Save the current VertexDecleration for restoring later
             var declaration = Render.Device.VertexDeclaration;
 
@@ -115,7 +120,7 @@ namespace Surgical.SDK.Rendering
             Render.Device.SetStreamSource(0, VertexBuffer, 0, Utilities.SizeOf<Vector4>());
             Render.Device.VertexDeclaration = VertexDeclaration;
 
-            var multiplier = Render.View * Render.Projection;
+            var multiplier = Game.ViewMatrix * Game.ProjectionMatrix;
 
             // Loop through the world-space positions to draw the circle
             foreach (var position in worldPositions)

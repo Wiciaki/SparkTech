@@ -51,6 +51,8 @@ using System.Windows.Forms;
 
 namespace SharpDX.Windows
 {
+    using System.Runtime.InteropServices;
+
     /// <summary>
     /// Default Rendering Form.
     /// </summary>
@@ -60,8 +62,6 @@ namespace SharpDX.Windows
         private const int SIZE_RESTORED = 0;
         private const int SIZE_MINIMIZED = 1;
         private const int SIZE_MAXIMIZED = 2;
-        private const int SIZE_MAXSHOW = 3;
-        private const int SIZE_MAXHIDE = 4;
         private const int WM_ACTIVATEAPP = 0x001C;
         private const int WM_POWERBROADCAST = 0x0218;
         private const int WM_MENUCHAR = 0x0120;
@@ -72,7 +72,7 @@ namespace SharpDX.Windows
         private const int SC_SCREENSAVE = 0xF140;
         private const int WM_DISPLAYCHANGE = 0x007E;
         private const int MNC_CLOSE = 1;
-        private System.Drawing.Size cachedSize;
+        private Size cachedSize;
         private FormWindowState previousWindowState;
         //private DisplayMonitor monitor;
         private bool isUserResizing;
@@ -93,17 +93,17 @@ namespace SharpDX.Windows
         /// <param name="text">The text.</param>
         public RenderForm(String text)
         {
-            Text = text;
-            ClientSize = new System.Drawing.Size(800, 600);
+            this.Text = text;
+            this.ClientSize = new Size(800, 600);
             //MinimumSize = new System.Drawing.Size(200, 200);
 
-            ResizeRedraw = true;
-            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint, true);
+            this.ResizeRedraw = true;
+            this.SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint, true);
 
             //Icon = Desktop.Properties.Resources.logo;
 
-            previousWindowState = FormWindowState.Normal;
-            AllowUserResizing = true;
+            this.previousWindowState = FormWindowState.Normal;
+            this.AllowUserResizing = true;
         }
 
         /// <summary>
@@ -164,17 +164,17 @@ namespace SharpDX.Windows
         {
             get
             {
-                return allowUserResizing;
+                return this.allowUserResizing;
             }
             set
             {
-                if (allowUserResizing != value)
+                if (this.allowUserResizing != value)
                 {
-                    allowUserResizing = value;
-                    MaximizeBox = allowUserResizing;
-                    FormBorderStyle = IsFullscreen
-                        ? FormBorderStyle.None
-                        : allowUserResizing ? FormBorderStyle.Sizable : FormBorderStyle.FixedSingle;
+                    this.allowUserResizing = value;
+                    this.MaximizeBox = this.allowUserResizing;
+                    this.FormBorderStyle = this.IsFullscreen
+                                               ? FormBorderStyle.None
+                                               : this.allowUserResizing ? FormBorderStyle.Sizable : FormBorderStyle.FixedSingle;
                 }
             }
         }
@@ -194,11 +194,11 @@ namespace SharpDX.Windows
         /// <param name="e">A <see cref="T:System.EventArgs"/> that contains the event data.</param>
         protected override void OnResizeBegin(EventArgs e)
         {
-            isUserResizing = true;
+            this.isUserResizing = true;
 
             base.OnResizeBegin(e);
-            cachedSize = Size;
-            OnPauseRendering(e);
+            this.cachedSize = this.Size;
+            this.OnPauseRendering(e);
         }
 
         /// <summary>
@@ -209,14 +209,14 @@ namespace SharpDX.Windows
         {
             base.OnResizeEnd(e);
 
-            if (isUserResizing && cachedSize != Size)
+            if (this.isUserResizing && this.cachedSize != this.Size)
             {
-                OnUserResized(e);
+                this.OnUserResized(e);
                 // UpdateScreen();
             }
 
-            isUserResizing = false;
-            OnResumeRendering(e);
+            this.isUserResizing = false;
+            this.OnResumeRendering(e);
         }
 
         /// <summary>
@@ -225,10 +225,10 @@ namespace SharpDX.Windows
         /// <param name="e">A <see cref="T:System.Windows.Forms.PaintEventArgs"/> that contains the event data.</param>
         protected override void OnPaintBackground(PaintEventArgs e)
         {
-            if (!isBackgroundFirstDraw)
+            if (!this.isBackgroundFirstDraw)
             {
                 base.OnPaintBackground(e);
-                isBackgroundFirstDraw = true;
+                this.isBackgroundFirstDraw = true;
             }
         }
 
@@ -238,8 +238,8 @@ namespace SharpDX.Windows
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void OnPauseRendering(EventArgs e)
         {
-            if (PauseRendering != null)
-                PauseRendering(this, e);
+            if (this.PauseRendering != null)
+                this.PauseRendering(this, e);
         }
 
         /// <summary>
@@ -248,8 +248,8 @@ namespace SharpDX.Windows
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void OnResumeRendering(EventArgs e)
         {
-            if (ResumeRendering != null)
-                ResumeRendering(this, e);
+            if (this.ResumeRendering != null)
+                this.ResumeRendering(this, e);
         }
 
         /// <summary>
@@ -258,14 +258,14 @@ namespace SharpDX.Windows
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void OnUserResized(EventArgs e)
         {
-            if (UserResized != null)
-                UserResized(this, e);
+            if (this.UserResized != null)
+                this.UserResized(this, e);
         }
 
         private void OnMonitorChanged(EventArgs e)
         {
-            if (MonitorChanged != null)
-                MonitorChanged(this, e);
+            if (this.MonitorChanged != null)
+                this.MonitorChanged(this, e);
         }
 
         /// <summary>
@@ -274,8 +274,8 @@ namespace SharpDX.Windows
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void OnAppActivated(EventArgs e)
         {
-            if (AppActivated != null)
-                AppActivated(this, e);
+            if (this.AppActivated != null)
+                this.AppActivated(this, e);
         }
 
         /// <summary>
@@ -284,8 +284,8 @@ namespace SharpDX.Windows
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void OnAppDeactivated(EventArgs e)
         {
-            if (AppDeactivated != null)
-                AppDeactivated(this, e);
+            if (this.AppDeactivated != null)
+                this.AppDeactivated(this, e);
         }
 
         /// <summary>
@@ -294,8 +294,8 @@ namespace SharpDX.Windows
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void OnSystemSuspend(EventArgs e)
         {
-            if (SystemSuspend != null)
-                SystemSuspend(this, e);
+            if (this.SystemSuspend != null)
+                this.SystemSuspend(this, e);
         }
 
         /// <summary>
@@ -304,8 +304,8 @@ namespace SharpDX.Windows
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void OnSystemResume(EventArgs e)
         {
-            if (SystemResume != null)
-                SystemResume(this, e);
+            if (this.SystemResume != null)
+                this.SystemResume(this, e);
         }
 
         /// <summary>
@@ -314,18 +314,18 @@ namespace SharpDX.Windows
         /// <param name="e">The <see cref="System.ComponentModel.CancelEventArgs"/> instance containing the event data.</param>
         private void OnScreensaver(CancelEventArgs e)
         {
-            if (Screensaver != null)
-                Screensaver(this, e);
+            if (this.Screensaver != null)
+                this.Screensaver(this, e);
         }
 
         protected override void OnClientSizeChanged(EventArgs e)
         {
             base.OnClientSizeChanged(e);
-            if (!isUserResizing && (isSizeChangedWithoutResizeBegin || cachedSize != Size))
+            if (!this.isUserResizing && (this.isSizeChangedWithoutResizeBegin || this.cachedSize != this.Size))
             {
-                isSizeChangedWithoutResizeBegin = false;
-                cachedSize = Size;
-                OnUserResized(EventArgs.Empty);
+                this.isSizeChangedWithoutResizeBegin = false;
+                this.cachedSize = this.Size;
+                this.OnUserResized(EventArgs.Empty);
                 //UpdateScreen();
             }
         }
@@ -343,14 +343,14 @@ namespace SharpDX.Windows
                 case WM_SIZE:
                     if (wparam == SIZE_MINIMIZED)
                     {
-                        previousWindowState = FormWindowState.Minimized;
-                        OnPauseRendering(EventArgs.Empty);
+                        this.previousWindowState = FormWindowState.Minimized;
+                        this.OnPauseRendering(EventArgs.Empty);
                     }
                     else
                     {
                         RawRectangle rect;
 
-                        Win32Native.GetClientRect(m.HWnd, out rect);
+                        GetClientRect(m.HWnd, out rect);
                         if (rect.Bottom - rect.Top == 0)
                         {
                             // Rapidly clicking the task bar to minimize and restore a window
@@ -360,51 +360,51 @@ namespace SharpDX.Windows
                         }
                         else if (wparam == SIZE_MAXIMIZED)
                         {
-                            if (previousWindowState == FormWindowState.Minimized)
-                                OnResumeRendering(EventArgs.Empty);
+                            if (this.previousWindowState == FormWindowState.Minimized)
+                                this.OnResumeRendering(EventArgs.Empty);
 
-                            previousWindowState = FormWindowState.Maximized;
+                            this.previousWindowState = FormWindowState.Maximized;
 
-                            OnUserResized(EventArgs.Empty);
+                            this.OnUserResized(EventArgs.Empty);
                             //UpdateScreen();
-                            cachedSize = Size;
+                            this.cachedSize = this.Size;
                         }
                         else if (wparam == SIZE_RESTORED)
                         {
-                            if (previousWindowState == FormWindowState.Minimized)
-                                OnResumeRendering(EventArgs.Empty);
+                            if (this.previousWindowState == FormWindowState.Minimized)
+                                this.OnResumeRendering(EventArgs.Empty);
 
-                            if (!isUserResizing && (Size != cachedSize || previousWindowState == FormWindowState.Maximized))
+                            if (!this.isUserResizing && (this.Size != this.cachedSize || this.previousWindowState == FormWindowState.Maximized))
                             {
-                                previousWindowState = FormWindowState.Normal;
+                                this.previousWindowState = FormWindowState.Normal;
 
                                 // Only update when cachedSize is != 0
-                                if (cachedSize != Size.Empty)
+                                if (this.cachedSize != Size.Empty)
                                 {
-                                    isSizeChangedWithoutResizeBegin = true;
+                                    this.isSizeChangedWithoutResizeBegin = true;
                                 }
                             }
                             else
-                                previousWindowState = FormWindowState.Normal;
+                                this.previousWindowState = FormWindowState.Normal;
                         }
                     }
                     break;
                 case WM_ACTIVATEAPP:
                     if (wparam != 0)
-                        OnAppActivated(EventArgs.Empty);
+                        this.OnAppActivated(EventArgs.Empty);
                     else
-                        OnAppDeactivated(EventArgs.Empty);
+                        this.OnAppDeactivated(EventArgs.Empty);
                     break;
                 case WM_POWERBROADCAST:
                     if (wparam == PBT_APMQUERYSUSPEND)
                     {
-                        OnSystemSuspend(EventArgs.Empty);
+                        this.OnSystemSuspend(EventArgs.Empty);
                         m.Result = new IntPtr(1);
                         return;
                     }
                     else if (wparam == PBT_APMRESUMESUSPEND)
                     {
-                        OnSystemResume(EventArgs.Empty);
+                        this.OnSystemResume(EventArgs.Empty);
                         m.Result = new IntPtr(1);
                         return;
                     }
@@ -417,7 +417,7 @@ namespace SharpDX.Windows
                     if (wparam == SC_MONITORPOWER || wparam == SC_SCREENSAVE)
                     {
                         var e = new CancelEventArgs();
-                        OnScreensaver(e);
+                        this.OnScreensaver(e);
                         if (e.Cancel)
                         {
                             m.Result = IntPtr.Zero;
@@ -426,7 +426,7 @@ namespace SharpDX.Windows
                     }
                     break;
                 case WM_DISPLAYCHANGE:
-                    OnMonitorChanged(EventArgs.Empty);
+                    this.OnMonitorChanged(EventArgs.Empty);
                     break;
             }
 
@@ -440,5 +440,8 @@ namespace SharpDX.Windows
 
             return base.ProcessDialogKey(keyData);
         }
+
+        [DllImport("user32.dll", EntryPoint = "GetClientRect")]
+        private static extern bool GetClientRect(IntPtr hWnd, out RawRectangle lpRect);
     }
 }

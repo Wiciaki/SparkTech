@@ -11,31 +11,27 @@
 
     public static class Render
     {
-        public static Device Device => render.Device;
+        public static Device Device => fragment.Device;
 
         public static event Action OnDraw, OnBeginScene, OnEndScene, OnLostDevice, OnResetDevice, OnDispose, OnSetRenderTarget;
 
         public static Size2 Resolution()
         {
-            return render.Resolution();
+            return fragment.Resolution();
         }
 
-        public static Matrix Projection => render.Projection;
+        private static IRenderAPI fragment;
 
-        public static Matrix View => render.View;
-
-        private static IRender render;
-
-        internal static void Initialize(IRender r)
+        internal static void Initialize(IRenderAPI api)
         {
-            render = r;
+            fragment = api;
 
-            r.Draw = () => InvokeRenderEvent(OnDraw);
-            r.BeginScene = () => InvokeRenderEvent(OnBeginScene);
-            r.EndScene = () => InvokeRenderEvent(OnEndScene);
-            r.LostDevice = () => InvokeRenderEvent(OnLostDevice);
-            r.ResetDevice = () => InvokeRenderEvent(OnResetDevice);
-            r.SetRenderTarget = () => InvokeRenderEvent(OnSetRenderTarget);
+            fragment.Draw = () => InvokeRenderEvent(OnDraw);
+            fragment.BeginScene = () => InvokeRenderEvent(OnBeginScene);
+            fragment.EndScene = () => InvokeRenderEvent(OnEndScene);
+            fragment.LostDevice = () => InvokeRenderEvent(OnLostDevice);
+            fragment.ResetDevice = () => InvokeRenderEvent(OnResetDevice);
+            fragment.SetRenderTarget = () => InvokeRenderEvent(OnSetRenderTarget);
 
             static void OnExit(object o, EventArgs args) => InvokeRenderEvent(OnDispose);
 

@@ -1,6 +1,7 @@
 ﻿namespace Surgical.SDK.Licensing
 {
     using System;
+    using System.Globalization;
 
     public class AuthResult
     {
@@ -16,7 +17,14 @@
 
         public override string ToString()
         {
-            return "IsLicensed=" + this.IsLicensed + ",Expiry=" + this.Expiry;
+            var expiry = this.IsLifetime() ? "Lifetime" : this.Expiry.ToString(CultureInfo.InvariantCulture);
+
+            return $"IsLicensed={this.IsLicensed},Expiry={expiry}";
+        }
+
+        public bool IsLifetime()
+        {
+            return this.Expiry == default;
         }
 
         public static AuthResult GetLifetime()

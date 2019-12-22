@@ -6,7 +6,7 @@
 
     using Surgical.SDK.EventData;
 
-    public interface IWndProc
+    public interface IUserInputAPI
     {
         Action<WndProcEventArgs> WndProc { get; set; }
 

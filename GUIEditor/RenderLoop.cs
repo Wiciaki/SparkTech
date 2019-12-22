@@ -130,10 +130,9 @@ namespace SharpDX.Windows
                     if (localHandle != IntPtr.Zero)
                     {
                         // Previous code not compatible with Application.AddMessageFilter but faster then DoEvents
-                        NativeMessage msg;
-                        while (Win32Native.PeekMessage(out msg, IntPtr.Zero, 0, 0, 0) != 0)
+                        while (PeekMessage(out var msg, IntPtr.Zero, 0, 0, 0) != 0)
                         {
-                            if (Win32Native.GetMessage(out msg, IntPtr.Zero, 0, 0) == -1)
+                            if (GetMessage(out msg, IntPtr.Zero, 0, 0) == -1)
                             {
                                 throw new InvalidOperationException(String.Format(CultureInfo.InvariantCulture,
                                     "An error happened in rendering loop while processing windows messages. Error: {0}",
@@ -149,8 +148,8 @@ namespace SharpDX.Windows
                             var message = new Message() { HWnd = msg.handle, LParam = msg.lParam, Msg = (int)msg.msg, WParam = msg.wParam };
                             if (!Application.FilterMessage(ref message))
                             {
-                                Win32Native.TranslateMessage(ref msg);
-                                Win32Native.DispatchMessage(ref msg);
+                                TranslateMessage(ref msg);
+                                DispatchMessage(ref msg);
                             }
                         }
                     }
@@ -174,14 +173,6 @@ namespace SharpDX.Windows
         }
 
         /// <summary>
-        /// Runs the specified main loop in the specified context.
-        /// </summary>
-        public static void Run(ApplicationContext context, Action renderCallback)
-        {
-            Run(context.MainForm, renderCallback);
-        }
-
-        /// <summary>
         /// Runs the specified main loop for the specified windows form.
         /// </summary>
         /// <param name="form">The form.</param>
@@ -192,23 +183,25 @@ namespace SharpDX.Windows
         /// renderCallback</exception>
         public static void Run(Control form, Action renderCallback, bool useApplicationDoEvents = false)
         {
-            if(form == null) throw new ArgumentNullException("form");
-            if(renderCallback == null) throw new ArgumentNullException("renderCallback");
-
             form.Show();
+
             using var renderLoop = new RenderLoop(form) { UseApplicationDoEvents = useApplicationDoEvents };
-            while(renderLoop.NextFrame())
+            while (renderLoop.NextFrame())
             {
                 renderCallback();
             }
         }
 
-        /// <summary>
-        /// Gets a value indicating whether this instance is application idle.
-        /// </summary>
-        /// <value>
-        /// 	<c>true</c> if this instance is application idle; otherwise, <c>false</c>.
-        /// </value>
-        public static bool IsIdle => Win32Native.PeekMessage(out _, IntPtr.Zero, 0, 0, 0) == 0;
+        [DllImport("user32.dll", EntryPoint = "PeekMessage")]
+        private static extern int PeekMessage(out NativeMessage lpMsg, IntPtr hWnd, int wMsgFilterMin, int wMsgFilterMax, int wRemoveMsg);
+
+        [DllImport("user32.dll", EntryPoint = "GetMessage")]
+        private static extern int GetMessage(out NativeMessage lpMsg, IntPtr hWnd, int wMsgFilterMin, int wMsgFilterMax);
+
+        [DllImport("user32.dll", EntryPoint = "TranslateMessage")]
+        private static extern int TranslateMessage(ref NativeMessage lpMsg);
+
+        [DllImport("user32.dll", EntryPoint = "DispatchMessage")]
+        private static extern int DispatchMessage(ref NativeMessage lpMsg);
     }
 }

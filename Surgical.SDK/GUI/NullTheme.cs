@@ -19,7 +19,7 @@
         public void DrawBox(Point point, Size2 size, Color color)
         { }
 
-        public void DrawTextBox(Point point, Size2 size, string text, bool forceCentered, Color? color)
+        public void DrawTextBox(Point point, Size2 size, string text, bool forceCentered, Color? color, float decayStage)
         { }
 
         public void DrawBorders(Point point, params Size2[] sizes)

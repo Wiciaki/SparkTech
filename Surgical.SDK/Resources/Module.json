@@ -8,7 +8,11 @@
   "picker": {
     "en": {
       "text": "Selected {module}",
-      "helpText": "{module} will be changed immediately" 
+      "helpText": "{module} will be changed immediately"
+    },
+    "zh": {
+      "text": "ZH- Selected {module}",
+      "helpText": "ZH- {module} will be changed immediately"
     } 
   } 
 }

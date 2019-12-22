@@ -11,7 +11,7 @@
     {
         public MenuKey(string id, Key defaultValue) : base(id, defaultValue.ToString())
         {
-            WndProc.OnWndProc += this.KeyWndProc;
+            UserInput.OnWndProc += this.KeyWndProc;
         }
 
         private bool selecting;

@@ -1,29 +1,34 @@
-﻿namespace Surgical.SDK.API
+﻿namespace Surgical.SDK
 {
     using System;
+    using System.IO;
 
+    using Surgical.SDK.API;
+    using Surgical.SDK.Entities;
     using Surgical.SDK.GUI;
     using Surgical.SDK.Licensing;
     using Surgical.SDK.Logging;
     using Surgical.SDK.Modules;
+    using Surgical.SDK.Packets;
+    using Surgical.SDK.Rendering;
 
     public sealed class Platform
     {
         public static string Name { get; private set; }
 
-        public static bool HasRender { get; private set; }
+        public static bool HasRenderAPI { get; private set; }
 
-        public static bool HasAPI { get; private set; }
+        public static bool HasCoreAPI { get; private set; }
 
-        public static bool HasWndProc { get; private set; }
+        public static bool HasUserInputAPI { get; private set; }
 
-        public AuthResult AuthResult { get; set; }
-
-        public IRender Render { get; set; }
+        public IRenderAPI RenderAPI { get; set; }
 
         public ICoreAPI CoreAPI { get; set; }
         
-        public IWndProc WndProc { get; set; }
+        public IUserInputAPI UserInputAPI { get; set; }
+
+        public AuthResult AuthResult { get; set; }
 
         public ITheme Theme { get; set; }
 
@@ -35,37 +40,37 @@
         {
             Log.SetLogger(this.Logger ??= new FileLogger());
 
-            if (this.Render != null)
+            if (this.RenderAPI != null)
             {
-                HasRender = true;
+                HasRenderAPI = true;
 
-                Rendering.Render.Initialize(this.Render);
+                Render.Initialize(this.RenderAPI);
             }
             else
             {
-                Log.Warn("Render not present!");
+                Log.Warn("RenderAPI not present!");
             }
 
-            if (this.WndProc != null)
+            if (this.UserInputAPI != null)
             {
-                HasWndProc = true;
+                HasUserInputAPI = true;
 
-                SDK.WndProc.Initialize(this.WndProc);
+                UserInput.Initialize(this.UserInputAPI);
             }
             else
             {
-                Log.Warn("WndProc not present!");
+                Log.Warn("UserInputAPI not present!");
             }
 
             if (this.CoreAPI != null)
             {
-                HasAPI = true;
+                HasCoreAPI = true;
 
-                Entities.ObjectManager.Initialize(this.CoreAPI.GetObjectManagerFragment() ?? throw InvalidAPI());
-                Entities.EntityEvents.Initialize(this.CoreAPI.GetEntityEventsFragment() ?? throw InvalidAPI());
-                Entities.Player.Initialize(this.CoreAPI.GetPlayerFragment() ?? throw InvalidAPI());
+                ObjectManager.Initialize(this.CoreAPI.GetObjectManagerFragment() ?? throw InvalidAPI());
+                EntityEvents.Initialize(this.CoreAPI.GetEntityEventsFragment() ?? throw InvalidAPI());
+                Player.Initialize(this.CoreAPI.GetPlayerFragment() ?? throw InvalidAPI());
                 Game.Initialize(this.CoreAPI.GetGameFragment() ?? throw InvalidAPI());
-                Packets.Packet.Initialize(this.CoreAPI.GetPacketFragment() ?? throw InvalidAPI());
+                Packet.Initialize(this.CoreAPI.GetPacketFragment() ?? throw InvalidAPI());
 
                 static ArgumentException InvalidAPI() => new ArgumentException("CoreAPI was provided, but one of the fragments was null");
             }
@@ -74,13 +79,19 @@
                 Log.Warn("CoreAPI not present!");
             }
 
-            GUI.Theme.SetTheme(this.Theme ??= new SurgicalTheme());
-
+            GUI.Theme.Initialize(this.Theme);
             SdkSetup.SetupAuth(this.AuthResult);
 
             if (this.ScriptLoader == null)
             {
                 this.ScriptLoader = new ScriptLoader();
+            }
+
+            var dir = Path.Combine(Folder.Root, Name);
+
+            if (Directory.Exists(dir))
+            {
+                this.ScriptLoader.LoadFrom(dir);
             }
 
             this.ScriptLoader.LoadFrom(Folder.Scripts);

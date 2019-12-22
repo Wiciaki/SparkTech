@@ -31,7 +31,7 @@ namespace Surgical.SDK.TargetSelector
     {
         #region Public Methods and Operators
 
-        IHero GetTarget(IEnumerable<IHero> targets);
+        IHero GetTarget(IEnumerable<IHero> heroes);
 
         #endregion
     }

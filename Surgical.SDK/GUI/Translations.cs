@@ -1,10 +1,11 @@
 ﻿namespace Surgical.SDK.GUI
 {
+    using System.Collections;
     using System.Collections.Generic;
 
     using Newtonsoft.Json.Linq;
 
-    public sealed class Translations
+    public sealed class Translations : IEnumerable
     {
         private JObject translations = new JObject();
 
@@ -20,7 +21,7 @@
             return this.GetToken(str)?.Value<string>();
         }
 
-        public void Set(JObject value)
+        public void Add(JObject value)
         {
             this.translations = value;
         }
@@ -34,15 +35,12 @@
         {
             var o = (JObject)this.translations[id];
 
-            if (o == null && !this.customs.TryGetValue(id, out o))
-            {
-                return null;
-            }
+            return o == null && !this.customs.TryGetValue(id, out o) ? null : new Translations { o };
+        }
 
-            var t = new Translations();
-            t.Set(o);
-
-            return t;
+        public IEnumerator GetEnumerator()
+        {
+            return new[] { this.translations }.GetEnumerator();
         }
     }
 }

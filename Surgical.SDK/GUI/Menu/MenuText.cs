@@ -13,7 +13,7 @@
 
         }
 
-        private const string HelpBoxText = "[?]"; // ❔
+        private const string HelpBoxText = "[?]";
 
         private const string MinItemWidthText = "This is enough";
 
@@ -59,6 +59,18 @@
                 this.helpText = value;
                 this.UpdateHelpTextSize();
             }
+        }
+
+        public void BindVariable(string varName, string value)
+        {
+            Update();
+
+            void Update()
+            {
+                this.Text = this.Text.Replace($"{{{varName}}}", value);
+            }
+
+            Menu.OnLanguageChanged += delegate { Update(); };
         }
 
         protected internal override void SetTranslations(Translations t)

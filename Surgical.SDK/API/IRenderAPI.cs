@@ -5,7 +5,7 @@
     using SharpDX;
     using SharpDX.Direct3D9;
 
-    public interface IRender
+    public interface IRenderAPI
     {
         Size2 Resolution();
 
@@ -22,9 +22,5 @@
         Action ResetDevice { get; set; }
 
         Action SetRenderTarget { get; set; }
-
-        Matrix Projection { get; }
-
-        Matrix View { get; }
     }
 }

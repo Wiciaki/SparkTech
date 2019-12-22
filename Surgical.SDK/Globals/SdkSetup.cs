@@ -1,5 +1,6 @@
-﻿namespace Surgical.SDK.API
+﻿namespace Surgical.SDK
 {
+    using System;
     using System.Globalization;
     using System.IO;
     using System.Linq;
@@ -26,8 +27,6 @@
     {
         public static readonly bool FirstRun;
 
-        //public static readonly IAuth SurgicalAuth;
-
         private static readonly Menu Menu;
 
         private static readonly Translations Strings;
@@ -36,13 +35,14 @@
         {
             Texture texture = null;
 
-            if (Platform.HasRender)
+            if (Platform.HasRenderAPI)
             {
                 texture = Texture.FromMemory(Render.Device, Resources.Banner, 295, 100, 0, Usage.None, Format.Unknown, Pool.Default, Filter.Default, Filter.Default, 0);
             }
 
-            Strings = new Translations();
-            Strings.Set(JObject.Parse(Resources.Strings));
+            Strings = new Translations { JObject.Parse(Resources.Strings) };
+
+            Theme.SetTheme(new SurgicalTheme());
 
             Menu = new Menu("sdk")
             {
@@ -58,6 +58,7 @@
                     new MenuInt("x", 0, 500, 40),
                     new MenuInt("y", 0, 500, 40)
                 },
+                new MenuList("theme"),
                 new MenuList("clock"),
                 new Menu("humanizer")
                 {
@@ -65,9 +66,9 @@
                 },
                 new Menu("license")
                 {
-                    new MenuText("lifetime"),
-                    new MenuText("valid"),
-                    new MenuText("invalid")
+                    new MenuText("lifetime") { IsVisible = false },
+                    new MenuText("licensed") { IsVisible = false },
+                    new MenuText("unlicensed") { IsVisible = false }
                 },
                 new Menu("about")
                 {
@@ -90,42 +91,39 @@
             typeof(EvadeService).Trigger();
             typeof(ChampionService).Trigger();
 
-            //SurgicalAuth = new Netlicensing(Machine.UserId, "d1213e7b-0817-4544-aa37-01817170c494");
-            //var AuthTask = SurgicalAuth.GetAuth("Surgical.SDK").ContinueWith(HandleAuth, TaskScheduler.Current);
+            // SurgicalAuth = new Netlicensing(Machine.UserId, "d1213e7b-0817-4544-aa37-01817170c494");
+            // var AuthTask = SurgicalAuth.GetAuth("Surgical.SDK").ContinueWith(HandleAuth, TaskScheduler.Current);
 
-            if (!Platform.HasWndProc)
+            if (!Platform.HasUserInputAPI)
             {
-                Menu.SetOpen(true);
-
                 Menu.IsExpanded = true;
                 Menu.GetMenu("menu").IsExpanded = true;
             }
 
             Log.Info("Surgical.SDK initialized!");
-            
-            // test code
-
-            //Menu.GetMenu("modes").GetMenu("harass").IsExpanded = true;
-            //((IExpandable)Menu.GetMenu("modes").GetMenu("harass")["objects"]).IsExpanded = true;
-            //((IExpandable)Menu["clock"]).IsExpanded = true;
-
-            //Menu["clock"].SetValue(1);
-            //Menu.GetMenu("modes").GetMenu("harass")["champAuto"].SetValue(false);
-
-            //var items = Menu.OfType<IExpandable>().ToList();
-            //var i = 0;
-
-            //var timer = new System.Timers.Timer(1000d) { Enabled = true };
-            //timer.Elapsed += delegate
-            //{
-            //    items.ForEach(item => item.IsExpanded = false);
-            //    items[i++ % items.Count].IsExpanded = true;
-            //};
         }
 
         internal static void SetupAuth(AuthResult result)
         {
-            // TODO
+            var menu = Menu.GetMenu("license");
+
+            if (!result.IsLicensed)
+            {
+                menu["unlicensed"].IsVisible = true;
+            }
+            else if (result.IsLifetime())
+            {
+                menu["lifetime"].IsVisible = true;
+            }
+            else
+            {
+                var expiry = result.Expiry.ToString(CultureInfo.InvariantCulture);
+
+                var item = menu.Get<MenuText>("licensed");
+                item.IsVisible = true;
+
+                item.BindVariable("expiry", expiry);
+            }
         }
 
         private static void SetupMenu(out bool firstRun)
@@ -152,8 +150,8 @@
             Log.Info("Running Surgical.SDK for the first time.");
 
             var culture = CultureInfo.InstalledUICulture;
-            var values = EnumCache<Language>.Values;
-            var i = values.ConvertAll(EnumCache<Language>.Description).IndexOf(culture.TwoLetterISOLanguageName);
+            var languages = EnumCache<Language>.Values;
+            var i = languages.ConvertAll(EnumCache<Language>.Description).IndexOf(culture.TwoLetterISOLanguageName);
 
             string welcomeMsg;
 
@@ -229,7 +227,7 @@
             var mainMenu = JObject.Parse(str);
             var mode = JObject.Parse(Resources.Mode);
 
-            foreach (var o in mainMenu["modes"].Skip(EnumCache<Language>.Values.Count)/*.Take(6)*/.Cast<JProperty>().Select(prop => prop.Value).OfType<JObject>())
+            foreach (var o in mainMenu["modes"].Skip(EnumCache<Language>.Values.Count)/*.Take(6)*/.Cast<JProperty>().Select(property => property.Value).OfType<JObject>())
             {
                 foreach (var pair in mode)
                 {

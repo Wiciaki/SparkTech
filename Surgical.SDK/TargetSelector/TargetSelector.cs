@@ -21,13 +21,13 @@
         {
             this.Menu = new Menu("TargetSelector");
 
-            this.weights = Weight.GetWeights(this.Menu);
+            this.weights = Weight.CreateWeights(this.Menu);
         }
 
-        IHero ITargetSelector.GetTarget(IEnumerable<IHero> targets)
+        IHero ITargetSelector.GetTarget(IEnumerable<IHero> heroes)
         {
             // experimental, lets see how this performs
-            var enemies = targets.Where(hero => hero.IsEnemy()).ToArray();
+            var enemies = heroes.Where(hero => hero.IsEnemy()).ToArray();
 
             switch (enemies.Length)
             {
@@ -38,15 +38,15 @@
             }
 
             var dictionary = enemies.ToDictionary(e => e, e => 0, new EntityComparer<IHero>());
-            var query = from w in this.weights let i = w.Importance where i > 0 select (w, i);
+            var query = from w in this.weights let v = w.Value where v > 0 select (w, v);
 
-            foreach (var (weight, importance) in query)
+            foreach (var (weight, value) in query)
             {
                 Array.Sort(enemies, weight);
 
                 for (var i = dictionary.Count; i >= 0; --i)
                 {
-                    dictionary[enemies[i]] += i * importance;
+                    dictionary[enemies[i]] += i * value;
                 }
             }
 

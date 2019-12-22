@@ -37,9 +37,9 @@ namespace Surgical.SDK.TargetSelector
 
         #region Public Methods and Operators
 
-        public static IHero GetTarget(this IEnumerable<IHero> targets)
+        public static IHero GetTarget(this IEnumerable<IHero> heroes)
         {
-            return Picker.Current.GetTarget(targets);
+            return Picker.Current.GetTarget(heroes);
         }
 
         #endregion

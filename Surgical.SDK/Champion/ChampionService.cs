@@ -5,11 +5,18 @@
 
     public static class ChampionService
     {
-        public static readonly Picker<Champion> Picker = new Picker<Champion>(GetModule());
+        public static readonly Picker<Champion> Picker = new Picker<Champion>(GetChampionModule());
 
-        private static Champion GetModule()
+        private static Champion GetChampionModule()
         {
-            return /*ObjectManager.Player.CharName*/ "" switch
+            var charName = string.Empty;
+
+            if (Platform.HasCoreAPI)
+            {
+                charName = ObjectManager.Player.CharName;
+            }
+
+            return charName switch
             {
                 "Orianna" => new Orianna(),
                 "Vayne" => new Vayne(),

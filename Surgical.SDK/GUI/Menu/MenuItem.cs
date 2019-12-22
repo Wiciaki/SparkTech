@@ -7,7 +7,6 @@
     using SharpDX;
 
     using Surgical.SDK.EventData;
-    using Surgical.SDK.Logging;
 
     public abstract class MenuItem
     {
@@ -23,12 +22,12 @@
 
         protected MenuItem(string id)
         {
-            this.Id = id;
-
             if (string.IsNullOrWhiteSpace(id))
             {
-                throw new ArgumentException("Empty MenuItem id provided!");
+                throw new ArgumentException("Empty MenuItem Id provided!");
             }
+
+            this.Id = id;
         }
 
         protected abstract Size2 GetSize();
@@ -60,11 +59,6 @@
             var s = this.save;
 
             this.save = false;
-
-            if (s)
-            {
-                Log.Warn(this.GetType());
-            }
 
             return s;
         }

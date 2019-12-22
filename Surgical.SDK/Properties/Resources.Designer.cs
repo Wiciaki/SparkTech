@@ -108,10 +108,9 @@ namespace Surgical.SDK.Properties {
         ///      &quot;helpText&quot;: &quot;All the settings besides key are champion-specific&quot; 
         ///    },
         ///    &quot;zh&quot;: {
-        ///      &quot;text&quot;: &quot;??&quot;
+        ///      &quot;text&quot;: &quot;PLS TRANSLATE TY&quot;
         ///    },
-        ///    &quot;combo&quot;: {
-        ///      &quot; [rest of string was truncated]&quot;;.
+        ///    &quot;comb [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string MainMenu {
             get {
@@ -168,11 +167,14 @@ namespace Surgical.SDK.Properties {
         ///  &quot;picker&quot;: {
         ///    &quot;en&quot;: {
         ///      &quot;text&quot;: &quot;Selected {module}&quot;,
-        ///      &quot;helpText&quot;: &quot;{module} will be changed immediately&quot; 
+        ///      &quot;helpText&quot;: &quot;{module} will be changed immediately&quot;
+        ///    },
+        ///    &quot;zh&quot;: {
+        ///      &quot;text&quot;: &quot;ZH- Selected {module}&quot;,
+        ///      &quot;helpText&quot;: &quot;ZH- {module} will be changed immediately&quot;
         ///    } 
         ///  } 
-        ///}
-        ///.
+        ///}.
         /// </summary>
         internal static string Module {
             get {
@@ -210,13 +212,12 @@ namespace Surgical.SDK.Properties {
         ///    &quot;firstTimeWelcome&quot;: &quot;Welcome to {platform}!\nEnglish language detected.\nYou can change that in the menu.&quot;,
         ///    &quot;none&quot;: &quot;None&quot;, 
         ///
-        ///    // special, don&apos;t translate, only change here
+        ///    // special, don&apos;t translate
         ///    &quot;languageUnknown&quot;: &quot;Welcome to {platform}!\nYour system language,\n\&quot;{language}\&quot; is not supported by the SDK.\nDefault will be used.\nYou can change that inside the menu.&quot;
         ///  },
         ///  &quot;zh&quot;: {
-        ///
-        ///  } 
-        ///}.
+        ///    &quot;keySelector&quot;: &quot;现在按...&quot;,
+        ///    &quot;firstTimeWelcome&quot;: &quot;Welcome to {platform}!\nChinese language d [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string Strings {
             get {
@@ -227,7 +228,27 @@ namespace Surgical.SDK.Properties {
         /// <summary>
         ///   Looks up a localized string similar to {
         ///  &quot;en&quot;: {
-        ///    &quot;text&quot;: &quot;Surgical&quot; 
+        ///    &quot;text&quot;: &quot;Surgical&quot;
+        ///  },
+        ///  &quot;timeToKill&quot;: {
+        ///    &quot;en&quot;: {
+        ///      &quot;text&quot;: &quot;Time to kill&quot;
+        ///    }
+        ///  },
+        ///  &quot;distancePlayer&quot;: {
+        ///    &quot;en&quot;: {
+        ///      &quot;text&quot;: &quot;Distance to player&quot;
+        ///    }
+        ///  },
+        ///  &quot;distanceMouse&quot;: {
+        ///    &quot;en&quot;: {
+        ///      &quot;text&quot;: &quot;Distance to mouse&quot;
+        ///    }
+        ///  },
+        ///  &quot;dealsMostDmg&quot;: {
+        ///    &quot;en&quot;: {
+        ///      &quot;text&quot;: &quot;Deals most damage&quot; 
+        ///    } 
         ///  }
         ///}.
         /// </summary>

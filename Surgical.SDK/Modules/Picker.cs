@@ -7,13 +7,14 @@
 
     using Newtonsoft.Json.Linq;
 
-    using Surgical.SDK.API;
     using Surgical.SDK.EventData;
     using Surgical.SDK.GUI.Menu;
     using Surgical.SDK.Properties;
 
     public sealed class Picker<TModule> where TModule : class, IModule
     {
+        public event Action<BeforeValueChangeEventArgs> OnModuleSelected;
+
         private readonly List<TModule> modules;
 
         private readonly Folder folder;
@@ -23,8 +24,6 @@
         private readonly MenuList picker;
 
         internal TModule Current { get; private set; }
-
-        public event Action<BeforeValueChangeEventArgs> OnModuleSelected;
 
         internal void Add(TModule module)
         {
@@ -50,12 +49,10 @@
                 input = input.Substring(1);
             }
 
-            this.picker = new MenuList("picker") { IsVisible = false, IsExpanded = true, Options = { module.Menu.Text } };
+            this.picker = new MenuList("picker") { IsVisible = false, IsExpanded = true, Options = new List<string> { module.Menu.Text } };
             this.picker.BeforeValueChange += this.BeforeValueChange;
 
-#pragma warning disable CA1304 // Specify CultureInfo
             this.root = new Menu(input.ToLower()) { IsVisible = module.Menu.Any() };
-#pragma warning restore CA1304 // Specify CultureInfo
             this.root.Add(this.picker);
             this.root.Add(module.Menu);
 

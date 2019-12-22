@@ -2,41 +2,39 @@
 {
     using SharpDX;
 
-    using Surgical.SDK.API;
-
     public static class Theme
     {
-        private static ITheme theme;
+        private static ITheme theme, platformTheme;
 
-        internal static void SetTheme(ITheme t)
+        internal static void Initialize(ITheme t)
         {
-            if (!Platform.HasRender)
+            platformTheme = t;
+
+            if (!Platform.HasRenderAPI)
             {
                 theme = new NullTheme();
                 return;
             }
 
-            if (theme == null)
-            {
-                Update();
-                return;
-            }
+            theme = t ?? new SurgicalTheme();
+            theme.Initialize();
 
+            Menu.Menu.UpdateArrowSize();
+            Clock.UpdateSize();
+        }
+
+        internal static void SetTheme(ITheme t)
+        {
             theme.Dispose();
 
-            Update();
+            theme = t;
+            t.Initialize();
+
+            Menu.Menu.UpdateArrowSize();
+            Clock.UpdateSize();
 
             Menu.Menu.UpdateAllSizes();
             Notifications.Notification.UpdateAllSizes();
-
-            void Update()
-            {
-                theme = t;
-                t.Initialize();
-
-                Menu.Menu.UpdateArrowSize();
-                Clock.UpdateSize();
-            }
         }
 
         public static int MinItemHeight => theme.MinItemHeight;
@@ -48,9 +46,9 @@
             return theme.MeasureText(text);
         }
 
-        public static void DrawTextBox(Point point, Size2 size, string text, bool forceCentered = false, Color? color = null)
+        public static void DrawTextBox(Point point, Size2 size, string text, bool forceCentered = false, Color? color = null, float decayStage = 1f)
         {
-            theme.DrawTextBox(point, size, text, forceCentered, color);
+            theme.DrawTextBox(point, size, text, forceCentered, color, decayStage);
         }
 
         public static void DrawBox(Point point, Size2 size, Color color)

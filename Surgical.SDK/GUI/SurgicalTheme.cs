@@ -50,11 +50,11 @@
             }
         }
 
-        public void DrawTextBox(Point point, Size2 size, string text, bool centered, Color? color)
+        public void DrawTextBox(Point point, Size2 size, string text, bool centered, Color? color, float decayStage)
         {
-            this.DrawBox(point, size, color ?? this.BackgroundColor);
+            this.DrawBox(point, size, DecayColor(color ?? this.BackgroundColor, decayStage));
 
-            this.Font.DrawText(null, text, this.GetTextRectangle(point, size), centered ? CenteredFlags : this.DrawFlags, Color.White);
+            this.Font.DrawText(null, text, this.GetTextRectangle(point, size), centered ? CenteredFlags : this.DrawFlags, DecayColor(Color.White, decayStage));
         }
 
         public void DrawBox(Point point, Size2 size, Color color)
@@ -80,6 +80,13 @@
 
                 point.Y += size.Height;
             }
+        }
+
+        protected static Color DecayColor(Color color, float decayStage)
+        {
+            color.A = (byte)(color.A * decayStage);
+
+            return color;
         }
 
         public virtual void Initialize()

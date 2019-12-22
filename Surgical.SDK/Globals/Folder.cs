@@ -1,4 +1,4 @@
-﻿namespace Surgical.SDK.API
+﻿namespace Surgical.SDK
 {
     using System;
     using System.IO;

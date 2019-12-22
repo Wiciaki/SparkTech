@@ -1,4 +1,4 @@
-﻿namespace TestLinker
+﻿namespace GUIEditor
 {
     using SharpDX;
     using SharpDX.Direct3D9;

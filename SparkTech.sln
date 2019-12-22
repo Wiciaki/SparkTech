@@ -7,11 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Surgical.SDK", "Surgical.SD
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SurgicalSample", "SurgicalSample\SurgicalSample.csproj", "{644B62F5-9BEF-430D-8AB3-08E71F7957BA}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{27467CBB-7354-496C-BFBA-E203263E2870}"
-	ProjectSection(SolutionItems) = preProject
-		.editorconfig = .editorconfig
-	EndProjectSection
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GUIEditor", "GUIEditor\GUIEditor.csproj", "{4BF343EF-6F7B-49C4-9346-7A25A04970F5}"
 EndProject
 Global

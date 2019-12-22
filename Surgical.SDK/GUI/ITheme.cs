@@ -16,7 +16,7 @@
 
         void DrawBox(Point point, Size2 size, Color color);
 
-        void DrawTextBox(Point point, Size2 size, string text, bool forceCentered, Color? color);
+        void DrawTextBox(Point point, Size2 size, string text, bool forceCentered, Color? color, float decayStage = 1f);
 
         void DrawBorders(Point point, params Size2[] sizes);
     }

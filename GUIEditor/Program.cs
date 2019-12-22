@@ -4,8 +4,6 @@
     using System.Drawing;
     using System.Windows.Forms;
 
-    using GUIEditor.Properties;
-
     using SharpDX;
     using SharpDX.Direct3D9;
     using SharpDX.Windows;
@@ -13,6 +11,7 @@
     using Surgical.SDK;
     using Surgical.SDK.API;
     using Surgical.SDK.EventData;
+    using Surgical.SDK.Licensing;
     using Surgical.SDK.Rendering;
 
     using Color = SharpDX.Color;
@@ -28,14 +27,17 @@
             var height = form.ClientSize.Height;
 
             form.Device = new Device(new Direct3D(), 0, DeviceType.Hardware, form.Handle, CreateFlags.HardwareVertexProcessing, new PresentParameters(width, height) { PresentationInterval = PresentInterval.One });
-            
-            var bytes = (byte[])new ImageConverter().ConvertTo(Resources.league, typeof(byte[]));
-            var texture = Texture.FromMemory(form.Device, bytes, 1910, 1082, 0, Usage.None, Format.A1, Pool.Managed, Filter.Default, Filter.Default, 0);
+
+            const string FileName = "background.png";
+
+            var size = Image.FromFile(FileName).Size;
+            var texture = Texture.FromFile(form.Device, FileName, size.Width, size.Height, 0, Usage.None, Format.A1, Pool.Managed, Filter.Default, Filter.Default, 0);
 
             var platform = Platform.Declare("GUI Editor");
 
-            platform.Render = form;
-            platform.WndProc = form;
+            platform.RenderAPI = form;
+            platform.UserInputAPI = form;
+            platform.AuthResult = new AuthResult(true, DateTime.Now.AddDays(2));
 
             platform.Boot();
 
@@ -50,7 +52,7 @@
 
                 form.Draw();
 
-                var cursor = WndProc.CursorPosition;
+                var cursor = UserInput.CursorPosition;
                 Vector.Draw(Color.WhiteSmoke, 6, new Vector2(cursor.X - 3, cursor.Y), new Vector2(cursor.X + 3, cursor.Y));
 
                 form.EndScene();
@@ -60,7 +62,7 @@
             });
         }
 
-        private class MainForm : RenderForm, IRender, IWndProc
+        private class MainForm : RenderForm, IRenderAPI, IUserInputAPI
         {
             public MainForm() : base("Surgical.SDK - GUI Editor")
             {
@@ -99,11 +101,11 @@
 
             public Action SetRenderTarget { get; set; }
 
-            public Matrix Projection => throw new NotImplementedException();
+            public Matrix ProjectionMatrix => throw new NotImplementedException();
 
-            public Matrix View => throw new NotImplementedException();
+            public Matrix ViewMatrix => throw new NotImplementedException();
 
-            Action<WndProcEventArgs> IWndProc.WndProc { get; set; }
+            Action<WndProcEventArgs> IUserInputAPI.WndProc { get; set; }
 
             public Vector2 CursorPosition
             {
@@ -118,7 +120,7 @@
 
             private bool WndProcBlock(WndProcEventArgs args)
             {
-                var @this = (IWndProc)this;
+                var @this = (IUserInputAPI)this;
                 var wndProc = @this.WndProc;
 
                 if (wndProc == null)

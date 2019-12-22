@@ -7,19 +7,19 @@
     using Surgical.SDK.API;
     using Surgical.SDK.EventData;
 
-    public static class WndProc
+    public static class UserInput
     {
-        private static IWndProc w;
+        private static IUserInputAPI r;
 
-        internal static void Initialize(IWndProc wndProc)
+        internal static void Initialize(IUserInputAPI userInput)
         {
-            w = wndProc;
+            r = userInput;
 
-            wndProc.WndProc = args => OnWndProc.SafeInvoke(args);
+            userInput.WndProc = args => OnWndProc.SafeInvoke(args);
         }
 
         public static event Action<WndProcEventArgs> OnWndProc;
 
-        public static Vector2 CursorPosition => w.CursorPosition;
+        public static Vector2 CursorPosition => r.CursorPosition;
     }
 }

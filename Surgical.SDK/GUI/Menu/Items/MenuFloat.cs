@@ -11,6 +11,8 @@
 
     public class MenuFloat : MenuValue, IMenuValue<float>
     {
+        private static readonly Color SliderColor = Color.WhiteSmoke;
+
         #region Fields
 
         private float value, draggingVal;
@@ -113,7 +115,7 @@
 
             if (this.dragging)
             {
-                var diff = WndProc.CursorPosition.X - point.X;
+                var diff = UserInput.CursorPosition.X - point.X;
 
                 if (diff <= 0)
                 {
@@ -135,7 +137,23 @@
             Theme.DrawTextBox(point, this.size, this.GetPrintableStr(displayNum), true);
             point.X -= width;
 
-            point.Y += this.size.Height;
+            var offset = (int)(barWidth / (range / (this.Value - this.Min)));
+
+            if (this.From > this.To)
+            {
+                offset = barWidth - offset;
+            }
+
+            var color = SliderColor;
+
+            if (!this.dragging)
+            {
+                color.A = 150;
+            }
+
+            point.Y += barHeight / 2 + this.size.Height;
+            Vector.Draw(color, barHeight, point, new Point(point.X + offset, point.Y));
+            point.Y -= barHeight / 2;
 
             var s = new Size2(this.size.Width, barHeight);
             Theme.DrawTextBox(point, s, $"{this.From:0.##}", true);
@@ -146,24 +164,6 @@
             
             point.X += drawSize.Width;
             Theme.DrawTextBox(point, s, $"{this.To:0.##}", true);
-            point.X -= drawSize.Width + s.Width;
-
-            var offset = (int)(barWidth / (range / (this.Value - this.Min)));
-
-            if (this.From > this.To)
-            {
-                offset = barWidth - offset;
-            }
-
-            var color = Color.White;
-
-            if (!this.dragging)
-            {
-                color.A = 150;
-            }
-
-            point.Y += barHeight / 2;
-            Vector.Draw(color, barHeight, point, new Point(point.X + offset, point.Y));
         }
 
         protected internal override void OnWndProc(Point point, int width, WndProcEventArgs args)

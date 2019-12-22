@@ -9,8 +9,6 @@
 
     public interface IGameFragment
     {
-        Vector3 CursorPosition { get; }
-
         void SendChat(string text);
 
         void ShowChat(string text);
@@ -34,6 +32,10 @@
         Vector2 WorldToMinimap(Vector3 pos);
 
         Vector3 ScreenToWorld(Vector2 pos);
+
+        Matrix ProjectionMatrix { get; }
+
+        Matrix ViewMatrix { get; }
 
         GameMode Mode { get; }
 

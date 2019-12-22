@@ -16,14 +16,14 @@
         {
             game = fragment;
 
-            fragment.Update = args => OnUpdate.SafeInvoke(args);
-            fragment.Notify = args => OnNotify.SafeInvoke(args);
-            fragment.Start = args => OnStart.SafeInvoke(args);
-            fragment.End = args => OnEnd.SafeInvoke(args);
-            fragment.Afk = args => OnAfk.SafeInvoke(args);
-            fragment.Ping = args => OnPing.SafeInvoke(args);
-            fragment.Input = args => OnInput.SafeInvoke(args);
-            fragment.Chat = args => OnChat.SafeInvoke(args);
+            game.Update = args => OnUpdate.SafeInvoke(args);
+            game.Notify = args => OnNotify.SafeInvoke(args);
+            game.Start = args => OnStart.SafeInvoke(args);
+            game.End = args => OnEnd.SafeInvoke(args);
+            game.Afk = args => OnAfk.SafeInvoke(args);
+            game.Ping = args => OnPing.SafeInvoke(args);
+            game.Input = args => OnInput.SafeInvoke(args);
+            game.Chat = args => OnChat.SafeInvoke(args);
         }
 
         public static event Action<EventArgs> OnUpdate;
@@ -42,8 +42,6 @@
 
         public static event Action<ChatEventArgs> OnChat;
 
-        public static Vector3 CursorPosition => game.CursorPosition;
-
         public static GameMode Mode => game.Mode;
 
         public static GameType Type => game.Type;
@@ -59,6 +57,10 @@
         public static long Id => game.Id;
 
         public static string Region => game.Region;
+
+        public static Matrix ProjectionMatrix => game.ProjectionMatrix;
+
+        public static Matrix ViewMatrix => game.ViewMatrix;
 
         public static void SendChat(string text)
         { 
@@ -105,9 +107,9 @@
             game.SendPing(category, target);
         }
 
-        public static void SendPing(PingCategory category, Vector2 target)
+        public static void SendPing(PingCategory category, Vector2 targetPos)
         {
-            game.SendPing(category, target);
+            game.SendPing(category, targetPos);
         }
 
         public static void ShowPing(PingCategory category, IGameObject target, bool playSound)
@@ -115,9 +117,9 @@
             game.ShowPing(category, target, playSound);
         }
 
-        public static void ShowPing(PingCategory category, Vector2 target, bool playSound)
+        public static void ShowPing(PingCategory category, Vector2 targetPos, bool playSound)
         {
-            game.ShowPing(category, target, playSound);
+            game.ShowPing(category, targetPos, playSound);
         }
     }
 }
