@@ -1,6 +1,5 @@
 ﻿namespace Surgical.SDK
 {
-    using System;
     using System.Globalization;
     using System.IO;
     using System.Linq;
@@ -33,16 +32,9 @@
 
         static SdkSetup()
         {
-            Texture texture = null;
-
-            if (Platform.HasRenderAPI)
-            {
-                texture = Texture.FromMemory(Render.Device, Resources.Banner, 295, 100, 0, Usage.None, Format.Unknown, Pool.Default, Filter.Default, Filter.Default, 0);
-            }
+            var texture = Platform.HasRenderAPI ? Texture.FromMemory(Render.Device, Resources.Banner, 295, 100, 0, Usage.None, Format.Unknown, Pool.Default, Filter.Default, Filter.Default, 0) : null;
 
             Strings = new Translations { JObject.Parse(Resources.Strings) };
-
-            Theme.SetTheme(new SurgicalTheme());
 
             Menu = new Menu("sdk")
             {
@@ -59,6 +51,11 @@
                     new MenuInt("y", 0, 500, 40)
                 },
                 new MenuList("theme"),
+                new Menu("notifications")
+                {
+                    new MenuFloat("decayTime", 0f, 10f, 4f),
+                    new MenuBool("borders", true)
+                },
                 new MenuList("clock"),
                 new Menu("humanizer")
                 {
@@ -130,6 +127,8 @@
         {
             HandlePosition();
             HandleClock();
+            HandleNotifications();
+            HandleTheme();
             HandleArrows();
 
             SetMenuTriggers();
@@ -197,6 +196,64 @@
             y.BeforeValueChange += args => Menu.SetPosition(x.GetValue<int>(), args.NewValue<int>());
 
             Menu.SetPosition(x.GetValue<int>(), y.GetValue<int>());
+        }
+
+        private static void HandleTheme()
+        {
+            var item = Menu.Get<MenuList>("theme");
+
+            var selected = item.GetValue<int>();
+
+            if (selected == 0 && !Platform.HasTheme)
+            {
+                selected = 1;
+                item.SetValue(selected);
+            }
+
+            Theme.SetTheme(selected);
+
+            item.BeforeValueChange += args =>
+            {
+                var value = args.NewValue<int>();
+
+                if (value == 0 && !Platform.HasTheme)
+                {
+                    args.Block();
+                    return;
+                }
+
+                Theme.SetTheme(value);
+            };
+
+            Menu.OnLanguageChanged += args => UpdateOptions();
+            UpdateOptions();
+
+            void UpdateOptions()
+            {
+                var options = item.Options;
+                options[0] = options[0].Replace("{platform}", Platform.Name);
+
+                if (!Platform.HasTheme)
+                {
+                    options[0] += " (unavailable)";
+                }
+
+                item.Options = options;
+            }
+        }
+
+        private static void HandleNotifications()
+        {
+            var menu = Menu.GetMenu("notifications");
+
+            var borders = menu["borders"];
+            var decay = menu["decayTime"];
+
+            borders.BeforeValueChange += args => Notification.SetBorders(args.NewValue<bool>());
+            decay.BeforeValueChange += args => Notification.SetDecayTime(args.NewValue<float>());
+
+            Notification.SetBorders(borders.GetValue<bool>());
+            Notification.SetDecayTime(decay.GetValue<float>());
         }
 
         private static void HandleArrows()

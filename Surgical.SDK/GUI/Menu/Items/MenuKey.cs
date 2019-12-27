@@ -100,7 +100,7 @@
             base.OnEndScene(point, width);
             point.X += width;
 
-            Theme.DrawTextBox(point, this.size, this.text, true, this.ButtonColor);
+            Theme.DrawTextBox(point, this.size, this.ButtonColor, this.text, true);
             Theme.DrawBorders(point, this.size);
         }
 

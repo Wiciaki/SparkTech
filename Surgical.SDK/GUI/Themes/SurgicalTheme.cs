@@ -1,4 +1,4 @@
-﻿namespace Surgical.SDK.GUI
+﻿namespace Surgical.SDK.GUI.Themes
 {
     using SharpDX;
     using SharpDX.Direct3D9;
@@ -10,6 +10,8 @@
     {
         public virtual Color BackgroundColor { get; }
 
+        public virtual Color BorderColor { get; }
+
         public int MinItemHeight { get; } = 26;
 
         public SurgicalTheme()
@@ -18,6 +20,7 @@
             color.A = 130;
 
             this.BackgroundColor = color;
+            this.BorderColor = Color.White;
         }
 
         protected Font Font { get; private set; }
@@ -27,7 +30,7 @@
             return new FontDescription { FaceName = "DengXian", Height = 18 };
         }
 
-        protected virtual FontDrawFlags DrawFlags { get; } = FontDrawFlags.VerticalCenter | FontDrawFlags.Left;
+        private const FontDrawFlags DrawFlags = FontDrawFlags.VerticalCenter | FontDrawFlags.Left;
 
         private const FontDrawFlags CenteredFlags = FontDrawFlags.VerticalCenter | FontDrawFlags.Center;
 
@@ -35,36 +38,41 @@
 
         public Size2 MeasureText(string text)
         {
-            var r = this.Font.MeasureText(null, text, this.DrawFlags);
+            var r = this.Font.MeasureText(null, text, DrawFlags);
 
-            var height = MultipleOf(r.Bottom - r.Top, this.MinItemHeight);
-            var width = MultipleOf(r.Right - r.Left, 2);
+            var size = this.extraTextSize;
 
-            return new Size2(width + this.extraTextSize.Width, height + this.extraTextSize.Height);
+            size.Height += MultipleOf(r.Bottom - r.Top, this.MinItemHeight);
+            size.Width += MultipleOf(r.Right - r.Left, 2);
 
-            static int MultipleOf(int num, int multipleOf)
-            {
-                var mod = num % multipleOf;
-
-                return mod == 0 ? num : num + multipleOf - mod;
-            }
+            return size;
         }
 
-        public void DrawTextBox(Point point, Size2 size, string text, bool centered, Color? color, float decayStage)
+        private static int MultipleOf(int num, int multipleOf)
         {
-            this.DrawBox(point, size, DecayColor(color ?? this.BackgroundColor, decayStage));
+            var mod = num % multipleOf;
 
-            this.Font.DrawText(null, text, this.GetTextRectangle(point, size), centered ? CenteredFlags : this.DrawFlags, DecayColor(Color.White, decayStage));
+            return mod == 0 ? num : num + multipleOf - mod;
         }
 
-        public void DrawBox(Point point, Size2 size, Color color)
+        public void DrawBox(Point point, Color color, Size2 size)
         {
             point.Y += size.Height / 2;
 
             Vector.Draw(color, size.Height, point, new Point(point.X + size.Width, point.Y));
         }
 
-        public virtual void DrawBorders(Point point, params Size2[] sizes)
+        public void DrawTextBox(Point point, Color color, Size2 size, string text, bool forceCentered, byte textAlpha)
+        {
+            this.DrawBox(point, color, size);
+
+            var textColor = Color.White;
+            textColor.A = textAlpha;
+
+            this.Font.DrawText(null, text, this.GetTextRectangle(point, size), forceCentered ? CenteredFlags : DrawFlags, textColor);
+        }
+
+        public virtual void DrawBorders(Point point, Color color, params Size2[] sizes)
         {
             foreach (var size in sizes)
             {
@@ -76,26 +84,10 @@
                 p[3] = new Vector2(point.X + size.Width, point.Y);
                 p[4] = new Vector2(point.X, point.Y);
 
-                Vector.Draw(Color.White, 1f, p);
+                Vector.Draw(color, 1f, p);
 
                 point.Y += size.Height;
             }
-        }
-
-        protected static Color DecayColor(Color color, float decayStage)
-        {
-            color.A = (byte)(color.A * decayStage);
-
-            return color;
-        }
-
-        public virtual void Initialize()
-        {
-            this.Font = new Font(Render.Device, this.GetFontDescription());
-
-            Render.OnLostDevice += this.Font.OnLostDevice;
-            Render.OnResetDevice += this.Font.OnResetDevice;
-            Render.OnDispose += this.Dispose;
         }
 
         //public override void DrawBorders(Point point, params Size2[] sizes)
@@ -132,9 +124,23 @@
             return new RawRectangle(point.X + w, point.Y + h, point.X + size.Width - w, point.Y + size.Height - h);
         }
 
-        public void Dispose()
+        public void Start()
         {
+            this.Font = new Font(Render.Device, this.GetFontDescription());
+
+            Render.OnLostDevice += this.Font.OnLostDevice;
+            Render.OnResetDevice += this.Font.OnResetDevice;
+            Render.OnDispose += this.Font.Dispose;
+        }
+
+        public void Pause()
+        {
+            Render.OnLostDevice -= this.Font.OnLostDevice;
+            Render.OnResetDevice -= this.Font.OnResetDevice;
+            Render.OnDispose -= this.Font.Dispose;
+
             this.Font.Dispose();
+            this.Font = null;
         }
     }
 }

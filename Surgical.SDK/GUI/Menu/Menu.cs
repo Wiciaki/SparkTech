@@ -114,7 +114,7 @@
             base.OnEndScene(point, width);
             point.X += width;
 
-            Theme.DrawTextBox(point, this.size, ArrowText, true, this.BackgroundColor);
+            Theme.DrawTextBox(point, this.size, this.BackgroundColor, ArrowText, true);
 
             if (!this.IsExpanded)
             {
@@ -553,7 +553,7 @@
 
         internal static void DrawArrow(Point point)
         {
-            Theme.DrawTextBox(point, arrowSize, ExtraArrowText, true, Color.Transparent);
+            Theme.DrawTextBox(point, arrowSize, Color.Transparent, ExtraArrowText, true);
         }
 
         internal static void UpdateArrowSize()

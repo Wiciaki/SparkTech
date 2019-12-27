@@ -1,14 +1,13 @@
-﻿namespace GUIEditor
+﻿namespace Surgical.SDK.GUI.Themes
 {
     using SharpDX;
     using SharpDX.Direct3D9;
 
-    using Surgical.SDK.GUI;
     using Surgical.SDK.Rendering;
 
-    public class AlphaStarTheme : SurgicalTheme
+    public class PurpleTheme : SurgicalTheme
     {
-        protected override FontDrawFlags DrawFlags { get; } = FontDrawFlags.Center | FontDrawFlags.VerticalCenter;
+        public override Color BorderColor { get; } = Color.DarkGray;
 
         public override Color BackgroundColor
         {
@@ -25,13 +24,13 @@
             return new FontDescription { FaceName = "Arial", Height = 16 };
         }
 
-        public override void DrawBorders(Point point, params Size2[] sizes)
+        public override void DrawBorders(Point point, Color color, params Size2[] sizes)
         {
             foreach (var size in sizes)
             {
                 var p = new[] { new Vector2(point.X + size.Width, point.Y), new Vector2(point.X, point.Y), new Vector2(point.X, point.Y + size.Height) };
 
-                Vector.Draw(Color.WhiteSmoke, 1.5f, p);
+                Vector.Draw(color, 1.5f, p);
 
                 point.Y += size.Height;
             }

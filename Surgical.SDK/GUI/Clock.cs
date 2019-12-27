@@ -4,7 +4,6 @@
 
     using SharpDX;
 
-    using Surgical.SDK.API;
     using Surgical.SDK.Rendering;
 
     internal static class Clock
@@ -41,7 +40,7 @@
         {
             if (mode == 0)
             {
-                Theme.DrawTextBox(point, size, Text(), true, Color.Transparent);
+                Theme.DrawTextBox(point, size, Text(), true);
             }
         }
     }

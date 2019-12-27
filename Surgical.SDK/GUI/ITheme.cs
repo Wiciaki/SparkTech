@@ -1,23 +1,21 @@
 ﻿namespace Surgical.SDK.GUI
 {
-    using System;
-
     using SharpDX;
 
-    public interface ITheme : IDisposable
+    public interface ITheme : IResumable
     {
-        void Initialize();
-
         Color BackgroundColor { get; }
+
+        Color BorderColor { get; }
 
         int MinItemHeight { get; }
 
         Size2 MeasureText(string text);
 
-        void DrawBox(Point point, Size2 size, Color color);
+        void DrawBox(Point point, Color color, Size2 size);
 
-        void DrawTextBox(Point point, Size2 size, string text, bool forceCentered, Color? color, float decayStage = 1f);
+        void DrawTextBox(Point point, Color color, Size2 size, string text, bool forceCentered, byte textAlpha);
 
-        void DrawBorders(Point point, params Size2[] sizes);
+        void DrawBorders(Point point, Color color, params Size2[] sizes);
     }
 }

@@ -4,14 +4,10 @@
 
     using Surgical.SDK.GUI.Menu;
 
-    public interface IModule : IEntryPoint
+    public interface IModule : IEntryPoint, IResumable
     {
         Menu Menu { get; }
 
         JObject GetTranslations();
-
-        void Start();
-
-        void Pause();
     }
 }

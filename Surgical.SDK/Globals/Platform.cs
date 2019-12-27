@@ -22,6 +22,8 @@
 
         public static bool HasUserInputAPI { get; private set; }
 
+        public static bool HasTheme { get; private set; }
+
         public IRenderAPI RenderAPI { get; set; }
 
         public ICoreAPI CoreAPI { get; set; }
@@ -78,6 +80,8 @@
             {
                 Log.Warn("CoreAPI not present!");
             }
+
+            HasTheme = this.Theme != null;
 
             GUI.Theme.Initialize(this.Theme);
             SdkSetup.SetupAuth(this.AuthResult);

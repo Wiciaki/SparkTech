@@ -68,25 +68,25 @@
                     picker.Add(module);
                 }
             }
-        }
 
-        private static T DynamicEntryPoint<T>(ConstructorInfo constructor, string typeName) where T : class, IEntryPoint
-        {
-            object o;
-
-            try
+            static T DynamicEntryPoint<T>(ConstructorInfo constructor, string typeName) where T : class, IEntryPoint
             {
-                o = constructor.Invoke(Array.Empty<object>());
-            }
-            catch (Exception ex)
-            {
-                Log.Error($"Couldn't create a new instance of {typeName}! Problem executing the parameterless constructor");
-                Log.Error(ex);
-                return null;
-            }
+                object o;
 
-            Log.Info($"Instantiated {typeName}!");
-            return o as T;
+                try
+                {
+                    o = constructor.Invoke(Array.Empty<object>());
+                }
+                catch (Exception ex)
+                {
+                    Log.Error($"Couldn't create a new instance of {typeName}! Problem executing the parameterless constructor");
+                    Log.Error(ex);
+                    return null;
+                }
+
+                Log.Info($"Instantiated {typeName}!");
+                return o as T;
+            }
         }
     }
 }

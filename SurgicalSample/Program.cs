@@ -73,7 +73,7 @@
 
             const string AwesomeText = "Hell yeah, this sample script is A W E S O M E";
             var color = this.menu["TextColor"].GetValue<Color>();
-            var drawPoint = (Point)Game.CursorPosition.WorldToScreen();
+            var drawPoint = (Point)UserInput.CursorPosition;
 
             Text.Draw(AwesomeText, color, drawPoint);
         }

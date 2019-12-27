@@ -101,10 +101,6 @@
 
             public Action SetRenderTarget { get; set; }
 
-            public Matrix ProjectionMatrix => throw new NotImplementedException();
-
-            public Matrix ViewMatrix => throw new NotImplementedException();
-
             Action<WndProcEventArgs> IUserInputAPI.WndProc { get; set; }
 
             public Vector2 CursorPosition

@@ -109,7 +109,7 @@
             base.OnEndScene(point, width);
             point.X += width;
 
-            Theme.DrawTextBox(point, this.size, ArrowText, true, this.BackgroundColor);
+            Theme.DrawTextBox(point, this.size, this.BackgroundColor, ArrowText, true);
 
             if (!this.IsExpanded)
             {
@@ -129,7 +129,7 @@
                 var s = this.sizes[i];
                 var color = this.Value == i ? Color.Green : Theme.BackgroundColor;
 
-                Theme.DrawTextBox(point, s, this.options[i], true, color);
+                Theme.DrawTextBox(point, s, color, this.options[i], true);
                 Theme.DrawBorders(point, s);
 
                 point.Y += s.Height;

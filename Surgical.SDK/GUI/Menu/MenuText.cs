@@ -138,7 +138,7 @@
         {
             var size = new Size2(width - this.helpSize.Width, this.textSize.Height);
 
-            Theme.DrawTextBox(point, size, this.Text, false, this.BackgroundColor);
+            Theme.DrawTextBox(point, size, this.BackgroundColor, this.Text);
 
             if (this.HelpText == null)
             {
@@ -149,7 +149,7 @@
 
             var cursorInside = Menu.IsCursorInside(point, this.helpSize);
 
-            Theme.DrawTextBox(point, this.helpSize, HelpBoxText, true, this.BackgroundColor);
+            Theme.DrawTextBox(point, this.helpSize, this.BackgroundColor, HelpBoxText, true);
 
             if (!cursorInside)
             {

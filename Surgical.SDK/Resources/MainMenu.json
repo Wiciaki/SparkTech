@@ -140,9 +140,29 @@
     "en": {
       "text": "Theme",
       "options": [
+        "{platform}",
         "Default",
+        "Default alternate borders",
         "Purplish"
       ]
+    }
+  },
+  "notifications": {
+    "en": {
+      "text": "Notifications"
+    },
+    "zh": {
+      "text": "??"
+    },
+    "decayTime": {
+      "en": {
+        "text": "Fade time"
+      }
+    },
+    "borders": {
+      "en": {
+        "text": "Enable notification borders" 
+      } 
     } 
   },
   "clock": {

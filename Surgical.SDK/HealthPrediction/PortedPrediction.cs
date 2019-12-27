@@ -29,12 +29,12 @@
             return null;
         }
 
-        void IModule.Start()
+        void IResumable.Start()
         {
 
         }
 
-        void IModule.Pause()
+        void IResumable.Pause()
         {
 
         }

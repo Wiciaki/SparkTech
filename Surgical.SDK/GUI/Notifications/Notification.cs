@@ -10,6 +10,20 @@
 
     public class Notification
     {
+        private static float decayTime;
+
+        private static bool borders;
+
+        internal static void SetBorders(bool bordersEnabled)
+        {
+            borders = bordersEnabled;
+        }
+
+        internal static void SetDecayTime(float time)
+        {
+            decayTime = time;
+        }
+
         public readonly string Content, Header;
 
         public Notification(string content, string header = null)
@@ -58,8 +72,6 @@
 
         static Notification()
         {
-            Send("HELLO TEST");
-
             Render.OnEndScene += OnEndScene;
         }
 
@@ -84,15 +96,38 @@
             for (var i = Entries.Count - 1; i >= 0; --i)
             {
                 var entry = Entries[i];
-                var stage = entry.GetDecayStage(t);
+                var delta = entry.Time - t;
+
+                var bgColor = Theme.BackgroundColor;
+                var bcolor = Theme.BorderColor;
+                var textAlpha = byte.MaxValue;
+
+                if (delta < 0)
+                {
+                    Entries.RemoveAt(i);
+                    continue;
+                }
+
+                if (delta < decayTime)
+                {
+                    var stage = delta / decayTime;
+
+                    bgColor = DecayColor(bgColor, stage);
+                    bcolor = DecayColor(bcolor, stage);
+                    textAlpha = (byte)(stage * byte.MaxValue);
+                }
+
+                var bpoint = point;
+                var bsizes = new List<Size2>();
 
                 if (entry.Notification.Header != null)
                 {
                     var headerSize = entry.Notification.headerSize;
                     headerSize.Width = width;
 
-                    Theme.DrawTextBox(point, headerSize, entry.Notification.Header, true, Theme.BackgroundColor, stage);
-                    //Theme.DrawBorders(point, headerSize);
+                    bsizes.Add(headerSize);
+
+                    Theme.DrawTextBox(point, headerSize, bgColor, entry.Notification.Header, true, textAlpha);
 
                     point.Y += entry.Notification.headerSize.Height;
                 }
@@ -100,16 +135,24 @@
                 var contentSize = entry.Notification.contentSize;
                 contentSize.Width = width;
 
-                Theme.DrawTextBox(point, contentSize, entry.Notification.Content, false, Theme.BackgroundColor, stage);
-                //Theme.DrawBorders(point, contentSize);
+                bsizes.Add(contentSize);
+
+                Theme.DrawTextBox(point, contentSize, bgColor, entry.Notification.Content, false, textAlpha);
+
+                if (borders)
+                {
+                    Theme.DrawBorders(bpoint, bcolor, bsizes.ToArray());
+                }
 
                 point.Y += contentSize.Height + Theme.MinItemHeight;
-
-                if (Math.Abs(stage) < 0.01f)
-                {
-                    Entries.RemoveAt(i);
-                }
             }
+        }
+
+        private static Color DecayColor(Color color, float decayStage)
+        {
+            color.A = (byte)(color.A * decayStage);
+
+            return color;
         }
 
         internal static void UpdateAllSizes()
@@ -119,24 +162,15 @@
 
         private class NotificationEntry
         {
-            private const float DecayTime = 4f;
-
             public readonly Notification Notification;
 
-            private readonly float time;
-
-            public float GetDecayStage(float gameTime)
-            {
-                var delta = this.time - gameTime;
-
-                return delta < DecayTime ? Math.Max(0f, delta / DecayTime) : 1f;
-            }
+            public readonly float Time;
 
             public NotificationEntry(Notification n, float duration)
             {
                 this.Notification = n;
 
-                this.time = duration + DecayTime + GetTime();
+                this.Time = duration + decayTime + GetTime();
             }
         }
     }
