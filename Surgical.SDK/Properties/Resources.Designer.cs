@@ -198,6 +198,16 @@ namespace Surgical.SDK.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
+        internal static byte[] Picker {
+            get {
+                object obj = ResourceManager.GetObject("Picker", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
         internal static byte[] RenderEffectCompiled {
             get {
                 object obj = ResourceManager.GetObject("RenderEffectCompiled", resourceCulture);

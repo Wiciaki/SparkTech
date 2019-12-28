@@ -25,7 +25,11 @@
 
         protected override Size2 GetSize()
         {
-            return AddButton(base.GetSize(), out this.size);
+            var button = AddButton(base.GetSize(), out this.size);
+
+            this.extraWidth = this.size.Width;
+
+            return button;
         }
 
         protected internal override void OnWndProc(Point point, int width, WndProcEventArgs args)

@@ -1,26 +1,59 @@
 ﻿namespace Surgical.SDK.GUI.Menu
 {
+    using System.Drawing;
+    using System.IO;
+
     using Newtonsoft.Json.Linq;
 
     using SharpDX;
+    using SharpDX.Direct3D9;
 
     using Surgical.SDK.EventData;
+    using Surgical.SDK.Properties;
+    using Surgical.SDK.Rendering;
+
+    using Color = SharpDX.Color;
+    using Point = SharpDX.Point;
 
     public class MenuColor : MenuValue, IMenuValue<Color>
     {
         protected Color tmValue;
 
+        protected int extraWidth;
+
         private bool picking;
 
         private Size2 size;
 
+        private static readonly Bitmap Picker;
+
+        private static readonly Texture PickerTexture;
+
+        private static readonly Size2 BitmapSize;
+
+        static MenuColor()
+        {
+            using (var stream = new MemoryStream(Resources.Picker))
+            {
+                Picker = new Bitmap(stream);
+            }
+
+            BitmapSize = new Size2(Picker.Size.Width, Picker.Size.Height);
+
+            PickerTexture = Texture.FromMemory(Render.Device, Resources.Picker, BitmapSize.Width, BitmapSize.Height, 0, Usage.None, default, Pool.Managed, Filter.Default, Filter.Default, 0);
+        }
+
         #region Constructors and Destructors
 
         public MenuColor(string id, Color defaultValue) : this(id, ColorToJArray(defaultValue))
-        { }
+        {
+
+        }
 
         protected MenuColor(string id, JToken defaultValue) : base(id, defaultValue)
-        { }
+        {
+
+        }
 
         #endregion
 
@@ -61,10 +94,17 @@
                 return;
             }
 
-            point.X += this.size.Width;
+            point.X += this.size.Width + this.extraWidth;
 
-            // todo this is temp
-            Rendering.Text.Draw("You dont know how hard it's to make a color picker ffs", Color.White, point);
+            if (Menu.ArrowsEnabled)
+            {
+                Menu.DrawArrow(point);
+
+                point.X += Menu.ArrowWidth;
+            }
+
+            Picture.Draw(point, PickerTexture);
+            Theme.DrawBorders(point, BitmapSize);
         }
 
         protected internal override void OnWndProc(Point point, int width, WndProcEventArgs args)
@@ -74,6 +114,27 @@
             if (Menu.IsLeftClick(args.Message) && Menu.IsCursorInside(point, this.size))
             {
                 this.picking ^= true;
+                return;
+            }
+
+            if (!this.picking)
+            {
+                return;
+            }
+
+            point.X += this.size.Width + this.extraWidth;
+
+            if (Menu.ArrowsEnabled)
+            {
+                point.X += Menu.ArrowWidth;
+            }
+
+            if (Menu.IsLeftClick(args.Message) && Menu.IsCursorInside(point, BitmapSize))
+            {
+                var cursor = (Point)UserInput.CursorPosition;
+                var color = Picker.GetPixel(cursor.X - point.X, cursor.Y - point.Y);
+
+                this.Value = new Color(color.R, color.G, color.B, color.A);
             }
         }
 
@@ -97,7 +158,7 @@
             var g = array[1].Value<byte>();
             var b = array[2].Value<byte>();
             var a = array[3].Value<byte>();
-            
+
             return new Color(r, g, b, a);
         }
 
