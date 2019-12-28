@@ -35,7 +35,7 @@
                             {
                                 Options = new List<string> { "Exploring", "All", "The", "SDK", "Possibilities" }
                             },
-                            new MenuColorBool("TextColor", Color.White, true)
+                            new MenuColorBool("TextColor", Color.White, false)
                         };
 
             // put JObject as a Build(...) parameter
@@ -45,9 +45,17 @@
             // adds our menu to the main menu
             Menu.Build(this.menu);
 
-            // will execute the code after loading screen
-            // or immediately, if the game has already started
-            Game.OnStart += this.OnStart;
+            // OnStart will not work if we're using GUI Editor or similiar
+            if (Platform.HasCoreAPI)
+            {
+                // will execute the code after loading screen
+                // or immediately, if the game has already started
+                Game.OnStart += this.OnStart;
+            }
+            else
+            {
+                Render.OnDraw += this.OnDraw;
+            }
         }
 
         // the menu instance. Use it to check user settings.
@@ -74,6 +82,7 @@
             const string AwesomeText = "Hell yeah, this sample script is A W E S O M E";
             var color = this.menu["TextColor"].GetValue<Color>();
             var drawPoint = (Point)UserInput.CursorPosition;
+            drawPoint.Y += 20;
 
             Text.Draw(AwesomeText, color, drawPoint);
         }

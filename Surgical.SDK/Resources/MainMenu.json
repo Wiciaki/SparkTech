@@ -116,7 +116,7 @@
         "text": "Position"
       },
       "zh": {
-        "text": "???"
+        "text": "??"
       }
     },
     "x": {
@@ -145,7 +145,16 @@
         "Default alternate borders",
         "Purplish"
       ]
-    }
+    },
+    "zh": {
+      "text": "??",
+      "options": [
+        "{platform}",
+        "??",
+        "??",
+        "??"
+      ] 
+    } 
   },
   "notifications": {
     "en": {
@@ -157,11 +166,17 @@
     "decayTime": {
       "en": {
         "text": "Fade time"
-      }
+      },
+      "zh": {
+        "text": "??" 
+      } 
     },
     "borders": {
       "en": {
-        "text": "Enable notification borders" 
+        "text": "Enable notification borders"
+      },
+      "zh": {
+        "text": "??" 
       } 
     } 
   },
@@ -213,17 +228,23 @@
         "text": "License time left: {expiry}"
       },
       "zh": {
-        "text": "??? {expiry}"
+        "text": "?? {expiry}"
       }
     },
     "unlicensed": {
       "en": {
         "text": "Not licensed"
-      }
+      },
+      "zh": {
+        "text": "??" 
+      } 
     },
     "lifetime": {
       "en": {
-        "text": "Lifetime license" 
+        "text": "Lifetime license"
+      },
+      "zh": {
+        "text": "??" 
       } 
     } 
   },
@@ -253,6 +274,9 @@
     "credits": {
       "en": {
         "text": "Thanks to all contributors, testers\nand everyone else who helped.\nWithout you, it wouldn't be possible"
+      },
+      "zh": {
+        "text": "??" 
       } 
     } 
   }

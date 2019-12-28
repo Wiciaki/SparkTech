@@ -110,14 +110,16 @@
                     var cursor = Cursor.Position;
                     var offset = this.DesktopLocation;
 
-                    return new Vector2(cursor.X - offset.X - 8, cursor.Y - offset.Y - 30);
+                    var x = cursor.X - offset.X - 8;
+                    var y = cursor.Y - offset.Y - 30;
+
+                    return new Vector2(x, y);
                 }
             }
 
             private bool WndProcBlock(WndProcEventArgs args)
             {
-                var @this = (IUserInputAPI)this;
-                var wndProc = @this.WndProc;
+                var wndProc = ((IUserInputAPI)this).WndProc;
 
                 if (wndProc == null)
                 {

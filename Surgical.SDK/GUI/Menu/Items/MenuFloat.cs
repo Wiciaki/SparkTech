@@ -11,8 +11,6 @@
 
     public class MenuFloat : MenuValue, IMenuValue<float>
     {
-        private static readonly Color SliderColor = Color.WhiteSmoke;
-
         #region Fields
 
         private float value, draggingVal;
@@ -46,16 +44,16 @@
             {
                 this.CheckBounds(value);
 
-                if (Math.Abs(this.value - value) >= 0.01f && this.InvokeNotifier(value))
+                if (Math.Abs(this.value - value) >= float.Epsilon && this.InvokeNotifier(value))
                 {
                     this.value = value;
                 }
             }
         }
 
-        public float Min => Math.Min(this.From, this.To);
-
         public float Max => Math.Max(this.From, this.To);
+
+        public float Min => Math.Min(this.From, this.To);
 
         protected virtual bool InvokeNotifier(float num)
         {
@@ -105,9 +103,11 @@
 
         protected internal override void OnEndScene(Point point, int width)
         {
+            float displayNum;
+
             var barWidth = width;
             var barHeight = Theme.MinItemHeight;
-            var displayNum = this.Value;
+
             var range = this.Max - this.Min;
 
             width -= this.size.Width;
@@ -117,20 +117,35 @@
             {
                 var diff = UserInput.CursorPosition.X - point.X;
 
-                if (diff <= 0)
+                if (diff <= 0f)
                 {
-                    displayNum = this.Min;
+                    displayNum = this.From;
                 }
                 else if (diff >= barWidth)
                 {
-                    displayNum = this.Max;
+                    displayNum = this.To;
                 }
                 else
                 {
-                    displayNum = this.Min + diff * range / barWidth;
+                    diff *= range / barWidth;
+
+                    displayNum = this.From;
+
+                    if (this.From > this.To)
+                    {
+                        displayNum -= diff;
+                    }
+                    else
+                    {
+                        displayNum += diff;
+                    }
                 }
 
                 this.draggingVal = displayNum;
+            }
+            else
+            {
+                displayNum = this.Value;
             }
 
             point.X += width;
@@ -144,7 +159,7 @@
                 offset = barWidth - offset;
             }
 
-            var color = SliderColor;
+            var color = Theme.BorderColor;
 
             if (!this.dragging)
             {
