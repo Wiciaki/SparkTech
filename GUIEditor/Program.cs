@@ -2,6 +2,7 @@
 {
     using System;
     using System.Drawing;
+    using System.IO;
     using System.Windows.Forms;
 
     using GUIEditor.Properties;
@@ -30,7 +31,15 @@
 
             form.Device = new Device(new Direct3D(), 0, DeviceType.Hardware, form.Handle, CreateFlags.HardwareVertexProcessing, new PresentParameters(width, height) { PresentationInterval = PresentInterval.One });
 
-            const string FileName = "background.png";
+            const string FileName = "Background.png";
+
+            if (!File.Exists(FileName))
+            {
+                var converter = new ImageConverter();
+                var result = (byte[])converter.ConvertTo(Resources.Background, typeof(byte[]));
+
+                File.WriteAllBytes(FileName, result);
+            }
 
             var size = Image.FromFile(FileName).Size;
             var texture = Texture.FromFile(form.Device, FileName, size.Width, size.Height, 0, Usage.None, Format.A1, Pool.Managed, Filter.Default, Filter.Default, 0);
