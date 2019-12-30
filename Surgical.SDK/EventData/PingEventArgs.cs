@@ -8,7 +8,7 @@
     {
         public IGameObject Source { get; }
 
-        public IGameObject Target { get; }
+        public IGameObject? Target { get; }
 
         public Vector2 Position { get; }
 
@@ -17,11 +17,8 @@
         public PingEventArgs(IGameObject source, IGameObject target, Vector2 position, PingCategory pingCategory)
         {
             this.Source = source;
-
             this.Target = target;
-
             this.Position = position;
-
             this.PingCategory = pingCategory;
         }
     }

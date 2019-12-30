@@ -8,7 +8,7 @@
 
     public interface IUserInputAPI
     {
-        Action<WndProcEventArgs> WndProc { get; set; }
+        Action<WndProcEventArgs> WndProcess { get; set; }
 
         Vector2 CursorPosition { get; }
     }

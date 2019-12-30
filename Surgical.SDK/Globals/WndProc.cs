@@ -9,17 +9,17 @@
 
     public static class UserInput
     {
-        private static IUserInputAPI r;
+        private static readonly IUserInputAPI Fragment;
 
-        internal static void Initialize(IUserInputAPI userInput)
+        public static event Action<WndProcEventArgs>? OnWndProc;
+
+        public static Vector2 CursorPosition => Fragment.CursorPosition;
+
+        static UserInput()
         {
-            r = userInput;
+            Fragment = Platform.UserInputFragment ?? throw new InvalidOperationException("Attempted to use UserInputAPI when it wasn't present!");
 
-            userInput.WndProc = args => OnWndProc.SafeInvoke(args);
+            Fragment.WndProcess = args => OnWndProc.SafeInvoke(args);
         }
-
-        public static event Action<WndProcEventArgs> OnWndProc;
-
-        public static Vector2 CursorPosition => r.CursorPosition;
     }
 }

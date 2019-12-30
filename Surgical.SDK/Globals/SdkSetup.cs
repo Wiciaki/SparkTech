@@ -32,8 +32,6 @@
 
         static SdkSetup()
         {
-            var texture = Platform.HasRenderAPI ? Texture.FromMemory(Render.Device, Resources.Banner, 295, 100, 0, Usage.None, Format.Unknown, Pool.Default, Filter.Default, Filter.Default, 0) : null;
-
             Strings = new Translations { JObject.Parse(Resources.Strings) };
 
             Menu = new Menu("sdk")
@@ -72,11 +70,17 @@
                     new MenuText("version"),
                     new MenuText("contact"),
                     new MenuText("credits")
-                },
-                new MenuTexture("banner", texture)
+                }
             };
 
-            Mode.Initialize(Menu.GetMenu("modes"));
+            if (Platform.HasRenderAPI)
+            {
+                var texture = Texture.FromMemory(Render.Device, Resources.Banner, 295, 100, 0, Usage.None, Format.Unknown, Pool.Default, Filter.Default, Filter.Default, 0);
+
+                Menu.Add(new MenuTexture("banner", texture));
+            }
+
+            Mode.Initialize(Menu.GetMenu("modes")!);
             Menu.Build(Menu, GetMenuTranslations());
             
             SetupMenu(out FirstRun);
@@ -94,7 +98,7 @@
             if (!Platform.HasUserInputAPI)
             {
                 Menu.IsExpanded = true;
-                Menu.GetMenu("menu").IsExpanded = true;
+                Menu.GetMenu("menu")!.IsExpanded = true;
             }
 
             Log.Info("Surgical.SDK initialized!");
@@ -102,21 +106,21 @@
 
         internal static void SetupAuth(AuthResult result)
         {
-            var menu = Menu.GetMenu("license");
+            var menu = Menu.GetMenu("license")!;
 
             if (!result.IsLicensed)
             {
-                menu["unlicensed"].IsVisible = true;
+                menu["unlicensed"]!.IsVisible = true;
             }
             else if (result.IsLifetime())
             {
-                menu["lifetime"].IsVisible = true;
+                menu["lifetime"]!.IsVisible = true;
             }
             else
             {
                 var expiry = result.Expiry.ToString(CultureInfo.InvariantCulture);
 
-                var item = menu.Get<MenuText>("licensed");
+                var item = menu.Get<MenuText>("licensed")!;
                 item.IsVisible = true;
 
                 item.BindVariable("expiry", expiry);
@@ -133,14 +137,16 @@
 
             SetMenuTriggers();
 
-            Menu["language"].BeforeValueChange += args => Menu.SetLanguage(args.NewValue<int>());
+            var langItem = Menu["language"]!;
+
+            langItem.BeforeValueChange += args => Menu.SetLanguage(args.NewValue<int>());
 
             var flagFile = Folder.Menu.GetFile(".nofirstrun");
             firstRun = !File.Exists(flagFile);
 
             if (!firstRun)
             {
-                Menu.SetLanguage(Menu["language"].GetValue<int>());
+                Menu.SetLanguage(langItem.GetValue<int>());
                 return;
             }
 
@@ -156,13 +162,13 @@
 
             if (i >= 0)
             {
-                Menu["language"].SetValue(i);
+                langItem.SetValue(i);
 
-                welcomeMsg = GetTranslatedString("firstTimeWelcome");
+                welcomeMsg = GetString("firstTimeWelcome")!;
             }
             else
             {
-                welcomeMsg = GetTranslatedString("languageUnknown");
+                welcomeMsg = GetString("languageUnknown")!;
                 welcomeMsg = welcomeMsg.Replace("{language}", culture.EnglishName);
             }
 
@@ -171,14 +177,14 @@
             Notification.Send(welcomeMsg, 10f);
         }
 
-        internal static string GetTranslatedString(string str)
+        internal static string? GetString(string str)
         {
             return Strings.GetString(str);
         }
 
         private static void HandleClock()
         {
-            var item = Menu["clock"];
+            var item = Menu["clock"]!;
 
             item.BeforeValueChange += args => Clock.SetMode(args.NewValue<int>());
 
@@ -187,10 +193,10 @@
 
         private static void HandlePosition()
         {
-            var menu = Menu.GetMenu("menu");
+            var menu = Menu.GetMenu("menu")!;
 
-            var x = menu["x"];
-            var y = menu["y"];
+            var x = menu["x"]!;
+            var y = menu["y"]!;
 
             x.BeforeValueChange += args => Menu.SetPosition(args.NewValue<int>(), y.GetValue<int>());
             y.BeforeValueChange += args => Menu.SetPosition(x.GetValue<int>(), args.NewValue<int>());
@@ -200,8 +206,7 @@
 
         private static void HandleTheme()
         {
-            var item = Menu.Get<MenuList>("theme");
-
+            var item = Menu.Get<MenuList>("theme")!;
             var selected = item.GetValue<int>();
 
             if (selected == 0 && !Platform.HasTheme)
@@ -231,12 +236,15 @@
             void UpdateOptions()
             {
                 var options = item.Options;
-                options[0] = options[0].Replace("{platform}", Platform.Name);
+                var s = options[0].Replace("{platform}", Platform.Name);
 
                 if (!Platform.HasTheme)
                 {
-                    options[0] += " (unavailable)";
+                    var str = GetString("platformHasNoTheme");
+                    s += $" ({str})";
                 }
+
+                options[0] = s;
 
                 item.Options = options;
             }
@@ -244,10 +252,10 @@
 
         private static void HandleNotifications()
         {
-            var menu = Menu.GetMenu("notifications");
+            var menu = Menu.GetMenu("notifications")!;
 
-            var borders = menu["borders"];
-            var decay = menu["decayTime"];
+            var borders = menu["borders"]!;
+            var decay = menu["decayTime"]!;
 
             borders.BeforeValueChange += args => Notification.SetBorders(args.NewValue<bool>());
             decay.BeforeValueChange += args => Notification.SetDecayTime(args.NewValue<float>());
@@ -258,7 +266,7 @@
 
         private static void HandleArrows()
         {
-            var item = Menu.GetMenu("menu")["arrows"];
+            var item = Menu.GetMenu("menu")!["arrows"]!;
 
             item.BeforeValueChange += args => Menu.SetArrows(args.NewValue<bool>());
 
@@ -267,19 +275,20 @@
 
         private static void SetMenuTriggers()
         {
-            var menu = Menu.GetMenu("menu");
+            var menu = Menu.GetMenu("menu")!;
 
-            var key = menu["key"].GetValue<Key>();
-            var toggle = menu["toggle"].GetValue<bool>();
+            var key = menu["key"]!.GetValue<Key>();
+            var toggle = menu["toggle"]!.GetValue<bool>();
 
             Menu.SetTriggers(key, toggle);
         }
 
         private static JObject GetMenuTranslations()
         {
-            var str = Resources.MainMenu;
+            var version = typeof(SdkSetup).Assembly.GetName().Version.ToString();
             
-            str = str.Replace("{version}", "1.0.0.0");
+            var str = Resources.MainMenu;
+            str = str.Replace("{version}", version);
 
             var mainMenu = JObject.Parse(str);
             var mode = JObject.Parse(Resources.Mode);

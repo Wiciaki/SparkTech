@@ -6,16 +6,18 @@
     {
         Color BackgroundColor { get; }
 
+        Color TextColor { get; }
+
         Color BorderColor { get; }
 
         int MinItemHeight { get; }
 
         Size2 MeasureText(string text);
 
-        void DrawBox(Point point, Color color, Size2 size);
+        void DrawBox(Point point, Size2 size, Color bgcolor);
 
-        void DrawTextBox(Point point, Color color, Size2 size, string text, bool forceCentered, byte textAlpha);
+        void DrawTextBox(Point point, Size2 size, Color bgcolor, Color txtcolor, string text, bool forceCentered);
 
-        void DrawBorders(Point point, Color color, params Size2[] sizes);
+        void DrawBorders(Point point, Color bcolor, params Size2[] sizes);
     }
 }

@@ -17,7 +17,7 @@
 
         private const string MinItemWidthText = "This is enough";
 
-        private string text, helpText;
+        private string? text, helpText;
 
         private Size2 textSize, helpSize, helpTextSize;
 
@@ -26,12 +26,7 @@
             get => this.text ?? this.Id;
             set
             {
-                if (string.IsNullOrWhiteSpace(value))
-                {
-                    value = null;
-                }
-
-                if (this.text == value)
+                if (string.IsNullOrWhiteSpace(value) || this.text == value)
                 {
                     return;
                 }
@@ -41,7 +36,7 @@
             }
         }
 
-        public string HelpText
+        public string? HelpText
         {
             get => this.helpText;
             set
@@ -63,21 +58,16 @@
 
         public void BindVariable(string varName, string value)
         {
+            void Update() => this.Text = this.Text.Replace($"{{{varName}}}", value);
+
             Update();
-
-            void Update()
-            {
-                this.Text = this.Text.Replace($"{{{varName}}}", value);
-            }
-
             Menu.OnLanguageChanged += delegate { Update(); };
         }
 
         protected internal override void SetTranslations(Translations t)
         {
             this.HelpText = t.GetString("helpText");
-
-            this.Text = t.GetString("text");
+            this.Text = t.GetString("text")!;
         }
 
         protected override Size2 GetSize()
@@ -85,7 +75,6 @@
             this.UpdateHelpTextSize();
 
             this.textSize = Theme.MeasureText(this.Text);
-
             this.helpSize = this.HelpText == null ? default : new Size2(Theme.MeasureText(HelpBoxText).Width, this.textSize.Height);
 
             var size = new Size2(this.textSize.Width + this.helpSize.Width, this.textSize.Height);
@@ -99,7 +88,7 @@
             return size;
         }
 
-        protected static Size2 AddButton(Size2 size, out Size2 buttonSize, string minWidthText = null)
+        protected static Size2 AddButton(Size2 size, out Size2 buttonSize, string? minWidthText = null)
         {
             var width = Math.Min(Theme.MinItemHeight, size.Height);
 
@@ -156,11 +145,10 @@
                 return;
             }
 
-            // todo maybe non centered?
             var resolution = Render.Resolution();
 
             point.X = (resolution.Width - this.helpTextSize.Width) / 2;
-            point.Y = this.textSize.Height;//(resolution.Height - this.helpTextSize.Height) / 2;
+            point.Y = this.helpTextSize.Height;
 
             Theme.DrawTextBox(point, this.helpTextSize, this.HelpText, true);
         }

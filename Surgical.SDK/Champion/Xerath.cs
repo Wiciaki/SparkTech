@@ -1,27 +1,40 @@
 ﻿namespace Surgical.SDK.Champion
 {
-    public class Xerath : Champion
-    {
-
-    }
-
-    /*
     using System;
     using System.Collections.Generic;
 
+    using Newtonsoft.Json.Linq;
+
     using SharpDX;
 
-    using SparkTech.SDK.Entities;
-    using SparkTech.SDK.Rendering;
-    using SparkTech.SDK.TargetSelection;
+    using Surgical.SDK.Entities;
+    using Surgical.SDK.GUI.Menu;
+    using Surgical.SDK.Rendering;
 
-    internal class Xerath
+    public class Xerath : IChampion
     {
-        public const string ChampionName = "Xerath";
+        public void Start()
+        {
+            
+        }
 
-        //Orbwalker instance
-        public static Orbwalking.Orbwalker Orbwalker;
+        public void Pause()
+        {
 
+        }
+
+        public Menu? Menu { get; }
+
+        public JObject? GetTranslations()
+        {
+            return null;
+        }
+
+        public float GetHealthIndicatorDamage(IHero hero)
+        {
+            return 0f;
+        }
+        /*
         //Spells
         public static List<Spell> SpellList = new List<Spell>();
 
@@ -30,50 +43,39 @@
         public static Spell E;
         public static Spell R;
 
-        //Menu
-        public static Menu Config;
-
         private static Vector2 PingLocation;
-        private static int LastPingT = 0;
-        private static bool AttacksEnabled
+        private static int LastPingT;
+
+        private bool AttacksEnabled()
         {
-            get
+            if (IsCastingR())
             {
-                if (IsCastingR)
-                {
-                    return false;
-                }
-
-
-                if (!ObjectManager.Player.CanAttack())
-                {
-                    return false;
-                }
-
-
-                if (Config.Item("ComboActive").GetValue<KeyBind>().Active)
-                {
-                    return IsPassiveUp || (!Q.IsReady() && !W.IsReady() && !E.IsReady());
-                }
-                    
-
-                return true;
+                return false;
             }
+
+            if (!ObjectManager.Player.CanAttack)
+            {
+                return false;
+            }
+
+            if (this.Menu["ComboActive"].GetValue<bool>())
+            {
+                return IsPassiveUp() || !Q.IsReady() && !W.IsReady() && !E.IsReady();
+            }
+
+            return true;
         }
 
-        public static bool IsPassiveUp
-        {
-            get { return ObjectManager.Player.HasBuff("xerathascended2onhit"); }
+        public static bool IsPassiveUp()
+        { 
+            return ObjectManager.Player.HasBuff("xerathascended2onhit"); 
         }
 
-        public static bool IsCastingR
+        public static bool IsCastingR()
         {
-            get
-            {
-                return ObjectManager.Player.HasBuff("XerathLocusOfPower2") ||
-                       (ObjectManager.Player.LastCastedSpellName().Equals("XerathLocusOfPower2", StringComparison.InvariantCultureIgnoreCase) &&
-                        Utils.TickCount - ObjectManager.Player.LastCastedSpellT() < 500);
-            }
+            return ObjectManager.Player.HasBuff("XerathLocusOfPower2")
+                   || ObjectManager.Player.LastCastedSpellName().Equals("XerathLocusOfPower2", StringComparison.InvariantCultureIgnoreCase)
+                   && Game.Time - ObjectManager.Player.LastCastedSpellT() < 500;
         }
 
         public static class RCharge
@@ -84,17 +86,8 @@
             public static bool TapKeyPressed;
         }
 
-        private static void Main(string[] args)
+        private static void OnStart(EventArgs args)
         {
-            CustomEvents.Game.OnGameLoad += Game_OnGameLoad;
-        }
-
-        private static void Game_OnGameLoad(EventArgs args)
-        {
-            Player = ObjectManager.Player;
-
-            if (Player.ChampionName != ChampionName) return;
-
             //Create the spells
             Q = new Spell(SpellSlot.Q, 1550);
             W = new Spell(SpellSlot.W, 1000);
@@ -267,7 +260,7 @@
         {
             if (!Config.Item("AutoEGC").GetValue<bool>()) return;
 
-            if (Player.Distance(gapcloser.Sender) < E.Range)
+            if (ObjectManager.Player.Distance(gapcloser.Sender) < E.Range)
             {
                 E.Cast(gapcloser.Sender);
             }
@@ -588,6 +581,6 @@
                 if (menuItem.Active && (spell.Slot != SpellSlot.R || R.Level > 0))
                     Render.Circle.DrawCircle(Player.Position, spell.Range, menuItem.Color);
             }
-        }
-    }*/
+        }*/
+    }
 }

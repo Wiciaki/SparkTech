@@ -59,7 +59,7 @@ namespace Surgical.SDK
         /// <summary>
         ///     Contains the descriptions of the enum members.
         /// </summary>
-        private static readonly Dictionary<TEnum, string> Descriptions;
+        private static readonly Dictionary<TEnum, string?> Descriptions;
 
         #endregion
 
@@ -96,7 +96,7 @@ namespace Surgical.SDK
         /// </summary>
         /// <param name="item">The value to have its description read.</param>
         /// <returns></returns>
-        public static string Description(TEnum item)
+        public static string? Description(TEnum item)
         {
             return Descriptions[item];
         }

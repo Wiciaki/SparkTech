@@ -26,7 +26,6 @@
         protected internal override void OnEndScene(Point point, int width)
         {
             Theme.DrawBox(point, new Size2(width, this.size.Height), Theme.BackgroundColor);
-
             point.X += (width - this.size.Width) / 2;
 
             Picture.Draw(point, this.texture);

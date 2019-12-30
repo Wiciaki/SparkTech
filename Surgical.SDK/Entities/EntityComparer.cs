@@ -6,12 +6,7 @@
     {
         public bool Equals(T x, T y)
         {
-            if (ReferenceEquals(x, y))
-            {
-                return true;
-            }
-
-            return x != null && y != null && this.GetHashCode(x) == this.GetHashCode(y);
+            return ReferenceEquals(x, y);
         }
 
         public int GetHashCode(T obj)

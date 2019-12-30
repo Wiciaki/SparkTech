@@ -12,7 +12,7 @@
     {
         public string Id { get; }
 
-        public event Action<BeforeValueChangeEventArgs> BeforeValueChange;
+        public event Action<BeforeValueChangeEventArgs>? BeforeValueChange;
 
         public bool IsVisible { get; set; } = true;
 
@@ -44,12 +44,12 @@
 
         }
 
-        protected internal virtual JToken GetToken()
+        protected internal virtual JToken? GetToken()
         {
             return null;
         }
 
-        protected internal virtual void SetToken(JToken token)
+        protected internal virtual void SetToken(JToken? token)
         {
 
         }

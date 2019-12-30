@@ -19,11 +19,8 @@
         public NewPathEventArgs(IUnit source, Vector3[] path, bool isDash, float speed)
         {
             this.Source = source;
-
             this.Path = path;
-
             this.IsDash = isDash;
-
             this.Speed = speed;
         }
     }

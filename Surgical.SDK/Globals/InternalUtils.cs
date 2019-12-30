@@ -8,7 +8,7 @@
 
     internal static class InternalUtils
     {
-        public static void SafeInvoke<T>(this Action<T> evt, T args)
+        public static void SafeInvoke<T>(this Action<T>? evt, T args)
         {
             if (evt == null)
             {

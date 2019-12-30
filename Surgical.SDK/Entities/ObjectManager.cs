@@ -1,26 +1,4 @@
-﻿//  -------------------------------------------------------------------
-//
-//  Last updated: 21/08/2017
-//  Created: 27/07/2017
-//
-//  Copyright (c) Entropy, 2017 - 2017
-//
-//  ObjectCache.cs is a part of SparkTech
-//
-//  SparkTech is free software: you can redistribute it and/or modify
-//  it under the terms of the GNU General Public License as published by
-//  the Free Software Foundation, either version 3 of the License, or
-//  (at your option) any later version.
-//  SparkTech is distributed in the hope that it will be useful,
-//  but WITHOUT ANY WARRANTY; without even the implied warranty of
-//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-//  GNU General Public License for more details.
-//  You should have received a copy of the GNU General Public License
-//  along with SparkTech. If not, see <http://www.gnu.org/licenses/>.
-//
-//  -------------------------------------------------------------------
-
-namespace Surgical.SDK.Entities
+﻿namespace Surgical.SDK.Entities
 {
     using System;
     using System.Collections;
@@ -28,7 +6,6 @@ namespace Surgical.SDK.Entities
     using System.Linq;
     using System.Reflection;
 
-    using Surgical.SDK.API.Fragments;
     using Surgical.SDK.Logging;
 
     public static class ObjectManager
@@ -38,10 +15,12 @@ namespace Surgical.SDK.Entities
                                                                              [typeof(IGameObject)] = new CacheEntry(new HashSet<IGameObject>(new EntityComparer<IGameObject>()))
                                                                          };
 
-        public static event Action<IGameObject> OnCreate, OnDelete;
+        public static event Action<IGameObject>? OnCreate, OnDelete;
 
-        internal static void Initialize(IObjectManagerFragment fragment)
+        static ObjectManager()
         {
+            var fragment = Platform.CoreFragment?.GetObjectManagerFragment() ?? throw Platform.FragmentException();
+
             Player = fragment.GetPlayer();
 
             fragment.Create = HandleCreate;
@@ -50,7 +29,7 @@ namespace Surgical.SDK.Entities
             Array.ForEach(fragment.GetUnits(), HandleCreate);
         }
 
-        public static IHero Player { get; private set; }
+        public static IHero Player { get; }
 
         public static HashSet<TGameObject> Get<TGameObject>() where TGameObject : IGameObject
         {
@@ -106,7 +85,7 @@ namespace Surgical.SDK.Entities
             foreach (var entry in Container.Where(p => p.Key.IsAssignableFrom(senderType)).Select(p => p.Value))
             {
                 MethodBase method;
-                Action<IGameObject> action;
+                Action<IGameObject>? action;
 
                 if (add)
                 {

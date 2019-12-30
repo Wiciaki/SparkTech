@@ -13,7 +13,6 @@
         public AggroEventArgs(IUnit source, IAttackable target)
         {
             this.Source = source;
-
             this.Target = target;
         }
     }

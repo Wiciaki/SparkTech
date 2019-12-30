@@ -17,11 +17,8 @@
         public PlaceItemInSlotEventArgs(IUnit source, int slot, int stack, int itemId)
         {
             this.Source = source;
-
             this.Slot = slot;
-
             this.Stack = stack;
-
             this.ItemId = itemId;
         }
     }

@@ -13,17 +13,19 @@
     using Surgical.SDK.Rendering;
 
     using Color = SharpDX.Color;
+    using Filter = SharpDX.Direct3D9.Filter;
     using Point = SharpDX.Point;
 
+    // todo cancerrr
     public class MenuColor : MenuValue, IMenuValue<Color>
     {
         protected Color tmValue;
 
-        protected int extraWidth;
+        protected int tmExtraWidth;
 
         private bool picking;
 
-        private Size2 size;
+        private Size2 paletteSize, buttonSize;
 
         private static readonly Bitmap Picker;
 
@@ -40,7 +42,7 @@
 
             BitmapSize = new Size2(Picker.Size.Width, Picker.Size.Height);
 
-            PickerTexture = Texture.FromMemory(Render.Device, Resources.Picker, BitmapSize.Width, BitmapSize.Height, 0, Usage.None, default, Pool.Managed, Filter.Default, Filter.Default, 0);
+            PickerTexture = Texture.FromMemory(Render.Device, Resources.Picker, BitmapSize.Width, BitmapSize.Height, 0, Usage.None, Format.A1, Pool.Managed, Filter.Default, Filter.Default, 0);
         }
 
         #region Constructors and Destructors
@@ -73,28 +75,28 @@
 
         protected override Size2 GetSize()
         {
-            return AddButton(AddButton(base.GetSize(), out this.size, "🎨"), out _);
+            return AddButton(AddButton(base.GetSize(), out this.paletteSize, "🎨"), out this.buttonSize);
         }
 
         protected internal override void OnEndScene(Point point, int width)
         {
-            width -= this.size.Width * 2;
+            width -= this.paletteSize.Width + this.buttonSize.Width;
             base.OnEndScene(point, width);
             point.X += width;
 
-            Theme.DrawTextBox(point, this.size, "🎨", true);
+            Theme.DrawTextBox(point, this.paletteSize, "🎨", true);
 
-            point.X += this.size.Width;
+            point.X += this.paletteSize.Width;
 
-            Theme.DrawBox(point, this.size, this.Value);
-            Theme.DrawBorders(point, this.size);
+            Theme.DrawBox(point, this.buttonSize, this.Value);
+            Theme.DrawBorders(point, this.buttonSize);
 
             if (!this.picking)
             {
                 return;
             }
 
-            point.X += this.size.Width + this.extraWidth;
+            point.X += this.buttonSize.Width + this.tmExtraWidth;
 
             if (Menu.ArrowsEnabled)
             {
@@ -109,9 +111,9 @@
 
         protected internal override void OnWndProc(Point point, int width, WndProcEventArgs args)
         {
-            point.X += width - this.size.Width;
+            point.X += width - this.buttonSize.Width;
 
-            if (Menu.IsLeftClick(args.Message) && Menu.IsCursorInside(point, this.size))
+            if (Menu.IsLeftClick(args.Message) && Menu.IsCursorInside(point, this.paletteSize))
             {
                 this.picking ^= true;
                 return;
@@ -122,7 +124,7 @@
                 return;
             }
 
-            point.X += this.size.Width + this.extraWidth;
+            point.X += this.paletteSize.Width + this.tmExtraWidth;
 
             if (Menu.ArrowsEnabled)
             {

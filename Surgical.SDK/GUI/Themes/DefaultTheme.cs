@@ -6,41 +6,51 @@
 
     using Surgical.SDK.Rendering;
 
-    public class SurgicalTheme : ITheme
+    public class DefaultTheme : ITheme
     {
         public virtual Color BackgroundColor { get; }
+
+        public virtual Color TextColor { get; }
 
         public virtual Color BorderColor { get; }
 
         public int MinItemHeight { get; } = 26;
 
-        public SurgicalTheme()
+        public DefaultTheme()
         {
             var color = Color.Black;
             color.A = 130;
 
             this.BackgroundColor = color;
             this.BorderColor = Color.White;
+            this.TextColor = Color.White;
         }
 
-        protected Font Font { get; private set; }
+        protected Font? Font { get; private set; }
 
         public virtual FontDescription GetFontDescription()
         {
-            return new FontDescription { FaceName = "DengXian", Height = 18 };
+            return new FontDescription { FaceName = string.Empty, Height = 18 };
         }
 
         private const FontDrawFlags DrawFlags = FontDrawFlags.VerticalCenter | FontDrawFlags.Left;
 
         private const FontDrawFlags CenteredFlags = FontDrawFlags.VerticalCenter | FontDrawFlags.Center;
 
-        private readonly Size2 extraTextSize = new Size2(12, 4);
+        protected virtual Size2 ExtraTextSize { get; } = new Size2(12, 4);
 
         public Size2 MeasureText(string text)
         {
-            var r = this.Font.MeasureText(null, text, DrawFlags);
+            static int MultipleOf(int num, int multipleOf)
+            {
+                var mod = num % multipleOf;
 
-            var size = this.extraTextSize;
+                return mod == 0 ? num : num + multipleOf - mod;
+            }
+
+            var r = this.Font!.MeasureText(null, text, DrawFlags);
+
+            var size = this.ExtraTextSize;
 
             size.Height += MultipleOf(r.Bottom - r.Top, this.MinItemHeight);
             size.Width += MultipleOf(r.Right - r.Left, 2);
@@ -48,28 +58,26 @@
             return size;
         }
 
-        private static int MultipleOf(int num, int multipleOf)
+        public virtual void DrawBox(Point point, Size2 size, Color color)
         {
-            var mod = num % multipleOf;
+            if (color == default)
+            {
+                return;
+            }
 
-            return mod == 0 ? num : num + multipleOf - mod;
-        }
-
-        public void DrawBox(Point point, Color color, Size2 size)
-        {
             point.Y += size.Height / 2;
 
             Vector.Draw(color, size.Height, point, new Point(point.X + size.Width, point.Y));
         }
 
-        public void DrawTextBox(Point point, Color color, Size2 size, string text, bool forceCentered, byte textAlpha)
+        public virtual void DrawTextBox(Point point, Size2 size, Color bgcolor, Color txtcolor, string text, bool forceCentered)
         {
-            this.DrawBox(point, color, size);
+            this.DrawBox(point, size, bgcolor);
 
-            var textColor = Color.White;
-            textColor.A = textAlpha;
+            var flags = forceCentered ? CenteredFlags : DrawFlags;
+            var rect = this.GetTextRectangle(point, size);
 
-            this.Font.DrawText(null, text, this.GetTextRectangle(point, size), forceCentered ? CenteredFlags : DrawFlags, textColor);
+            this.Font!.DrawText(null, text, rect, flags, txtcolor);
         }
 
         public virtual void DrawBorders(Point point, Color color, params Size2[] sizes)
@@ -77,12 +85,12 @@
             foreach (var size in sizes)
             {
                 var p = new Vector2[5];
-
+                
                 p[0] = new Vector2(point.X, point.Y);
                 p[1] = new Vector2(point.X, point.Y + size.Height);
                 p[2] = new Vector2(point.X + size.Width, point.Y + size.Height);
                 p[3] = new Vector2(point.X + size.Width, point.Y);
-                p[4] = new Vector2(point.X, point.Y);
+                p[4] = p[0];
 
                 Vector.Draw(color, 1f, p);
 
@@ -90,41 +98,15 @@
             }
         }
 
-        //public override void DrawBorders(Point point, params Size2[] sizes)
-        //{
-        //    var p = new Vector2[3];
-
-        //    var size = sizes[0];
-                
-        //    p[0] = new Vector2(point.X, point.Y + size.Height);
-        //    p[1] = new Vector2(point.X, point.Y);
-        //    p[2] = new Vector2(point.X + size.Width, point.Y);
-
-        //    Vector.Draw(Color.White, 1f, p);
-
-        //    for (var i = 0; i < sizes.Length - 1; ++i)
-        //    {
-        //        point.Y += size.Height;
-
-        //        size = sizes[i + 1];
-        //    }
-
-        //    p[0] = new Vector2(point.X, point.Y + size.Height);
-        //    p[1] = new Vector2(point.X + size.Width, point.Y + size.Height);
-        //    p[2] = new Vector2(point.X + size.Width, point.Y);
-
-        //    Vector.Draw(Color.White, 1f, p);
-        //}
-
-        private RawRectangle GetTextRectangle(Point point, Size2 size)
+        protected RawRectangle GetTextRectangle(Point point, Size2 size)
         {
-            var w = this.extraTextSize.Width / 2;
-            var h = this.extraTextSize.Height / 2;
+            var w = this.ExtraTextSize.Width / 2;
+            var h = this.ExtraTextSize.Height / 2;
 
             return new RawRectangle(point.X + w, point.Y + h, point.X + size.Width - w, point.Y + size.Height - h);
         }
 
-        public void Start()
+        public virtual void Start()
         {
             this.Font = new Font(Render.Device, this.GetFontDescription());
 
@@ -133,9 +115,9 @@
             Render.OnDispose += this.Font.Dispose;
         }
 
-        public void Pause()
+        public virtual void Pause()
         {
-            Render.OnLostDevice -= this.Font.OnLostDevice;
+            Render.OnLostDevice -= this.Font!.OnLostDevice;
             Render.OnResetDevice -= this.Font.OnResetDevice;
             Render.OnDispose -= this.Font.Dispose;
 

@@ -13,7 +13,6 @@
         public BuffUpdateEventArgs(IUnit source, IBuff buff)
         {
             this.Source = source;
-
             this.Buff = buff;
         }
     }

@@ -4,6 +4,8 @@
     using System.Drawing;
     using System.Windows.Forms;
 
+    using GUIEditor.Properties;
+
     using SharpDX;
     using SharpDX.Direct3D9;
     using SharpDX.Windows;
@@ -21,7 +23,7 @@
         [STAThread]
         private static void Main()
         {
-            var form = new MainForm { AllowUserResizing = false };
+            var form = new MainForm();
 
             var width = form.ClientSize.Width;
             var height = form.ClientSize.Height;
@@ -66,7 +68,9 @@
         {
             public MainForm() : base("Surgical.SDK - GUI Editor")
             {
+                this.AllowUserResizing = false;
                 this.Size = new Size(1920, 1080);
+                this.Icon = Resources.Surgeon;
             }
 
             public Size2 Resolution()
@@ -101,7 +105,7 @@
 
             public Action SetRenderTarget { get; set; }
 
-            Action<WndProcEventArgs> IUserInputAPI.WndProc { get; set; }
+            public Action<WndProcEventArgs> WndProcess { get; set; }
 
             public Vector2 CursorPosition
             {
@@ -119,14 +123,12 @@
 
             private bool WndProcBlock(WndProcEventArgs args)
             {
-                var wndProc = ((IUserInputAPI)this).WndProc;
-
-                if (wndProc == null)
+                if (this.WndProcess == null)
                 {
                     return false;
                 }
 
-                wndProc(args);
+                this.WndProcess(args);
 
                 return args.IsBlocked;
             }

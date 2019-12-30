@@ -108,9 +108,9 @@ namespace Surgical.SDK.Properties {
         ///      &quot;helpText&quot;: &quot;All the settings besides key are champion-specific&quot; 
         ///    },
         ///    &quot;zh&quot;: {
-        ///      &quot;text&quot;: &quot;PLS TRANSLATE TY&quot;
+        ///      &quot;text&quot;: &quot;SHANA PLS TRANSLATE TY&quot;
         ///    },
-        ///    &quot;comb [rest of string was truncated]&quot;;.
+        ///    [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string MainMenu {
             get {
@@ -185,6 +185,19 @@ namespace Surgical.SDK.Properties {
         /// <summary>
         ///   Looks up a localized string similar to {
         ///  &quot;en&quot;: {
+        ///    &quot;text&quot;: &quot;&quot;
+        ///  } 
+        ///}.
+        /// </summary>
+        internal static string NullChampion {
+            get {
+                return ResourceManager.GetString("NullChampion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
+        ///  &quot;en&quot;: {
         ///    &quot;text&quot;:  &quot;Surgical&quot; 
         ///  }
         ///}.
@@ -220,14 +233,15 @@ namespace Surgical.SDK.Properties {
         ///  &quot;en&quot;: {
         ///    &quot;keySelector&quot;: &quot;Press now...&quot;,
         ///    &quot;firstTimeWelcome&quot;: &quot;Welcome to {platform}!\nEnglish language detected.\nYou can change that in the menu.&quot;,
-        ///    &quot;none&quot;: &quot;None&quot;, 
+        ///    &quot;none&quot;: &quot;None&quot;,
+        ///    &quot;platformHasNoTheme&quot;: &quot;has no theme&quot;, 
         ///
         ///    // special, don&apos;t translate
         ///    &quot;languageUnknown&quot;: &quot;Welcome to {platform}!\nYour system language,\n\&quot;{language}\&quot; is not supported by the SDK.\nDefault will be used.\nYou can change that inside the menu.&quot;
         ///  },
         ///  &quot;zh&quot;: {
         ///    &quot;keySelector&quot;: &quot;现在按...&quot;,
-        ///    &quot;firstTimeWelcome&quot;: &quot;Welcome to {platform}!\nChinese language d [rest of string was truncated]&quot;;.
+        ///    &quot;firstTimeWelcome&quot;:  [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string Strings {
             get {

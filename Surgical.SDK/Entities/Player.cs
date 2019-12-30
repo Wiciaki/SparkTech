@@ -6,38 +6,38 @@
 
     public static class Player
     {
-        private static IPlayerFragment player;
+        private static readonly IPlayerFragment Fragment;
 
-        internal static void Initialize(IPlayerFragment fragment)
+        static Player()
         {
-            player = fragment;
+            Fragment = Platform.CoreFragment?.GetPlayerFragment() ?? throw Platform.FragmentException();
         }
 
         public static void IssueOrder(GameObjectOrder order, Vector3 target)
         {
-            player.IssueOrder(order, target);
+            Fragment.IssueOrder(order, target);
         }
 
         public static void IssueOrder(GameObjectOrder order, IGameObject target)
         {
-            player.IssueOrder(order, target);
+            Fragment.IssueOrder(order, target);
         }
 
         public static void UpdateChargedSpell(SpellSlot slot, Vector3 target)
         {
-            player.UpdateChargedSpell(slot, target);
+            Fragment.UpdateChargedSpell(slot, target);
         }
 
         //bool CastSpell(SpellCastInput args);
 
         public static void LevelSpell(SpellSlot slot)
         {
-            player.LevelSpell(slot);
+            Fragment.LevelSpell(slot);
         }
 
         public static void EvolveSpell(SpellSlot slot)
         {
-            player.EvolveSpell(slot);
+            Fragment.EvolveSpell(slot);
         }
     }
 }

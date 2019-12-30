@@ -2,15 +2,13 @@
 {
     using System;
 
-    using Surgical.SDK.API;
-
     public static class Log
     {
-        private static ILogger l;
+        private static readonly ILogger Logger;
 
-        internal static void SetLogger(ILogger logger)
+        static Log()
         {
-            l = logger;
+            Logger = Platform.PlatformLogger ?? new FileLogger();
 
             AppDomain.CurrentDomain.UnhandledException += (sender, args) => { Error(args.ExceptionObject); };
 
@@ -18,41 +16,41 @@
             Info("Platform name: " + Platform.Name);
         }
 
-        public static void Error(object obj)
+        public static void Error(object? obj)
         {
             Error(obj?.ToString());
         }
 
-        public static void Warn(object obj)
+        public static void Warn(object? obj)
         {
             Warn(obj?.ToString());
         }
 
-        public static void Info(object obj)
+        public static void Info(object? obj)
         {
             Info(obj?.ToString());
         }
 
-        public static void Error(string msg)
+        public static void Error(string? msg)
         {
             Write(msg, LogLevel.Error);
         }
 
-        public static void Warn(string msg)
+        public static void Warn(string? msg)
         {
             Write(msg, LogLevel.Warn);
         }
 
-        public static void Info(string msg)
+        public static void Info(string? msg)
         {
             Write(msg, LogLevel.Debug);
         }
 
-        private static void Write(string msg, LogLevel level)
+        private static void Write(string? msg, LogLevel level)
         {
             if (msg != null)
             {
-                l.Write(msg, level);
+                Logger.Write(msg, level);
             }
         }
     }

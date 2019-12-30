@@ -22,7 +22,7 @@
 
         private readonly Translations translations = new Translations();
 
-        private JObject settings;
+        private JObject? settings;
 
         private Size2 size;
 
@@ -42,14 +42,14 @@
             return this.OfType<TMenuItem>();
         }
 
-        public MenuItem this[string id] => this.items.Find(item => item.Id == id);
+        public MenuItem? this[string id] => this.items.Find(item => item.Id == id);
 
-        public TMenuItem Get<TMenuItem>(string id) where TMenuItem : MenuItem
+        public TMenuItem? Get<TMenuItem>(string id) where TMenuItem : MenuItem
         {
-            return (TMenuItem)this[id];
+            return (TMenuItem?)this[id];
         }
 
-        public Menu GetMenu(string id)
+        public Menu? GetMenu(string id)
         {
             return this.Get<Menu>(id);
         }
@@ -59,12 +59,12 @@
             return this.Concat(this.GetItems<Menu>().SelectMany(menu => menu.GetDescensants()));
         }
 
-        public static void Build(Menu menu, JObject translations = null)
+        public static void Build(Menu menu, JObject? translations = null)
         {
             Build(menu, translations, true);
         }
 
-        internal static void Build(Menu menu, JObject translations, bool createSaveHandler)
+        internal static void Build(Menu menu, JObject? translations, bool createSaveHandler)
         {
             if (Roots.Exists(root => root.Id == menu.Id))
             {
@@ -151,11 +151,6 @@
 
         public void Add(MenuItem item)
         {
-            if (item == null)
-            {
-                return;
-            }
-
             if (this.items.Exists(i => i.Id == item.Id))
             {
                 throw new InvalidOperationException($"Id \"{item.Id}\" already exists within this menu instance!");
@@ -173,7 +168,7 @@
             UpdateItemSize(item, this.translations);
         }
 
-        public void Add(MenuItem item, JObject value)
+        public void Add(MenuItem item, JObject? value)
         {
             if (value != null)
             {
@@ -205,7 +200,7 @@
             return b;
         }
 
-        protected internal override JToken GetToken()
+        protected internal override JToken? GetToken()
         {
             if (!this.IsSaving)
             {
@@ -239,14 +234,14 @@
             return o;
         }
 
-        protected internal override void SetToken(JToken token)
+        protected internal override void SetToken(JToken? token)
         {
             if (!this.IsSaving)
             {
                 return;
             }
 
-            this.settings = (JObject)token ?? new JObject();
+            this.settings = (JObject?)token ?? new JObject();
 
             foreach (var item in this)
             {
@@ -311,7 +306,7 @@
 
         public static string LanguageTag { get; private set; }
 
-        public static event Action<EventArgs> OnVisibilityChanged, OnLanguageChanged;
+        public static event Action<EventArgs>? OnVisibilityChanged, OnLanguageChanged;
 
         private static bool released;
 
@@ -319,7 +314,7 @@
 
         static Menu()
         {
-            LanguageTag = EnumCache<Language>.Description(default);
+            LanguageTag = EnumCache<Language>.Description(default)!;
 
             if (!Platform.HasUserInputAPI)
             {
@@ -335,7 +330,7 @@
                 Subscribe(null);
             }
 
-            static void Subscribe(EventArgs _)
+            static void Subscribe(EventArgs? _)
             {
                 Render.OnEndScene += OnEndScene;
                 Render.OnDraw += OnDraw;
@@ -494,7 +489,7 @@
 
         private static void SetLanguage(Language language)
         {
-            var tag = EnumCache<Language>.Description(language);
+            var tag = EnumCache<Language>.Description(language)!;
 
             if (LanguageTag == tag)
             {
@@ -565,7 +560,7 @@
 
         #region SaveHandler
 
-        private class SaveHandler : IDisposable
+        private class SaveHandler
         {
             private readonly SemaphoreSlim semaphore = new SemaphoreSlim(1, 1);
 
@@ -573,14 +568,14 @@
 
             private readonly string targetPath;
 
-            private JToken lastSaved;
+            private JToken? lastSaved;
 
             public SaveHandler(Menu menu, Folder folder)
             {
                 this.menu = menu;
                 this.targetPath = folder.GetFile(menu.Id + ".json");
 
-                JObject o = null;
+                JObject? o = null;
 
                 if (File.Exists(this.targetPath))
                 {
@@ -638,11 +633,6 @@
                 }
 
                 this.semaphore.Release();
-            }
-
-            public void Dispose()
-            {
-                this.semaphore.Dispose();
             }
         }
 

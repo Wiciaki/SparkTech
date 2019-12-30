@@ -10,116 +10,116 @@
 
     public static class Game
     {
-        private static IGameFragment game;
+        private static readonly IGameFragment Fragment;
 
-        internal static void Initialize(IGameFragment fragment)
+        static Game()
         {
-            game = fragment;
+            Fragment = Platform.CoreFragment?.GetGameFragment() ?? throw Platform.FragmentException();
 
-            game.Update = args => OnUpdate.SafeInvoke(args);
-            game.Notify = args => OnNotify.SafeInvoke(args);
-            game.Start = args => OnStart.SafeInvoke(args);
-            game.End = args => OnEnd.SafeInvoke(args);
-            game.Afk = args => OnAfk.SafeInvoke(args);
-            game.Ping = args => OnPing.SafeInvoke(args);
-            game.Input = args => OnInput.SafeInvoke(args);
-            game.Chat = args => OnChat.SafeInvoke(args);
+            Fragment.Update = args => OnUpdate.SafeInvoke(args);
+            Fragment.Notify = args => OnNotify.SafeInvoke(args);
+            Fragment.Start = args => OnStart.SafeInvoke(args);
+            Fragment.End = args => OnEnd.SafeInvoke(args);
+            Fragment.Afk = args => OnAfk.SafeInvoke(args);
+            Fragment.Ping = args => OnPing.SafeInvoke(args);
+            Fragment.Input = args => OnInput.SafeInvoke(args);
+            Fragment.Chat = args => OnChat.SafeInvoke(args);
         }
 
-        public static event Action<EventArgs> OnUpdate;
+        public static event Action<EventArgs>? OnUpdate;
 
-        public static event Action<EventArgs> OnStart;
+        public static event Action<EventArgs>? OnStart;
 
-        public static event Action<EndEventArgs> OnEnd;
+        public static event Action<EndEventArgs>? OnEnd;
 
-        public static event Action<AfkEventArgs> OnAfk;
+        public static event Action<AfkEventArgs>? OnAfk;
 
-        public static event Action<NotifyEventArgs> OnNotify;
+        public static event Action<NotifyEventArgs>? OnNotify;
 
-        public static event Action<PingEventArgs> OnPing;
+        public static event Action<PingEventArgs>? OnPing;
 
-        public static event Action<InputEventArgs> OnInput;
+        public static event Action<InputEventArgs>? OnInput;
 
-        public static event Action<ChatEventArgs> OnChat;
+        public static event Action<ChatEventArgs>? OnChat;
 
-        public static GameMode Mode => game.Mode;
+        public static GameMode Mode => Fragment.Mode;
 
-        public static GameType Type => game.Type;
+        public static GameType Type => Fragment.Type;
 
-        public static GameMap Map => game.Map;
+        public static GameMap Map => Fragment.Map;
 
-        public static float Time => game.Time;
+        public static float Time => Fragment.Time;
 
-        public static float ClockTime => game.ClockTime;
+        public static float ClockTime => Fragment.ClockTime;
 
-        public static float Latency => game.Latency;
+        public static float Latency => Fragment.Latency;
 
-        public static long Id => game.Id;
+        public static long Id => Fragment.Id;
 
-        public static string Region => game.Region;
+        public static string Region => Fragment.Region;
 
-        public static Matrix ProjectionMatrix => game.ProjectionMatrix;
+        public static Matrix ProjectionMatrix => Fragment.ProjectionMatrix;
 
-        public static Matrix ViewMatrix => game.ViewMatrix;
+        public static Matrix ViewMatrix => Fragment.ViewMatrix;
 
         public static void SendChat(string text)
         { 
-            game.SendChat(text);
+            Fragment.SendChat(text);
         }
 
         public static void ShowChat(string text)
         {
-            game.ShowChat(text);
+            Fragment.ShowChat(text);
         }
 
         public static bool IsChatOpen()
         {
-            return game.IsChatOpen();
+            return Fragment.IsChatOpen();
         }
 
         public static bool IsShopOpen()
         {
-            return game.IsShopOpen();
+            return Fragment.IsShopOpen();
         }
 
         public static Vector2 WorldToScreen(this Vector3 pos)
         {
-            return game.WorldToScreen(pos);
+            return Fragment.WorldToScreen(pos);
         }
 
         public static Vector2 WorldToMinimap(this Vector3 pos)
         {
-            return game.WorldToMinimap(pos);
+            return Fragment.WorldToMinimap(pos);
         }
 
         public static Vector3 ScreenToWorld(this Vector2 pos)
         {
-            return game.ScreenToWorld(pos);
+            return Fragment.ScreenToWorld(pos);
         }
 
         public static void SendEmote(Emote emote)
         {
-            game.SendEmote(emote);
+            Fragment.SendEmote(emote);
         }
 
         public static void SendPing(PingCategory category, IGameObject target)
         {
-            game.SendPing(category, target);
+            Fragment.SendPing(category, target);
         }
 
         public static void SendPing(PingCategory category, Vector2 targetPos)
         {
-            game.SendPing(category, targetPos);
+            Fragment.SendPing(category, targetPos);
         }
 
         public static void ShowPing(PingCategory category, IGameObject target, bool playSound)
         {
-            game.ShowPing(category, target, playSound);
+            Fragment.ShowPing(category, target, playSound);
         }
 
         public static void ShowPing(PingCategory category, Vector2 targetPos, bool playSound)
         {
-            game.ShowPing(category, targetPos, playSound);
+            Fragment.ShowPing(category, targetPos, playSound);
         }
     }
 }

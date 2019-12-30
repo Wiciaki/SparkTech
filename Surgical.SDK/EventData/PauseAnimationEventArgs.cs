@@ -13,7 +13,6 @@
         public PauseAnimationEventArgs(IUnit source, bool pause)
         {
             this.Source = source;
-
             this.Pause = pause;
         }
     }

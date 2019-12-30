@@ -4,7 +4,6 @@
 
     using SharpDX;
 
-    using Surgical.SDK.API;
     using Surgical.SDK.EventData;
 
     public class MenuKey : MenuValue, IMenuValue<Key>
@@ -16,7 +15,7 @@
 
         private bool selecting;
 
-        private string text;
+        private string? text;
 
         private Size2 size;
 
@@ -76,7 +75,7 @@
 
         protected override Size2 GetSize()
         {
-            this.text = this.selecting ? SdkSetup.GetTranslatedString("keySelector") : this.value.ToString();
+            this.text = this.selecting ? SdkSetup.GetString("keySelector") : this.value.ToString();
 
             var s = base.GetSize();
 
@@ -100,7 +99,7 @@
             base.OnEndScene(point, width);
             point.X += width;
 
-            Theme.DrawTextBox(point, this.size, this.ButtonColor, this.text, true);
+            Theme.DrawTextBox(point, this.size, this.ButtonColor, this.text!, true);
             Theme.DrawBorders(point, this.size);
         }
 

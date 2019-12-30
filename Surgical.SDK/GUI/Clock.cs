@@ -24,23 +24,30 @@
 
         private static Point point;
 
-        private static string Text()
+        private static string GetText(DateTime dateTime)
         {
-            return Platform.Name + " - " + DateTime.Now.ToLongTimeString();
+            return Platform.Name + " - " + dateTime.ToLongTimeString();
         }
 
         internal static void UpdateSize()
         {
-            size = Theme.MeasureText(Text() + "0");
+            size = Theme.MeasureText(GetText(DateTime.Today));
 
             point = new Point((Render.Resolution().Width - size.Width) / 2, 0);
         }
 
         private static void OnEndScene()
         {
-            if (mode == 0)
+            if (mode == 2)
             {
-                Theme.DrawTextBox(point, size, Text(), true);
+                return;
+            }
+
+            var date = DateTime.Now;
+
+            if (mode == 0 || mode == 1 && date.Second <= 5)
+            {
+                Theme.DrawTextBox(point, size, GetText(date), true);
             }
         }
     }

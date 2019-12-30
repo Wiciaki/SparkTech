@@ -69,7 +69,7 @@
                 }
             }
 
-            static T DynamicEntryPoint<T>(ConstructorInfo constructor, string typeName) where T : class, IEntryPoint
+            static T? DynamicEntryPoint<T>(ConstructorInfo constructor, string typeName) where T : class, IEntryPoint
             {
                 object o;
 

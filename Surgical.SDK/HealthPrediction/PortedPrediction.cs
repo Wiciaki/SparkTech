@@ -15,6 +15,11 @@
     {
         public PortedPrediction()
         {
+            if (!Platform.HasCoreAPI)
+            {
+                return;
+            }
+
             EntityEvents.OnProcessSpellCast += ObjAiBaseOnOnProcessSpellCast;
             Game.OnUpdate += Game_OnGameUpdate;
             EntityEvents.OnSpellbookStopCast += SpellbookOnStopCast;
@@ -24,7 +29,7 @@
 
         Menu IModule.Menu { get; } = new Menu("surgical");
 
-        JObject IModule.GetTranslations()
+        JObject? IModule.GetTranslations()
         {
             return null;
         }

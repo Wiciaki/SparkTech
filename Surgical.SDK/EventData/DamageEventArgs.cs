@@ -19,13 +19,9 @@
         public DamageEventArgs(IAttackable source, IAttackable target, DamageHitType hitType, DamageType damageType, float damage)
         {
             this.Source = source;
-
             this.Target = target;
-
             this.Damage = damage;
-
             this.HitType = hitType;
-
             this.DamageType = damageType;
         }
     }

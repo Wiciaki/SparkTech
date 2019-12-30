@@ -17,11 +17,8 @@
         public UpdateChargedSpellEventArgs(ISpellbook source, SpellSlot slot, Vector3 position, bool releaseCast)
         {
             this.Source = source;
-
             this.Slot = slot;
-
             this.Position = position;
-
             this.ReleaseCast = releaseCast;
         }
     }

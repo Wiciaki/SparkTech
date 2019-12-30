@@ -11,7 +11,6 @@
         public ChatEventArgs(IHero source, string message)
         {
             this.Source = source;
-
             this.Message = message;
         }
     }

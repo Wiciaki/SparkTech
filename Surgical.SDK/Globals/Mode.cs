@@ -3,7 +3,6 @@
     using System.Collections.Generic;
     using System.Linq;
 
-    using Surgical.SDK.API;
     using Surgical.SDK.GUI.Menu;
 
     public class Mode
@@ -117,7 +116,7 @@
 
         private class NoneMode : Mode
         {
-            public override string DisplayName => SdkSetup.GetTranslatedString("none");
+            public override string DisplayName => SdkSetup.GetString("none");
 
             protected override bool IsActive { get; } = true;
 

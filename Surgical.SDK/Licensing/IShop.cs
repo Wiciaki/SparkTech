@@ -4,6 +4,6 @@
 
     public interface IShop
     {
-        Task<string> GetShopUrl();
+        Task<string?> GetShopUrl();
     }
 }

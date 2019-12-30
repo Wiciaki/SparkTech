@@ -9,7 +9,6 @@
         public WndProcEventArgs(WindowsMessages message, Key key)
         {
             this.Message = message;
-
             this.Key = key;
         }
 

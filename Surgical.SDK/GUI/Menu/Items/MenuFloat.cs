@@ -7,13 +7,12 @@
     using SharpDX;
 
     using Surgical.SDK.EventData;
-    using Surgical.SDK.Rendering;
 
     public class MenuFloat : MenuValue, IMenuValue<float>
     {
         #region Fields
 
-        private float value, draggingVal;
+        private float value, dvalue;
 
         private bool dragging;
 
@@ -103,11 +102,10 @@
 
         protected internal override void OnEndScene(Point point, int width)
         {
-            float displayNum;
-
             var barWidth = width;
             var barHeight = Theme.MinItemHeight;
 
+            var reverseMode = this.From > this.To;
             var range = this.Max - this.Min;
 
             width -= this.size.Width;
@@ -115,70 +113,55 @@
 
             if (this.dragging)
             {
-                var diff = UserInput.CursorPosition.X - point.X;
+                var diff = (int)UserInput.CursorPosition.X - point.X;
+                diff = Math.Max(0, Math.Min(barWidth, diff));
 
-                if (diff <= 0f)
+                if (reverseMode)
                 {
-                    displayNum = this.From;
-                }
-                else if (diff >= barWidth)
-                {
-                    displayNum = this.To;
-                }
-                else
-                {
-                    diff *= range / barWidth;
-
-                    displayNum = this.From;
-
-                    if (this.From > this.To)
-                    {
-                        displayNum -= diff;
-                    }
-                    else
-                    {
-                        displayNum += diff;
-                    }
+                    diff *= -1;
                 }
 
-                this.draggingVal = displayNum;
-            }
-            else
-            {
-                displayNum = this.Value;
+                this.dvalue = this.From + diff * range / barWidth;
             }
 
             point.X += width;
-            Theme.DrawTextBox(point, this.size, this.GetPrintableStr(displayNum), true);
+            Theme.DrawTextBox(point, this.size, this.GetPrintableStr(this.dvalue), true);
             point.X -= width;
+            
+            point.Y += this.size.Height;
 
-            var offset = (int)(barWidth / (range / (this.Value - this.Min)));
+            var offset = (int)(barWidth / (range / (this.dvalue - this.Min)));
 
-            if (this.From > this.To)
+            if (reverseMode)
             {
                 offset = barWidth - offset;
             }
 
-            var color = Theme.BorderColor;
-
-            if (!this.dragging)
-            {
-                color.A = 150;
-            }
-
-            point.Y += barHeight / 2 + this.size.Height;
-            Vector.Draw(color, barHeight, point, new Point(point.X + offset, point.Y));
-            point.Y -= barHeight / 2;
+            var firstSize = new Size2(offset, barHeight);
+            var secondSize = new Size2(barWidth - offset, barHeight);
+            
+            var barColor = GetContrastingColor(Theme.BackgroundColor);
+            Theme.DrawBox(point, firstSize, barColor);
+            
+            point.X += offset;
+            Theme.DrawBox(point, secondSize);
+            point.X -= offset;
 
             var s = new Size2(this.size.Width, barHeight);
-            Theme.DrawTextBox(point, s, $"{this.From:0.##}", true);
-            point.X += s.Width;
 
-            var drawSize = new Size2(barWidth - 2 * s.Width, barHeight);
-            Theme.DrawBox(point, drawSize, Theme.BackgroundColor);
-            
-            point.X += drawSize.Width;
-            Theme.DrawTextBox(point, s, $"{this.To:0.##}", true);
+            void ShowNum(float num) => Theme.DrawTextBox(point, s, Color.Transparent, $"{num:0.##}", true);
+
+            ShowNum(this.From);
+            point.X += barWidth - s.Width;
+            ShowNum(this.To);
+        }
+
+        private static Color GetContrastingColor(Color c)
+        {
+            c = new Color(c.R > 127 ? 0 : 255, c.G > 127 ? 0 : 255, c.B > 127 ? 0 : 255);
+            c.A /= 3;
+
+            return c;
         }
 
         protected internal override void OnWndProc(Point point, int width, WndProcEventArgs args)
@@ -201,14 +184,14 @@
             {
                 this.dragging = false;
 
-                this.Value = this.draggingVal;
+                this.Value = this.dvalue;
             }
         }
 
         protected override JToken Token
         {
             get => this.value;
-            set => this.value = value.Value<float>();
+            set => this.dvalue = this.value = value.Value<float>();
         }
 
         #endregion

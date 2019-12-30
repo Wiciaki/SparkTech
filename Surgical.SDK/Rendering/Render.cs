@@ -11,27 +11,18 @@
 
     public static class Render
     {
-        public static Device Device => fragment.Device;
+        private static readonly IRenderAPI Fragment;
 
-        public static event Action OnDraw, OnBeginScene, OnEndScene, OnLostDevice, OnResetDevice, OnDispose, OnSetRenderTarget;
-
-        public static Size2 Resolution()
+        static Render()
         {
-            return fragment.Resolution();
-        }
+            Fragment = Platform.RenderFragment ?? throw Platform.APIException("RenderAPI");
 
-        private static IRenderAPI fragment;
-
-        internal static void Initialize(IRenderAPI api)
-        {
-            fragment = api;
-
-            fragment.Draw = () => InvokeRenderEvent(OnDraw);
-            fragment.BeginScene = () => InvokeRenderEvent(OnBeginScene);
-            fragment.EndScene = () => InvokeRenderEvent(OnEndScene);
-            fragment.LostDevice = () => InvokeRenderEvent(OnLostDevice);
-            fragment.ResetDevice = () => InvokeRenderEvent(OnResetDevice);
-            fragment.SetRenderTarget = () => InvokeRenderEvent(OnSetRenderTarget);
+            Fragment.Draw = () => InvokeRenderEvent(OnDraw);
+            Fragment.BeginScene = () => InvokeRenderEvent(OnBeginScene);
+            Fragment.EndScene = () => InvokeRenderEvent(OnEndScene);
+            Fragment.LostDevice = () => InvokeRenderEvent(OnLostDevice);
+            Fragment.ResetDevice = () => InvokeRenderEvent(OnResetDevice);
+            Fragment.SetRenderTarget = () => InvokeRenderEvent(OnSetRenderTarget);
 
             static void OnExit(object o, EventArgs args) => InvokeRenderEvent(OnDispose);
 
@@ -44,7 +35,16 @@
             typeof(Picture).Trigger();
         }
 
-        private static void InvokeRenderEvent(Action e)
+        public static Device Device => Fragment.Device;
+
+        public static event Action? OnDraw, OnBeginScene, OnEndScene, OnLostDevice, OnResetDevice, OnDispose, OnSetRenderTarget;
+
+        public static Size2 Resolution()
+        {
+            return Fragment.Resolution();
+        }
+
+        private static void InvokeRenderEvent(Action? e)
         {
             if (e == null)
             {

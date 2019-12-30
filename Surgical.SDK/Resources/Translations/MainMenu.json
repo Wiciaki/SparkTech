@@ -21,7 +21,7 @@
       "helpText": "All the settings besides key are champion-specific" 
     },
     "zh": {
-      "text": "PLS TRANSLATE TY"
+      "text": "SHANA PLS TRANSLATE TY"
     },
     "combo": {
       "en": {
@@ -108,7 +108,7 @@
         "text": "Enable arrow indicators"
       },
       "zh": {
-        "text": "asdfsef"
+        "text": "??"
       }
     },
     "position": {
@@ -142,14 +142,20 @@
       "options": [
         "{platform}",
         "Default",
-        "Default alternate borders",
-        "Purplish"
+        "Alternate borders",
+        "Simple black",
+        "Simple white",
+        "Stylish red",
+        "Stylish blue"
       ]
     },
     "zh": {
       "text": "??",
       "options": [
         "{platform}",
+        "??",
+        "??",
+        "??",
         "??",
         "??",
         "??"
@@ -192,11 +198,11 @@
     },
     "zh": {
       "text": "钟",
-      "helpText": "Smart shows the clock for 5 seconds, every minute",
+      "helpText": "??",
       "options": [
-        "On",
-        "Smart",
-        "Off"
+        "??",
+        "??",
+        "??"
       ]
     }
   },
@@ -225,7 +231,7 @@
     },
     "licensed": {
       "en": {
-        "text": "License time left: {expiry}"
+        "text": "License expires at: {expiry}"
       },
       "zh": {
         "text": "?? {expiry}"
@@ -260,7 +266,7 @@
         "text": "SDK Version {version}"
       },
       "zh": {
-        "text": "??"
+        "text": "?? {version}"
       }
     },
     "contact": {

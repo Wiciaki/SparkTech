@@ -7,28 +7,28 @@
 
     public static class Packet
     {
-        private static IPacketFragment packet;
+        private static readonly IPacketFragment Fragment;
 
-        internal static void Initialize(IPacketFragment fragment)
+        static Packet()
         {
-            packet = fragment;
+            Fragment = Platform.CoreFragment?.GetPacketFragment() ?? throw Platform.FragmentException();
 
-            fragment.Process = args => OnProcess.SafeInvoke(args);
-            fragment.Send = args => OnSend.SafeInvoke(args);
+            Fragment.Process = args => OnProcess.SafeInvoke(args);
+            Fragment.Send = args => OnSend.SafeInvoke(args);
         }
 
-        public static event Action<PacketEventArgs> OnProcess;
+        public static event Action<PacketEventArgs>? OnProcess;
 
-        public static event Action<PacketEventArgs> OnSend;
+        public static event Action<PacketEventArgs>? OnSend;
 
         public static void Process(byte[] packetData, PacketChannel channel)
         {
-            packet.ProcessPacket(packetData, channel);
+            Fragment.ProcessPacket(packetData, channel);
         }
 
         public static void Send(byte[] packetData, PacketChannel channel, PacketProtocolFlags protocolFlags)
         {
-            packet.SendPacket(packetData, channel, protocolFlags);
+            Fragment.SendPacket(packetData, channel, protocolFlags);
         }
     }
 }

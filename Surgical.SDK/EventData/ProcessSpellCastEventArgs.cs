@@ -12,7 +12,7 @@
 
         public ISpellData Spell { get; }
 
-        public IGameObject Target { get; }
+        public IGameObject? Target { get; }
 
         public int Level { get; }
 
@@ -29,21 +29,13 @@
         public ProcessCastEventArgs(IUnit source, ISpellData spell, IGameObject target, int level, Vector3 start, Vector3 end, int counter, SpellSlot slot, int missileNetworkId)
         {
             this.Source = source;
-
             this.Spell = spell;
-
             this.Level = level;
-
             this.Start = start;
-
             this.End = end;
-
             this.Target = target;
-
             this.CastedSpellCount = counter;
-
             this.Slot = slot;
-
             this.MissileNetworkId = missileNetworkId;
         }
     }

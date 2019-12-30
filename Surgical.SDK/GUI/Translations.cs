@@ -7,16 +7,16 @@
 
     public sealed class Translations : IEnumerable
     {
-        private JObject translations = new JObject();
+        private JObject? translations = new JObject();
 
         private readonly Dictionary<string, JObject> customs = new Dictionary<string, JObject>();
 
-        public JToken GetToken(string str)
+        public JToken? GetToken(string str)
         {
-            return this.translations[Menu.Menu.LanguageTag]?[str];
+            return this.translations![Menu.Menu.LanguageTag]?[str];
         }
 
-        public string GetString(string str)
+        public string? GetString(string str)
         {
             return this.GetToken(str)?.Value<string>();
         }
@@ -31,9 +31,9 @@
             this.customs.Add(id, value);
         }
 
-        public Translations GetObject(string id)
+        public Translations? GetObject(string id)
         {
-            var o = (JObject)this.translations[id];
+            var o = (JObject?)this.translations![id];
 
             return o == null && !this.customs.TryGetValue(id, out o) ? null : new Translations { o };
         }

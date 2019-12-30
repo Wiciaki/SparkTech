@@ -12,20 +12,16 @@
 
         public Vector3 EndPosition { get; }
 
-        public IGameObject Target { get; }
+        public IGameObject? Target { get; }
 
         public SpellSlot Slot { get; }
 
-        public CastSpellEventArgs(ISpellbook source, Vector3 startPos, Vector3 endPos, IGameObject target, SpellSlot slot)
+        public CastSpellEventArgs(ISpellbook source, Vector3 startPos, Vector3 endPos, IGameObject? target, SpellSlot slot)
         {
             this.Source = source;
-
             this.StartPosition = startPos;
-
             this.EndPosition = endPos;
-
             this.Target = target;
-
             this.Slot = slot;
         }
     }

@@ -37,7 +37,7 @@
 
         }
 
-        public async Task<string> GetShopUrl()
+        public async Task<string?> GetShopUrl()
         {
             var licensee = "licenseeNumber=" + this.licenseeNumber;
 
@@ -59,7 +59,7 @@
             // this might fail under certain configurations so I delegated it into this method to take pain out of debugging
 
             // firstly, this
-            var items = json["items"]["item"];
+            var items = json["items"]!["item"];
 
             // then, there is a 1-item array
             var props = items.Single()["property"];
@@ -68,10 +68,10 @@
             var jObjects = props.Cast<JObject>();
 
             // which are basically name/value pairs
-            return jObjects.ToDictionary(j => j["name"].Value<string>(), j => j["value"].Value<string>());
+            return jObjects.ToDictionary(j => j["name"]!.Value<string>(), j => j["value"]!.Value<string>());
         }
 
-        private static AuthResult GetAuth(JObject json)
+        private static AuthResult GetAuth(JObject? json)
         {
             if (json != null)
             {
@@ -100,7 +100,7 @@
             return new AuthResult(false);
         }
 
-        private async Task<JObject> SendPost(string ending, params string[] reqParams)
+        private async Task<JObject?> SendPost(string ending, params string[] reqParams)
         {
             const string BaseLink = "https://go.netlicensing.io/core/v2/rest/";
 

@@ -27,7 +27,7 @@
         {
             var button = AddButton(base.GetSize(), out this.size);
 
-            this.extraWidth = this.size.Width;
+            this.tmExtraWidth = this.size.Width;
 
             return button;
         }
@@ -70,7 +70,7 @@
 
         private static (Color Color, bool Bool) JObjectToColorBool(JToken o)
         {
-            return (Color: JArrayToColor(o["Color"].Value<JArray>()), Bool: o["Bool"].Value<bool>());
+            return (Color: JArrayToColor(o["Color"]!.Value<JArray>()), Bool: o["Bool"]!.Value<bool>());
         }
     }
 }

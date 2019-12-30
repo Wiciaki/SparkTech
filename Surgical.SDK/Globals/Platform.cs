@@ -14,39 +14,50 @@
 
     public sealed class Platform
     {
-        public static string Name { get; private set; }
+        public static string Name { get; private set; } = "";
 
         public static bool HasRenderAPI { get; private set; }
 
+        internal static IRenderAPI? RenderFragment;
+
         public static bool HasCoreAPI { get; private set; }
+
+        internal static ICoreAPI? CoreFragment;
 
         public static bool HasUserInputAPI { get; private set; }
 
+        internal static IUserInputAPI? UserInputFragment;
+
         public static bool HasTheme { get; private set; }
 
-        public IRenderAPI RenderAPI { get; set; }
+        internal static ITheme? PlatformTheme;
 
-        public ICoreAPI CoreAPI { get; set; }
+        public IRenderAPI? RenderAPI { get; set; }
+
+        public ICoreAPI? CoreAPI { get; set; }
         
-        public IUserInputAPI UserInputAPI { get; set; }
+        public IUserInputAPI? UserInputAPI { get; set; }
 
         public AuthResult AuthResult { get; set; }
 
-        public ITheme Theme { get; set; }
+        public ITheme? Theme { get; set; }
 
-        public IScriptLoader ScriptLoader { get; set; }
+        public IScriptLoader? ScriptLoader { get; set; }
 
-        public ILogger Logger { get; set; }
+        public ILogger? Logger { get; set; }
+
+        internal static ILogger PlatformLogger;
 
         public void Boot()
         {
-            Log.SetLogger(this.Logger ??= new FileLogger());
+            typeof(Log).Trigger();
 
             if (this.RenderAPI != null)
             {
                 HasRenderAPI = true;
 
-                Render.Initialize(this.RenderAPI);
+                RenderFragment = this.RenderAPI;
+                typeof(Render).Trigger();
             }
             else
             {
@@ -57,7 +68,8 @@
             {
                 HasUserInputAPI = true;
 
-                UserInput.Initialize(this.UserInputAPI);
+                UserInputFragment = this.UserInputAPI;
+                typeof(UserInput).Trigger();
             }
             else
             {
@@ -68,13 +80,12 @@
             {
                 HasCoreAPI = true;
 
-                ObjectManager.Initialize(this.CoreAPI.GetObjectManagerFragment() ?? throw InvalidAPI());
-                EntityEvents.Initialize(this.CoreAPI.GetEntityEventsFragment() ?? throw InvalidAPI());
-                Player.Initialize(this.CoreAPI.GetPlayerFragment() ?? throw InvalidAPI());
-                Game.Initialize(this.CoreAPI.GetGameFragment() ?? throw InvalidAPI());
-                Packet.Initialize(this.CoreAPI.GetPacketFragment() ?? throw InvalidAPI());
-
-                static ArgumentException InvalidAPI() => new ArgumentException("CoreAPI was provided, but one of the fragments was null");
+                CoreFragment = this.CoreAPI;
+                typeof(ObjectManager).Trigger();
+                typeof(EntityEvents).Trigger();
+                typeof(Player).Trigger();
+                typeof(Game).Trigger();
+                typeof(Packet).Trigger();
             }
             else
             {
@@ -82,8 +93,9 @@
             }
 
             HasTheme = this.Theme != null;
+            PlatformTheme = this.Theme;
+            typeof(Theme).Trigger();
 
-            GUI.Theme.Initialize(this.Theme);
             SdkSetup.SetupAuth(this.AuthResult);
 
             if (this.ScriptLoader == null)
@@ -115,5 +127,20 @@
 
         private Platform()
         { }
+
+        internal static Exception FragmentException()
+        {
+            if (!HasCoreAPI)
+            {
+                return APIException("CoreAPI");
+            }
+
+            return new ArgumentException("CoreAPI was provided, but one of the fragments was null");
+        }
+
+        internal static InvalidOperationException APIException(string apiName)
+        {
+            return new InvalidOperationException($"Attempted to use {apiName} when it wasn't present!");
+        }
     }
 }

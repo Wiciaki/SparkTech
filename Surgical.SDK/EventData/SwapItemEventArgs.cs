@@ -15,9 +15,7 @@
         public SwapItemEventArgs(IUnit source, int from, int to)
         {
             this.Source = source;
-
             this.From = from;
-
             this.To = to;
         }
     }

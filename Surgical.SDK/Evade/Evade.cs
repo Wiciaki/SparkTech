@@ -7,9 +7,9 @@
 
     public class Evade : IEvade
     {
-        public Menu Menu { get; } = new Menu("surgical");
+        public Menu? Menu { get; } = new Menu("surgical");
 
-        public JObject GetTranslations()
+        public JObject? GetTranslations()
         {
             return JObject.Parse(Resources.Evade);
         }

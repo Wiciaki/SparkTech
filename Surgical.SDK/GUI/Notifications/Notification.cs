@@ -24,9 +24,11 @@
             decayTime = time;
         }
 
-        public readonly string Content, Header;
+        public readonly string Content;
 
-        public Notification(string content, string header = null)
+        public readonly string? Header;
+
+        public Notification(string content, string? header = null)
         {
             if (string.IsNullOrWhiteSpace(content))
             {
@@ -51,12 +53,12 @@
             Send(content, null, duration);
         }
 
-        public static void Send(string content, string header = null)
+        public static void Send(string content, string? header = null)
         {
             Send(content, header, 5f);
         }
 
-        public static void Send(string content, string header, float duration)
+        public static void Send(string content, string? header, float duration)
         {
             new Notification(content, header).Send(duration);
         }
@@ -66,7 +68,6 @@
         private void UpdateSizes()
         {
             this.contentSize = Theme.MeasureText(this.Content);
-
             this.headerSize = new Size2(this.contentSize.Width, Theme.MinItemHeight);
         }
 
@@ -98,9 +99,9 @@
                 var entry = Entries[i];
                 var delta = entry.Time - t;
 
-                var bgColor = Theme.BackgroundColor;
+                var bgcolor = Theme.BackgroundColor;
                 var bcolor = Theme.BorderColor;
-                var textAlpha = byte.MaxValue;
+                var txtcolor = Theme.TextColor;
 
                 if (delta < 0)
                 {
@@ -112,9 +113,11 @@
                 {
                     var stage = delta / decayTime;
 
-                    bgColor = DecayColor(bgColor, stage);
-                    bcolor = DecayColor(bcolor, stage);
-                    textAlpha = (byte)(stage * byte.MaxValue);
+                    void Decay(ref Color color) => color.A = (byte)(color.A * stage);
+
+                    Decay(ref bgcolor);
+                    Decay(ref bcolor);
+                    Decay(ref txtcolor);
                 }
 
                 var bpoint = point;
@@ -127,7 +130,7 @@
 
                     bsizes.Add(headerSize);
 
-                    Theme.DrawTextBox(point, headerSize, bgColor, entry.Notification.Header, true, textAlpha);
+                    Theme.DrawTextBox(point, headerSize, bgcolor, txtcolor, entry.Notification.Header, true);
 
                     point.Y += entry.Notification.headerSize.Height;
                 }
@@ -137,7 +140,7 @@
 
                 bsizes.Add(contentSize);
 
-                Theme.DrawTextBox(point, contentSize, bgColor, entry.Notification.Content, false, textAlpha);
+                Theme.DrawTextBox(point, contentSize, bgcolor, txtcolor, entry.Notification.Content);
 
                 if (borders)
                 {
@@ -146,13 +149,6 @@
 
                 point.Y += contentSize.Height + Theme.MinItemHeight;
             }
-        }
-
-        private static Color DecayColor(Color color, float decayStage)
-        {
-            color.A = (byte)(color.A * decayStage);
-
-            return color;
         }
 
         internal static void UpdateAllSizes()

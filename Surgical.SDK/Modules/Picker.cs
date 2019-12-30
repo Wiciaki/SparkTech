@@ -13,7 +13,7 @@
 
     public sealed class Picker<TModule> where TModule : class, IModule
     {
-        public event Action<BeforeValueChangeEventArgs> OnModuleSelected;
+        public event Action<BeforeValueChangeEventArgs>? OnModuleSelected;
 
         private readonly List<TModule> modules;
 
@@ -29,8 +29,8 @@
         {
             this.modules.Add(module);
 
-            this.root.Add(module.Menu, module.GetTranslations());
-            module.Menu.CreateSaveHandler(this.folder);
+            this.root.Add(module.Menu!, module.GetTranslations());
+            module.Menu!.CreateSaveHandler(this.folder);
 
             this.UpdateOptions();
 
@@ -49,7 +49,7 @@
                 input = input.Substring(1);
             }
 
-            this.picker = new MenuList("picker") { IsVisible = false, IsExpanded = true, Options = new List<string> { module.Menu.Text } };
+            this.picker = new MenuList("picker") { IsVisible = false, IsExpanded = true, Options = new List<string> { module.Menu!.Text } };
             this.picker.BeforeValueChange += this.BeforeValueChange;
 
             this.root = new Menu(input.ToLower()) { IsVisible = module.Menu.Any() };
@@ -77,8 +77,8 @@
         {
             var module = this.modules[args.NewValue<int>()];
 
-            var oldValue = this.Current.Menu.Id;
-            var newValue = module.Menu.Id;
+            var oldValue = this.Current.Menu!.Id;
+            var newValue = module.Menu!.Id;
 
             var detector = BeforeValueChangeEventArgs.Create(oldValue, newValue);
             this.OnModuleSelected.SafeInvoke(detector);
@@ -96,7 +96,7 @@
 
         private void UpdateOptions()
         {
-            this.picker.Options = this.modules.ConvertAll(m => m.Menu.Text);
+            this.picker.Options = this.modules.ConvertAll(m => m.Menu!.Text);
         }
     }
 }

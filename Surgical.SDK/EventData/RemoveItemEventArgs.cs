@@ -13,7 +13,6 @@
         public RemoveItemEventArgs(IUnit source, int slot)
         {
             this.Source = source;
-
             this.Slot = slot;
         }
     }

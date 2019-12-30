@@ -3,8 +3,6 @@
     using System;
     using System.IO;
 
-    using Surgical.SDK.API;
-
     public sealed class FileLogger : ILogger
     {
         private readonly string path;

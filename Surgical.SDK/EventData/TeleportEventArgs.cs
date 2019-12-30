@@ -15,9 +15,7 @@
         public TeleportEventArgs(IUnit source, string recallType, string recallName)
         {
             this.Source = source;
-
             this.RecallType = recallType;
-
             this.RecallName = recallName;
         }
     }

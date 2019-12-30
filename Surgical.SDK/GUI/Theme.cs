@@ -20,35 +20,39 @@
 
             Color ITheme.BackgroundColor { get; }
 
+            Color ITheme.TextColor { get; }
+
             Color ITheme.BorderColor { get; }
 
             int ITheme.MinItemHeight { get; }
 
             Size2 ITheme.MeasureText(string text) => default;
 
-            void ITheme.DrawBox(Point point, Color color, Size2 size)
+            void ITheme.DrawBox(Point point, Size2 size, Color bgcolor)
             { }
 
-            void ITheme.DrawTextBox(Point point, Color color, Size2 size, string text, bool forceCentered, byte textAlpha)
+            void ITheme.DrawTextBox(Point point, Size2 size, Color bgcolor, Color txtcolor, string text, bool forceCentered)
             { }
 
-            void ITheme.DrawBorders(Point point, Color color, params Size2[] sizes)
+            void ITheme.DrawBorders(Point point, Color bcolor, params Size2[] sizes)
             { }
         }
 
-        private static ITheme theme, platformTheme;
+        private static readonly ITheme? PlatformTheme;
 
-        internal static void Initialize(ITheme t)
+        private static ITheme theme;
+
+        static Theme()
         {
-            platformTheme = t;
-
             if (!Platform.HasRenderAPI)
             {
                 theme = new NullTheme();
                 return;
             }
 
-            theme = t ?? new SurgicalTheme();
+            PlatformTheme = Platform.PlatformTheme;
+            theme = PlatformTheme ?? new DefaultTheme();
+
             theme.Start();
 
             Menu.Menu.UpdateArrowSize();
@@ -61,10 +65,13 @@
 
             theme = i switch
             {
-                0 => platformTheme,
-                1 => new SurgicalTheme(),
-                2 => new SurgicalTheme2(),
-                3 => new PurpleTheme(),
+                0 => PlatformTheme ?? throw new InvalidOperationException(),
+                1 => new DefaultTheme(),
+                2 => new AlternateBordersTheme(),
+                3 => new SimpleTheme(Color.White, Color.Black),
+                4 => new SimpleTheme(Color.Black, Color.White),
+                5 => new StylishTheme(Color.DarkRed),
+                6 => new StylishTheme(Color.DarkBlue),
                 _ => throw new IndexOutOfRangeException()
             };
 
@@ -83,6 +90,8 @@
 
         public static Color BorderColor => theme.BorderColor;
 
+        public static Color TextColor => theme.TextColor;
+
         public static Size2 MeasureText(string text)
         {
             return theme.MeasureText(text);
@@ -93,24 +102,34 @@
             DrawTextBox(point, size, BackgroundColor, text, forceCentered);
         }
 
-        public static void DrawTextBox(Point point, Size2 size, Color color, string text, bool forceCentered = false, byte textAlpha = byte.MaxValue)
+        public static void DrawTextBox(Point point, Size2 size, Color bgcolor, string text, bool forceCentered = false)
         {
-            theme.DrawTextBox(point, color, size, text, forceCentered, textAlpha);
+            DrawTextBox(point, size, bgcolor, TextColor, text, forceCentered);
+        }
+
+        public static void DrawTextBox(Point point, Size2 size, Color bgcolor, Color txtcolor, string text, bool forceCentered = false)
+        {
+            theme.DrawTextBox(point, size, bgcolor, txtcolor, text, forceCentered);
+        }
+
+        public static void DrawBox(Point point, Size2 size)
+        {
+            DrawBox(point, size, BackgroundColor);
         }
 
         public static void DrawBox(Point point, Size2 size, Color color)
         {
-            theme.DrawBox(point, color, size);
+            theme.DrawBox(point, size, color);
         }
 
         public static void DrawBorders(Point point, params Size2[] sizes)
         {
-            theme.DrawBorders(point, BorderColor, sizes);
+            DrawBorders(point, BorderColor, sizes);
         }
 
-        public static void DrawBorders(Point point, Color color, params Size2[] sizes)
+        public static void DrawBorders(Point point, Color bcolor, params Size2[] sizes)
         {
-            theme.DrawBorders(point, color, sizes);
+            theme.DrawBorders(point, bcolor, sizes);
         }
     }
 }

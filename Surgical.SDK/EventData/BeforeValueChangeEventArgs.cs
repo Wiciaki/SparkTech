@@ -1,5 +1,7 @@
 ﻿namespace Surgical.SDK.EventData
 {
+    using System;
+
     public class BeforeValueChangeEventArgs : BlockableEventArgs
     {
         private readonly object oldValue, newValue;
@@ -27,6 +29,16 @@
 
         public static BeforeValueChangeEventArgs Create<T>(T oldValue, T newValue)
         {
+            if (oldValue == null)
+            {
+                throw new ArgumentNullException(nameof(oldValue));
+            }
+
+            if (newValue == null)
+            {
+                throw new ArgumentNullException(nameof(newValue));
+            }
+
             return new BeforeValueChangeEventArgs(oldValue, newValue);
         }
     }

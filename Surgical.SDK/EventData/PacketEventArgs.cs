@@ -13,9 +13,7 @@
         public PacketEventArgs(byte[] packet, PacketChannel channel, PacketProtocolFlags protocolFlags)
         {
             this.Packet = packet;
-
             this.Channel = channel;
-
             this.ProtocolFlags = protocolFlags;
         }
     }

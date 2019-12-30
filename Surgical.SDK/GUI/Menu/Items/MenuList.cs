@@ -20,7 +20,7 @@
 
         private readonly List<string> options;
 
-        private List<Size2> sizes;
+        private Size2[]? sizes;
 
         private const string ArrowText = ">";
 
@@ -66,13 +66,13 @@
         {
             if (this.options.Count == 0)
             {
-                this.sizes = new List<Size2>(0);
+                this.sizes = Array.Empty<Size2>();
                 return;
             }
 
-            this.sizes = this.options.ConvertAll(Theme.MeasureText);
+            this.sizes = this.options.ConvertAll(Theme.MeasureText).ToArray();
             var width = this.sizes.Max(iS => iS.Width);
-            this.sizes = this.sizes.ConvertAll(iS => new Size2(width, iS.Height));
+            this.sizes = Array.ConvertAll(this.sizes, iS => new Size2(width, iS.Height));
         }
 
         protected internal override void OnWndProc(Point point, int width, WndProcEventArgs args)
@@ -91,7 +91,7 @@
 
             for (var i = 0; i < this.options.Count; i++)
             {
-                var s = this.sizes[i];
+                var s = this.sizes![i];
 
                 if (Menu.IsCursorInside(point, s))
                 {
@@ -124,16 +124,19 @@
                 point.X += Menu.ArrowWidth;
             }
 
+            var bpoint = point;
+
             for (var i = 0; i < this.options.Count; i++)
             {
-                var s = this.sizes[i];
+                var s = this.sizes![i];
                 var color = this.Value == i ? Color.Green : Theme.BackgroundColor;
 
                 Theme.DrawTextBox(point, s, color, this.options[i], true);
-                Theme.DrawBorders(point, s);
 
                 point.Y += s.Height;
             }
+
+            Theme.DrawBorders(bpoint, this.sizes!);
         }
 
         #region Public Properties

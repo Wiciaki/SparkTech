@@ -118,37 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="Banner" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Banner.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="Evade" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\resources\translations\evade.json;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1250</value>
-  </data>
-  <data name="MainMenu" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\resources\translations\mainmenu.json;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1250</value>
-  </data>
-  <data name="Mode" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\resources\translations\mode.json;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1250</value>
-  </data>
-  <data name="Module" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\resources\translations\module.json;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;iso-8859-2</value>
-  </data>
-  <data name="NullChampion" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\resources\translations\nullchampion.json;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1250</value>
-  </data>
-  <data name="Orbwalker" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\resources\translations\orbwalker.json;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1250</value>
-  </data>
-  <data name="Picker" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Picker.jpg;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="RenderEffectCompiled" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\resources\rendereffectcompiled;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="Strings" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\resources\translations\strings.json;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1250</value>
-  </data>
-  <data name="TargetSelector" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\resources\translations\targetselector.json;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1250</value>
+  <data name="Surgeon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\surgeon.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

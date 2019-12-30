@@ -13,7 +13,6 @@
         public PlayAnimationEventArgs(IUnit source, string animation)
         {
             this.Source = source;
-
             this.Animation = animation;
         }
     }

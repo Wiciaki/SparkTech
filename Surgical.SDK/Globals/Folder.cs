@@ -49,7 +49,7 @@
 
         public static implicit operator string(Folder folder)
         {
-            return folder?.ToString();
+            return folder.ToString();
         }
 
         public override string ToString()

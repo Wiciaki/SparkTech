@@ -2,11 +2,23 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
 
     using Surgical.SDK.Logging;
 
     public static class DelayAction
     {
+        public static void OnLeagueThread(Action action)
+        {
+            void Callback(EventArgs _)
+            {
+                Game.OnUpdate -= Callback;
+                action();
+            }
+
+            Game.OnUpdate += Callback;
+        }
+
         static DelayAction()
         {
             Game.OnUpdate += OnUpdate;
@@ -14,7 +26,7 @@
 
         private static readonly List<DelayActionEntry> DelayActions = new List<DelayActionEntry>();
 
-        private static void OnUpdate(System.EventArgs _)
+        private static void OnUpdate(EventArgs _)
         {
             if (DelayActions.Count == 0)
             {
@@ -49,29 +61,20 @@
         public static void Add(float time, Action action)
         {
             DelayActions.Add(new DelayActionEntry(time, action));
-
             DelayActions.Sort(DelayActionComparer);
-        }
-        
-        public static void OnUpdate(Action action)
-        {
-            void Callback(System.EventArgs _)
-            {
-                Game.OnUpdate -= Callback;
-
-                action();
-            }
-
-            Game.OnUpdate += Callback;
         }
 
         private class DelayActionEntry
         {
             public class Comparer : IComparer<DelayActionEntry>
             {
+                [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
                 int IComparer<DelayActionEntry>.Compare(DelayActionEntry x, DelayActionEntry y)
                 {
-                    return y.ExecuteTime.CompareTo(x.ExecuteTime);
+                    var e1 = x.ExecuteTime;
+                    var e2 = y.ExecuteTime;
+
+                    return e1.CompareTo(e2);
                 }
             }
 
@@ -94,7 +97,6 @@
             public DelayActionEntry(float time, Action action)
             {
                 this.ExecuteTime = Game.Time + time;
-
                 this.action = action;
             }
         }

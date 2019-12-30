@@ -8,6 +8,8 @@
 
         string CharName { get; }
 
+        bool HasBuff(string buffName);
+
         bool HasBuffOfType(BuffType buff);
 
         IBuff GetBuff(string buffName);

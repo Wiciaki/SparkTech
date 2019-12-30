@@ -2,8 +2,8 @@
 {
     using Surgical.SDK.Entities;
 
-    public interface IEventArgsTarget<out T> where T : IGameObject
+    public interface IEventArgsTarget<out T> where T : class, IGameObject
     {
-        T Target { get; }
+        T? Target { get; }
     }
 }

@@ -13,7 +13,6 @@
         public NotifyEventArgs(IGameObject source, GameEvent @event)
         {
             this.Source = source;
-
             this.Event = @event;
         }
     }
