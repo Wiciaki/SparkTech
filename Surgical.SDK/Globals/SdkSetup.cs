@@ -6,6 +6,7 @@
 
     using Newtonsoft.Json.Linq;
 
+    using SharpDX;
     using SharpDX.Direct3D9;
 
     using Surgical.SDK.Champion;
@@ -21,6 +22,7 @@
     using Surgical.SDK.Properties;
     using Surgical.SDK.Rendering;
     using Surgical.SDK.TargetSelector;
+    using Surgical.SDK.Utilities;
 
     public static class SdkSetup
     {
@@ -51,13 +53,24 @@
                 new MenuList("theme"),
                 new Menu("notifications")
                 {
-                    new MenuFloat("decayTime", 0f, 10f, 4f),
-                    new MenuBool("borders", true)
+                    new MenuFloat("decayTime", 0f, 10f, 4.5f),
+                    new MenuBool("borders", true),
+                    new MenuAction("spawnTest", SpawnTestNotification)
                 },
-                new MenuList("clock"),
+                new Menu("clock")
+                {
+                    new MenuList("mode"),
+                    new MenuBool("background", false),
+                    new MenuColorBool("customColor", Color.LawnGreen, true)
+                },
                 new Menu("humanizer")
                 {
                     new MenuBool("enable", true)
+                },
+                new Menu("loader")
+                {
+                    new MenuAction("refresh", Platform.ScriptLoader.LoadAll),
+                    new MenuText("loaded")
                 },
                 new Menu("license")
                 {
@@ -82,7 +95,10 @@
 
             Mode.Initialize(Menu.GetMenu("modes")!);
             Menu.Build(Menu, GetMenuTranslations());
-            
+
+            LoadedItem = Menu.GetMenu("loader")!.Get<MenuText>("loaded")!;
+            loadedBaseText = LoadedItem.Text;
+
             SetupMenu(out FirstRun);
 
             typeof(HealthPredictionService).Trigger();
@@ -91,6 +107,7 @@
             typeof(OrbwalkerService).Trigger();
             typeof(EvadeService).Trigger();
             typeof(ChampionService).Trigger();
+            typeof(UtilityService).Trigger();
 
             // SurgicalAuth = new Netlicensing(Machine.UserId, "d1213e7b-0817-4544-aa37-01817170c494");
             // var AuthTask = SurgicalAuth.GetAuth("Surgical.SDK").ContinueWith(HandleAuth, TaskScheduler.Current);
@@ -104,11 +121,11 @@
             Log.Info("Surgical.SDK initialized!");
         }
 
-        internal static void SetupAuth(AuthResult result)
+        internal static void SetAuth(AuthResult? result)
         {
             var menu = Menu.GetMenu("license")!;
 
-            if (!result.IsLicensed)
+            if (result == null || !result.IsLicensed)
             {
                 menu["unlicensed"]!.IsVisible = true;
             }
@@ -134,6 +151,7 @@
             HandleNotifications();
             HandleTheme();
             HandleArrows();
+            HandleLoadedCount();
 
             SetMenuTriggers();
 
@@ -184,11 +202,33 @@
 
         private static void HandleClock()
         {
-            var item = Menu["clock"]!;
+            var menu = Menu.GetMenu("clock")!;
+
+            var item = menu["mode"]!;
 
             item.BeforeValueChange += args => Clock.SetMode(args.NewValue<int>());
-
             Clock.SetMode(item.GetValue<int>());
+
+            item = menu["background"]!;
+
+            item.BeforeValueChange += args => Clock.SetBackground(args.NewValue<bool>());
+            Clock.SetBackground(item.GetValue<bool>());
+
+            item = menu["customColor"]!;
+
+            item.BeforeValueChange += args =>
+            {
+                if (args.ValueIs<bool>())
+                {
+                    Clock.SetCustomColor(item.GetValue<Color>(), args.NewValue<bool>());
+                }
+                else
+                {
+                    Clock.SetCustomColor(args.NewValue<Color>(), item.GetValue<bool>());
+                }
+            };
+
+            Clock.SetCustomColor(item.GetValue<Color>(), item.GetValue<bool>());
         }
 
         private static void HandlePosition()
@@ -302,6 +342,34 @@
             }
 
             return mainMenu;
+        }
+
+        private static void SpawnTestNotification()
+        {
+            Notification.Send("Hello, world!\nThis is an example of a lenghty notification.", "Test successful");
+        }
+
+        private static readonly MenuText LoadedItem;
+
+        private static int loadedCount;
+
+        private static string loadedBaseText;
+
+        private static void HandleLoadedCount()
+        {
+            Menu.OnLanguageChanged += delegate
+            {
+                loadedBaseText = LoadedItem.Text;
+                SetScriptsCount(loadedCount);
+            };
+
+            SetScriptsCount(0);
+        }
+
+        internal static void SetScriptsCount(int i)
+        {
+            loadedCount = i;
+            LoadedItem.Text = loadedBaseText.Replace("{i}", i.ToString());
         }
     }
 }

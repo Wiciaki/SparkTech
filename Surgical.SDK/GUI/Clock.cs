@@ -15,9 +15,30 @@
 
         private static int mode;
 
+        private static bool useBackground;
+
+        private static Color? customColor;
+
         internal static void SetMode(int value)
         {
             mode = value;
+        }
+
+        internal static void SetBackground(bool b)
+        {
+            useBackground = b;
+        }
+
+        internal static void SetCustomColor(Color color, bool b)
+        {
+            if (!b)
+            {
+                customColor = null;
+            }
+            else
+            {
+                customColor = color;
+            }
         }
 
         private static Size2 size;
@@ -38,17 +59,30 @@
 
         private static void OnEndScene()
         {
-            if (mode == 2)
+            if (mode >= 3)
             {
                 return;
             }
 
             var date = DateTime.Now;
 
-            if (mode == 0 || mode == 1 && date.Second <= 5)
+            var b = mode switch
             {
-                Theme.DrawTextBox(point, size, GetText(date), true);
+                0 => true,
+                1 => Menu.Menu.IsOpen,
+                2 => date.Second <= 5,
+                _ => throw new IndexOutOfRangeException()
+            };
+
+            if (!b)
+            {
+                return;
             }
+
+            var bgcolor = useBackground ? Theme.BackgroundColor : Color.Transparent;
+            var txtcolor = customColor ?? Theme.TextColor;
+
+            Theme.DrawTextBox(point, size, bgcolor, txtcolor, GetText(date), true);
         }
     }
 }

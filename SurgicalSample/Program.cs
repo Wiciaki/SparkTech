@@ -23,24 +23,24 @@
             Log.Info("Hello, World! (hello, logs...?)");
 
             // creates the menu
-            this.menu = new Menu("SampleMenu")
+            this.menu = new Menu("SurgicalSample")
                         {
-                            new Menu("FirstSubmenu")
+                            new Menu("First submenu")
                             {
-                                new MenuBool("ThisIsAwesome", true)
+                                new MenuBool("This is awesome", true)
                             },
-                            new MenuInt("ThisIsWhatSliderLooksLike", 0, 100, 50),
-                            new MenuInt("SlidersCanBeReverseToo", 500, 100, 350),
-                            new MenuList("HaveFun")
+                            new MenuInt("This is what a slider looks like", 0, 100, 50),
+                            new MenuInt("Sliders can be reverse too", 500, 100, 350),
+                            new MenuList("Have fun")
                             {
                                 Options = new List<string> { "Exploring", "All", "The", "SDK", "Possibilities" }
                             },
-                            new MenuColorBool("TextColor", Color.White, false)
+                            new MenuColorBool("Show text under cursor", Color.White, false)
                         };
 
             // put JObject as a Build(...) parameter
             // this will enable multilanguage, too!
-            this.menu.GetMenu("FirstSubmenu").Get<MenuText>("ThisIsAwesome").HelpText = "This is easier to set if you use json to provide translations";
+            this.menu.GetMenu("First submenu").Get<MenuText>("This is awesome").HelpText = "This is easier to set if you use json to provide translations";
 
             // adds our menu to the main menu
             Menu.Build(this.menu);
@@ -74,14 +74,14 @@
         private void OnDraw()
         {
             // don't draw if it's disabled
-            if (!this.menu["TextColor"].GetValue<bool>())
+            if (!this.menu["Show text under cursor"].GetValue<bool>())
             {
                 return;
             }
 
             const string AwesomeText = "Hell yeah, this sample script is A W E S O M E";
-            var color = this.menu["TextColor"].GetValue<Color>();
-            var drawPoint = (Point)UserInput.CursorPosition;
+            var color = this.menu["Show text under cursor"].GetValue<Color>();
+            var drawPoint = UserInput.CursorPosition;
             drawPoint.Y += 20;
 
             Text.Draw(AwesomeText, color, drawPoint);
@@ -90,7 +90,7 @@
         private void OnUpdate(EventArgs obj)
         {
             // this is how to get a get a menu value
-            var isEnabled = this.menu.GetMenu("FirstSubmenu")["ThisIsAwesome"].GetValue<bool>();
+            var isEnabled = this.menu.GetMenu("First submenu")["This is awesome"].GetValue<bool>();
         }
     }
 }

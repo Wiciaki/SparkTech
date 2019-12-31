@@ -1,7 +1,6 @@
 ﻿namespace Surgical.SDK
 {
     using System;
-    using System.IO;
 
     using Surgical.SDK.API;
     using Surgical.SDK.Entities;
@@ -14,23 +13,27 @@
 
     public sealed class Platform
     {
-        public static string Name { get; private set; } = "";
+        public static string Name { get; private set; }
 
-        public static bool HasRenderAPI { get; private set; }
+        internal static IRenderAPI? RenderFragment { get; private set; }
 
-        internal static IRenderAPI? RenderFragment;
+        internal static ICoreAPI? CoreFragment { get; private set; }
+        
+        internal static IUserInputAPI? UserInputFragment { get; private set; }
 
-        public static bool HasCoreAPI { get; private set; }
+        internal static ITheme? PlatformTheme { get; private set; }
 
-        internal static ICoreAPI? CoreFragment;
+        internal static ILogger? PlatformLogger { get; private set; }
 
-        public static bool HasUserInputAPI { get; private set; }
+        internal static Loader ScriptLoader { get; private set; }
 
-        internal static IUserInputAPI? UserInputFragment;
+        public static bool HasRenderAPI => RenderFragment != null;
 
-        public static bool HasTheme { get; private set; }
+        public static bool HasCoreAPI => CoreFragment != null;
 
-        internal static ITheme? PlatformTheme;
+        public static bool HasUserInputAPI => UserInputFragment != null;
+
+        public static bool HasTheme => PlatformTheme != null;
 
         public IRenderAPI? RenderAPI { get; set; }
 
@@ -38,25 +41,29 @@
         
         public IUserInputAPI? UserInputAPI { get; set; }
 
-        public AuthResult AuthResult { get; set; }
-
         public ITheme? Theme { get; set; }
 
-        public IScriptLoader? ScriptLoader { get; set; }
+        public Loader Loader { get; }
 
         public ILogger? Logger { get; set; }
 
-        internal static ILogger PlatformLogger;
+        public AuthResult? AuthResult { get; set; }
 
         public void Boot()
         {
+            RenderFragment = this.RenderAPI;
+            UserInputFragment = this.UserInputAPI;
+            CoreFragment = this.CoreAPI;
+
+            ScriptLoader = this.Loader;
+
+            PlatformLogger = this.Logger;
+            PlatformTheme = this.Theme;
+
             typeof(Log).Trigger();
 
-            if (this.RenderAPI != null)
+            if (HasRenderAPI)
             {
-                HasRenderAPI = true;
-
-                RenderFragment = this.RenderAPI;
                 typeof(Render).Trigger();
             }
             else
@@ -64,11 +71,8 @@
                 Log.Warn("RenderAPI not present!");
             }
 
-            if (this.UserInputAPI != null)
+            if (HasUserInputAPI)
             {
-                HasUserInputAPI = true;
-
-                UserInputFragment = this.UserInputAPI;
                 typeof(UserInput).Trigger();
             }
             else
@@ -76,11 +80,8 @@
                 Log.Warn("UserInputAPI not present!");
             }
 
-            if (this.CoreAPI != null)
+            if (HasCoreAPI)
             {
-                HasCoreAPI = true;
-
-                CoreFragment = this.CoreAPI;
                 typeof(ObjectManager).Trigger();
                 typeof(EntityEvents).Trigger();
                 typeof(Player).Trigger();
@@ -92,25 +93,11 @@
                 Log.Warn("CoreAPI not present!");
             }
 
-            HasTheme = this.Theme != null;
-            PlatformTheme = this.Theme;
             typeof(Theme).Trigger();
 
-            SdkSetup.SetupAuth(this.AuthResult);
+            SdkSetup.SetAuth(this.AuthResult);
 
-            if (this.ScriptLoader == null)
-            {
-                this.ScriptLoader = new ScriptLoader();
-            }
-
-            var dir = Path.Combine(Folder.Root, Name);
-
-            if (Directory.Exists(dir))
-            {
-                this.ScriptLoader.LoadFrom(dir);
-            }
-
-            this.ScriptLoader.LoadFrom(Folder.Scripts);
+            ScriptLoader.LoadAll();
         }
 
         public static Platform Declare(string name)
@@ -126,7 +113,9 @@
         }
 
         private Platform()
-        { }
+        {
+            this.Loader = new Loader();
+        }
 
         internal static Exception FragmentException()
         {

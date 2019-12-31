@@ -92,6 +92,11 @@
             return Fragment.WorldToMinimap(pos);
         }
 
+        public static Vector3 ScreenToWorld(this Point pos)
+        {
+            return ScreenToWorld((Vector2)pos);
+        }
+
         public static Vector3 ScreenToWorld(this Vector2 pos)
         {
             return Fragment.ScreenToWorld(pos);

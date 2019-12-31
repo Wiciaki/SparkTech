@@ -13,13 +13,13 @@
 
         public static event Action<WndProcEventArgs>? OnWndProc;
 
-        public static Vector2 CursorPosition => Fragment.CursorPosition;
+        public static Point CursorPosition => Fragment.CursorPosition;
 
         static UserInput()
         {
-            Fragment = Platform.UserInputFragment ?? throw new InvalidOperationException("Attempted to use UserInputAPI when it wasn't present!");
+            Fragment = Platform.UserInputFragment ?? throw Platform.APIException("UserInputAPI");
 
-            Fragment.WndProcess = args => OnWndProc.SafeInvoke(args);
+            Fragment.WndProc = args => OnWndProc.SafeInvoke(args);
         }
     }
 }

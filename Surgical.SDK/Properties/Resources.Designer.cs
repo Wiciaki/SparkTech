@@ -105,12 +105,12 @@ namespace Surgical.SDK.Properties {
         ///  &quot;modes&quot;: {
         ///    &quot;en&quot;: {
         ///      &quot;text&quot;: &quot;Modes&quot;,
-        ///      &quot;helpText&quot;: &quot;All the settings besides key are champion-specific&quot; 
+        ///      &quot;helpText&quot;: &quot;All the settings besides key are champion-specific&quot;
         ///    },
         ///    &quot;zh&quot;: {
         ///      &quot;text&quot;: &quot;SHANA PLS TRANSLATE TY&quot;
         ///    },
-        ///    [rest of string was truncated]&quot;;.
+        ///     [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string MainMenu {
             get {
@@ -185,7 +185,10 @@ namespace Surgical.SDK.Properties {
         /// <summary>
         ///   Looks up a localized string similar to {
         ///  &quot;en&quot;: {
-        ///    &quot;text&quot;: &quot;&quot;
+        ///    &quot;text&quot;: &quot;Not implemented&quot;
+        ///  },
+        ///  &quot;zh&quot;: {
+        ///    &quot;text&quot;: &quot;??&quot; 
         ///  } 
         ///}.
         /// </summary>
@@ -232,16 +235,14 @@ namespace Surgical.SDK.Properties {
         ///   Looks up a localized string similar to {
         ///  &quot;en&quot;: {
         ///    &quot;keySelector&quot;: &quot;Press now...&quot;,
-        ///    &quot;firstTimeWelcome&quot;: &quot;Welcome to {platform}!\nEnglish language detected.\nYou can change that in the menu.&quot;,
+        ///    &quot;firstTimeWelcome&quot;: &quot;Welcome to {platform}!\nEnglish language detected.\nYou can change that from within the menu.&quot;,
         ///    &quot;none&quot;: &quot;None&quot;,
-        ///    &quot;platformHasNoTheme&quot;: &quot;has no theme&quot;, 
+        ///    &quot;platformHasNoTheme&quot;: &quot;has no theme&quot;,
+        ///    &quot;loaderHeader&quot;: &quot;No new scripts detected&quot;,
+        ///    &quot;loaderContent&quot;: &quot;In case of malfunctioning,\nplease make sure to put the .dll in\n%appdata%/Surgical.SDK/Scripts&quot;,
         ///
         ///    // special, don&apos;t translate
-        ///    &quot;languageUnknown&quot;: &quot;Welcome to {platform}!\nYour system language,\n\&quot;{language}\&quot; is not supported by the SDK.\nDefault will be used.\nYou can change that inside the menu.&quot;
-        ///  },
-        ///  &quot;zh&quot;: {
-        ///    &quot;keySelector&quot;: &quot;现在按...&quot;,
-        ///    &quot;firstTimeWelcome&quot;:  [rest of string was truncated]&quot;;.
+        ///    &quot;languageUnknown&quot;: &quot;Welcome to {platform}!\nYour system language,\n\ [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string Strings {
             get {
@@ -279,6 +280,18 @@ namespace Surgical.SDK.Properties {
         internal static string TargetSelector {
             get {
                 return ResourceManager.GetString("TargetSelector", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
+        ///
+        ///}
+        ///.
+        /// </summary>
+        internal static string Utilities {
+            get {
+                return ResourceManager.GetString("Utilities", resourceCulture);
             }
         }
     }

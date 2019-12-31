@@ -38,8 +38,8 @@
             Effect = Effect.FromMemory(Render.Device, Resources.RenderEffectCompiled, ShaderFlags.None);
             EffectHandle = Effect.GetTechnique(0);
 
-            Render.OnLostDevice += () => Effect.OnLostDevice();
-            Render.OnResetDevice += () => Effect.OnResetDevice();
+            Render.OnLostDevice += Effect.OnLostDevice;
+            Render.OnResetDevice += Effect.OnResetDevice;
 
             Render.OnDispose += () =>
             {
@@ -73,13 +73,16 @@
             Render.Device.VertexDeclaration = VertexDeclaration;
 
             var multiplier = Game.ViewMatrix * Game.ProjectionMatrix;
+            var color4 = (Vector4)color;
 
             foreach (var position in worldPositions)
             {
+                var matrix = Matrix.Translation(position) * multiplier;
+
                 Effect.BeginPass(0);
 
-                Effect.SetValue("ProjectionMatrix", Matrix.Translation(position) * multiplier);
-                Effect.SetValue("Color", new Vector4(color.R / 255f, color.G / 255f, color.B / 255f, color.A / 255f));
+                Effect.SetValue("ProjectionMatrix", matrix);
+                Effect.SetValue("Color", color4);
                 Effect.SetValue("Radius", radius);
                 Effect.SetValue("Width", thickness);
                 Effect.SetValue("Filled", filled);

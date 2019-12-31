@@ -6,7 +6,7 @@
 
     public interface IModule : IEntryPoint, IResumable
     {
-        Menu? Menu { get; }
+        Menu Menu { get; }
 
         JObject? GetTranslations();
     }

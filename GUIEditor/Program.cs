@@ -17,6 +17,7 @@
     using Surgical.SDK.Licensing;
     using Surgical.SDK.Rendering;
 
+    using Point = SharpDX.Point;
     using Color = SharpDX.Color;
 
     internal static class Program
@@ -35,8 +36,7 @@
 
             if (!File.Exists(FileName))
             {
-                var converter = new ImageConverter();
-                var result = (byte[])converter.ConvertTo(Resources.Background, typeof(byte[]));
+                var result = (byte[])new ImageConverter().ConvertTo(Resources.Background, typeof(byte[]));
 
                 File.WriteAllBytes(FileName, result);
             }
@@ -48,7 +48,7 @@
 
             platform.RenderAPI = form;
             platform.UserInputAPI = form;
-            platform.AuthResult = new AuthResult(true, DateTime.Now.AddDays(2));
+            platform.AuthResult = new AuthResult(true, DateTime.Today.AddDays(3));
 
             platform.Boot();
 
@@ -64,7 +64,7 @@
                 form.Draw();
 
                 var cursor = UserInput.CursorPosition;
-                Vector.Draw(Color.WhiteSmoke, 6, new Vector2(cursor.X - 3, cursor.Y), new Vector2(cursor.X + 3, cursor.Y));
+                Vector.Draw(Color.White, 6, new Vector2(cursor.X - 3, cursor.Y), new Vector2(cursor.X + 3, cursor.Y));
 
                 form.EndScene();
 
@@ -80,6 +80,7 @@
                 this.AllowUserResizing = false;
                 this.Size = new Size(1920, 1080);
                 this.Icon = Resources.Surgeon;
+                
             }
 
             public Size2 Resolution()
@@ -89,15 +90,24 @@
 
             protected override void WndProc(ref Message m)
             {
-                var message = (WindowsMessages)m.Msg;
-                var key = (Key)m.WParam.ToInt64();
+                var wndProc = ((IUserInputAPI)this).WndProc;
 
-                var args = new WndProcEventArgs(message, key);
-
-                if (!this.WndProcBlock(args))
+                if (wndProc != null)
                 {
-                    base.WndProc(ref m);
+                    var message = (WindowsMessages)m.Msg;
+                    var key = (Key)m.WParam.ToInt64();
+
+                    var args = new WndProcEventArgs(message, key);
+
+                    wndProc(args);
+
+                    if (args.IsBlocked)
+                    {
+                        return;
+                    }
                 }
+
+                base.WndProc(ref m);
             }
 
             public Device Device { get; set; }
@@ -114,9 +124,9 @@
 
             public Action SetRenderTarget { get; set; }
 
-            public Action<WndProcEventArgs> WndProcess { get; set; }
+            Action<WndProcEventArgs> IUserInputAPI.WndProc { get; set; }
 
-            public Vector2 CursorPosition
+            public Point CursorPosition
             {
                 get
                 {
@@ -126,20 +136,8 @@
                     var x = cursor.X - offset.X - 8;
                     var y = cursor.Y - offset.Y - 30;
 
-                    return new Vector2(x, y);
+                    return new Point(x, y);
                 }
-            }
-
-            private bool WndProcBlock(WndProcEventArgs args)
-            {
-                if (this.WndProcess == null)
-                {
-                    return false;
-                }
-
-                this.WndProcess(args);
-
-                return args.IsBlocked;
             }
         }
     }

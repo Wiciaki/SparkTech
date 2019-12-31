@@ -14,9 +14,7 @@
     <PackageReference Include="SharpDX.Mathematics" Version="4.2.0" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Surgical.SDK">
-      <HintPath>PutSDKHere\Surgical.SDK.dll</HintPath>
-    </Reference>
+    <ProjectReference Include="..\Surgical.SDK\Surgical.SDK.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Properties\Resources.Designer.cs">
@@ -31,4 +29,7 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="copy $(TargetPath) &quot;%25appdata%25\Surgical.SDK\Scripts&quot;" />
+  </Target>
 </Project>

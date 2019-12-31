@@ -65,10 +65,12 @@
 
         private Size2 headerSize, contentSize;
 
+        private int Width => Math.Max(this.headerSize.Width, this.contentSize.Width);
+
         private void UpdateSizes()
         {
             this.contentSize = Theme.MeasureText(this.Content);
-            this.headerSize = new Size2(this.contentSize.Width, Theme.MinItemHeight);
+            this.headerSize = this.Header == null ? default : Theme.MeasureText(this.Header);
         }
 
         static Notification()
@@ -89,8 +91,8 @@
             }
 
             var point = new Point(1870, 100);
-            var t = GetTime();
-            var width = Entries.Max(entry => entry.Notification.contentSize.Width);
+            var t = GetTime() - decayTime;
+            var width = Entries.Max(entry => entry.Notification.Width);
 
             point.X -= width;
 
@@ -125,29 +127,28 @@
 
                 if (entry.Notification.Header != null)
                 {
-                    var headerSize = entry.Notification.headerSize;
-                    headerSize.Width = width;
+                    var hsize = entry.Notification.headerSize;
+                    hsize.Width = width;
 
-                    bsizes.Add(headerSize);
+                    bsizes.Add(hsize);
 
-                    Theme.DrawTextBox(point, headerSize, bgcolor, txtcolor, entry.Notification.Header, true);
-
+                    Theme.DrawTextBox(point, hsize, bgcolor, txtcolor, entry.Notification.Header, true);
                     point.Y += entry.Notification.headerSize.Height;
                 }
 
-                var contentSize = entry.Notification.contentSize;
-                contentSize.Width = width;
+                var csize = entry.Notification.contentSize;
+                csize.Width = width;
 
-                bsizes.Add(contentSize);
+                bsizes.Add(csize);
 
-                Theme.DrawTextBox(point, contentSize, bgcolor, txtcolor, entry.Notification.Content);
+                Theme.DrawTextBox(point, csize, bgcolor, txtcolor, entry.Notification.Content);
 
                 if (borders)
                 {
                     Theme.DrawBorders(bpoint, bcolor, bsizes.ToArray());
                 }
 
-                point.Y += contentSize.Height + Theme.MinItemHeight;
+                point.Y += csize.Height + Theme.MinItemHeight;
             }
         }
 
@@ -166,7 +167,7 @@
             {
                 this.Notification = n;
 
-                this.Time = duration + decayTime + GetTime();
+                this.Time = duration + GetTime();
             }
         }
     }

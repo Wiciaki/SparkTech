@@ -18,7 +18,7 @@
   "modes": {
     "en": {
       "text": "Modes",
-      "helpText": "All the settings besides key are champion-specific" 
+      "helpText": "All the settings besides key are champion-specific"
     },
     "zh": {
       "text": "SHANA PLS TRANSLATE TY"
@@ -70,7 +70,7 @@
       "zh": {
         "text": "??"
       }
-    } 
+    }
   },
   "menu": {
     "en": {
@@ -159,8 +159,8 @@
         "??",
         "??",
         "??"
-      ] 
-    } 
+      ]
+    }
   },
   "notifications": {
     "en": {
@@ -174,37 +174,71 @@
         "text": "Fade time"
       },
       "zh": {
-        "text": "??" 
-      } 
+        "text": "??"
+      }
     },
     "borders": {
       "en": {
         "text": "Enable notification borders"
       },
       "zh": {
-        "text": "??" 
-      } 
-    } 
+        "text": "??"
+      }
+    },
+    "spawnTest": {
+      "en": {
+        "text": "Spawn test notification"
+      },
+      "zh": {
+        "test": "??"
+      }
+    }
   },
   "clock": {
     "en": {
-      "text": "Clock",
-      "helpText": "Smart shows the clock for 5 seconds, every minute",
-      "options": [
-        "On",
-        "Smart",
-        "Off"
-      ]
+      "text": "Clock"
     },
     "zh": {
-      "text": "钟",
-      "helpText": "??",
-      "options": [
-        "??",
-        "??",
-        "??"
-      ]
-    }
+      "text": "??"
+    },
+    "mode": {
+      "en": {
+        "text": "Mode",
+        "helpText": "Smart shows the clock for 5 seconds, every minute",
+        "options": [
+          "Always on",
+          "When menu opened",
+          "Smart",
+          "Off"
+        ]
+      },
+      "zh": {
+        "text": "钟",
+        "helpText": "??",
+        "options": [
+          "??",
+          "??",
+          "??",
+          "??"
+        ]
+      }
+    },
+    "background": {
+      "en": {
+        "text": "Show background"
+      },
+      "zh": {
+        "text": "??"
+      }
+    },
+    "customColor": {
+      "en": {
+        "text": "Use custom color"
+      },
+      "zh": {
+        "text": "??" 
+      } 
+    } 
   },
   "humanizer": {
     "en": {
@@ -222,6 +256,32 @@
       }
     }
   },
+  "loader": {
+    "en": {
+      "text": "Loader"
+    },
+    "zh": {
+      "text": "??"
+    },
+    "refresh": {
+      "en": {
+        "text": "Load newly added",
+        "helpText": "The number below should bump immediately"
+      },
+      "zh": {
+        "text": "??",
+        "helpText": "??" 
+      }
+    },
+    "loaded": {
+      "en": {
+        "text": "Currently loaded {i} custom script(s)"
+      },
+      "zh": {
+        "text": "?? {i}" 
+      } 
+    } 
+  },
   "license": {
     "en": {
       "text": "License"
@@ -231,7 +291,7 @@
     },
     "licensed": {
       "en": {
-        "text": "License expires at: {expiry}"
+        "text": "License active.\nExpires at: {expiry}"
       },
       "zh": {
         "text": "?? {expiry}"
@@ -239,20 +299,20 @@
     },
     "unlicensed": {
       "en": {
-        "text": "Not licensed"
+        "text": "You're currently unlicensed"
       },
       "zh": {
-        "text": "??" 
-      } 
+        "text": "??"
+      }
     },
     "lifetime": {
       "en": {
-        "text": "Lifetime license"
+        "text": "You're currently using a lifetime license"
       },
       "zh": {
-        "text": "??" 
-      } 
-    } 
+        "text": "??"
+      }
+    }
   },
   "about": {
     "en": {
@@ -282,8 +342,8 @@
         "text": "Thanks to all contributors, testers\nand everyone else who helped.\nWithout you, it wouldn't be possible"
       },
       "zh": {
-        "text": "??" 
-      } 
-    } 
+        "text": "??"
+      }
+    }
   }
 } 

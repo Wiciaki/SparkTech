@@ -1,0 +1,50 @@
+{
+  "en": {
+    "text": "Built-in utilities",
+    "helpText": "All the goodies, just a click away!"
+  },
+  "zh": {
+    "text": "??",
+    "helpText": "??"
+  },
+  "active": {
+    "en": {
+      "text": "Active"
+    },
+    "zh": {
+      "text": "??" 
+    }, 
+    "activator": {
+      "en": {
+        "text": "Enable activator"
+      },
+      "zh": {
+        "text": "??"
+      }
+    },
+    "indicator": {
+      "en": {
+        "text": "Enable damage indicator"
+      },
+      "zh": {
+        "text": "??"
+      }
+    }
+  },
+  "activator": {
+    "en": {
+      "text": "Activator"
+    },
+    "zh": {
+      "text": "??"
+    }
+  },
+  "indicator": {
+    "en": {
+      "text": "Damage indicator"
+    },
+    "zh": {
+      "text": "??"
+    }
+  }
+}

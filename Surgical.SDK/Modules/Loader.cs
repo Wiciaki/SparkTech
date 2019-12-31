@@ -1,51 +1,91 @@
 ﻿namespace Surgical.SDK.Modules
 {
     using System;
+    using System.Collections.Generic;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Reflection;
+    using System.Threading;
     using System.Threading.Tasks;
 
     using Surgical.SDK.Champion;
     using Surgical.SDK.Evade;
+    using Surgical.SDK.GUI.Notifications;
     using Surgical.SDK.HealthPrediction;
     using Surgical.SDK.Logging;
     using Surgical.SDK.MovementPrediction;
     using Surgical.SDK.Orbwalker;
     using Surgical.SDK.TargetSelector;
 
-    public class ScriptLoader : IScriptLoader
+    public class Loader
     {
-        public virtual void LoadFrom(string folder)
+        private static readonly HashSet<string> Loaded = new HashSet<string>();
+
+        private static bool canWarn;
+
+        public Loader()
         {
-            var files = Directory.EnumerateFiles(folder).Where(path => Path.GetExtension(path) == ".dll");
-
-            Parallel.ForEach(files, LoadFile);
-
-            void LoadFile(string path)
-            {
-                Log.Info($"Loading {Path.GetFileName(path)}...");
-
-                Assembly assembly;
-
-                try
-                {
-                    assembly = Assembly.LoadFrom(path);
-                }
-                catch (Exception ex)
-                {
-                    Log.Error(ex);
-                    return;
-                }
-
-                this.ProcessAssembly(assembly);
-            }
+            Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
         }
 
-        protected virtual void ProcessAssembly(Assembly assembly)
+        public void LoadAll()
+        {
+            var files = Array.FindAll(Directory.GetFiles(Folder.Scripts), p => Path.GetExtension(p) == ".dll" && !Loaded.Contains(p));
+
+            if (files.Length > 0)
+            {
+                Parallel.ForEach(files, this.LoadFrom);
+            }
+            else if (canWarn)
+            {
+                var content = SdkSetup.GetString("loaderContent")!;
+                var header = SdkSetup.GetString("loaderHeader")!;
+
+                Notification.Send(content, header);
+            }
+
+            canWarn = true;
+        }
+
+        public void LoadFrom(string path)
+        {
+            if (!Loaded.Add(path))
+            {
+                return;
+            }
+
+            var name = Path.GetFileName(path);
+
+            Log.Info($"Loading {name}...");
+
+            Assembly assembly;
+
+            try
+            {
+                assembly = this.LoadAssembly(path);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex);
+                return;
+            }
+
+            ProcessAssembly(assembly);
+
+            SdkSetup.SetScriptsCount(Loaded.Count);
+            Notification.Send($"Surgical.SDK: Loaded {name}!");
+        }
+
+        protected virtual Assembly LoadAssembly(string path)
+        {
+            return Assembly.LoadFrom(path);
+        }
+
+        private static void ProcessAssembly(Assembly assembly)
         {
             var modules = (from type in assembly.GetTypes()
-                           where type.IsClass && !type.IsAbstract && typeof(IEntryPoint).IsAssignableFrom(type)
+                           where type.IsClass && typeof(IEntryPoint).IsAssignableFrom(type)
                            let constructor = type.GetConstructor(Type.EmptyTypes)
                            where constructor != null && constructor.IsPublic
                            let name = type.Name
@@ -81,10 +121,12 @@
                 {
                     Log.Error($"Couldn't create a new instance of {typeName}! Problem executing the parameterless constructor");
                     Log.Error(ex);
+
                     return null;
                 }
 
                 Log.Info($"Instantiated {typeName}!");
+
                 return o as T;
             }
         }

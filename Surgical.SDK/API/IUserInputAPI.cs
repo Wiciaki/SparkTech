@@ -8,8 +8,8 @@
 
     public interface IUserInputAPI
     {
-        Action<WndProcEventArgs> WndProcess { get; set; }
+        Action<WndProcEventArgs>? WndProc { get; set; }
 
-        Vector2 CursorPosition { get; }
+        Point CursorPosition { get; }
     }
 }
