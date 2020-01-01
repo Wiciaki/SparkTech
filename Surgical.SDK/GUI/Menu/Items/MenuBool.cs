@@ -8,14 +8,14 @@
 
     public class MenuBool : MenuValue, IMenuValue<bool>
     {
+        private Size2 size;
+
+        private bool value;
+
         public MenuBool(string id, bool defaultValue) : base(id, defaultValue)
         {
 
         }
-
-        private Size2 size;
-
-        private bool value;
 
         public bool Value
         {

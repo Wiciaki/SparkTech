@@ -9,7 +9,7 @@
     {
         static UtilityService()
         {
-            var utilities = new IUtility[] { new Activator(), new DamageIndicator() };
+            var utilities = new IUtility[] { new Activator(), new DamageIndicator(), new AutoLvlUp() };
 
             var active = new Menu("active");
             var menu = new Menu("utilities") { active };
@@ -37,7 +37,7 @@
 
                 item.BeforeValueChange += args =>
                 {
-                    if (args.NewValue<bool>())
+                    if (args.GetNewValue<bool>())
                     {
                         utility.Start();
                         utility.Menu.IsVisible = true;

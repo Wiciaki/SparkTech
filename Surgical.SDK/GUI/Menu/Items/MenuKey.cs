@@ -8,18 +8,18 @@
 
     public class MenuKey : MenuValue, IMenuValue<Key>
     {
-        public MenuKey(string id, Key defaultValue) : base(id, defaultValue.ToString())
-        {
-            UserInput.OnWndProc += this.KeyWndProc;
-        }
-
         private bool selecting;
 
         private string? text;
 
+        private Key value;
+
         private Size2 size;
 
-        private Key value;
+        public MenuKey(string id, Key defaultValue) : base(id, defaultValue.ToString())
+        {
+            UserInput.OnWndProc += this.KeyWndProc;
+        }
 
         public Key Value
         {
@@ -79,7 +79,7 @@
 
             var s = base.GetSize();
 
-            var t = Theme.MeasureText(this.text);
+            var t = Theme.MeasureText(this.text!);
             t.Height = s.Height;
 
             if (Theme.MinItemHeight > t.Width)

@@ -7,16 +7,16 @@
 
     public class Evade : IEvade
     {
-        public Menu? Menu { get; } = new Menu("surgical");
+        public Menu Menu { get; } = new Menu("surgical") { new Menu("a") };
 
-        public JObject? GetTranslations()
-        {
-            return JObject.Parse(Resources.Evade);
-        }
+        public JObject? GetTranslations() => JObject.Parse(Resources.Evade);
 
         public void Start()
         {
-            
+            if (!Platform.HasCoreAPI)
+            {
+                return;
+            }
         }
 
         public void Pause()

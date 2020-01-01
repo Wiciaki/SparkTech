@@ -60,6 +60,7 @@
                 new Menu("clock")
                 {
                     new MenuList("mode"),
+                    new MenuList("elements"),
                     new MenuBool("background", false),
                     new MenuColorBool("customColor", Color.LawnGreen, true)
                 },
@@ -116,7 +117,11 @@
             {
                 Menu.IsExpanded = true;
                 Menu.GetMenu("menu")!.IsExpanded = true;
+
+                Notification.Send("UserInputAPI not present; you can't interact with the menu!", 20f);
             }
+
+            Platform.ScriptLoader.LoadAll();
 
             Log.Info("Surgical.SDK initialized!");
         }
@@ -157,7 +162,7 @@
 
             var langItem = Menu["language"]!;
 
-            langItem.BeforeValueChange += args => Menu.SetLanguage(args.NewValue<int>());
+            langItem.BeforeValueChange += args => Menu.SetLanguage(args.GetNewValue<int>());
 
             var flagFile = Folder.Menu.GetFile(".nofirstrun");
             firstRun = !File.Exists(flagFile);
@@ -206,13 +211,18 @@
 
             var item = menu["mode"]!;
 
-            item.BeforeValueChange += args => Clock.SetMode(args.NewValue<int>());
+            item.BeforeValueChange += args => Clock.SetMode(args.GetNewValue<int>());
             Clock.SetMode(item.GetValue<int>());
 
             item = menu["background"]!;
 
-            item.BeforeValueChange += args => Clock.SetBackground(args.NewValue<bool>());
+            item.BeforeValueChange += args => Clock.SetBackground(args.GetNewValue<bool>());
             Clock.SetBackground(item.GetValue<bool>());
+
+            item = menu["elements"]!;
+
+            item.BeforeValueChange += args => Clock.SetElements(args.GetNewValue<int>());
+            Clock.SetElements(item.GetValue<int>());
 
             item = menu["customColor"]!;
 
@@ -220,11 +230,11 @@
             {
                 if (args.ValueIs<bool>())
                 {
-                    Clock.SetCustomColor(item.GetValue<Color>(), args.NewValue<bool>());
+                    Clock.SetCustomColor(item.GetValue<Color>(), args.GetNewValue<bool>());
                 }
                 else
                 {
-                    Clock.SetCustomColor(args.NewValue<Color>(), item.GetValue<bool>());
+                    Clock.SetCustomColor(args.GetNewValue<Color>(), item.GetValue<bool>());
                 }
             };
 
@@ -238,8 +248,8 @@
             var x = menu["x"]!;
             var y = menu["y"]!;
 
-            x.BeforeValueChange += args => Menu.SetPosition(args.NewValue<int>(), y.GetValue<int>());
-            y.BeforeValueChange += args => Menu.SetPosition(x.GetValue<int>(), args.NewValue<int>());
+            x.BeforeValueChange += args => Menu.SetPosition(args.GetNewValue<int>(), y.GetValue<int>());
+            y.BeforeValueChange += args => Menu.SetPosition(x.GetValue<int>(), args.GetNewValue<int>());
 
             Menu.SetPosition(x.GetValue<int>(), y.GetValue<int>());
         }
@@ -247,9 +257,10 @@
         private static void HandleTheme()
         {
             var item = Menu.Get<MenuList>("theme")!;
+            
             var selected = item.GetValue<int>();
 
-            if (selected == 0 && !Platform.HasTheme)
+            if (selected == 0 && !Platform.HasOwnTheme)
             {
                 selected = 1;
                 item.SetValue(selected);
@@ -259,9 +270,9 @@
 
             item.BeforeValueChange += args =>
             {
-                var value = args.NewValue<int>();
+                var value = args.GetNewValue<int>();
 
-                if (value == 0 && !Platform.HasTheme)
+                if (value == 0 && !Platform.HasOwnTheme)
                 {
                     args.Block();
                     return;
@@ -278,7 +289,7 @@
                 var options = item.Options;
                 var s = options[0].Replace("{platform}", Platform.Name);
 
-                if (!Platform.HasTheme)
+                if (!Platform.HasOwnTheme)
                 {
                     var str = GetString("platformHasNoTheme");
                     s += $" ({str})";
@@ -297,8 +308,8 @@
             var borders = menu["borders"]!;
             var decay = menu["decayTime"]!;
 
-            borders.BeforeValueChange += args => Notification.SetBorders(args.NewValue<bool>());
-            decay.BeforeValueChange += args => Notification.SetDecayTime(args.NewValue<float>());
+            borders.BeforeValueChange += args => Notification.SetBorders(args.GetNewValue<bool>());
+            decay.BeforeValueChange += args => Notification.SetDecayTime(args.GetNewValue<float>());
 
             Notification.SetBorders(borders.GetValue<bool>());
             Notification.SetDecayTime(decay.GetValue<float>());
@@ -308,7 +319,7 @@
         {
             var item = Menu.GetMenu("menu")!["arrows"]!;
 
-            item.BeforeValueChange += args => Menu.SetArrows(args.NewValue<bool>());
+            item.BeforeValueChange += args => Menu.SetArrows(args.GetNewValue<bool>());
 
             Menu.SetArrows(item.GetValue<bool>());
         }
@@ -333,7 +344,7 @@
             var mainMenu = JObject.Parse(str);
             var mode = JObject.Parse(Resources.Mode);
 
-            foreach (var o in mainMenu["modes"].Skip(EnumCache<Language>.Values.Count)/*.Take(6)*/.Cast<JProperty>().Select(property => property.Value).OfType<JObject>())
+            foreach (var o in mainMenu["modes"].Skip(EnumCache<Language>.Values.Count).Take(6).Cast<JProperty>().Select(property => property.Value).OfType<JObject>())
             {
                 foreach (var pair in mode)
                 {

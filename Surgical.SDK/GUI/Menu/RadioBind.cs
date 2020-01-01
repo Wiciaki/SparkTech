@@ -1,10 +1,11 @@
 ﻿namespace Surgical.SDK.GUI.Menu
 {
+    using System.Collections;
     using System.Collections.Generic;
 
-    public class RadioBind
+    public sealed class RadioBind : IEnumerable, IResumable
     {
-        private bool block;
+        private bool block, working;
 
         private readonly List<MenuBool> items = new List<MenuBool>();
 
@@ -17,7 +18,7 @@
 
         private void BeforeValueChange(MenuItem item)
         {
-            if (this.block)
+            if (this.block || !this.working)
             {
                 return;
             }
@@ -30,6 +31,21 @@
             }
 
             this.block = false;
+        }
+
+        public void Start()
+        {
+            this.working = true;
+        }
+
+        public void Pause()
+        {
+            this.working = false;
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return this.items.GetEnumerator();
         }
     }
 }

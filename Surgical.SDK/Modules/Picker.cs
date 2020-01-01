@@ -54,7 +54,7 @@
 
             this.root = new Menu(input.ToLower()) { IsVisible = module.Menu.Any() };
             this.root.Add(this.picker);
-            this.root.Add(module.Menu);
+            this.root.Add(module.Menu, module.GetTranslations());
 
             this.folder = Folder.Menu.GetFolder(input);
             module.Menu.CreateSaveHandler(this.folder);
@@ -75,7 +75,7 @@
 
         private void BeforeValueChange(BeforeValueChangeEventArgs args)
         {
-            var module = this.modules[args.NewValue<int>()];
+            var module = this.modules[args.GetNewValue<int>()];
 
             var oldValue = this.Current.Menu!.Id;
             var newValue = module.Menu!.Id;

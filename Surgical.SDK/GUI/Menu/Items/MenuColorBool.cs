@@ -8,12 +8,14 @@
 
     public class MenuColorBool : MenuColor, IMenuValue<bool>
     {
+        private bool value;
+
+        private Size2 size;
+
         public MenuColorBool(string id, Color defaultColor, bool defaultBool) : base(id, ColorBoolToJObject(defaultColor, defaultBool))
         {
 
         }
-
-        private bool value;
 
         public new bool Value
         {
@@ -21,15 +23,14 @@
             set => this.value ^= this.value != value && this.UpdateValue(value);
         }
 
-        private Size2 size;
-
         protected override Size2 GetSize()
         {
-            var button = AddButton(base.GetSize(), out this.size);
+            return AddButton(base.GetSize(), out this.size);
+        }
 
-            this.tmExtraWidth = this.size.Width;
-
-            return button;
+        protected internal override bool InsideExpandableArea(Point point, int width)
+        {
+            return base.InsideExpandableArea(point, width - this.size.Width);
         }
 
         protected internal override void OnWndProc(Point point, int width, WndProcEventArgs args)
@@ -53,24 +54,29 @@
 
         protected override JToken Token
         {
-            get => ColorBoolToJObject(base.Value, this.Value);
+            get => ColorBoolToJObject(base.Token, this.Value);
             set
             {
-                var (color, b) = JObjectToColorBool(value);
+                var (token, @bool) = JObjectToColorBool(value);
 
-                this.tmValue = color;
-                this.value = b;
+                base.Token = token;
+                this.value = @bool;
             }
         }
 
         private static JObject ColorBoolToJObject(Color color, bool @bool)
         {
-            return new JObject { { "Color", ColorToJArray(color) }, { "Bool", @bool } };
+            return ColorBoolToJObject(new JArray { color.R, color.G, color.B, color.A }, @bool);
         }
 
-        private static (Color Color, bool Bool) JObjectToColorBool(JToken o)
+        private static JObject ColorBoolToJObject(JToken token, bool @bool)
         {
-            return (Color: JArrayToColor(o["Color"]!.Value<JArray>()), Bool: o["Bool"]!.Value<bool>());
+            return new JObject { { "Color", token }, { "Bool", @bool } };
+        }
+
+        private static (JArray Color, bool Bool) JObjectToColorBool(JToken o)
+        {
+            return (Color: o["Color"]!.Value<JArray>(), Bool: o["Bool"]!.Value<bool>());
         }
     }
 }

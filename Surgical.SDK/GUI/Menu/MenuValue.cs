@@ -13,7 +13,7 @@
 
         private static string GetTag()
         {
-            var s = Platform.HasCoreAPI ? ObjectManager.Player.CharName : Platform.Name.Replace(" ", string.Empty);
+            var s = Platform.HasCoreAPI ? ObjectManager.Player.CharName : Platform.Name!.Replace(" ", string.Empty);
 
             return s.ToLower();
         }
@@ -68,21 +68,18 @@
 
             var full = this.fullToken;
 
-            if (@default)
-            {
-                if (full != null)
-                {
-                    full.Remove(GetTag());
-
-                    if (full.Count == 0)
-                    {
-                        this.fullToken = full = null;
-                    }
-                }
-            }
-            else
+            if (!@default)
             {
                 (full ??= new JObject())[GetTag()] = t;
+            }
+            else if (full != null)
+            {
+                full.Remove(GetTag());
+
+                if (full.Count == 0)
+                {
+                    this.fullToken = full = null;
+                }
             }
 
             return full;

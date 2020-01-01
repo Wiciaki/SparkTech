@@ -223,6 +223,24 @@
         ]
       }
     },
+    "elements": {
+      "en": {
+        "text": "Displayable elements",
+        "options": [
+          "Both",
+          "Just platform name",
+          "Just time"
+        ]
+      },
+      "zh": {
+        "text": "??",
+        "options": [
+          "??",
+          "??",
+          "??"
+        ]
+      }
+    },
     "background": {
       "en": {
         "text": "Show background"

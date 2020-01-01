@@ -4,9 +4,9 @@
 
     public class MenuSeparator : MenuItem
     {
-        private readonly int heightMultiplier;
-
         private Size2 size;
+
+        private readonly int heightMultiplier;
 
         public MenuSeparator(string id, int heightMultiplier = 1) : base(id)
         {

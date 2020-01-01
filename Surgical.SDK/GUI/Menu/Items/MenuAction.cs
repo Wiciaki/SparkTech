@@ -11,15 +11,15 @@
     {
         private readonly Action action;
 
+        private bool pressing;
+
+        private Size2 size;
+
         public MenuAction(string id, Action action) : base(id)
         {
             this.action = action;
         }
 
-        private bool pressing;
-
-        private Size2 size;
-        
         protected override Size2 GetSize()
         {
             return AddButton(base.GetSize(), out this.size);

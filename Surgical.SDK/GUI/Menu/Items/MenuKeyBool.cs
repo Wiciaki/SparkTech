@@ -6,37 +6,22 @@
 
     public class MenuKeyBool : MenuKey, IMenuValue<bool>
     {
-        public MenuKeyBool(string id, Key defaultValue) : base(id, defaultValue)
+        public MenuKeyBool(string id, Key defaultValue, bool toggle = false) : base(id, defaultValue)
         {
-
+            this.toggle = toggle;
         }
 
-        private bool value, toggle, release;
+        private readonly bool toggle;
+
+        private bool value, release;
+
+        protected override Color ButtonColor => this.Value ? Color.OrangeRed : Color.DarkRed;
 
         public new bool Value
         {
             get => this.value;
             set => this.value ^= this.value != value && this.UpdateValue(value, true);
         }
-
-        public bool Toggle
-        {
-            get => this.toggle;
-            set
-            {
-                if (this.toggle == value)
-                {
-                    return;
-                }
-
-                this.toggle = value;
-
-                this.release = false;
-                this.Value = false;
-            }
-        }
-
-        protected override Color ButtonColor => this.Value ? Color.OrangeRed : Color.DarkRed;
 
         protected override void KeyWndProc(WndProcEventArgs args)
         {
@@ -47,14 +32,9 @@
                 return;
             }
 
-            if (this.Toggle)
-            {
-                this.Value = args.Message == WindowsMessages.KEYUP && (this.release ^= true);
-            }
-            else
-            {
-                this.Value = args.Message == WindowsMessages.KEYDOWN || args.Message == WindowsMessages.CHAR;
-            }
+            var m = args.Message;
+
+            this.Value = this.toggle ? m == WindowsMessages.KEYUP && (this.release ^= true) : m == WindowsMessages.KEYDOWN || m == WindowsMessages.CHAR;
         }
     }
 }

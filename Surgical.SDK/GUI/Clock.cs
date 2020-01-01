@@ -15,9 +15,15 @@
 
         private static int mode;
 
+        private static int elements;
+
         private static bool useBackground;
 
         private static Color? customColor;
+
+        private static Size2 size;
+
+        private static Point point;
 
         internal static void SetMode(int value)
         {
@@ -27,6 +33,12 @@
         internal static void SetBackground(bool b)
         {
             useBackground = b;
+        }
+
+        internal static void SetElements(int i)
+        {
+            elements = i;
+            UpdateSize();
         }
 
         internal static void SetCustomColor(Color color, bool b)
@@ -41,13 +53,26 @@
             }
         }
 
-        private static Size2 size;
-
-        private static Point point;
-
         private static string GetText(DateTime dateTime)
         {
-            return Platform.Name + " - " + dateTime.ToLongTimeString();
+            var text = "";
+
+            if (elements == 0 || elements == 1)
+            {
+                text += Platform.Name;
+            }
+
+            if (elements == 0)
+            {
+                text += " - ";
+            }
+
+            if (elements == 0 || elements == 2)
+            {
+                text += dateTime.ToLongTimeString();
+            }
+
+            return text;
         }
 
         internal static void UpdateSize()

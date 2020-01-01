@@ -12,8 +12,6 @@
 
     public class MenuList : MenuValue, IExpandable, IMenuValue<int>, IMenuValue<string>
     {
-        public bool IsExpanded { get; set; }
-
         private int index;
 
         private Size2 size;
@@ -30,6 +28,8 @@
         {
             this.options = new List<string>();
         }
+
+        public bool IsExpanded { get; set; }
 
         #endregion
 
@@ -137,6 +137,11 @@
             }
 
             Theme.DrawBorders(bpoint, this.sizes!);
+        }
+
+        protected internal override bool InsideExpandableArea(Point point, int width)
+        {
+            return Menu.IsCursorInside(point, new Size2(width, this.Size.Height));
         }
 
         #region Public Properties

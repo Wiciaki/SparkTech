@@ -131,7 +131,7 @@
     <value>..\resources\translations\mode.json;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1250</value>
   </data>
   <data name="Module" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\resources\translations\module.json;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;iso-8859-2</value>
+    <value>..\resources\translations\module.json;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1250</value>
   </data>
   <data name="NullChampion" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\translations\nullchampion.json;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1250</value>

@@ -149,6 +149,11 @@
             WndProcGroup(this.items, point, args);
         }
 
+        protected internal override bool InsideExpandableArea(Point point, int width)
+        {
+            return IsCursorInside(point, new Size2(width, this.Size.Height));
+        }
+
         public void Add(MenuItem item)
         {
             if (this.items.Exists(i => i.Id == item.Id))
@@ -369,7 +374,7 @@
             {
                 var m = args.Message;
 
-                if (IsOpen ? m == WindowsMessages.KEYUP && (!toggleBehavior || !(released ^= true)) : m == WindowsMessages.KEYDOWN)
+                if (IsOpen ? m == WindowsMessages.KEYUP && (!toggleBehavior || !(released ^= true)) : m == WindowsMessages.KEYDOWN || m == WindowsMessages.CHAR)
                 {
                     SetOpen(!IsOpen);
                     return;
@@ -399,7 +404,7 @@
             {
                 item.OnWndProc(point, width, args);
 
-                if (IsLeftClick(args.Message) && item is IExpandable && IsCursorInside(point, new Size2(width, item.Size.Height)))
+                if (IsLeftClick(args.Message) && item is IExpandable && item.InsideExpandableArea(point, width))
                 {
                     foreach (var expandable in roots.OfType<IExpandable>())
                     {

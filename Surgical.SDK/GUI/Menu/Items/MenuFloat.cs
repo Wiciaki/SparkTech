@@ -16,6 +16,8 @@
 
         private bool dragging;
 
+        private Size2 size;
+
         #endregion
 
         #region Constructors and Destructors
@@ -78,15 +80,15 @@
 
         protected virtual string GetMaxNumStr()
         {
-            return $"[{(int)this.Max}.00]";
+            var num = (int)this.Max;
+
+            return $"[{num}.00]";
         }
 
         protected virtual string GetPrintableStr(float num)
         {
             return $"[{num:F}]";
         }
-
-        private Size2 size;
 
         protected override Size2 GetSize()
         {
@@ -113,8 +115,7 @@
 
             if (this.dragging)
             {
-                var diff = (int)UserInput.CursorPosition.X - point.X;
-                diff = Math.Max(0, Math.Min(barWidth, diff));
+                var diff = Math.Max(0, Math.Min(barWidth, UserInput.CursorPosition.X - point.X));
 
                 if (reverseMode)
                 {
@@ -132,19 +133,27 @@
 
             var offset = (int)(barWidth / (range / (this.dvalue - this.Min)));
 
+            Color firstColor, secondColor;
+
             if (reverseMode)
             {
                 offset = barWidth - offset;
+
+                firstColor = Theme.BackgroundColor;
+                secondColor = GetSliderColor();
+            }
+            else
+            {
+                firstColor = GetSliderColor();
+                secondColor = Theme.BackgroundColor;
             }
 
             var firstSize = new Size2(offset, barHeight);
             var secondSize = new Size2(barWidth - offset, barHeight);
             
-            var barColor = GetContrastingColor(Theme.BackgroundColor);
-            Theme.DrawBox(point, firstSize, barColor);
-            
+            Theme.DrawBox(point, firstSize, firstColor);
             point.X += offset;
-            Theme.DrawBox(point, secondSize);
+            Theme.DrawBox(point, secondSize, secondColor);
             point.X -= offset;
 
             var s = new Size2(this.size.Width, barHeight);
@@ -156,12 +165,14 @@
             ShowNum(this.To);
         }
 
-        private static Color GetContrastingColor(Color c)
+        private static Color GetSliderColor()
         {
-            c = new Color(c.R > 127 ? 0 : 255, c.G > 127 ? 0 : 255, c.B > 127 ? 0 : 255);
-            c.A /= 3;
+            const float ContrastWeight = .4f;
 
-            return c;
+            var start = Theme.BackgroundColor;
+            var end = new Color(start.R > 127 ? 0 : 255, start.G > 127 ? 0 : 255, start.B > 127 ? 0 : 255);
+
+            return Color.Lerp(start, end, ContrastWeight);
         }
 
         protected internal override void OnWndProc(Point point, int width, WndProcEventArgs args)

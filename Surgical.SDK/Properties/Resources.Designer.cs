@@ -73,8 +73,11 @@ namespace Surgical.SDK.Properties {
         /// <summary>
         ///   Looks up a localized string similar to {
         ///  &quot;en&quot;: {
-        ///    &quot;text&quot;: &quot;Surgical Evade&quot; 
-        ///  }
+        ///    &quot;text&quot;: &quot;Surgical Evade&quot;
+        ///  },
+        ///  &quot;zh&quot;: {
+        ///    &quot;text&quot;: &quot;??&quot; 
+        ///  } 
         ///}
         ///.
         /// </summary>
@@ -255,6 +258,9 @@ namespace Surgical.SDK.Properties {
         ///  &quot;en&quot;: {
         ///    &quot;text&quot;: &quot;Surgical&quot;
         ///  },
+        ///  &quot;zh&quot;: {
+        ///    &quot;text&quot;: &quot;??&quot; 
+        ///  },
         ///  &quot;timeToKill&quot;: {
         ///    &quot;en&quot;: {
         ///      &quot;text&quot;: &quot;Time to kill&quot;
@@ -285,9 +291,34 @@ namespace Surgical.SDK.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to {
-        ///
-        ///}
-        ///.
+        ///  &quot;en&quot;: {
+        ///    &quot;text&quot;: &quot;Built-in utilities&quot;,
+        ///    &quot;helpText&quot;: &quot;All the goodies, just a click away!&quot;
+        ///  },
+        ///  &quot;zh&quot;: {
+        ///    &quot;text&quot;: &quot;??&quot;,
+        ///    &quot;helpText&quot;: &quot;??&quot;
+        ///  },
+        ///  &quot;active&quot;: {
+        ///    &quot;en&quot;: {
+        ///      &quot;text&quot;: &quot;Enabled utilities&quot;
+        ///    },
+        ///    &quot;zh&quot;: {
+        ///      &quot;text&quot;: &quot;??&quot;
+        ///    },
+        ///    &quot;activator&quot;: {
+        ///      &quot;en&quot;: {
+        ///        &quot;text&quot;: &quot;Enable activator&quot;
+        ///      },
+        ///      &quot;zh&quot;: {
+        ///        &quot;text&quot;: &quot;??&quot;
+        ///      }
+        ///    },
+        ///    &quot;indicator&quot;: {
+        ///      &quot;en&quot;: {
+        ///        &quot;text&quot;: &quot;Enable damage indicator&quot;
+        ///      },
+        ///      &quot;zh [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string Utilities {
             get {

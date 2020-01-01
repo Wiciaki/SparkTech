@@ -13,7 +13,7 @@
 
     public sealed class Platform
     {
-        public static string Name { get; private set; }
+        public static string? Name { get; private set; }
 
         internal static IRenderAPI? RenderFragment { get; private set; }
 
@@ -25,7 +25,7 @@
 
         internal static ILogger? PlatformLogger { get; private set; }
 
-        internal static Loader ScriptLoader { get; private set; }
+        internal static readonly Loader ScriptLoader = new Loader();
 
         public static bool HasRenderAPI => RenderFragment != null;
 
@@ -33,7 +33,7 @@
 
         public static bool HasUserInputAPI => UserInputFragment != null;
 
-        public static bool HasTheme => PlatformTheme != null;
+        public static bool HasOwnTheme => PlatformTheme != null;
 
         public IRenderAPI? RenderAPI { get; set; }
 
@@ -54,8 +54,6 @@
             RenderFragment = this.RenderAPI;
             UserInputFragment = this.UserInputAPI;
             CoreFragment = this.CoreAPI;
-
-            ScriptLoader = this.Loader;
 
             PlatformLogger = this.Logger;
             PlatformTheme = this.Theme;
@@ -96,12 +94,15 @@
             typeof(Theme).Trigger();
 
             SdkSetup.SetAuth(this.AuthResult);
-
-            ScriptLoader.LoadAll();
         }
 
         public static Platform Declare(string name)
         {
+            if (Name != null)
+            {
+                throw new InvalidOperationException($"Platform, \"{Name}\" already declared!");
+            }
+
             if (string.IsNullOrWhiteSpace(name))
             {
                 throw new ArgumentException("Invalid platform name", nameof(name));
@@ -114,7 +115,7 @@
 
         private Platform()
         {
-            this.Loader = new Loader();
+            this.Loader = ScriptLoader;
         }
 
         internal static Exception FragmentException()

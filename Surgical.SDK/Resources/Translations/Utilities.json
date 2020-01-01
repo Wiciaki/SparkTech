@@ -9,11 +9,11 @@
   },
   "active": {
     "en": {
-      "text": "Active"
+      "text": "Enabled utilities"
     },
     "zh": {
-      "text": "??" 
-    }, 
+      "text": "??"
+    },
     "activator": {
       "en": {
         "text": "Enable activator"
@@ -25,6 +25,14 @@
     "indicator": {
       "en": {
         "text": "Enable damage indicator"
+      },
+      "zh": {
+        "text": "??"
+      }
+    },
+    "leveler": {
+      "en": {
+        "text": "Enable leveler"
       },
       "zh": {
         "text": "??"
@@ -46,5 +54,21 @@
     "zh": {
       "text": "??"
     }
+  },
+  "leveler": {
+    "en": {
+      "text": "Automatic lvler"
+    },
+    "zh": {
+      "text": "??"
+    },
+    "a": {
+      "en": {
+        "text": ""
+      },
+      "zh": {
+        "text": "??" 
+      } 
+    } 
   }
 }

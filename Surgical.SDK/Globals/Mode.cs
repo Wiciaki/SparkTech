@@ -64,22 +64,22 @@
                 item.IsChampSpecific = true;
             }
 
-            this.menu.Get<MenuValue>("key").IsChampSpecific = false;
+            this.menu.Get<MenuValue>("key")!.IsChampSpecific = false;
         }
 
         protected virtual bool GetConfig(string id)
         {
-            return this.menu[id].GetValue<bool>();
+            return this.menu[id]!.GetValue<bool>();
         }
 
         protected virtual bool GetSubConfig(string subMenuId, string id)
         {
-            return this.menu.GetMenu(subMenuId)[id].GetValue<bool>();
+            return this.menu.GetMenu(subMenuId)![id]!.GetValue<bool>();
         }
 
         protected virtual bool GetConfig(string id, int minIndex)
         {
-            return this.menu[id].GetValue<int>() >= minIndex;
+            return this.menu[id]!.GetValue<int>() >= minIndex;
         }
 
         internal static void Initialize(Menu menu)
@@ -116,7 +116,7 @@
 
         private class NoneMode : Mode
         {
-            public override string DisplayName => SdkSetup.GetString("none");
+            public override string DisplayName => SdkSetup.GetString("none")!;
 
             protected override bool IsActive { get; } = true;
 

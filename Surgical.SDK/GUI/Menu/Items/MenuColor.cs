@@ -1,7 +1,7 @@
 ﻿namespace Surgical.SDK.GUI.Menu
 {
-    using System.Drawing;
-    using System.IO;
+    using System;
+    using System.Linq;
 
     using Newtonsoft.Json.Linq;
 
@@ -12,49 +12,22 @@
     using Surgical.SDK.Properties;
     using Surgical.SDK.Rendering;
 
-    using Color = SharpDX.Color;
-    using Filter = SharpDX.Direct3D9.Filter;
-    using Point = SharpDX.Point;
-
-    // todo cancerrr
-    public class MenuColor : MenuValue, IMenuValue<Color>
+    public class MenuColor : MenuValue, IExpandable, IMenuValue<Color>
     {
-        protected Color tmValue;
+        private const string PaletteText = "🎨";
 
-        protected int tmExtraWidth;
-
-        private bool picking;
+        private Color value;
 
         private Size2 paletteSize, buttonSize;
-
-        private static readonly Bitmap Picker;
-
-        private static readonly Texture PickerTexture;
-
-        private static readonly Size2 BitmapSize;
-
-        static MenuColor()
-        {
-            using (var stream = new MemoryStream(Resources.Picker))
-            {
-                Picker = new Bitmap(stream);
-            }
-
-            BitmapSize = new Size2(Picker.Size.Width, Picker.Size.Height);
-
-            PickerTexture = Texture.FromMemory(Render.Device, Resources.Picker, BitmapSize.Width, BitmapSize.Height, 0, Usage.None, Format.A1, Pool.Managed, Filter.Default, Filter.Default, 0);
-        }
 
         #region Constructors and Destructors
 
         public MenuColor(string id, Color defaultValue) : this(id, ColorToJArray(defaultValue))
         {
-
         }
 
         protected MenuColor(string id, JToken defaultValue) : base(id, defaultValue)
         {
-
         }
 
         #endregion
@@ -63,19 +36,21 @@
 
         public Color Value
         {
-            get => this.tmValue;
+            get => this.value;
             set
             {
-                if (value != this.tmValue && this.UpdateValue(value))
+                if (value != this.value && this.UpdateValue(value))
                 {
-                    this.tmValue = value;
+                    this.value = value;
                 }
             }
         }
 
+        public bool IsExpanded { get; set; }
+
         protected override Size2 GetSize()
         {
-            return AddButton(AddButton(base.GetSize(), out this.paletteSize, "🎨"), out this.buttonSize);
+            return AddButton(AddButton(base.GetSize(), out this.paletteSize, PaletteText), out this.buttonSize);
         }
 
         protected internal override void OnEndScene(Point point, int width)
@@ -84,60 +59,37 @@
             base.OnEndScene(point, width);
             point.X += width;
 
-            Theme.DrawTextBox(point, this.paletteSize, "🎨", true);
+            var bgcolor = Theme.BackgroundColor;
+
+            if (this.IsExpanded)
+            {
+                bgcolor.A = byte.MaxValue;
+            }
+
+            Theme.DrawTextBox(point, this.paletteSize, bgcolor, PaletteText, true);
 
             point.X += this.paletteSize.Width;
 
             Theme.DrawBox(point, this.buttonSize, this.Value);
             Theme.DrawBorders(point, this.buttonSize);
 
-            if (!this.picking)
+            if (this.IsExpanded)
             {
-                return;
+                ColorPicker.Draw();
             }
-
-            point.X += this.buttonSize.Width + this.tmExtraWidth;
-
-            if (Menu.ArrowsEnabled)
-            {
-                Menu.DrawArrow(point);
-
-                point.X += Menu.ArrowWidth;
-            }
-
-            Picture.Draw(point, PickerTexture);
-            Theme.DrawBorders(point, BitmapSize);
         }
 
         protected internal override void OnWndProc(Point point, int width, WndProcEventArgs args)
         {
-            point.X += width - this.buttonSize.Width;
-
-            if (Menu.IsLeftClick(args.Message) && Menu.IsCursorInside(point, this.paletteSize))
+            if (Menu.IsLeftClick(args.Message) && ColorPicker.IsColorSelected(out var color))
             {
-                this.picking ^= true;
-                return;
+                this.Value = color;
             }
+        }
 
-            if (!this.picking)
-            {
-                return;
-            }
-
-            point.X += this.paletteSize.Width + this.tmExtraWidth;
-
-            if (Menu.ArrowsEnabled)
-            {
-                point.X += Menu.ArrowWidth;
-            }
-
-            if (Menu.IsLeftClick(args.Message) && Menu.IsCursorInside(point, BitmapSize))
-            {
-                var cursor = (Point)UserInput.CursorPosition;
-                var color = Picker.GetPixel(cursor.X - point.X, cursor.Y - point.Y);
-
-                this.Value = new Color(color.R, color.G, color.B, color.A);
-            }
+        protected internal override bool InsideExpandableArea(Point point, int width)
+        {
+            return Menu.IsCursorInside(point, new Size2(width, this.Size.Height));
         }
 
         #endregion
@@ -146,29 +98,99 @@
 
         protected override JToken Token
         {
-            get => ColorToJArray(this.tmValue);
-            set => this.tmValue = JArrayToColor((JArray)value);
+            get => ColorToJArray(this.value);
+            set => this.value = JArrayToColor((JArray)value);
         }
 
         #endregion
 
         #region Methods
 
-        protected static Color JArrayToColor(JArray array)
+        private static Color JArrayToColor(JArray array)
         {
-            var r = array[0].Value<byte>();
-            var g = array[1].Value<byte>();
-            var b = array[2].Value<byte>();
-            var a = array[3].Value<byte>();
-
-            return new Color(r, g, b, a);
+            return new Color(Enumerable.Range(0, 4).Select(i => array[i].Value<byte>()).ToArray());
         }
 
-        protected static JArray ColorToJArray(Color color)
+        private static JArray ColorToJArray(Color color)
         {
             return new JArray { color.R, color.G, color.B, color.A };
         }
 
         #endregion
+
+        private static class ColorPicker
+        {
+            private const float BorderThickness = 4f;
+
+            private static readonly Texture Texture;
+
+            private static readonly Size2 Size;
+
+            private static readonly int Pitch;
+
+            private static readonly byte[] PixelData;
+
+            static ColorPicker()
+            {
+                Size = new Size2(600, 388);
+                Texture = Texture.FromMemory(Render.Device, Resources.Picker, Size.Width, Size.Height, 0, Usage.None, Format.A1, Pool.Managed, Filter.Default, Filter.Default, 0);
+
+                var colorsCount = Size.Width * Size.Height * 4;
+
+                using var surface = Texture.GetSurfaceLevel(0);
+                var rectangle = surface.LockRectangle(LockFlags.ReadOnly);
+                var pointer = new DataPointer(rectangle.DataPointer, colorsCount);
+            
+                Pitch = rectangle.Pitch;
+                PixelData = pointer.ToArray();
+            
+                surface.UnlockRectangle();
+            }
+
+            private static Point GetPickerPosition()
+            {
+                return new Point(1870 - Size.Width, 750 - Size.Height);
+            }
+
+            private static Color GetPixel(int x, int y)
+            {
+                var index = x * 4 + y * Pitch;
+
+                var result = new byte[4];
+                Array.Copy(PixelData, index, result, 0, 4);
+
+                return new ColorBGRA(result);
+            }
+
+            public static bool IsColorSelected(out Color color)
+            {
+                var palette = GetPickerPosition();
+
+                if (Menu.IsCursorInside(palette, Size))
+                {
+                    var cursor = UserInput.CursorPosition;
+
+                    color = GetPixel(cursor.X - palette.X, cursor.Y - palette.Y);
+                    return true;
+                }
+
+                color = default;
+                return false;
+            }
+
+            public static void Draw()
+            {
+                var point = GetPickerPosition();
+
+                Picture.Draw(point, Texture);
+
+                var v1 = new Vector2(point.X, point.Y);
+                var v2 = new Vector2(point.X + Size.Width, point.Y);
+                var v3 = new Vector2(point.X + Size.Width, point.Y + Size.Height);
+                var v4 = new Vector2(point.X, point.Y + Size.Height);
+
+                Vector.Draw(Theme.BorderColor, BorderThickness, v1, v2, v3, v4, v1);
+            }
+        }
     }
 }

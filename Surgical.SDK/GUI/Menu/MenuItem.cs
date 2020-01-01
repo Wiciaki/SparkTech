@@ -41,17 +41,12 @@
 
         protected internal virtual void OnWndProc(Point point, int width, WndProcEventArgs args)
         {
-
         }
 
-        protected internal virtual JToken? GetToken()
-        {
-            return null;
-        }
+        protected internal virtual JToken? GetToken() => null;
 
         protected internal virtual void SetToken(JToken? token)
         {
-
         }
 
         protected internal virtual bool ConsumeSaveToken()
@@ -65,8 +60,9 @@
 
         protected internal virtual void SetTranslations(Translations t)
         {
-
         }
+
+        protected internal virtual bool InsideExpandableArea(Point point, int width) => false;
 
         private IMenuValue<T> MenuValue<T>()
         {

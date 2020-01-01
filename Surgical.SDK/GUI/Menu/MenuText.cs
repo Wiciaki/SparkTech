@@ -75,9 +75,14 @@
             this.UpdateHelpTextSize();
 
             this.textSize = Theme.MeasureText(this.Text);
-            this.helpSize = this.HelpText == null ? default : new Size2(Theme.MeasureText(HelpBoxText).Width, this.textSize.Height);
 
             var size = new Size2(this.textSize.Width + this.helpSize.Width, this.textSize.Height);
+            
+            if (size.Height > this.helpSize.Height)
+            {
+                this.helpSize = new Size2(this.helpSize.Width, size.Height);
+            }
+            
             var width = Theme.MeasureText(MinItemWidthText).Width;
 
             if (width > size.Width)
@@ -105,7 +110,15 @@
 
         private void UpdateHelpTextSize()
         {
-            this.helpTextSize = this.HelpText != null ? Theme.MeasureText(this.HelpText) : default;
+            if (this.HelpText == null)
+            {
+                this.helpTextSize = this.helpSize = default;
+            }
+            else
+            {
+                this.helpTextSize = Theme.MeasureText(this.HelpText);
+                this.helpSize = Theme.MeasureText(HelpBoxText);
+            }
         }
 
         protected Color BackgroundColor

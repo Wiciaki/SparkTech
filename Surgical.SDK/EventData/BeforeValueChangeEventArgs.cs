@@ -17,12 +17,12 @@
             return this.oldValue is T && this.newValue is T;
         }
 
-        public T OldValue<T>()
+        public T GetOldValue<T>()
         {
             return (T)this.oldValue;
         }
 
-        public T NewValue<T>()
+        public T GetNewValue<T>()
         {
             return (T)this.newValue;
         }
