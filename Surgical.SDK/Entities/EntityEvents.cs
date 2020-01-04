@@ -46,6 +46,18 @@
         
         public static event Action<UpdateChargedSpellEventArgs>? OnSpellbookUpdateChargedSpell;
 
+        public static event Action<VisibilityChangedEventArgs>? OnEnterLocalVisibilityClient;
+
+        public static event Action<VisibilityChangedEventArgs>? OnLeaveLocalVisibilityClient;
+
+        public static event Action<VisibilityChangedEventArgs>? OnEnterTeamVisibility;
+
+        public static event Action<VisibilityChangedEventArgs>? OnLeaveTeamVisibility;
+
+        public static event Action<VisibilityChangedEventArgs>? OnEnterVisibilityClient;
+
+        public static event Action<VisibilityChangedEventArgs>? OnLeaveVisibilityClient;
+
         static EntityEvents()
         {
             var fragment = Platform.CoreFragment?.GetEntityEventsFragment() ?? throw Platform.FragmentException();
@@ -70,6 +82,12 @@
             fragment.SpellbookCastSpell = args => OnSpellbookCastSpell.SafeInvoke(args);
             fragment.SpellbookStopCast = args => OnSpellbookStopCast.SafeInvoke(args);
             fragment.SpellbookUpdateChargedSpell = args => OnSpellbookUpdateChargedSpell.SafeInvoke(args);
+            fragment.EnterLocalVisiblityClient = args => OnEnterLocalVisibilityClient.SafeInvoke(args);
+            fragment.LeaveLocalVisiblityClient = args => OnLeaveLocalVisibilityClient.SafeInvoke(args);
+            fragment.EnterTeamVisiblity = args => OnEnterTeamVisibility.SafeInvoke(args);
+            fragment.LeaveTeamVisiblity = args => OnLeaveTeamVisibility.SafeInvoke(args);
+            fragment.EnterVisiblityClient = args => OnEnterVisibilityClient.SafeInvoke(args);
+            fragment.LeaveVisiblityClient = args => OnLeaveVisibilityClient.SafeInvoke(args);
         }
     }
 }

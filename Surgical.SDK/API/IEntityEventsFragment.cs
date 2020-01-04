@@ -1,4 +1,4 @@
-﻿namespace Surgical.SDK.API.Fragments
+﻿namespace Surgical.SDK.API
 {
     using System;
 
@@ -46,10 +46,16 @@
         
         Action<UpdateChargedSpellEventArgs> SpellbookUpdateChargedSpell { get; set; }
 
-        // Action<IAttackableUnit> OnLeaveVisiblityClient { get; set; }
+        Action<VisibilityChangedEventArgs> EnterLocalVisiblityClient { get; set; }
 
-        //OnLeaveTeamVisiblity
-        // OnLeaveLocalVisiblityClient
-        // ^x2 for enter
+        Action<VisibilityChangedEventArgs> LeaveLocalVisiblityClient { get; set; }
+
+        Action<VisibilityChangedEventArgs> EnterTeamVisiblity { get; set; }
+
+        Action<VisibilityChangedEventArgs> LeaveTeamVisiblity { get; set; }
+
+        Action<VisibilityChangedEventArgs> EnterVisiblityClient { get; set; }
+
+        Action<VisibilityChangedEventArgs> LeaveVisiblityClient { get; set; }
     }
 }

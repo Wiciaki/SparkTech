@@ -6,6 +6,10 @@
 
     public class AlternateBordersTheme : DefaultTheme
     {
+        protected AlternateBordersTheme()
+        {
+        }
+
         public override void DrawBorders(Point point, Color color, params Size2[] sizes)
         {
             const float Thickness = 1f;
@@ -32,6 +36,11 @@
             p[2] = new Vector2(point.X + size.Width, point.Y);
 
             Vector.Draw(color, Thickness, p);
+        }
+
+        public new static ITheme Create()
+        {
+            return new AlternateBordersTheme();
         }
     }
 }

@@ -16,7 +16,7 @@
 
         public int MinItemHeight { get; } = 26;
 
-        public DefaultTheme()
+        protected DefaultTheme()
         {
             var color = Color.Black;
             color.A = 130;
@@ -26,11 +26,13 @@
             this.TextColor = Color.White;
         }
 
+        public static ITheme Create() => new DefaultTheme();
+
         protected Font? Font { get; private set; }
 
         public virtual FontDescription GetFontDescription()
         {
-            return new FontDescription { FaceName = string.Empty, Height = 18 };
+            return new FontDescription { FaceName = string.Empty, Height = 18, OutputPrecision = FontPrecision.TrueType, Quality = FontQuality.ClearType };
         }
 
         private const FontDrawFlags DrawFlags = FontDrawFlags.VerticalCenter | FontDrawFlags.Left;

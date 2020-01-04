@@ -15,8 +15,6 @@
 
         private const string HelpBoxText = "[?]";
 
-        private const string MinItemWidthText = "This is enough";
-
         private string? text, helpText;
 
         private Size2 textSize, helpSize, helpTextSize;
@@ -56,14 +54,6 @@
             }
         }
 
-        public void BindVariable(string varName, string value)
-        {
-            void Update() => this.Text = this.Text.Replace($"{{{varName}}}", value);
-
-            Update();
-            Menu.OnLanguageChanged += delegate { Update(); };
-        }
-
         protected internal override void SetTranslations(Translations t)
         {
             this.HelpText = t.GetString("helpText");
@@ -82,12 +72,10 @@
             {
                 this.helpSize = new Size2(this.helpSize.Width, size.Height);
             }
-            
-            var width = Theme.MeasureText(MinItemWidthText).Width;
 
-            if (width > size.Width)
+            if (Menu.MinItemWidth > size.Width)
             {
-                size.Width = width;
+                size.Width = Menu.MinItemWidth;
             }
 
             return size;
@@ -149,18 +137,14 @@
 
             point.X += size.Width;
 
-            var cursorInside = Menu.IsCursorInside(point, this.helpSize);
-
             Theme.DrawTextBox(point, this.helpSize, this.BackgroundColor, HelpBoxText, true);
 
-            if (!cursorInside)
+            if (!Menu.IsCursorInside(point, this.helpSize))
             {
                 return;
             }
 
-            var resolution = Render.Resolution();
-
-            point.X = (resolution.Width - this.helpTextSize.Width) / 2;
+            point.X = (Render.Resolution.Width - this.helpTextSize.Width) / 2;
             point.Y = this.helpTextSize.Height;
 
             Theme.DrawTextBox(point, this.helpTextSize, this.HelpText, true);

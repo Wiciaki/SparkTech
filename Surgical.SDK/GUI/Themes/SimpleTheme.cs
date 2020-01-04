@@ -5,15 +5,11 @@
 
     public class SimpleTheme : DefaultTheme
     {
-        public SimpleTheme(Color textColor, Color bgColor)
+        protected SimpleTheme(Color color, Color bgcolor)
         {
-            this.TextColor = textColor;
-            this.BorderColor = textColor;
-
-            var w = bgColor;
-            w.A -= 20;
-
-            this.BackgroundColor = w;
+            this.TextColor = color;
+            this.BorderColor = color;
+            this.BackgroundColor = bgcolor;
         }
 
         public override Color TextColor { get; }
@@ -24,7 +20,36 @@
 
         public override FontDescription GetFontDescription()
         {
-            return new FontDescription { FaceName = "Arial", Height = 16 };
+            var description = base.GetFontDescription();
+
+            description.FaceName = "Bariol";
+            description.Height = 16;
+
+            return description;
+        }
+
+        public static ITheme CreateBlack()
+        {
+            var bgcolor = Color.Black;
+            bgcolor.A -= 20;
+
+            return new SimpleTheme(Color.White, bgcolor);
+        }
+
+        public static ITheme CreateWhite()
+        {
+            var bgcolor = Color.White;
+            bgcolor.A -= 20;
+
+            return new SimpleTheme(Color.Black, bgcolor);
+        }
+
+        public static ITheme CreateBlue()
+        {
+            var bgcolor = Color.DarkBlue;
+            bgcolor.A -= 100;
+
+            return new SimpleTheme(Color.WhiteSmoke, bgcolor);
         }
     }
 }

@@ -31,8 +31,8 @@ namespace Surgical.SDK.Orbwalker
     {
         public static readonly Picker<IOrbwalker> Picker = new Picker<IOrbwalker>(new Orbwalker());
 
-        public static event Action<BeforeAttackEventArgs> BeforeAttack;
+        public static event Action<BeforeAttackEventArgs>? BeforeAttack;
 
-        public static event Action<AfterAttackEventArgs> AfterAttack;
+        public static event Action<AfterAttackEventArgs>? AfterAttack;
     }
 }

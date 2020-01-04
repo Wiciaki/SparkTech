@@ -3,7 +3,7 @@
     "keySelector": "Press now...",
     "firstTimeWelcome": "Welcome to {platform}!\nEnglish language detected.\nYou can change that from within the menu.",
     "none": "None",
-    "platformHasNoTheme": "has no theme",
+    "platformHasNoTheme": "provides no theme",
     "loaderHeader": "No new scripts detected",
     "loaderContent": "In case of malfunctioning,\nplease make sure to put the .dll in\n%appdata%/Surgical.SDK/Scripts",
 

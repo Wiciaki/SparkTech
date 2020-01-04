@@ -23,25 +23,22 @@
         private Netlicensing(string licenseeNumber, NetworkCredential credentials)
         {
             this.licenseeNumber = WebUtility.UrlEncode(licenseeNumber);
-
             this.crendentials = credentials;
         }
 
         public Netlicensing(string licenseeNumber, SecureString apiKey) : this(licenseeNumber, new NetworkCredential("apiKey", apiKey))
         {
-
         }
 
         public Netlicensing(string licenseeNumber, string apiKey) : this(licenseeNumber, new NetworkCredential("apiKey", apiKey))
         {
-
         }
 
         public async Task<string?> GetShopUrl()
         {
+            const string Shop = "tokenType=SHOP";
             var licensee = "licenseeNumber=" + this.licenseeNumber;
-
-            var json = await this.SendPost("token", "tokenType=SHOP", licensee);
+            var json = await this.SendPost("token", Shop, licensee);
 
             return json == null ? null : GetResponseObjects(json)["shopURL"];
         }
@@ -51,13 +48,11 @@
             var ending = $"licensee/{this.licenseeNumber}/validate";
             var param = "productNumber=" + productNumber;
 
-            return GetAuth(await this.SendPost(ending, param));
+            return GetAuth(await this.SendPost(ending, param)) ?? AuthResult.GetUnlicensed();
         }
 
         private static Dictionary<string, string> GetResponseObjects(JObject json)
         {
-            // this might fail under certain configurations so I delegated it into this method to take pain out of debugging
-
             // firstly, this
             var items = json["items"]!["item"];
 
@@ -65,39 +60,43 @@
             var props = items.Single()["property"];
 
             // and finally, everything in "property" is a JObject
-            var jObjects = props.Cast<JObject>();
+            // var jObjects = props.Cast<JObject>();
 
             // which are basically name/value pairs
-            return jObjects.ToDictionary(j => j["name"]!.Value<string>(), j => j["value"]!.Value<string>());
+            return props.ToDictionary(j => j["name"]!.Value<string>(), j => j["value"]!.Value<string>());
         }
 
-        private static AuthResult GetAuth(JObject? json)
+        private static AuthResult? GetAuth(JObject? json)
         {
-            if (json != null)
+            if (json == null)
             {
-                // inspect to add more models
-                // Console.WriteLine(json);
-
-                var r = GetResponseObjects(json);
-
-                if (bool.Parse(r["valid"]))
-                {
-                    switch (r["licensingModel"])
-                    {
-                        case "Subscription":
-                            var expiry = DateTime.Parse(r["expires"]);
-
-                            if (expiry > DateTime.Now)
-                            {
-                                return new AuthResult(true, expiry);
-                            }
-
-                            break;
-                    }
-                }
+                return null;
             }
 
-            return new AuthResult(false);
+            var resp = GetResponseObjects(json);
+
+            if (!bool.Parse(resp["valid"]))
+            {
+                return null;
+            }
+
+            // inspect to add more models
+            // Console.WriteLine(json);
+
+            switch (resp["licensingModel"])
+            {
+                case "Subscription":
+                    var expiry = DateTime.Parse(resp["expires"]);
+
+                    if (expiry > DateTime.Now)
+                    {
+                        return new AuthResult(true, expiry);
+                    }
+
+                    break;
+            }
+
+            return null;
         }
 
         private async Task<JObject?> SendPost(string ending, params string[] reqParams)
@@ -118,7 +117,7 @@
 
             request.ContentLength = bytes.Length;
 
-            using (var requestStream = request.GetRequestStream())
+            await using (var requestStream = request.GetRequestStream())
             {
                 await requestStream.WriteAsync(bytes, 0, bytes.Length);
             }
@@ -126,12 +125,7 @@
             try
             {
                 using var response = (HttpWebResponse)await request.GetResponseAsync();
-                using var responseStream = response.GetResponseStream();
-
-                if (responseStream == null)
-                {
-                    throw new ApplicationException("responseStream == null");
-                }
+                await using var responseStream = response.GetResponseStream() ?? throw new NullReferenceException("responseStream == null");
 
                 Log.Info("Auth OK");
 
@@ -148,9 +142,9 @@
 
                 if (response != null)
                 {
-                    var statusCode = (int)response.StatusCode;
+                    var statusCode = response.StatusCode;
 
-                    Log.Info("Response code " + statusCode);
+                    Log.Info("Response code: " + (int)statusCode);
                 }
 
                 return null;

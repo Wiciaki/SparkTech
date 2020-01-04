@@ -38,7 +38,7 @@
             void IResumable.Pause()
             { }
 
-            Menu? IModule.Menu { get; } = new Menu("notimplemented");
+            Menu IModule.Menu { get; } = new Menu("notimplemented");
 
             JObject? IModule.GetTranslations() => JObject.Parse(Resources.NullChampion);
 

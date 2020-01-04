@@ -2,7 +2,7 @@
 {
     using SharpDX;
 
-    using Surgical.SDK.API.Fragments;
+    using Surgical.SDK.API;
 
     public static class Player
     {
@@ -12,6 +12,8 @@
         {
             Fragment = Platform.CoreFragment?.GetPlayerFragment() ?? throw Platform.FragmentException();
         }
+
+        public static int SpellTrainingPoints => Fragment.SpellTrainingPoints;
 
         public static void IssueOrder(GameObjectOrder order, Vector3 target)
         {

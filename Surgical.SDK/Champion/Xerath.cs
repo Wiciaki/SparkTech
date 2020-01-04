@@ -23,7 +23,7 @@
 
         }
 
-        public Menu? Menu { get; }
+        public Menu Menu { get; }
 
         public JObject? GetTranslations()
         {

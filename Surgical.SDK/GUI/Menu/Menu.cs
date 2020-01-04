@@ -3,6 +3,7 @@
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Diagnostics.Contracts;
     using System.IO;
     using System.Linq;
     using System.Threading;
@@ -30,34 +31,40 @@
 
         public Menu(string id) : base(id)
         {
-
         }
 
         public bool IsExpanded { get; set; }
 
         #region Accessors
 
+        [Pure]
         public IEnumerable<TMenuItem> GetItems<TMenuItem>() where TMenuItem : MenuItem
         {
             return this.OfType<TMenuItem>();
         }
 
+        [Pure]
         public MenuItem? this[string id] => this.items.Find(item => item.Id == id);
 
+        [Pure]
         public TMenuItem? Get<TMenuItem>(string id) where TMenuItem : MenuItem
         {
             return (TMenuItem?)this[id];
         }
 
+        [Pure]
         public Menu? GetMenu(string id)
         {
             return this.Get<Menu>(id);
         }
 
+        [Pure]
         public IEnumerable<MenuItem> GetDescensants()
         {
             return this.Concat(this.GetItems<Menu>().SelectMany(menu => menu.GetDescensants()));
         }
+
+        #endregion
 
         public static void Build(Menu menu, JObject? translations = null)
         {
@@ -99,8 +106,6 @@
             SaveHandlers.Add(new SaveHandler(this, folder));
         }
 
-        #endregion
-
         #region Overrides
 
         protected override Size2 GetSize()
@@ -116,7 +121,7 @@
 
             Theme.DrawTextBox(point, this.size, this.BackgroundColor, ArrowText, true);
 
-            if (!this.IsExpanded)
+            if (!this.IsExpanded || this.items.Count == 0)
             {
                 return;
             }
@@ -134,7 +139,7 @@
 
         protected internal override void OnWndProc(Point point, int width, WndProcEventArgs args)
         {
-            if (!this.IsExpanded)
+            if (!this.IsExpanded || this.items.Count == 0)
             {
                 return;
             }
@@ -551,14 +556,26 @@
 
         internal static int ArrowWidth => arrowSize.Width;
 
+        internal static int MinItemWidth { get; private set; }
+
+        internal static int MinNotificationWidth { get; private set; }
+
         internal static void DrawArrow(Point point)
         {
             Theme.DrawTextBox(point, arrowSize, Color.Transparent, ExtraArrowText, true);
         }
 
-        internal static void UpdateArrowSize()
+        internal static void UpdateDecalSizes()
         {
             arrowSize = new Size2(Theme.MeasureText(ExtraArrowText).Width, Theme.MinItemHeight);
+
+            const string MinWidthText = "This is enough";
+
+            MinItemWidth = Theme.MeasureText(MinWidthText).Width;
+
+            const string MinNotificationText = "This is enought for notifications";
+
+            MinNotificationWidth = Theme.MeasureText(MinNotificationText).Width;
         }
 
         #endregion

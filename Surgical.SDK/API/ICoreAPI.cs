@@ -1,7 +1,5 @@
 ﻿namespace Surgical.SDK.API
 {
-    using Surgical.SDK.API.Fragments;
-
     public interface ICoreAPI
     {
         IEntityEventsFragment GetEntityEventsFragment();

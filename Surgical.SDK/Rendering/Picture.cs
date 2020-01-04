@@ -11,9 +11,9 @@
         {
             Sprite = new Sprite(Render.Device);
 
-            Render.OnDispose += () => Sprite.Dispose();
-            Render.OnLostDevice += () => Sprite.OnLostDevice();
-            Render.OnResetDevice += () => Sprite.OnResetDevice();
+            Render.OnDispose += Sprite.Dispose;
+            Render.OnLostDevice += Sprite.OnLostDevice;
+            Render.OnResetDevice += Sprite.OnResetDevice;
         }
 
         public static void Draw(Vector2 position, Texture texture, Color? color = null, Vector3? center = null, Rectangle? rectangle = null, float? rotation = null, Vector2? scale = null)

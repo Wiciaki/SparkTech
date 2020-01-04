@@ -145,6 +145,7 @@
         "Alternate borders",
         "Simple black",
         "Simple white",
+        "Simple blue",
         "Stylish red",
         "Stylish blue"
       ]
@@ -153,6 +154,7 @@
       "text": "??",
       "options": [
         "{platform}",
+        "??",
         "??",
         "??",
         "??",

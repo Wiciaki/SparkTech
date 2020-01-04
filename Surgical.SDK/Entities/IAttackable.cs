@@ -3,11 +3,16 @@
     public interface IAttackable : IGameObject
     {
         float Health { get; }
+        float HealthPercent { get; }
         float MaxHealth { get; }
 
         float Mana { get; }
+        float ManaPercent { get; }
         float MaxMana { get; }
 
+        string ArmorMaterial { get; }
+
+        float AllShield { get; }
         float PhysicalShield { get; }
         float MagicalShield { get; }
 
@@ -19,8 +24,8 @@
         bool IsTargetable { get; }
         bool IsZombie { get; }
 
-        // float PathfindingCollisionRadius
-        // float OverrideCollisionHeight
-        // float OverrideCollisionRadius
+        float PathfindingCollisionRadius { get; }
+        float OverrideCollisionHeight { get; }
+        float OverrideCollisionRadius { get; }
     }
 }

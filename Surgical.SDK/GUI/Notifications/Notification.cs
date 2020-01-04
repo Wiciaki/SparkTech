@@ -69,8 +69,19 @@
 
         private void UpdateSizes()
         {
-            this.contentSize = Theme.MeasureText(this.Content);
-            this.headerSize = this.Header == null ? default : Theme.MeasureText(this.Header);
+            var csize = Theme.MeasureText(this.Content);
+
+            if (Menu.Menu.MinNotificationWidth > csize.Width)
+            {
+                csize.Width = Menu.Menu.MinNotificationWidth;
+            }
+
+            this.contentSize = csize;
+
+            if (this.Header != null)
+            {
+                this.headerSize = Theme.MeasureText(this.Header);
+            }
         }
 
         static Notification()
@@ -91,7 +102,7 @@
             }
 
             var point = new Point(1870, 100);
-            var t = GetTime() - decayTime;
+            var time = GetTime() - decayTime;
             var width = Entries.Max(entry => entry.Notification.Width);
 
             point.X -= width;
@@ -99,21 +110,21 @@
             for (var i = Entries.Count - 1; i >= 0; --i)
             {
                 var entry = Entries[i];
-                var delta = entry.Time - t;
+                var deltaTime = entry.Time - time;
 
                 var bgcolor = Theme.BackgroundColor;
                 var bcolor = Theme.BorderColor;
                 var txtcolor = Theme.TextColor;
 
-                if (delta < 0)
+                if (deltaTime < 0f)
                 {
                     Entries.RemoveAt(i);
                     continue;
                 }
 
-                if (delta < decayTime)
+                if (deltaTime < decayTime)
                 {
-                    var stage = delta / decayTime;
+                    var stage = deltaTime / decayTime;
 
                     void Decay(ref Color color) => color.A = (byte)(color.A * stage);
 

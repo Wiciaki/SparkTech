@@ -6,5 +6,7 @@
     public interface IChampion : IModule
     {
         float GetHealthIndicatorDamage(IHero hero);
+
+        // GetSequence
     }
 }

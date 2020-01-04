@@ -4,7 +4,7 @@
 
     using SharpDX;
 
-    using Surgical.SDK.API.Fragments;
+    using Surgical.SDK.API;
     using Surgical.SDK.Entities;
     using Surgical.SDK.EventData;
 

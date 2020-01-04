@@ -7,18 +7,16 @@
 
     public class StylishTheme : DefaultTheme
     {
-        public StylishTheme(Color color)
-        {
-            color.A -= 100;
-
-            this.BackgroundColor = color;
-        }
+        protected StylishTheme(Color bgcolor) => this.BackgroundColor = bgcolor;
 
         public override Color BackgroundColor { get; }
 
         public override FontDescription GetFontDescription()
         {
-            return new FontDescription { FaceName = "Cambria", Height = 18 };
+            var description = base.GetFontDescription();
+            description.FaceName = "Cambria";
+
+            return description;
         }
 
         public override void DrawBorders(Point point, Color color, params Size2[] sizes)
@@ -31,6 +29,22 @@
 
                 point.Y += size.Height;
             }
+        }
+
+        public static ITheme CreateRed()
+        {
+            var bgcolor = Color.DarkRed;
+            bgcolor.A -= 100;
+
+            return new StylishTheme(bgcolor);
+        }
+
+        public static ITheme CreateBlue()
+        {
+            var bgcolor = Color.DarkBlue;
+            bgcolor.A -= 100;
+
+            return new StylishTheme(bgcolor);
         }
     }
 }

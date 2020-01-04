@@ -37,11 +37,6 @@
 
         public static MinionType GetMinionType(this IMinion minion)
         {
-            if (minion == null)
-            {
-                return MinionType.Unknown;
-            }
-
             var baseSkinName = minion.BaseSkinName;
             var match = LaneMinionRegex.Match(baseSkinName);
 
@@ -57,7 +52,7 @@
                 };
             }
 
-            if (baseSkinName.StartsWith("SRU_Plant", StringComparison.CurrentCultureIgnoreCase))
+            if (baseSkinName.StartsWith("SRU_Plant", StringComparison.InvariantCultureIgnoreCase))
             {
                 return MinionType.Plant;
             }
@@ -71,7 +66,7 @@
 
             var name = minion.Name;
 
-            if (name.StartsWith("SRU_", StringComparison.OrdinalIgnoreCase))
+            if (name.StartsWith("SRU_", StringComparison.InvariantCultureIgnoreCase))
             {
                 return name.EndsWith("Mini") ? MinionType.JungleMini : MinionType.Jungle;
             }

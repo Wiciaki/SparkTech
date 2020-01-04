@@ -12,11 +12,9 @@
         [SuppressMessage("ReSharper", "UnassignedGetOnlyAutoProperty", Justification = "This class provides an empty implementation")]
         private class NullTheme : ITheme
         {
-            void IResumable.Pause()
-            { }
+            void IResumable.Start() => throw new InvalidOperationException();
 
-            void IResumable.Start()
-            { }
+            void IResumable.Pause() => throw new InvalidOperationException();
 
             Color ITheme.BackgroundColor { get; }
 
@@ -51,12 +49,12 @@
             }
 
             PlatformTheme = Platform.PlatformTheme;
-            theme = PlatformTheme ?? new DefaultTheme();
-
+            theme = PlatformTheme ?? DefaultTheme.Create();
             theme.Start();
 
-            Menu.Menu.UpdateArrowSize();
+            Menu.Menu.UpdateDecalSizes();
             Clock.UpdateSize();
+
         }
 
         internal static void SetTheme(int i)
@@ -66,23 +64,26 @@
             theme = i switch
             {
                 0 => PlatformTheme ?? throw new InvalidOperationException(),
-                1 => new DefaultTheme(),
-                2 => new AlternateBordersTheme(),
-                3 => new SimpleTheme(Color.White, Color.Black),
-                4 => new SimpleTheme(Color.Black, Color.White),
-                5 => new StylishTheme(Color.DarkRed),
-                6 => new StylishTheme(Color.DarkBlue),
+                1 => DefaultTheme.Create(),
+                2 => AlternateBordersTheme.Create(),
+                3 => SimpleTheme.CreateBlack(),
+                4 => SimpleTheme.CreateWhite(),
+                5 => SimpleTheme.CreateBlue(),
+                6 => StylishTheme.CreateRed(),
+                7 => StylishTheme.CreateBlue(),
                 _ => throw new IndexOutOfRangeException()
             };
 
             theme.Start();
 
-            Menu.Menu.UpdateArrowSize();
+            Menu.Menu.UpdateDecalSizes();
             Clock.UpdateSize();
 
             Menu.Menu.UpdateAllSizes();
             Notifications.Notification.UpdateAllSizes();
         }
+
+        #region API Proxy
 
         public static int MinItemHeight => theme.MinItemHeight;
 
@@ -131,5 +132,7 @@
         {
             theme.DrawBorders(point, bcolor, sizes);
         }
+
+        #endregion
     }
 }

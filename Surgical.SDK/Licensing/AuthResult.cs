@@ -31,5 +31,10 @@
         {
             return new AuthResult(true);
         }
+
+        public static AuthResult GetUnlicensed()
+        {
+            return new AuthResult(false);
+        }
     }
 }

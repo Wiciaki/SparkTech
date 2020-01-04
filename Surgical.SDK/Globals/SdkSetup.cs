@@ -70,7 +70,7 @@
                 },
                 new Menu("loader")
                 {
-                    new MenuAction("refresh", Platform.ScriptLoader.LoadAll),
+                    new MenuAction("refresh", Platform.ScriptLoader!.LoadAll),
                     new MenuText("loaded")
                 },
                 new Menu("license")
@@ -145,7 +145,10 @@
                 var item = menu.Get<MenuText>("licensed")!;
                 item.IsVisible = true;
 
-                item.BindVariable("expiry", expiry);
+                void Update() => item.Text = item.Text.Replace("{expiry}", expiry);
+
+                Update();
+                Menu.OnLanguageChanged += delegate { Update(); };
             }
         }
 

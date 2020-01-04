@@ -19,7 +19,7 @@
         {
             Fragment = Platform.UserInputFragment ?? throw Platform.APIException("UserInputAPI");
 
-            Fragment.WndProc = args => OnWndProc.SafeInvoke(args);
+            Fragment.WndProcess = args => OnWndProc.SafeInvoke(args);
         }
     }
 }

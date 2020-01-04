@@ -22,14 +22,15 @@
 
         private static readonly VertexDeclaration VertexDeclaration;
 
-        /// <summary>
-        ///     Initializes the <see cref="Circle" /> class.
-        /// </summary>
         static Circle()
         {
             VertexBuffer = new VertexBuffer(Render.Device, Utilities.SizeOf<Vector4>() * 3, Usage.WriteOnly, VertexFormat.None, Pool.Managed);
 
-            VertexBuffer.Lock(0, 0, LockFlags.None).WriteRange(new[] { new Vector4(-Radius, 0f, -Radius, 1.0f), new Vector4(0f, 0f, Radius, 1.0f), new Vector4(Radius, 0f, -Radius, 1.0f) });
+            using (var ds = VertexBuffer.Lock(0, 0, LockFlags.None))
+            {
+                ds.WriteRange(new[] { new Vector4(-Radius, 0f, -Radius, 1.0f), new Vector4(0f, 0f, Radius, 1.0f), new Vector4(Radius, 0f, -Radius, 1.0f) });
+            }
+
             VertexBuffer.Unlock();
 
             var vertexElements = new[] { new VertexElement(0, 0, DeclarationType.Float4, DeclarationMethod.Default, DeclarationUsage.Position, 0), VertexElement.VertexDeclarationEnd };
@@ -72,22 +73,22 @@
             Render.Device.SetStreamSource(0, VertexBuffer, 0, Utilities.SizeOf<Vector4>());
             Render.Device.VertexDeclaration = VertexDeclaration;
 
-            var multiplier = Game.ViewMatrix * Game.ProjectionMatrix;
-            var color4 = (Vector4)color;
+            var mod = Game.ViewMatrix * Game.ProjectionMatrix;
+            var c = (Vector4)color;
 
             foreach (var position in worldPositions)
             {
-                var matrix = Matrix.Translation(position) * multiplier;
+                var matrix = Matrix.Translation(position) * mod;
 
                 Effect.BeginPass(0);
 
                 Effect.SetValue("ProjectionMatrix", matrix);
-                Effect.SetValue("Color", color4);
+                Effect.SetValue("Color", c);
                 Effect.SetValue("Radius", radius);
                 Effect.SetValue("Width", thickness);
                 Effect.SetValue("Filled", filled);
                 Effect.SetValue("EnableZ", false);
-                Effect.SetValue("antiAlias", AntiAlias);
+                Effect.SetValue("AntiAlias", AntiAlias);
 
                 Effect.EndPass();
 

@@ -7,7 +7,7 @@
 
     public interface IRenderAPI
     {
-        Size2 Resolution();
+        Size2 Resolution { get; }
 
         Device Device { get; }
 

@@ -17,7 +17,7 @@
 
         }
 
-        public Menu? Menu { get; }
+        public Menu Menu { get; } = new Menu("surgical");
 
         public JObject? GetTranslations()
         {

@@ -20,11 +20,16 @@
 
     public class Loader
     {
+        protected virtual Assembly LoadAssembly(string path)
+        {
+            return Assembly.LoadFrom(path);
+        }
+
         private static readonly HashSet<string> Loaded = new HashSet<string>();
 
         private static bool canWarn;
 
-        public Loader()
+        static Loader()
         {
             Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
         }
@@ -75,11 +80,6 @@
 
             SdkSetup.SetScriptsCount(Loaded.Count);
             Notification.Send($"Surgical.SDK: Loaded {name}!");
-        }
-
-        protected virtual Assembly LoadAssembly(string path)
-        {
-            return Assembly.LoadFrom(path);
         }
 
         private static void ProcessAssembly(Assembly assembly)

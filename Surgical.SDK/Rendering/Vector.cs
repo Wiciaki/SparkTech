@@ -21,9 +21,9 @@
         {
             Line = new Line(Render.Device) { Antialias = true };
 
-            Render.OnDispose += () => Line.Dispose();
-            Render.OnLostDevice += () => Line.OnLostDevice();
-            Render.OnResetDevice += () => Line.OnResetDevice();
+            Render.OnDispose += Line.Dispose;
+            Render.OnLostDevice += Line.OnLostDevice;
+            Render.OnResetDevice += Line.OnResetDevice;
         }
 
         #endregion
@@ -50,8 +50,7 @@
         /// <param name="vertices">The screen positions.</param>
         public static void Draw(Color color, float thickness, params Vector2[] vertices)
         {
-            // Make sure we can draw the line
-            if (vertices.Length < 2 || thickness <= 0f)
+            if (vertices.Length < 2 || thickness < float.Epsilon)
             {
                 return;
             }

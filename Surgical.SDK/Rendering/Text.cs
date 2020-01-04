@@ -7,9 +7,6 @@
 
     #endregion
 
-    /// <summary>
-    ///     Class Text
-    /// </summary>
     public static class Text
     {
         #region Static Fields
@@ -35,9 +32,9 @@
                 FontPitchAndFamily.Default | FontPitchAndFamily.DontCare,
                 "Arial");
 
-            Render.OnResetDevice += () => Font.OnResetDevice();
-            Render.OnLostDevice += () => Font.OnLostDevice();
-            Render.OnDispose += () => Font.Dispose();
+            Render.OnResetDevice += Font.OnResetDevice;
+            Render.OnLostDevice += Font.OnLostDevice;
+            Render.OnDispose += Font.Dispose;
         }
 
         #endregion

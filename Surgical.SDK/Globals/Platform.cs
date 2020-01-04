@@ -25,7 +25,7 @@
 
         internal static ILogger? PlatformLogger { get; private set; }
 
-        internal static readonly Loader ScriptLoader = new Loader();
+        internal static Loader? ScriptLoader { get; private set; }
 
         public static bool HasRenderAPI => RenderFragment != null;
 
@@ -43,11 +43,11 @@
 
         public ITheme? Theme { get; set; }
 
-        public Loader Loader { get; }
-
         public ILogger? Logger { get; set; }
 
         public AuthResult? AuthResult { get; set; }
+
+        public Loader Loader { get; set; }
 
         public void Boot()
         {
@@ -94,6 +94,8 @@
             typeof(Theme).Trigger();
 
             SdkSetup.SetAuth(this.AuthResult);
+
+            ScriptLoader = this.Loader ??= new Loader();
         }
 
         public static Platform Declare(string name)
@@ -115,7 +117,6 @@
 
         private Platform()
         {
-            this.Loader = ScriptLoader;
         }
 
         internal static Exception FragmentException()

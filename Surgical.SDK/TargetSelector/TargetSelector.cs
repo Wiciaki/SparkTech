@@ -24,7 +24,7 @@
             this.weights = Weight.CreateWeights(this.Menu);
         }
 
-        IHero ITargetSelector.GetTarget(IEnumerable<IHero> heroes)
+        IHero? ITargetSelector.GetTarget(IEnumerable<IHero> heroes)
         {
             // experimental, lets see how this performs
             var enemies = heroes.Where(hero => hero.IsEnemy()).ToArray();

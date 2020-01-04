@@ -1,4 +1,4 @@
-﻿namespace Surgical.SDK.API.Fragments
+﻿namespace Surgical.SDK.API
 {
     using SharpDX;
 
@@ -6,7 +6,7 @@
 
     public interface IPlayerFragment
     {
-        // todo ??
+        int SpellTrainingPoints { get; }
 
         void IssueOrder(GameObjectOrder order, Vector3 target);
 

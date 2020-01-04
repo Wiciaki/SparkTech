@@ -16,6 +16,8 @@
 
         bool IsActive { get; }
 
+        bool IsPositive { get; }
+
         bool IsValid { get; }
 
         string Name { get; }

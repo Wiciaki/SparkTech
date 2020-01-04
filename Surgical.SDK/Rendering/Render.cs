@@ -39,19 +39,16 @@
 
         public static event Action? OnDraw, OnBeginScene, OnEndScene, OnLostDevice, OnResetDevice, OnDispose, OnSetRenderTarget;
 
-        public static Size2 Resolution()
-        {
-            return Fragment.Resolution();
-        }
+        public static Size2 Resolution => Fragment.Resolution;
 
-        private static void InvokeRenderEvent(Action? e)
+        private static void InvokeRenderEvent(Action? evt)
         {
-            if (e == null)
+            if (evt == null)
             {
                 return;
             }
 
-            foreach (var callback in e.GetInvocationList().Cast<Action>())
+            foreach (var callback in evt.GetInvocationList().Cast<Action>())
             {
                 try
                 {

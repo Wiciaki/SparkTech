@@ -6,7 +6,7 @@
 
     using Surgical.SDK.Logging;
 
-    internal static class InternalUtils
+    internal static class InternalEx
     {
         public static void SafeInvoke<T>(this Action<T>? evt, T args)
         {

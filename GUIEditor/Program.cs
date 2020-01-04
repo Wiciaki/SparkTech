@@ -48,7 +48,7 @@
 
             platform.RenderAPI = form;
             platform.UserInputAPI = form;
-            platform.AuthResult = new AuthResult(true, DateTime.Today.AddDays(3));
+            platform.AuthResult = AuthResult.GetLifetime();
 
             platform.Boot();
 
@@ -80,17 +80,13 @@
                 this.AllowUserResizing = false;
                 this.Size = new Size(1920, 1080);
                 this.Icon = Resources.Surgeon;
-                
             }
 
-            public Size2 Resolution()
-            {
-                return new Size2(1920, 1080);
-            }
+            public Size2 Resolution { get; } = new Size2(1920, 1080);
 
             protected override void WndProc(ref Message m)
             {
-                var wndProc = ((IUserInputAPI)this).WndProc;
+                var wndProc = this.WndProcess;
 
                 if (wndProc != null)
                 {
@@ -124,7 +120,7 @@
 
             public Action SetRenderTarget { get; set; }
 
-            Action<WndProcEventArgs> IUserInputAPI.WndProc { get; set; }
+            public Action<WndProcEventArgs> WndProcess { get; set; }
 
             public Point CursorPosition
             {

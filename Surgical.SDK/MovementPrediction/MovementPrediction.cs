@@ -8,7 +8,7 @@
     {
         public Menu Menu { get; } = new Menu("surgical");
 
-        public JObject GetTranslations()
+        public JObject? GetTranslations()
         {
             return null;
         }

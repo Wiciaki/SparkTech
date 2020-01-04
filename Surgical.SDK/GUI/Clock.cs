@@ -6,13 +6,8 @@
 
     using Surgical.SDK.Rendering;
 
-    internal static class Clock
+    public static class Clock
     {
-        static Clock()
-        {
-            Render.OnEndScene += OnEndScene;
-        }
-
         private static int mode;
 
         private static int elements;
@@ -53,9 +48,14 @@
             }
         }
 
+        static Clock()
+        {
+            Render.OnEndScene += OnEndScene;
+        }
+
         private static string GetText(DateTime dateTime)
         {
-            var text = "";
+            var text = string.Empty;
 
             if (elements == 0 || elements == 1)
             {
@@ -79,16 +79,13 @@
         {
             size = Theme.MeasureText(GetText(DateTime.Today));
 
-            point = new Point((Render.Resolution().Width - size.Width) / 2, 0);
+            var x = (Render.Resolution.Width - size.Width) / 2;
+
+            point = new Point(x, 0);
         }
 
         private static void OnEndScene()
         {
-            if (mode >= 3)
-            {
-                return;
-            }
-
             var date = DateTime.Now;
 
             var b = mode switch
@@ -96,6 +93,7 @@
                 0 => true,
                 1 => Menu.Menu.IsOpen,
                 2 => date.Second <= 5,
+                3 => false,
                 _ => throw new IndexOutOfRangeException()
             };
 
