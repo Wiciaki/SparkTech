@@ -59,16 +59,16 @@
                 return this.fullToken;
             }
 
-            var @default = JToken.DeepEquals(t, this.defaultValue);
+            var equals = JToken.DeepEquals(t, this.defaultValue);
 
             if (!this.IsChampSpecific)
             {
-                return @default ? null : t;
+                return equals ? null : t;
             }
 
             var full = this.fullToken;
 
-            if (!@default)
+            if (!equals)
             {
                 (full ??= new JObject())[GetTag()] = t;
             }
@@ -96,11 +96,7 @@
 
             if (token == null)
             {
-                if (this.defaultValue != null)
-                {
-                    this.Token = this.defaultValue;
-                }
-
+                this.Token = this.defaultValue;
                 return;
             }
 

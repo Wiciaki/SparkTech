@@ -61,7 +61,7 @@
                             new MenuBool("explosives", settings.Explosives)
                         };
 
-            foreach (var item in this.menu.GetDescensants().OfType<MenuValue>())
+            foreach (var item in this.menu.GetDescendants().OfType<MenuValue>())
             {
                 item.IsChampSpecific = true;
             }

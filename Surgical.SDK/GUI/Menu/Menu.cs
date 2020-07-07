@@ -59,9 +59,9 @@
         }
 
         [Pure]
-        public IEnumerable<MenuItem> GetDescensants()
+        public IEnumerable<MenuItem> GetDescendants()
         {
-            return this.Concat(this.GetItems<Menu>().SelectMany(menu => menu.GetDescensants()));
+            return this.Concat(this.GetItems<Menu>().SelectMany(menu => menu.GetDescendants()));
         }
 
         #endregion
@@ -101,7 +101,7 @@
             menu.UpdateTranslations();
         }
 
-        internal void CreateSaveHandler(Folder folder)
+        internal void CreateSaveHandler(Folder folder) 
         {
             SaveHandlers.Add(new SaveHandler(this, folder));
         }
@@ -542,7 +542,7 @@
 
         private void UpdateSizes()
         {
-            foreach (var item in this.GetDescensants().Prepend(this))
+            foreach (var item in this.GetDescendants().Prepend(this))
             {
                 item.UpdateSize();
             }
@@ -644,10 +644,10 @@
 
                         this.lastSaved = token;
 
-                        using var fs = new FileStream(this.targetPath, FileMode.Create, FileAccess.Write);
-                        using var sw = new StreamWriter(fs);
+                        await using var fs = new FileStream(this.targetPath, FileMode.Create, FileAccess.Write);
+                        await using var sw = new StreamWriter(fs);
                         using var writer = new JsonTextWriter(sw) { Formatting = Formatting.Indented };
-                            
+
                         await token.WriteToAsync(writer);
                     }
 

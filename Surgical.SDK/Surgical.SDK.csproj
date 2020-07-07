@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <SignAssembly>true</SignAssembly>
+    <SignAssembly>false</SignAssembly>
     <AssemblyOriginatorKeyFile>Surgical.pfx</AssemblyOriginatorKeyFile>
     <DelaySign>false</DelaySign>
     <NeutralLanguage>en</NeutralLanguage>

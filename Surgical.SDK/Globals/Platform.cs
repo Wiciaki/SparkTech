@@ -47,7 +47,7 @@
 
         public AuthResult? AuthResult { get; set; }
 
-        public Loader Loader { get; set; }
+        public Loader? Loader { get; set; }
 
         public void Boot()
         {
