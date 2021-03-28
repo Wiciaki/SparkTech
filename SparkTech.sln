@@ -1,13 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
-VisualStudioVersion = 16.0.28621.142
+VisualStudioVersion = 16.0.31112.23
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Surgical.SDK", "Surgical.SDK\Surgical.SDK.csproj", "{35284B3E-CDFC-475C-9F90-185E605272CB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SparkTech.SDK", "SparkTech.SDK\SparkTech.SDK.csproj", "{ACAC4D5C-F455-4903-BA56-ED3A7EBCFF94}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SurgicalSample", "SurgicalSample\SurgicalSample.csproj", "{644B62F5-9BEF-430D-8AB3-08E71F7957BA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SparkTech.Ensoul", "SparkTech.Ensoul\SparkTech.Ensoul.csproj", "{1D92455B-8BDC-4F66-906E-F8B502505C11}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GUIEditor", "GUIEditor\GUIEditor.csproj", "{4BF343EF-6F7B-49C4-9346-7A25A04970F5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SparkTech.GUIEditor", "SparkTech.GUIEditor\SparkTech.GUIEditor.csproj", "{6C61DF4F-77C8-42F2-BB73-A507BB781178}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,23 +15,23 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{35284B3E-CDFC-475C-9F90-185E605272CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{35284B3E-CDFC-475C-9F90-185E605272CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{35284B3E-CDFC-475C-9F90-185E605272CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{35284B3E-CDFC-475C-9F90-185E605272CB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{644B62F5-9BEF-430D-8AB3-08E71F7957BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{644B62F5-9BEF-430D-8AB3-08E71F7957BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{644B62F5-9BEF-430D-8AB3-08E71F7957BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{644B62F5-9BEF-430D-8AB3-08E71F7957BA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4BF343EF-6F7B-49C4-9346-7A25A04970F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4BF343EF-6F7B-49C4-9346-7A25A04970F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4BF343EF-6F7B-49C4-9346-7A25A04970F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4BF343EF-6F7B-49C4-9346-7A25A04970F5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ACAC4D5C-F455-4903-BA56-ED3A7EBCFF94}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ACAC4D5C-F455-4903-BA56-ED3A7EBCFF94}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ACAC4D5C-F455-4903-BA56-ED3A7EBCFF94}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ACAC4D5C-F455-4903-BA56-ED3A7EBCFF94}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1D92455B-8BDC-4F66-906E-F8B502505C11}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D92455B-8BDC-4F66-906E-F8B502505C11}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D92455B-8BDC-4F66-906E-F8B502505C11}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1D92455B-8BDC-4F66-906E-F8B502505C11}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6C61DF4F-77C8-42F2-BB73-A507BB781178}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6C61DF4F-77C8-42F2-BB73-A507BB781178}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6C61DF4F-77C8-42F2-BB73-A507BB781178}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6C61DF4F-77C8-42F2-BB73-A507BB781178}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {F99DC729-56C0-4922-AFA4-8D147B8B68EC}
+		SolutionGuid = {A7CF2B4A-25FA-4B26-B69F-E03CEE30D6F0}
 	EndGlobalSection
 EndGlobal

@@ -1,0 +1,265 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{ACAC4D5C-F455-4903-BA56-ED3A7EBCFF94}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SparkTech.SDK</RootNamespace>
+    <AssemblyName>SparkTech.SDK</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+    <PreBuildEvent />
+    <PostBuildEvent>
+    </PostBuildEvent>
+    <PlatformTarget>x86</PlatformTarget>
+    <CscToolPath>C:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\MSBuild\15.0\Bin\Roslyn</CscToolPath>
+    <OutputPath>bin\Release</OutputPath>
+    <LangVersion>7.0</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <RunPostBuildEvent>Always</RunPostBuildEvent>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>C:\Users\Penguin\Desktop\EnsoulSharp\Reference\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX">
+      <HintPath>C:\Users\Penguin\Desktop\EnsoulSharp\Reference\SharpDX.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.Direct3D9">
+      <HintPath>C:\Users\Penguin\Desktop\EnsoulSharp\Reference\SharpDX.Direct3D9.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.Mathematics">
+      <HintPath>C:\Users\Penguin\Desktop\EnsoulSharp\Reference\SharpDX.Mathematics.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="API\ICoreAPI.cs" />
+    <Compile Include="API\IEntityEventsFragment.cs" />
+    <Compile Include="API\IGameFragment.cs" />
+    <Compile Include="API\IObjectManagerFragment.cs" />
+    <Compile Include="API\IPacketFragment.cs" />
+    <Compile Include="API\IPlayerFragment.cs" />
+    <Compile Include="API\IRenderAPI.cs" />
+    <Compile Include="API\IUserInputAPI.cs" />
+    <Compile Include="Champion\ChampionService.cs" />
+    <Compile Include="Champion\IChampion.cs" />
+    <Compile Include="Champion\Jinx.cs" />
+    <Compile Include="Champion\Orianna.cs" />
+    <Compile Include="Champion\Syndra.cs" />
+    <Compile Include="Champion\Vayne.cs" />
+    <Compile Include="Champion\Viktor.cs" />
+    <Compile Include="Champion\Xerath.cs" />
+    <Compile Include="DelayAction.cs" />
+    <Compile Include="Emote.cs" />
+    <Compile Include="Entities\EntityComparer.cs" />
+    <Compile Include="Entities\EntityEvents.cs" />
+    <Compile Include="Entities\Enumerations\AbilityResourceType.cs" />
+    <Compile Include="Entities\Enumerations\BuffType.cs" />
+    <Compile Include="Entities\Enumerations\BuyItemResult.cs" />
+    <Compile Include="Entities\Enumerations\DamageHitType.cs" />
+    <Compile Include="Entities\Enumerations\DamageType.cs" />
+    <Compile Include="Entities\Enumerations\ItemId.cs" />
+    <Compile Include="Entities\Enumerations\OutputType.cs" />
+    <Compile Include="Entities\Enumerations\SpellDataCastType.cs" />
+    <Compile Include="Entities\Enumerations\SpellDataTargetType.cs" />
+    <Compile Include="Entities\Enumerations\SpellToggleState.cs" />
+    <Compile Include="Entities\Enumerations\GameObjectCharacterState.cs" />
+    <Compile Include="Entities\Enumerations\GameObjectCombatType.cs" />
+    <Compile Include="Entities\Enumerations\GameObjectOrder.cs" />
+    <Compile Include="Entities\Enumerations\GameObjectTeam.cs" />
+    <Compile Include="Entities\Enumerations\MinionType.cs" />
+    <Compile Include="Entities\Enumerations\SpellSlot.cs" />
+    <Compile Include="Entities\Enumerations\SpellState.cs" />
+    <Compile Include="Entities\Extensions.cs" />
+    <Compile Include="Entities\IAttackable.cs" />
+    <Compile Include="Entities\Props\IBuff.cs" />
+    <Compile Include="Entities\IBuilding.cs" />
+    <Compile Include="Entities\IGameObject.cs" />
+    <Compile Include="Entities\IHero.cs" />
+    <Compile Include="Entities\IMinion.cs" />
+    <Compile Include="Entities\IMissile.cs" />
+    <Compile Include="Entities\Props\IItem.cs" />
+    <Compile Include="Entities\Props\IItemData.cs" />
+    <Compile Include="Entities\Props\ISpellbook.cs" />
+    <Compile Include="Entities\Props\ISpell.cs" />
+    <Compile Include="Entities\ITurret.cs" />
+    <Compile Include="Entities\IUnit.cs" />
+    <Compile Include="Entities\ObjectManager.cs" />
+    <Compile Include="Entities\Player.cs" />
+    <Compile Include="Entities\Props\ISpellData.cs" />
+    <Compile Include="EnumCache.cs" />
+    <Compile Include="Evade\Evade.cs" />
+    <Compile Include="Evade\EvadeService.cs" />
+    <Compile Include="Evade\IEvade.cs" />
+    <Compile Include="EventData\_AfkEventArgs.cs" />
+    <Compile Include="EventData\AfterAttackEventArgs.cs" />
+    <Compile Include="EventData\AggroEventArgs.cs" />
+    <Compile Include="EventData\BeforeAttackEventArgs.cs" />
+    <Compile Include="EventData\BeforeValueChangeEventArgs.cs" />
+    <Compile Include="EventData\BlockableEventArgs.cs" />
+    <Compile Include="EventData\BuffUpdateEventArgs.cs" />
+    <Compile Include="EventData\CastSpellEventArgs.cs" />
+    <Compile Include="EventData\_ChatEventArgs.cs" />
+    <Compile Include="EventData\_DamageEventArgs.cs" />
+    <Compile Include="EventData\_EndEventArgs.cs" />
+    <Compile Include="EventData\IEventArgsSource.cs" />
+    <Compile Include="EventData\IEventArgsTarget.cs" />
+    <Compile Include="EventData\_InputEventArgs.cs" />
+    <Compile Include="EventData\IssueOrderEventArgs.cs" />
+    <Compile Include="EventData\LevelUpEventArgs.cs" />
+    <Compile Include="EventData\NewPathEventArgs.cs" />
+    <Compile Include="EventData\NotifyEventArgs.cs" />
+    <Compile Include="EventData\PacketEventArgs.cs" />
+    <Compile Include="EventData\_PauseAnimationEventArgs.cs" />
+    <Compile Include="EventData\_PingEventArgs.cs" />
+    <Compile Include="EventData\_PlaceItemInSlotEventArgs.cs" />
+    <Compile Include="EventData\PlayAnimationEventArgs.cs" />
+    <Compile Include="EventData\ProcessSpellCastEventArgs.cs" />
+    <Compile Include="EventData\_RemoveItemEventArgs.cs" />
+    <Compile Include="EventData\StopCastEventArgs.cs" />
+    <Compile Include="EventData\_SwapItemEventArgs.cs" />
+    <Compile Include="EventData\TargetEventArgs.cs" />
+    <Compile Include="EventData\TeleportEventArgs.cs" />
+    <Compile Include="EventData\UpdateChargedSpellEventArgs.cs" />
+    <Compile Include="EventData\_VisibilityChangedEventArgs.cs" />
+    <Compile Include="EventData\WndProcEventArgs.cs" />
+    <Compile Include="Folder.cs" />
+    <Compile Include="Game.cs" />
+    <Compile Include="GameEventId.cs" />
+    <Compile Include="GameMap.cs" />
+    <Compile Include="GameState.cs" />
+    <Compile Include="Geometry\AOE\MEB.cs" />
+    <Compile Include="Geometry\AOE\MEC.cs" />
+    <Compile Include="Geometry\Arc.cs" />
+    <Compile Include="Geometry\Circle.cs" />
+    <Compile Include="Geometry\EquilateralTriangle.cs" />
+    <Compile Include="Geometry\IPolygon.cs" />
+    <Compile Include="Geometry\IsoscelesTriangle.cs" />
+    <Compile Include="Geometry\Line.cs" />
+    <Compile Include="Geometry\LinearPolygon.cs" />
+    <Compile Include="Geometry\Rectangle.cs" />
+    <Compile Include="Geometry\Ring.cs" />
+    <Compile Include="Geometry\Sector.cs" />
+    <Compile Include="Geometry\Triangle.cs" />
+    <Compile Include="Geometry\VectorExtensions.cs" />
+    <Compile Include="GUI\Clock.cs" />
+    <Compile Include="GUI\ITheme.cs" />
+    <Compile Include="GUI\Language.cs" />
+    <Compile Include="GUI\Menu\IExpandable.cs" />
+    <Compile Include="GUI\Menu\IMenuValue.cs" />
+    <Compile Include="GUI\Menu\Items\MenuAction.cs" />
+    <Compile Include="GUI\Menu\Items\MenuBool.cs" />
+    <Compile Include="GUI\Menu\Items\MenuColor.cs" />
+    <Compile Include="GUI\Menu\Items\MenuColorBool.cs" />
+    <Compile Include="GUI\Menu\Items\MenuFloat.cs" />
+    <Compile Include="GUI\Menu\Items\MenuInt.cs" />
+    <Compile Include="GUI\Menu\Items\MenuKey.cs" />
+    <Compile Include="GUI\Menu\Items\MenuKeyBool.cs" />
+    <Compile Include="GUI\Menu\Items\MenuList.cs" />
+    <Compile Include="GUI\Menu\Items\MenuSeparator.cs" />
+    <Compile Include="GUI\Menu\Items\MenuTexture.cs" />
+    <Compile Include="GUI\Menu\Menu.cs" />
+    <Compile Include="GUI\Menu\MenuItem.cs" />
+    <Compile Include="GUI\Menu\MenuText.cs" />
+    <Compile Include="GUI\Menu\MenuValue.cs" />
+    <Compile Include="GUI\Menu\RadioBind.cs" />
+    <Compile Include="GUI\Notifications\Notification.cs" />
+    <Compile Include="GUI\Theme.cs" />
+    <Compile Include="GUI\Theme\AlternateBordersTheme.cs" />
+    <Compile Include="GUI\Theme\DefaultTheme.cs" />
+    <Compile Include="GUI\Theme\SimpleTheme.cs" />
+    <Compile Include="GUI\Theme\StylishTheme.cs" />
+    <Compile Include="GUI\Translations.cs" />
+    <Compile Include="HealthPrediction\HealthPrediction.cs" />
+    <Compile Include="HealthPrediction\HealthPredictionService.cs" />
+    <Compile Include="HealthPrediction\IHealthPredition.cs" />
+    <Compile Include="HealthPrediction\PortedPrediction.cs" />
+    <Compile Include="InternalEx.cs" />
+    <Compile Include="IResumable.cs" />
+    <Compile Include="Keys.cs" />
+    <Compile Include="Licensing\AuthResult.cs" />
+    <Compile Include="Licensing\IAuth.cs" />
+    <Compile Include="Licensing\IShop.cs" />
+    <Compile Include="Licensing\Netlicensing.cs" />
+    <Compile Include="Logging\ConsoleLogger.cs" />
+    <Compile Include="Logging\FileLogger.cs" />
+    <Compile Include="Logging\ILogger.cs" />
+    <Compile Include="Logging\Log.cs" />
+    <Compile Include="Logging\LogLevel.cs" />
+    <Compile Include="Mode.cs" />
+    <Compile Include="Modules\IEntryPoint.cs" />
+    <Compile Include="Modules\IModule.cs" />
+    <Compile Include="Modules\Loader.cs" />
+    <Compile Include="Modules\Picker.cs" />
+    <Compile Include="MovementPrediction\Collision.cs" />
+    <Compile Include="MovementPrediction\CollisionableObjects.cs" />
+    <Compile Include="MovementPrediction\IMovementPrediction.cs" />
+    <Compile Include="MovementPrediction\MovementPrediction.cs" />
+    <Compile Include="MovementPrediction\MovementPredictionService.cs" />
+    <Compile Include="MovementPrediction\PredictionInput.cs" />
+    <Compile Include="MovementPrediction\PredictionOutput.cs" />
+    <Compile Include="Orbwalker\IOrbwalker.cs" />
+    <Compile Include="Orbwalker\Orbwalker.cs" />
+    <Compile Include="Orbwalker\OrbwalkerService.cs" />
+    <Compile Include="Packets\Packet.cs" />
+    <Compile Include="Packets\PacketChannel.cs" />
+    <Compile Include="Packets\PacketProtocolFlags.cs" />
+    <Compile Include="PingCategory.cs" />
+    <Compile Include="Platform.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs" />
+    <Compile Include="Rendering\Circle.cs" />
+    <Compile Include="Rendering\Picture.cs" />
+    <Compile Include="Rendering\Render.cs" />
+    <Compile Include="Rendering\Text.cs" />
+    <Compile Include="Rendering\Vector.cs" />
+    <Compile Include="SdkSetup.cs" />
+    <Compile Include="SpellDatabase\DamageLibrary.cs" />
+    <Compile Include="SpellDatabase\Database.cs" />
+    <Compile Include="SpellDatabase\Default\BaseDamageObtainer.cs" />
+    <Compile Include="SpellDatabase\Default\DefaultDatabase.cs" />
+    <Compile Include="SpellDatabase\IDatabase.cs" />
+    <Compile Include="SpellDatabase\PlayerSpell.cs" />
+    <Compile Include="SpellDatabase\Spell.cs" />
+    <Compile Include="SpellDatabase\SpellLink.cs" />
+    <Compile Include="TargetSelector\ITargetSelector.cs" />
+    <Compile Include="TargetSelector\TargetSelector.cs" />
+    <Compile Include="TargetSelector\TargetSelectorService.cs" />
+    <Compile Include="TargetSelector\Weight.cs" />
+    <Compile Include="UserInput.cs" />
+    <Compile Include="Utilities\Activator.cs" />
+    <Compile Include="Utilities\AutoLvlUp.cs" />
+    <Compile Include="Utilities\DamageIndicator.cs" />
+    <Compile Include="Utilities\IUtility.cs" />
+    <Compile Include="Utilities\UtilityService.cs" />
+    <Compile Include="WindowsMessages.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

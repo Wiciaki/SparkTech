@@ -1,0 +1,369 @@
+﻿{
+  "en": {
+    "text": "SparkTech.SDK",
+    "helpText": "Here you will find all the settings that impact other scripts"
+  },
+  "zh": {
+    "text": "Spark制作",
+    "helpText": "帮助"
+  },
+  "language": {
+    "en": {
+      "text": "Language"
+    },
+    "zh": {
+      "text": "语言 (language)"
+    }
+  },
+  "modes": {
+    "en": {
+      "text": "Modes",
+      "helpText": "All the settings besides key are champion-specific"
+    },
+    "zh": {
+      "text": "CHINESE PPL PLS TRANSLATE TY"
+    },
+    "combo": {
+      "en": {
+        "text": "Combo"
+      },
+      "zh": {
+        "text": "??"
+      }
+    },
+    "laneclear": {
+      "en": {
+        "text": "Laneclear"
+      },
+      "zh": {
+        "text": "??"
+      }
+    },
+    "harass": {
+      "en": {
+        "text": "Harass"
+      },
+      "zh": {
+        "text": "??"
+      }
+    },
+    "lasthit": {
+      "en": {
+        "text": "Lasthit"
+      },
+      "zh": {
+        "text": "??"
+      }
+    },
+    "custom": {
+      "en": {
+        "text": "Custom mode"
+      },
+      "zh": {
+        "text": "??"
+      }
+    },
+    "flee": {
+      "en": {
+        "text": "Flee"
+      },
+      "zh": {
+        "text": "??"
+      }
+    }
+  },
+  "menu": {
+    "en": {
+      "text": "Menu settings"
+    },
+    "zh": {
+      "text": "??"
+    },
+    "key": {
+      "en": {
+        "text": "Activation button"
+      },
+      "zh": {
+        "text": "激活按键"
+      }
+    },
+    "toggle": {
+      "en": {
+        "text": "Press to toggle?"
+      },
+      "zh": {
+        "text": "锁死"
+      }
+    },
+    "apply": {
+      "en": {
+        "text": "Click here to apply above settings"
+      },
+      "zh": {
+        "text": "应用"
+      }
+    },
+    "arrows": {
+      "en": {
+        "text": "Enable arrow indicators"
+      },
+      "zh": {
+        "text": "??"
+      }
+    },
+    "position": {
+      "en": {
+        "text": "Position"
+      },
+      "zh": {
+        "text": "??"
+      }
+    },
+    "x": {
+      "en": {
+        "text": "X coordinate"
+      },
+      "zh": {
+        "text": "X轴"
+      }
+    },
+    "y": {
+      "en": {
+        "text": "Y coordinate"
+      },
+      "zh": {
+        "text": "Y轴"
+      }
+    }
+  },
+  "theme": {
+    "en": {
+      "text": "Theme",
+      "options": [
+        "{platform}",
+        "Default",
+        "Alternate borders",
+        "Simple black",
+        "Simple white",
+        "Simple blue",
+        "Stylish red",
+        "Stylish blue"
+      ]
+    },
+    "zh": {
+      "text": "??",
+      "options": [
+        "{platform}",
+        "??",
+        "??",
+        "??",
+        "??",
+        "??",
+        "??",
+        "??"
+      ]
+    }
+  },
+  "notifications": {
+    "en": {
+      "text": "Notifications"
+    },
+    "zh": {
+      "text": "??"
+    },
+    "decayTime": {
+      "en": {
+        "text": "Fade time"
+      },
+      "zh": {
+        "text": "??"
+      }
+    },
+    "borders": {
+      "en": {
+        "text": "Enable notification borders"
+      },
+      "zh": {
+        "text": "??"
+      }
+    },
+    "spawnTest": {
+      "en": {
+        "text": "Spawn test notification"
+      },
+      "zh": {
+        "test": "??"
+      }
+    }
+  },
+  "clock": {
+    "en": {
+      "text": "Clock"
+    },
+    "zh": {
+      "text": "??"
+    },
+    "mode": {
+      "en": {
+        "text": "Mode",
+        "helpText": "Smart shows the clock for 5 seconds, every minute",
+        "options": [
+          "Always on",
+          "When menu opened",
+          "Smart",
+          "Off"
+        ]
+      },
+      "zh": {
+        "text": "钟",
+        "helpText": "??",
+        "options": [
+          "??",
+          "??",
+          "??",
+          "??"
+        ]
+      }
+    },
+    "elements": {
+      "en": {
+        "text": "Displayable elements",
+        "options": [
+          "Both",
+          "Just platform name",
+          "Just time"
+        ]
+      },
+      "zh": {
+        "text": "??",
+        "options": [
+          "??",
+          "??",
+          "??"
+        ]
+      }
+    },
+    "background": {
+      "en": {
+        "text": "Show background"
+      },
+      "zh": {
+        "text": "??"
+      }
+    },
+    "customColor": {
+      "en": {
+        "text": "Use custom color"
+      },
+      "zh": {
+        "text": "??" 
+      } 
+    } 
+  },
+  "humanizer": {
+    "en": {
+      "text": "Humanizer"
+    },
+    "zh": {
+      "text": "??"
+    },
+    "enable": {
+      "en": {
+        "text": "Enable the global humanizer"
+      },
+      "zh": {
+        "text": "??"
+      }
+    }
+  },
+  "loader": {
+    "en": {
+      "text": "Loader"
+    },
+    "zh": {
+      "text": "??"
+    },
+    "refresh": {
+      "en": {
+        "text": "Load newly added",
+        "helpText": "The number below should bump immediately"
+      },
+      "zh": {
+        "text": "??",
+        "helpText": "??" 
+      }
+    },
+    "loaded": {
+      "en": {
+        "text": "Currently loaded {i} custom script(s)"
+      },
+      "zh": {
+        "text": "?? {i}" 
+      } 
+    } 
+  },
+  "license": {
+    "en": {
+      "text": "License"
+    },
+    "zh": {
+      "text": "??"
+    },
+    "licensed": {
+      "en": {
+        "text": "License active.\nExpires at: {expiry}"
+      },
+      "zh": {
+        "text": "?? {expiry}"
+      }
+    },
+    "unlicensed": {
+      "en": {
+        "text": "You're currently unlicensed"
+      },
+      "zh": {
+        "text": "??"
+      }
+    },
+    "lifetime": {
+      "en": {
+        "text": "You're currently using a lifetime license"
+      },
+      "zh": {
+        "text": "??"
+      }
+    }
+  },
+  "about": {
+    "en": {
+      "text": "About"
+    },
+    "zh": {
+      "text": "??"
+    },
+    "version": {
+      "en": {
+        "text": "SDK Version {version}"
+      },
+      "zh": {
+        "text": "?? {version}"
+      }
+    },
+    "contact": {
+      "en": {
+        "text": "Find me on discord:Spark#9147"
+      },
+      "zh": {
+        "text": "??"
+      }
+    },
+    "credits": {
+      "en": {
+        "text": "Thanks to all contributors, testers\nand everyone else who helped.\nWithout you, it wouldn't be possible"
+      },
+      "zh": {
+        "text": "??"
+      }
+    }
+  }
+} 

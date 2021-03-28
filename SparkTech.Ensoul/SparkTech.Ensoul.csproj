@@ -1,0 +1,101 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{1D92455B-8BDC-4F66-906E-F8B502505C11}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>SparkTech.Ensoul</RootNamespace>
+    <AssemblyName>SparkTech.Ensoul</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+    <PreBuildEvent />
+    <PostBuildEvent />
+    <CscToolPath>C:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\MSBuild\15.0\Bin\Roslyn</CscToolPath>
+    <OutputPath>bin\Release</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>icon_sparktech.ico</ApplicationIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EnsoulSharp">
+      <HintPath>C:\Users\Penguin\Desktop\EnsoulSharp\Reference\EnsoulSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="EnsoulSharp.SDK">
+      <HintPath>C:\Users\Penguin\Desktop\EnsoulSharp\Reference\EnsoulSharp.SDK.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX">
+      <HintPath>C:\Users\Penguin\Desktop\EnsoulSharp\Reference\SharpDX.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.Direct3D9">
+      <HintPath>C:\Users\Penguin\Desktop\EnsoulSharp\Reference\SharpDX.Direct3D9.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.Mathematics">
+      <HintPath>C:\Users\Penguin\Desktop\EnsoulSharp\Reference\SharpDX.Mathematics.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CoreAPI.cs" />
+    <Compile Include="Entities\AIBaseClient.cs" />
+    <Compile Include="Entities\AIBuilding.cs" />
+    <Compile Include="Entities\AIHeroClient.cs" />
+    <Compile Include="Entities\AIMinionClient.cs" />
+    <Compile Include="Entities\AITurretClient.cs" />
+    <Compile Include="Entities\AttackableUnit.cs" />
+    <Compile Include="Entities\EntityConverter.cs" />
+    <Compile Include="Entities\GameObject.cs" />
+    <Compile Include="Entities\MissileClient.cs" />
+    <Compile Include="Entities\Props\Buff.cs" />
+    <Compile Include="Entities\Props\Item.cs" />
+    <Compile Include="Entities\Props\ItemData.cs" />
+    <Compile Include="Entities\Props\PropWrapper.cs" />
+    <Compile Include="Entities\Props\Spell.cs" />
+    <Compile Include="Entities\Props\Spellbook.cs" />
+    <Compile Include="Entities\Props\SpellData.cs" />
+    <Compile Include="Fragments\EntityEventsFragment.cs" />
+    <Compile Include="Fragments\GameFragment.cs" />
+    <Compile Include="Fragments\ObjectManagerFragment.cs" />
+    <Compile Include="Fragments\PacketFragment.cs" />
+    <Compile Include="Fragments\PlayerFragment.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RenderAPI.cs" />
+    <Compile Include="UserInputAPI.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SparkTech.SDK\SparkTech.SDK.csproj">
+      <Project>{acac4d5c-f455-4903-ba56-ed3a7ebcff94}</Project>
+      <Name>SparkTech.SDK</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="icon_sparktech.ico" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
