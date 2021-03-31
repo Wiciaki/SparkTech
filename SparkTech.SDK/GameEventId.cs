@@ -225,6 +225,6 @@
         OnLocalPlayerLoadoutBound,
         OnTurretPlateDestroyed,
         OnPlantActivated,
-        OnPlayerEntersVisibility,
+        OnPlayerEntersVisibility
     }
 }

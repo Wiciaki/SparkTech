@@ -24,7 +24,7 @@
     },
     "indicator": {
       "en": {
-        "text": "Enable damage indicator"
+        "text": "Enable damage indicators"
       },
       "zh": {
         "text": "??"
@@ -49,7 +49,7 @@
   },
   "indicator": {
     "en": {
-      "text": "Damage indicator"
+      "text": "Damage indicators"
     },
     "zh": {
       "text": "??"

@@ -5,7 +5,6 @@
     using SharpDX;
 
     using SparkTech.SDK.Entities;
-    using SparkTech.SDK.EventData;
 
     public interface IGameFragment
     {
@@ -15,10 +14,6 @@
 
         void SendEmote(Emote emote);
 
-        void ShowPing(PingCategory category, IGameObject target, bool playSound);
-
-        void ShowPing(PingCategory category, Vector2 target, bool playSound);
-
         void SendPing(PingCategory category, IGameObject target);
 
         void SendPing(PingCategory category, Vector2 target);
@@ -26,6 +21,8 @@
         bool IsShopOpen();
 
         bool IsChatOpen();
+
+        bool IsScoreboardOpen();
 
         Vector2 WorldToScreen(Vector3 pos);
 
@@ -45,20 +42,8 @@
 
         float Time { get; }
 
-        float Latency { get; }
+        float Ping { get; }
 
         Action<EventArgs> Update { get; set; }
-
-        Action<_EndEventArgs> End { get; set; }
-
-        Action<_AfkEventArgs> Afk { get; set; }
-
-        Action<NotifyEventArgs> Notify { get; set; }
-
-        Action<_PingEventArgs> Ping { get; set; }
-
-        Action<_InputEventArgs> Input { get; set; }
-
-        Action<_ChatEventArgs> Chat { get; set; }
     }
 }

@@ -72,6 +72,9 @@
     <Compile Include="Champion\Vayne.cs" />
     <Compile Include="Champion\Viktor.cs" />
     <Compile Include="Champion\Xerath.cs" />
+    <Compile Include="DamageLibrary\DamageLibraryService.cs" />
+    <Compile Include="DamageLibrary\IDamageLibrary.cs" />
+    <Compile Include="DamageLibrary\Implementation\DamageLibraryImpl.cs" />
     <Compile Include="DelayAction.cs" />
     <Compile Include="Emote.cs" />
     <Compile Include="Entities\EntityComparer.cs" />
@@ -94,6 +97,7 @@
     <Compile Include="Entities\Enumerations\SpellSlot.cs" />
     <Compile Include="Entities\Enumerations\SpellState.cs" />
     <Compile Include="Entities\Extensions.cs" />
+    <Compile Include="Entities\GameObjectType.cs" />
     <Compile Include="Entities\IAttackable.cs" />
     <Compile Include="Entities\Props\IBuff.cs" />
     <Compile Include="Entities\IBuilding.cs" />
@@ -114,6 +118,7 @@
     <Compile Include="Evade\Evade.cs" />
     <Compile Include="Evade\EvadeService.cs" />
     <Compile Include="Evade\IEvade.cs" />
+    <Compile Include="EventData\PropertyChangeEventArgs.cs" />
     <Compile Include="EventData\_AfkEventArgs.cs" />
     <Compile Include="EventData\AfterAttackEventArgs.cs" />
     <Compile Include="EventData\AggroEventArgs.cs" />
@@ -246,9 +251,9 @@
     <Compile Include="SpellDatabase\Spell.cs" />
     <Compile Include="SpellDatabase\SpellLink.cs" />
     <Compile Include="TargetSelector\ITargetSelector.cs" />
-    <Compile Include="TargetSelector\TargetSelector.cs" />
+    <Compile Include="TargetSelector\Implementation\TargetSelectorImpl.cs" />
     <Compile Include="TargetSelector\TargetSelectorService.cs" />
-    <Compile Include="TargetSelector\Weight.cs" />
+    <Compile Include="TargetSelector\Implementation\Weight.cs" />
     <Compile Include="UserInput.cs" />
     <Compile Include="Utilities\Activator.cs" />
     <Compile Include="Utilities\AutoLvlUp.cs" />
@@ -259,6 +264,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Translations\HealthPrediction.json" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

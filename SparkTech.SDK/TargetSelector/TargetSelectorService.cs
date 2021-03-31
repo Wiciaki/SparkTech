@@ -24,14 +24,15 @@ namespace SparkTech.SDK.TargetSelector
 {
     using System.Collections.Generic;
 
-    using SparkTech.SDK.Entities;
-    using SparkTech.SDK.Modules;
+    using Entities;
+    using Modules;
+    using Implementation;
 
     public static class TargetSelectorService
     {
         #region Static Fields
 
-        public static readonly Picker<ITargetSelector> Picker = new Picker<ITargetSelector>(new TargetSelector());
+        public static readonly Picker<ITargetSelector> Picker = new Picker<ITargetSelector>(new TargetSelectorImpl());
 
         #endregion
 

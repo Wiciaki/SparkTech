@@ -10,6 +10,7 @@
     using SharpDX.Direct3D9;
 
     using SparkTech.SDK.Champion;
+    using SparkTech.SDK.DamageLibrary;
     using SparkTech.SDK.Evade;
     using SparkTech.SDK.GUI;
     using SparkTech.SDK.GUI.Menu;
@@ -75,9 +76,9 @@
                 },
                 new Menu("license")
                 {
-                    new MenuText("lifetime") { IsVisible = false },
-                    new MenuText("licensed") { IsVisible = false },
-                    new MenuText("unlicensed") { IsVisible = false }
+                    new MenuText("lifetime"),
+                    new MenuText("licensed"),
+                    new MenuText("unlicensed")
                 },
                 new Menu("about")
                 {
@@ -102,23 +103,24 @@
 
             SetupMenu(out FirstRun);
 
+            typeof(DamageLibraryService).Trigger();
+            typeof(TargetSelectorService).Trigger();
             typeof(HealthPredictionService).Trigger();
             typeof(MovementPredictionService).Trigger();
-            typeof(TargetSelectorService).Trigger();
             typeof(OrbwalkerService).Trigger();
             typeof(EvadeService).Trigger();
-            typeof(ChampionService).Trigger();
             typeof(UtilityService).Trigger();
+            typeof(ChampionService).Trigger();
 
             // SurgicalAuth = new Netlicensing(Machine.UserId, "d1213e7b-0817-4544-aa37-01817170c494");
             // var AuthTask = SurgicalAuth.GetAuth("SparkTech.SDK").ContinueWith(HandleAuth, TaskScheduler.Current);
 
             if (!Platform.HasUserInputAPI)
             {
+                Menu.SetOpen(true);
+
                 Menu.IsExpanded = true;
                 Menu.GetMenu("menu").IsExpanded = true;
-
-                Menu.SetOpen(true);
 
                 Notification.Send("This platform can't interact with the game!", "UserInputAPI not present", float.MaxValue);
             }
@@ -129,6 +131,11 @@
         internal static void SetAuth(AuthResult result)
         {
             var menu = Menu.GetMenu("license");
+
+            foreach (var item in menu)
+            {
+                item.IsVisible = false;
+            }
 
             if (result == null || !result.IsLicensed)
             {
@@ -213,22 +220,18 @@
             var menu = Menu.GetMenu("clock");
 
             var item = menu["mode"];
-
             item.BeforeValueChange += args => Clock.SetMode(args.NewValue<int>());
             Clock.SetMode(item.GetValue<int>());
 
             item = menu["background"];
-
             item.BeforeValueChange += args => Clock.SetBackground(args.NewValue<bool>());
             Clock.SetBackground(item.GetValue<bool>());
 
             item = menu["elements"];
-
             item.BeforeValueChange += args => Clock.SetElements(args.NewValue<int>());
             Clock.SetElements(item.GetValue<int>());
 
             item = menu["customColor"];
-
             item.BeforeValueChange += args =>
             {
                 if (args.ValueIs<bool>())
@@ -349,7 +352,7 @@
             var mainMenu = JObject.Parse(str);
             var mode = JObject.Parse(Resources.Mode);
 
-            foreach (var o in mainMenu["modes"].Skip(EnumCache<Language>.Values.Count).Take(6).Cast<JProperty>().Select(property => property.Value).OfType<JObject>())
+            foreach (var o in mainMenu["modes"].Skip(EnumCache<Language>.Values.Count).Take(6).Cast<JProperty>().Select(prop => prop.Value).OfType<JObject>())
             {
                 foreach (var pair in mode)
                 {

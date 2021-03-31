@@ -184,7 +184,15 @@ namespace SparkTech.SDK.Properties {
                 return ResourceManager.GetString("Module", resourceCulture);
             }
         }
-        
+
+        internal static string HealthPrediction
+        {
+            get
+            {
+                return ResourceManager.GetString("HealthPrediction", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to {
         ///  &quot;en&quot;: {

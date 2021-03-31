@@ -9,7 +9,6 @@
     using SDK;
     using SDK.API;
     using SDK.Entities;
-    using SDK.EventData;
 
     using Game = EnsoulSharp.Game;
 
@@ -19,28 +18,23 @@
         {
             Game.OnUpdate += args => this.Update(args);
             //Game.OnNotify += args => this.Notify(new NotifyEventArgs(null, (GameEvent)args.EventId));
-            // todo
         }
 
         public Matrix ProjectionMatrix => Drawing.Projection;
         public Matrix ViewMatrix => Drawing.View;
-        public SDK.GameState State => (SDK.GameState)(Game.State - 1);
+        public SDK.GameState State => (SDK.GameState)Game.State;
         public GameMap Map => (GameMap)Game.MapId;
         public float Time => Game.Time;
-        public float Latency => Game.Ping;
+        public float Ping => Game.Ping;
         public Vector3 Cursor => Game.CursorPos;
 
         public Action<EventArgs> Update { get; set; }
-        public Action<_EndEventArgs> End { get; set; }
-        public Action<_AfkEventArgs> Afk { get; set; }
-        public Action<NotifyEventArgs> Notify { get; set; }
-        public Action<_PingEventArgs> Ping { get; set; }
-        public Action<_InputEventArgs> Input { get; set; }
-        public Action<_ChatEventArgs> Chat { get; set; }
 
         public bool IsChatOpen() => MenuGUI.IsChatOpen;
 
         public bool IsShopOpen() => MenuGUI.IsShopOpen;
+
+        public bool IsScoreboardOpen() => MenuGUI.IsScoreboardOpen;
 
         public void SendChat(string text) => Game.Say(text, false);
 
@@ -57,16 +51,6 @@
         }
 
         public void ShowChat(string text) => Game.Print(text);
-
-        public void ShowPing(SDK.PingCategory category, IGameObject target, bool playSound)
-        {
-            // not available
-        }
-
-        public void ShowPing(SDK.PingCategory category, Vector2 target, bool playSound)
-        {
-            // not available
-        }
 
         public Vector3 ScreenToWorld(Vector2 pos) => Drawing.ScreenToWorld(pos);
 

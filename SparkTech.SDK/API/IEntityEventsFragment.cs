@@ -6,7 +6,7 @@
 
     public interface IEntityEventsFragment
     {
-        //Action<DamageEventArgs> Damage { get; set; }
+        Action<NotifyEventArgs> Notify { get; set; }
 
         Action<PlayAnimationEventArgs> PlayAnimation { get; set; }
 
@@ -22,28 +22,20 @@
 
         Action<AggroEventArgs> Aggro { get; set; }
 
-        //Action<SwapItemEventArgs> SwapItem { get; set; }
-
-        //Action<PlaceItemInSlotEventArgs> PlaceItemInSlot { get; set; }
-
-        //Action<RemoveItemEventArgs> RemoveItem { get; set; }
-
         Action<BuffUpdateEventArgs> BuffAdd { get; set; }
 
         Action<BuffUpdateEventArgs> BuffRemove { get; set; }
 
-        //Action<BuffUpdateEventArgs> BuffUpdateCount { get; set; }
-
         Action<LevelUpEventArgs> LevelUp { get; set; }
-
-        //Action<PauseAnimationEventArgs> PauseAnimation { get; set; }
-
-        //Action<TargetEventArgs> Target { get; set; }
 
         Action<CastSpellEventArgs> SpellbookCastSpell { get; set; }
         
         Action<StopCastEventArgs> SpellbookStopCast { get; set; }
         
         Action<UpdateChargedSpellEventArgs> SpellbookUpdateChargedSpell { get; set; }
+
+        Action<PropertyChangeEventArgs<int>> OnIntegerPropertyChange { get; set; }
+
+        Action<PropertyChangeEventArgs<float>> OnFloatPropertyChange { get; set; }
     }
 }

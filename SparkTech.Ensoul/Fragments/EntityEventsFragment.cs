@@ -13,6 +13,9 @@
     {
         public EntityEventsFragment()
         {
+            Game.OnNotify += args => {
+                this.Notify(new NotifyEventArgs(args.NetworkId, (SDK.GameEventId)args.EventId));
+                };
             AIBaseClient.OnPlayAnimation += (o, args) =>
             {
                 var arg = new PlayAnimationEventArgs(o.NetworkId, args.Animation);
@@ -30,15 +33,9 @@
             };
             AttackableUnit.OnTeleport += (o, args) => this.Teleport(new TeleportEventArgs(o.NetworkId, args.RecallType, args.RecallName));
             AIBaseClient.OnAggro += (o, args) => this.Aggro(new AggroEventArgs(o.NetworkId, args.NetworkId));
-            //AIBaseClient.OnSwapItem += args => this.SwapItem();
-            //AIBaseClient.OnPlaceItem += args => this.PlaceItemInSlot();
-            //AIBaseClient.OnRemoveItem += args => this.RemoveItem();
             AIBaseClient.OnBuffAdd += (o, args) => this.BuffAdd(new BuffUpdateEventArgs(o.NetworkId, EntityConverter.Convert(args.Buff)));
             AIBaseClient.OnBuffRemove += (o, args) => this.BuffRemove(new BuffUpdateEventArgs(o.NetworkId, EntityConverter.Convert(args.Buff)));
-            //EnsoulSharp.AIBaseClient.O += args => this.BuffUpdateCount();
             AIHeroClient.OnLevelUp += (o, args) => this.LevelUp(new LevelUpEventArgs(o.NetworkId, args.Level));
-            //AIBaseClient.OnAggro += args => this.PauseAnimation();
-            //AIBaseClient.OnAggro += args => this.Target();
             Spellbook.OnCastSpell += (o, args) =>
             {
                 var arg = new CastSpellEventArgs(EntityConverter.Convert(o), args.StartPosition, args.EndPosition, EntityConverter.T(args.Target?.NetworkId), (SDK.Entities.SpellSlot)args.Slot);
@@ -52,9 +49,11 @@
                 this.SpellbookUpdateChargedSpell(arg);
                 if (arg.IsBlocked) { args.Process = false; };
             };
-            //EnsoulSharp.AIBaseClient.On += args => this.EnterLocalVisiblityClient();
+            GameObject.OnIntegerPropertyChange += (o, args) => this.OnIntegerPropertyChange(new PropertyChangeEventArgs<int>(o.NetworkId, args.Property, args.OldValue, args.NewValue));
+            GameObject.OnFloatPropertyChange += (o, args) => this.OnFloatPropertyChange(new PropertyChangeEventArgs<float>(o.NetworkId, args.Property, args.OldValue, args.NewValue));
         }
 
+        public Action<NotifyEventArgs> Notify { get; set; }
         public Action<PlayAnimationEventArgs> PlayAnimation { get; set; }
         public Action<ProcessSpellCastEventArgs> ProcessSpellCast { get; set; }
         public Action<ProcessSpellCastEventArgs> DoCast { get; set; }
@@ -68,5 +67,7 @@
         public Action<CastSpellEventArgs> SpellbookCastSpell { get; set; }
         public Action<StopCastEventArgs> SpellbookStopCast { get; set; }
         public Action<UpdateChargedSpellEventArgs> SpellbookUpdateChargedSpell { get; set; }
+        public Action<PropertyChangeEventArgs<int>> OnIntegerPropertyChange { get; set; }
+        public Action<PropertyChangeEventArgs<float>> OnFloatPropertyChange { get; set; }
     }
 }

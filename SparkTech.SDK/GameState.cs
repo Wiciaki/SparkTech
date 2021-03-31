@@ -2,14 +2,12 @@
 {
     public enum GameState
     {
+        Loading,
         Connecting,
-
         Running,
-
         Paused,
-
         Finished,
-
-        Exiting
+        Exiting,
+        Exited
     }
 }

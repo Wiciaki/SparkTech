@@ -1,0 +1,37 @@
+﻿namespace SparkTech.SDK.Entities
+{
+    public enum GameObjectType
+    {
+        NeutralMinionCampClient,
+        AIHeroClient,
+        AIMarker,
+        AIMinionClient,
+        ObjectAttacher,
+        LevelPropAIClient,
+        AITurretCommon,
+        AITurretClient,
+        EffectEmitter,
+        GameObject,
+        Pawn,
+        MissileClient,
+        DrawFX,
+        UnrevealedTarget,
+        TFTSlotObject,
+        Barracks,
+        BarracksDampenerClient,
+        Obj_Levelsizer,
+        Obj_NavPoint,
+        Obj_SpawnPoint,
+        AnimatedBuildingClient,
+        BuildingClient,
+        GrassObject,
+        HQClient,
+        Obj_InfoPoint,
+        MapPropClient,
+        LevelPropGameObjectClient,
+        LevelPropSpawnerPoint,
+        ShopClient,
+        Turret,
+        Unknown,
+    }
+}

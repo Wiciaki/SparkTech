@@ -3,9 +3,11 @@
     using SDK;
     using SDK.Licensing;
 
+    using SparkTech.SDK.DamageLibrary;
+
     class Program
     {
-        static void Main(string[] args)
+        static void Main(string[] _)
         {
             var platform = new Platform("EnsoulSharp")
             {
@@ -18,6 +20,9 @@
             };
 
             platform.Load();
+
+            DamageLibraryService.Picker.Add(new Ports.EnsoulDamageLibrary());
+            DamageLibraryService.Picker.OnModuleSelected += args => args.Block();
         }
     }
 }

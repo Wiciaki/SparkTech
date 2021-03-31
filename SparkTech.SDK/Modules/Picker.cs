@@ -25,7 +25,7 @@
 
         internal TModule Current { get; private set; }
 
-        internal void Add(TModule module)
+        public void Add(TModule module)
         {
             this.modules.Add(module);
 
@@ -64,6 +64,8 @@
 
             this.Current = module;
             this.Current.Start();
+
+            if (typeof(TModule).Name == "IDamageLibrary") picker.SetValue(1); // temp fix
         }
 
         private static JObject GetTranslations(string input)

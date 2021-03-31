@@ -46,6 +46,10 @@
     <Reference Include="EnsoulSharp.SDK">
       <HintPath>C:\Users\Penguin\Desktop\EnsoulSharp\Reference\EnsoulSharp.SDK.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>C:\Users\Penguin\Desktop\EnsoulSharp\Reference\Newtonsoft.Json.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
     <Reference Include="SharpDX">
       <HintPath>C:\Users\Penguin\Desktop\EnsoulSharp\Reference\SharpDX.dll</HintPath>
     </Reference>
@@ -80,6 +84,7 @@
     <Compile Include="Fragments\ObjectManagerFragment.cs" />
     <Compile Include="Fragments\PacketFragment.cs" />
     <Compile Include="Fragments\PlayerFragment.cs" />
+    <Compile Include="Ports\EnsoulDamageLibrary.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RenderAPI.cs" />
@@ -87,6 +92,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SparkTech.SDK\SparkTech.SDK.csproj">

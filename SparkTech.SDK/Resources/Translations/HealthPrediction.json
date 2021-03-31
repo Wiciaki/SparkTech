@@ -1,0 +1,17 @@
+{
+  "en": {
+    "text": "Ported L# [Spark]"
+  },
+  "zh": {
+    "text": "??"
+  },
+  "windup": {
+    "en": {
+      "text": "Extra windup time",
+      "helpText": "Windup time is broscience, i will find a way to\nget rid of this in the future"
+    },
+    "zh": {
+      "text": "??"
+    }
+  }
+}

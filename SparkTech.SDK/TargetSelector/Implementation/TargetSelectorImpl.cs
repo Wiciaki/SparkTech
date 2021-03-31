@@ -1,4 +1,4 @@
-﻿namespace SparkTech.SDK.TargetSelector
+﻿namespace SparkTech.SDK.TargetSelector.Implementation
 {
     using System;
     using System.Collections.Generic;
@@ -10,13 +10,13 @@
     using SparkTech.SDK.GUI.Menu;
     using SparkTech.SDK.Properties;
 
-    public class TargetSelector : ITargetSelector
+    public class TargetSelectorImpl : ITargetSelector
     {
         public Menu Menu { get; }
 
         protected readonly List<Weight> weights;
 
-        public TargetSelector()
+        public TargetSelectorImpl()
         {
             this.Menu = new Menu("TargetSelector");
 
@@ -42,7 +42,7 @@
                 }
             }
 
-            //Console.WriteLine("weights: " + string.Join(", ", dictionary.Select(p => p.Value)));
+            //Console.WriteLine("Weights: " + string.Join(", ", dictionary.Select(p => p.Value)));
 
             return dictionary.OrderByDescending(pair => pair.Value).First().Key;
         }
@@ -53,13 +53,9 @@
         }
 
         public void Start()
-        {
-
-        }
+        { }
 
         public void Pause()
-        {
-
-        }
+        { }
     }
 }

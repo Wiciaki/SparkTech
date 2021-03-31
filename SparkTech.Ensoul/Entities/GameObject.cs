@@ -25,6 +25,12 @@
 
         public Vector3 Position => this.Entity.Position;
 
+        public Vector3 PreviousPosition => this.Entity.PreviousPosition;
+
         public bool IsValid => this.Entity.IsValid;
+
+        public GameObjectType Type => (GameObjectType)this.Entity.Type;
+
+        public BoundingBox BoundingBox => this.Entity.BBox;
     }
 }

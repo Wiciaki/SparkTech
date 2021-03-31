@@ -27,12 +27,23 @@ namespace SparkTech.SDK.Orbwalker
     using SparkTech.SDK.EventData;
     using SparkTech.SDK.Modules;
 
-    public static class OrbwalkerService
+    public class OrbwalkerService
     {
         public static readonly Picker<IOrbwalker> Picker = new Picker<IOrbwalker>(new Orbwalker());
 
         public static event Action<BeforeAttackEventArgs> BeforeAttack;
 
+        protected bool RaiseBeforeAttack(BeforeAttackEventArgs args)
+        {
+            BeforeAttack.SafeInvoke(args);
+            return !args.IsBlocked;
+        }
+
         public static event Action<AfterAttackEventArgs> AfterAttack;
+
+        protected void RaiseAfterAttack(AfterAttackEventArgs args)
+        {
+            AfterAttack.SafeInvoke(args);
+        }
     }
 }

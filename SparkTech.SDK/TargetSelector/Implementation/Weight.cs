@@ -1,4 +1,4 @@
-﻿namespace SparkTech.SDK.TargetSelector
+﻿namespace SparkTech.SDK.TargetSelector.Implementation
 {
     using System;
     using System.Collections.Generic;

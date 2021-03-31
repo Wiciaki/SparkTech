@@ -9,9 +9,12 @@
     using SparkTech.SDK.GUI.Menu;
     using SparkTech.SDK.Properties;
 
-    public class Orbwalker : IOrbwalker
+    public class Orbwalker : OrbwalkerService, IOrbwalker
     {
-        public Menu Menu { get; } = new Menu("surgical");
+        public Menu Menu { get; } = new Menu("surgical")
+        {
+            
+        };
 
         public JObject GetTranslations()
         {
@@ -28,13 +31,7 @@
 
         }
 
-        public float LastAutoAttackStartTime { get; }
 
-        public bool IsAttacking { get; }
-
-        public Action<BeforeAttackEventArgs> BeforeAttack { get; set; }
-
-        public Action<AfterAttackEventArgs> AfterAttack { get; set; }
     }
 
     /*

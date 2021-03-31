@@ -9,58 +9,146 @@
     using SparkTech.SDK.Entities;
     using SparkTech.SDK.EventData;
     using SparkTech.SDK.GUI.Menu;
-    using SparkTech.SDK.Modules;
+    using SparkTech.SDK.Properties;
+    using Rendering;
+    using SharpDX;
+    using SparkTech.SDK.DamageLibrary;
 
     public class PortedPrediction : IHealthPredition
     {
         public PortedPrediction()
         {
-            //if (!Platform.HasCoreAPI)
+            if (!Platform.HasCoreAPI)
             {
                 return;
             }
 
-            EntityEvents.OnProcessSpellCast += ObjAiBaseOnOnProcessSpellCast;
-            Game.OnUpdate += Game_OnGameUpdate;
-            EntityEvents.OnSpellbookStopCast += SpellbookOnStopCast;
-            ObjectManager.OnDelete += MissileClient_OnDelete;
-            EntityEvents.OnDoCast += Obj_AI_Base_OnDoCast;
+            EntityEvents.OnProcessSpellCast += OnObjAiBaseProcessSpellCast;
+            Game.OnUpdate += OnGameUpdate;
+            EntityEvents.OnSpellbookStopCast += OnSpellbookStopCast;
+            ObjectManager.OnDelete += OnGameObjectDelete;
+            EntityEvents.OnDoCast += OnObjAiBaseDoCast;
+            Render.OnDraw += this.Render_OnDraw;
         }
 
-        Menu IModule.Menu { get; } = new Menu("surgical");
-
-        JObject IModule.GetTranslations()
+        private void Render_OnDraw()
         {
-            return null;
+            foreach (var unit in ActiveAttacks.Select(p => p.Value.Target).Distinct())
+            {
+                var damage = this.Predict(unit, 2f);
+
+                Text.Draw(damage.ToString(), Color.Magenta, (Point)Game.WorldToScreen(unit.Position));
+            }
         }
 
-        void IResumable.Start()
+        public Menu Menu { get; } = new Menu("spark") { new MenuInt("windup", -20, 120, 0) };
+
+        private float Windup => this.Menu["windup"].GetValue<int>();
+
+        public JObject GetTranslations()
+        {
+            return JObject.Parse(Resources.HealthPrediction);
+        }
+
+        public void Start()
         {
 
         }
 
-        void IResumable.Pause()
+        public void Pause()
         {
 
         }
 
+        private static readonly Dictionary<int, PredictedDamage> ActiveAttacks = new Dictionary<int, PredictedDamage>();
+
+        private static int TickCount => (int)(Game.Time * 1000f);
+
+        /// <summary>
+        ///     Last Tick Update
+        /// </summary>
+        private static int lastTick;
+
+        #region Public Methods and Operators
+
+        /// <summary>
+        ///     Return the Attacking turret.
+        /// </summary>
+        /// <param name="minion">
+        ///     The minion.
+        /// </param>
+        /// <returns>
+        ///     The <see cref="bool" />
+        /// </returns>
+        public static IUnit GetAggroTurret(IUnit minion)
+        {
+            var activeTurret =
+                ActiveAttacks.Values.FirstOrDefault(m => m.Source is IUnit && m.Target.Compare(minion));
+            return activeTurret?.Source;
+        }
+
+        /// <summary>
+        ///     Determines whether the specified minion has turret aggro.
+        /// </summary>
+        /// <param name="minion">The minion</param>
+        /// <returns>
+        ///     The <see cref="bool" />
+        /// </returns>
+        public static bool HasTurretAggro(IMinion minion)
+        {
+            return ActiveAttacks.Values.Any(m => m.Source is IMinion && m.Target.Compare(minion));
+        }
+
+        /// <summary>
+        ///     Return the starttick of the attacking turret.
+        /// </summary>
+        /// <param name="minion">
+        ///     The minion.
+        /// </param>
+        /// <returns>
+        ///     The <see cref="bool" />
+        /// </returns>
+        public static int TurretAggroStartTick(IMinion minion)
+        {
+            var activeTurret =
+                ActiveAttacks.Values.FirstOrDefault(m => m.Source is ITurret && m.Target.Compare(minion));
+            return activeTurret?.StartTick ?? 0;
+        }
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        ///     Calculates the default prediction of the unit.
+        /// </summary>
+        /// <param name="unit">
+        ///     The unit
+        /// </param>
+        /// <param name="time">
+        ///     The time
+        /// </param>
+        /// <param name="delay">
+        ///     The delay
+        /// </param>
+        /// <returns>
+        ///     The <see cref="float" />
+        /// </returns>
         public float Predict(IUnit unit, float time)
         {
             var predictedDamage = 0f;
-
-            foreach (var attack in ActiveAttacks.Values)
+            foreach (var attack in ActiveAttacks.Values.Where(i => i.Target.Compare(unit) && !i.Processed))
             {
                 var attackDamage = 0f;
-
-                //if (!attack.Processed && attack.Source.IsValidTarget(float.MaxValue, false)
-                //                      && attack.Target.IsValidTarget(float.MaxValue, false) && attack.Target.Id == unit.Id)
+                if (attack.Source.IsValidTarget(false) && attack.Target.IsValidTarget())
                 {
-                    var landTime = attack.StartTime + attack.Delay
-                                                    + Math.Max(0, unit.Distance(attack.Source) - attack.Source.BoundingRadius)
-                                                    / attack.ProjectileSpeed /* + delay */;
-
-                    if ( //Utils.GameTimeTickCount < landTime - delay &&
-                        landTime < Game.Time + time)
+                    var landTime = attack.StartTick + attack.Delay
+                                   + 1000
+                                   * (attack.Source.CombatType == GameObjectCombatType.Melee
+                                          ? 0
+                                          : Math.Max(0, unit.Distance(attack.Source) - attack.Source.BoundingRadius)
+                                            / attack.ProjectileSpeed) + this.Windup;
+                    if (landTime < TickCount + time*1000)
                     {
                         attackDamage = attack.Damage;
                     }
@@ -72,102 +160,147 @@
             return unit.Health - predictedDamage;
         }
 
-        #region Static Fields
-
         /// <summary>
-        ///     The active attacks
+        ///     GameObject on delete subscribed event function.
         /// </summary>
-        private static readonly Dictionary<int, PredictedDamage> ActiveAttacks = new Dictionary<int, PredictedDamage>();
-
-        #endregion
-
-        #region Methods
-
-        /// <summary>
-        ///     Fired when the game is updated.
-        /// </summary>
-        /// <param name="args">The <see cref="EventArgs" /> instance containing the event data.</param>
-        private static void Game_OnGameUpdate(EventArgs args)
+        /// <param name="sender">
+        ///     <see cref="GameObject" /> sender
+        /// </param>
+        /// <param name="args">
+        ///     <see cref="System.EventArgs" /> event data
+        /// </param>
+        private static void OnGameObjectDelete(IGameObject sender)
         {
-            ActiveAttacks.Where(pair => pair.Value.StartTime < Game.Time).ToList().ForEach(pair => ActiveAttacks.Remove(pair.Key));
-        }
-
-        /// <summary>
-        ///     Fired when a <see cref="MissileClient" /> is deleted from the game.
-        /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="args">The <see cref="EventArgs" /> instance containing the event data.</param>
-        static void MissileClient_OnDelete(IGameObject sender)
-        {
-            if (sender is IMissile missile && missile.Caster != null)
+            if (!sender.IsValid)
             {
-                var id = missile.Caster.Id;
+                return;
+            }
 
-                if (ActiveAttacks.Any(attack => attack.Key == id))
+            var aiBase = sender as IUnit;
+            if (aiBase != null)
+            {
+                var objNetworkId = aiBase.Id;
+                if (ActiveAttacks.ContainsKey(objNetworkId))
                 {
-                    ActiveAttacks[id].Processed = true;
+                    ActiveAttacks.Remove(objNetworkId);
+                    return;
+                }
+                foreach (var activeAttack in ActiveAttacks.Values.Where(i => i.Target.Compare(aiBase)))
+                {
+                    ActiveAttacks.Remove(activeAttack.Source.Id);
+                }
+                return;
+            }
+
+            var missile = sender as IMissile;
+            if (missile?.Caster != null)
+            {
+                var casterNetworkId = missile.Caster.Id;
+                if (ActiveAttacks.ContainsKey(casterNetworkId))
+                {
+                    ActiveAttacks[casterNetworkId].Processed = true;
                 }
             }
         }
 
         /// <summary>
-        ///     Fired when a unit does an auto attack.
+        ///     Game Tick which is called by the game update event.
         /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="args">The <see cref="GameObjectProcessSpellCastEventArgs" /> instance containing the event data.</param>
-        private static void Obj_AI_Base_OnDoCast(ProcessSpellCastEventArgs args)
+        /// <param name="args">
+        ///     <see cref="System.EventArgs" /> event data
+        /// </param>
+        private static void OnGameUpdate(EventArgs args)
+        {
+            if (TickCount - lastTick <= 1000)
+            {
+                return;
+            }
+
+            ActiveAttacks.ToList()
+                .Where(pair => pair.Value.StartTick < TickCount - 3000)
+                .ToList()
+                .ForEach(pair => ActiveAttacks.Remove(pair.Key));
+
+            lastTick = TickCount;
+        }
+
+        /// <summary>
+        ///     Obj_AI_Base on DoCast subscribed event function.
+        /// </summary>
+        /// <param name="sender">
+        ///     <see cref="Obj_AI_Base" /> sender
+        /// </param>
+        /// <param name="args">
+        ///     <see cref="GameObjectProcessSpellCastEventArgs" /> event data
+        /// </param>
+        private static void OnObjAiBaseDoCast(ProcessSpellCastEventArgs args)
         {
             var sender = args.Source;
 
-            if (ActiveAttacks.ContainsKey(sender.Id) && sender.CombatType == GameObjectCombatType.Melee)
+            if (sender.IsValid && sender.CombatType == GameObjectCombatType.Melee)
             {
-                ActiveAttacks[sender.Id].Processed = true;
+                var casterNetworkId = sender.Id;
+                if (ActiveAttacks.ContainsKey(casterNetworkId))
+                {
+                    ActiveAttacks[casterNetworkId].Processed = true;
+                }
             }
         }
 
         /// <summary>
-        ///     Fired when the game processes a spell cast.
+        ///     Process Spell Cast subscribed event function.
         /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="args">The <see cref="GameObjectProcessSpellCastEventArgs" /> instance containing the event data.</param>
-        private static void ObjAiBaseOnOnProcessSpellCast(ProcessSpellCastEventArgs args)
+        /// <param name="sender"><see cref="Obj_AI_Base" /> sender</param>
+        /// <param name="args">Processed Spell Cast Data</param>
+        private static void OnObjAiBaseProcessSpellCast(ProcessSpellCastEventArgs args)
         {
             var sender = args.Source;
+            if (!sender.IsValidTarget(false) ||/* !AutoAttack.IsAutoAttack(args.SData.Name) ||*/ !sender.IsAlly())
+            {
+                return;
+            }
 
-            //if (!sender.IsValidTarget(3000, false) || sender.Team != ObjectManager.Player.Team || sender is IHero
-            //    || !Orbwalking.IsAutoAttack(args.Spell.Name) || !(args.Target is IUnit))
-            //{
-            //    return;
-            //}
+            if (!(sender is IMinion) && !(sender is ITurret))
+            {
+                return;
+            }
 
-            //var target = (IUnit)args.Target;
-            //ActiveAttacks.Remove(sender.Id);
+            var target = args.Target as IMinion;
 
-            //var attackData = new PredictedDamage(
-            //    sender,
-            //    target,
-            //    Game.Time,
-            //    sender.AttackCastDelay * 1000,
-            //    sender.AttackDelay * 1000 - (sender is ITurret ? 70 : 0),
-            //    sender.CombatType == GameObjectCombatType.Melee ? int.MaxValue : (int)args.Spell.MissileSpeed,
-            //    (float)sender.GetAutoAttackDamage(target, true));
+            if (target == null)
+            {
+                return;
+            }
 
-            //ActiveAttacks.Add(sender.Id, attackData);
+            ActiveAttacks.Remove(sender.Id);
+            ActiveAttacks.Add(
+                sender.Id,
+                new PredictedDamage(
+                    sender,
+                    target,
+                    (int)((Game.Time*1000) - (Game.Ping / 2)),
+                    sender.AttackCastDelay * 1000,
+                    (sender.AttackDelay * 1000) - (sender is ITurret ? 70 : 0),
+                    sender.CombatType == GameObjectCombatType.Melee ? int.MaxValue : (int)args.SpellData.MissileSpeed,
+                    sender.GetAutoAttackDamage(target)));
         }
 
         /// <summary>
-        ///     Fired when the spellbooks stops a cast.
+        ///     Spell-book on casting stop subscribed event function.
         /// </summary>
-        /// <param name="args">The <see cref="SpellbookStopCastEventArgs" /> instance containing the event data.</param>
-        private static void SpellbookOnStopCast(StopCastEventArgs args)
+        /// <param name="sender">
+        ///     <see cref="Spellbook" /> sender
+        /// </param>
+        /// <param name="args">Spell-book Stop Cast Data</param>
+        private static void OnSpellbookStopCast(StopCastEventArgs args)
         {
-            var owner = args.Source.Owner;
-
-            if (owner.IsValid /*&& args.StopAnimation*/)
+            var sender = args.Source;
+            if (sender.Owner.IsValid && !args.KeepAnimationPlaying && args.DestroyMissile)
             {
-                if (ActiveAttacks.ContainsKey(owner.Id))
+                var casterNetworkId = sender.Owner.Id;
+                if (ActiveAttacks.ContainsKey(casterNetworkId))
                 {
-                    ActiveAttacks.Remove(owner.Id);
+                    ActiveAttacks.Remove(casterNetworkId);
                 }
             }
         }
@@ -175,16 +308,46 @@
         #endregion
 
         /// <summary>
-        ///     Represetns predicted damage.
+        ///     Predicted Damage Container
         /// </summary>
         private class PredictedDamage
         {
             #region Fields
 
             /// <summary>
-            ///     The animation time
+            ///     Animation Time
             /// </summary>
             public readonly float AnimationTime;
+
+            /// <summary>
+            ///     The Damage
+            /// </summary>
+            public readonly float Damage;
+
+            /// <summary>
+            ///     Delay before damage impact
+            /// </summary>
+            public readonly float Delay;
+
+            /// <summary>
+            ///     Projectile Speed
+            /// </summary>
+            public readonly int ProjectileSpeed;
+
+            /// <summary>
+            ///     The Source
+            /// </summary>
+            public readonly IUnit Source;
+
+            /// <summary>
+            ///     Start Tick
+            /// </summary>
+            public readonly int StartTick;
+
+            /// <summary>
+            ///     The Target
+            /// </summary>
+            public readonly IUnit Target;
 
             #endregion
 
@@ -193,17 +356,31 @@
             /// <summary>
             ///     Initializes a new instance of the <see cref="PredictedDamage" /> class.
             /// </summary>
-            /// <param name="source">The source.</param>
-            /// <param name="target">The target.</param>
-            /// <param name="startTime">The start tick.</param>
-            /// <param name="delay">The delay.</param>
-            /// <param name="animationTime">The animation time.</param>
-            /// <param name="projectileSpeed">The projectile speed.</param>
-            /// <param name="damage">The damage.</param>
+            /// <param name="source">
+            ///     Damage Source
+            /// </param>
+            /// <param name="target">
+            ///     Damage Target
+            /// </param>
+            /// <param name="startTick">
+            ///     Starting Game Tick
+            /// </param>
+            /// <param name="delay">
+            ///     Delay of damage impact
+            /// </param>
+            /// <param name="animationTime">
+            ///     Animation time
+            /// </param>
+            /// <param name="projectileSpeed">
+            ///     Projectile Speed
+            /// </param>
+            /// <param name="damage">
+            ///     The Damage
+            /// </param>
             public PredictedDamage(
                 IUnit source,
                 IUnit target,
-                float startTime,
+                int startTick,
                 float delay,
                 float animationTime,
                 int projectileSpeed,
@@ -211,7 +388,7 @@
             {
                 this.Source = source;
                 this.Target = target;
-                this.StartTime = startTime;
+                this.StartTick = startTick;
                 this.Delay = delay;
                 this.ProjectileSpeed = projectileSpeed;
                 this.Damage = damage;
@@ -222,61 +399,7 @@
 
             #region Public Properties
 
-            /// <summary>
-            ///     Gets or sets the damage.
-            /// </summary>
-            /// <value>
-            ///     The damage.
-            /// </value>
-            public float Damage { get; private set; }
-
-            /// <summary>
-            ///     Gets or sets the delay.
-            /// </summary>
-            /// <value>
-            ///     The delay.
-            /// </value>
-            public float Delay { get; private set; }
-
-            /// <summary>
-            ///     Gets or sets a value indicating whether this <see cref="PredictedDamage" /> is processed.
-            /// </summary>
-            /// <value>
-            ///     <c>true</c> if processed; otherwise, <c>false</c>.
-            /// </value>
-            public bool Processed { get; internal set; }
-
-            /// <summary>
-            ///     Gets or sets the projectile speed.
-            /// </summary>
-            /// <value>
-            ///     The projectile speed.
-            /// </value>
-            public int ProjectileSpeed { get; private set; }
-
-            /// <summary>
-            ///     Gets or sets the source.
-            /// </summary>
-            /// <value>
-            ///     The source.
-            /// </value>
-            public IUnit Source { get; private set; }
-
-            /// <summary>
-            ///     Gets or sets the start tick.
-            /// </summary>
-            /// <value>
-            ///     The start tick.
-            /// </value>
-            public float StartTime { get; internal set; }
-
-            /// <summary>
-            ///     Gets or sets the target.
-            /// </summary>
-            /// <value>
-            ///     The target.
-            /// </value>
-            public IUnit Target { get; private set; }
+            public bool Processed { get; set; }
 
             #endregion
         }
