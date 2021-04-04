@@ -98,7 +98,7 @@
             AddModulesTo(HealthPredictionService.Picker);
             AddModulesTo(MovementPredictionService.Picker);
             AddModulesTo(EvadeService.Picker);
-            AddModulesTo(OrbwalkerService.Picker);
+            AddModulesTo(Orbwalker.Picker);
             AddModulesTo(ChampionService.Picker);
 
             void AddModulesTo<T>(Picker<T> picker) where T : class, IModule

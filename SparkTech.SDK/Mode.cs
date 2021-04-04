@@ -9,6 +9,8 @@
     {
         public static Mode Current => Modes.Find(mode => mode.IsActive);
 
+        public static bool NoneMode() => Current.DisplayName == "None";
+
         public virtual string DisplayName => this.menu.Text;
 
         protected virtual bool IsActive => this.GetConfig("key");
@@ -25,11 +27,11 @@
 
         public bool AttackWards => this.GetSubConfig("objects", "wards");
 
-        public bool AttackClones => this.GetSubConfig("objects","clones");
+        public bool AttackClones => this.GetSubConfig("objects", "clones");
 
         public bool AttackPets => this.GetSubConfig("objects", "pets");
 
-        public bool AttackBarrel => this.GetSubConfig("objects","barrel");
+        public bool AttackBarrel => this.GetSubConfig("objects", "barrel");
 
         private static readonly List<Mode> Modes = new List<Mode>();
 
@@ -85,19 +87,19 @@
         internal static void Initialize(Menu menu)
         {
             var dictionary = new Dictionary<string, ModeSettings>
-                       {
-                           ["combo"] = new ModeSettings(Key.Space) { ChampionAuto = true, ChampionSpells = 2 },
-                           ["laneclear"] = new ModeSettings(Key.V) { ChampionAuto = true, Minions = 2, Pets = true, Wards = true },
-                           ["harass"] = new ModeSettings(Key.C) { ChampionAuto = true, ChampionSpells = 1, Minions = 1, Wards = true },
-                           ["lasthit"] = new ModeSettings(Key.X) { Minions = 1, Wards = true },
-                           ["custom"] = new ModeSettings(Key.Z),
-                           ["flee"] = new ModeSettings(Key.A) { Flee = true, Explosives = true }
-                       };
+            {
+                ["combo"] = new ModeSettings(Key.Space) { ChampionAuto = true, ChampionSpells = 2 },
+                ["laneclear"] = new ModeSettings(Key.V) { ChampionAuto = true, Minions = 2, Pets = true, Wards = true },
+                ["harass"] = new ModeSettings(Key.C) { ChampionAuto = true, ChampionSpells = 1, Minions = 1, Wards = true },
+                ["lasthit"] = new ModeSettings(Key.X) { Minions = 1, Wards = true },
+                ["custom"] = new ModeSettings(Key.Z),
+                ["flee"] = new ModeSettings(Key.A) { Flee = true, Explosives = true }
+            };
 
             Modes.AddRange(dictionary.Select(pair => new Mode(pair.Key, pair.Value)));
             Modes.ForEach(mode => menu.Add(mode.menu));
 
-            Modes.Add(new NoneMode());
+            Modes.Add(new None());
         }
 
         private class ModeSettings
@@ -114,9 +116,9 @@
             }
         }
 
-        private class NoneMode : Mode
+        private class None : Mode
         {
-            public override string DisplayName => SdkSetup.GetString("none");
+            public override string DisplayName { get; } = "None";
 
             protected override bool IsActive { get; } = true;
 

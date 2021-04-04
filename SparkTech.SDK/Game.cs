@@ -28,7 +28,7 @@
 
         public static float Time => Fragment.Time;
 
-        public static float Ping => Fragment.Ping;
+        public static int Ping => Fragment.Ping;
 
         public static Matrix ProjectionMatrix => Fragment.ProjectionMatrix;
 
@@ -36,12 +36,12 @@
 
         public static void SendChat(string text)
         { 
-            Fragment.SendChat(text);
+            Fragment.Say(text);
         }
 
         public static void ShowChat(string text)
         {
-            Fragment.ShowChat(text);
+            Fragment.Print(text);
         }
 
         public static bool IsChatOpen()

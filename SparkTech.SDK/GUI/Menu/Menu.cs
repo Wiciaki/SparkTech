@@ -36,28 +36,23 @@
 
         #region Accessors
 
-        [Pure]
         public IEnumerable<TMenuItem> GetItems<TMenuItem>() where TMenuItem : MenuItem
         {
             return this.OfType<TMenuItem>();
         }
 
-        [Pure]
         public MenuItem this[string id] => this.items.Find(item => item.Id == id);
 
-        [Pure]
         public TMenuItem Get<TMenuItem>(string id) where TMenuItem : MenuItem
         {
             return (TMenuItem)this[id];
         }
 
-        [Pure]
         public Menu GetMenu(string id)
         {
             return this.Get<Menu>(id);
         }
 
-        [Pure]
         public IEnumerable<MenuItem> GetDescendants()
         {
             return this.Concat(this.GetItems<Menu>().SelectMany(menu => menu.GetDescendants()));
@@ -245,7 +240,7 @@
 
         protected internal override void SetToken(JToken token)
         {
-            if (!this.IsSaving || this.settings != null)
+            if (this.settings != null)
             {
                 return;
             }
@@ -391,12 +386,6 @@
         private static void WndProcGroup<T>(List<T> roots, Point point, WndProcEventArgs args) where T : MenuItem
         {
             roots = roots.FindAll(item => item.IsVisible);
-
-            if (roots.Count == 0)
-            {
-                return;
-            }
-
             var width = roots.Max(item => item.Size.Width);
 
             roots.ForEach(item =>
@@ -418,14 +407,8 @@
         private static void EndSceneGroup<T>(List<T> roots, Point point) where T : MenuItem
         {
             roots = roots.FindAll(item => item.IsVisible);
-
-            if (roots.Count == 0)
-            {
-                return;
-            }
-
-            var p = point;
             var width = roots.Max(item => item.Size.Width);
+            var p = point;
 
             roots.ForEach(item =>
             {

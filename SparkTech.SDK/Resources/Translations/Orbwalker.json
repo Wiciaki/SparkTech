@@ -1,5 +1,80 @@
 {
   "en": {
-    "text":  "Surgical" 
-  }
+    "text":  "SparkWalker" 
+  },
+  "zh": {
+	"text": "??"
+  },
+  "drawings": {
+	"en": {
+		"text": "Drawings"
+	},
+	"zh": {
+		"text": "??"
+	},
+	"playerRange": {
+		"en": {
+			"text": "Show your AutoAttack range"
+		},
+		"zh": {
+			"text": "??"
+		}
+	},
+	"enemy": {
+		"en": {
+			"text": "Show enemies' AA ranges"
+		},
+		"zh": {
+			"text": "??"
+		},
+		"alone": {
+			"en": {
+				"text": "No enemy heroes detected"
+			},
+			"zh": {
+				"text": "??"
+			}
+	}
+	},
+	"minions": {
+		"en": {
+			"text": "Show AA damage on minions' HP bars"
+		},
+		"zh": {
+			"text": "??"
+		}
+	},
+	"playerHold": {
+		"en": {
+			"text": "Show hold range"
+		},
+		"zh": {
+			"text": "??"
+		}
+	},
+	"targetMinion": {
+		"en": {
+			"text": "Show targeted minion while farming"
+		},
+		"zh": {
+			"text": "??"
+		}
+	}
+  },
+  "underTurretFarming": {
+	    "en": {
+			"text": "Try to farm under turret [BETA]"
+	    },
+	    "zh": {
+		    "text": "??"
+	    }
+	},
+	"meleeMagnet": {
+		"en": {
+			"text": "Magnet to enemies (melee only)"
+		},
+		"zh": {
+			"text": "??"
+		}
+	}
 }

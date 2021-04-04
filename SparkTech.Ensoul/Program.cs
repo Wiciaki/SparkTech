@@ -1,13 +1,17 @@
 ﻿namespace SparkTech.Ensoul
 {
+    using System.Linq;
+
     using SDK;
     using SDK.Licensing;
+    using SDK.DamageLibrary;
+    using SDK.Orbwalker;
 
-    using SparkTech.SDK.DamageLibrary;
+    using Ports;
 
-    class Program
+    internal static class Program
     {
-        static void Main(string[] _)
+        private static void Main(string[] args)
         {
             var platform = new Platform("EnsoulSharp")
             {
@@ -19,10 +23,33 @@
                 CoreAPI = new CoreAPI()
             };
 
-            platform.Load();
+            platform.Load(PostLoad);
+        }
 
-            DamageLibraryService.Picker.Add(new Ports.EnsoulDamageLibrary());
+        private static void PostLoad()
+        {
+            Orbwalker.Picker.Add(new EnsoulOrbwalker());
+
+            DamageLibraryService.Picker.Add(new EnsoulDamageLibrary());
             DamageLibraryService.Picker.OnModuleSelected += args => args.Block();
+
+            EnsoulSharp.SDK.Utility.DelayAction.Add(0, () =>
+            {
+                SetEnsoulOrbwalker(false);
+
+                // disable the default ensoul draws
+                var menu = (EnsoulSharp.SDK.MenuUI.Menu)EnsoulSharp.SDK.MenuUI.MenuManager.Instance.Menus[2]["Drawing"];
+
+                foreach (var item in menu.Components.Values.Cast<EnsoulSharp.SDK.MenuUI.MenuBool>())
+                {
+                    item.SetValue(false);
+                }
+            });
+        }
+
+        internal static void SetEnsoulOrbwalker(bool enable)
+        {
+            EnsoulSharp.SDK.Orbwalker.AttackEnabled = EnsoulSharp.SDK.Orbwalker.MoveEnabled = enable;
         }
     }
 }

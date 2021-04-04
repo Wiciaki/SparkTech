@@ -37,7 +37,7 @@
         public async Task<string> GetShopUrl()
         {
             const string Shop = "tokenType=SHOP";
-            var licensee = "licenseeNumber=" + this.licenseeNumber;
+            var licensee = $"licenseeNumber={this.licenseeNumber}";
             var json = await this.SendPost("token", Shop, licensee);
 
             return json == null ? null : GetResponseObjects(json)["shopURL"];
@@ -128,7 +128,7 @@
                 {
                     using (var responseStream = response.GetResponseStream() ?? throw new NullReferenceException("responseStream == null"))
                     {
-                        Log.Info("Auth OK");
+                        Log.Info("Netlicensing post OK");
 
                         using (var sr = new StreamReader(responseStream))
                         {
@@ -142,7 +142,7 @@
             }
             catch (WebException ex)
             {
-                Log.Info("Auth failed!");
+                Log.Info("Netlicensing post failed!");
 
                 var response = (HttpWebResponse)ex.Response;
 

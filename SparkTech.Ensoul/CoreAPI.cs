@@ -1,34 +1,19 @@
 ﻿namespace SparkTech.Ensoul
 {
-    using SparkTech.Ensoul.Fragments;
+    using Fragments;
 
     using SDK.API;
 
     public class CoreAPI : ICoreAPI
     {
-        public IEntityEventsFragment GetEntityEventsFragment()
-        {
-            return new EntityEventsFragment();
-        }
+        public IEntityEventsFragment GetEntityEventsFragment() => new EntityEventsFragment();
 
-        public IGameFragment GetGameFragment()
-        {
-            return new GameFragment();
-        }
+        public IGameFragment GetGameFragment() => new GameFragment();
 
-        public IObjectManagerFragment GetObjectManagerFragment()
-        {
-            return new ObjectManagerFragment();
-        }
+        public IObjectManagerFragment GetObjectManagerFragment() => new ObjectManagerFragment();
 
-        public IPacketFragment GetPacketFragment()
-        {
-            return new PacketFragment();
-        }
+        public IPacketFragment GetPacketFragment() => new PacketFragment();
 
-        public IPlayerFragment GetPlayerFragment()
-        {
-            return new PlayerFragment();
-        }
+        public IPlayerFragment GetPlayerFragment() => new PlayerFragment();
     }
 }

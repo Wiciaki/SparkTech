@@ -9,7 +9,7 @@
     {
         public static void OnLeagueThread(Action action)
         {
-            void Callback(EventArgs _)
+            void Callback(EventArgs args)
             {
                 Game.OnUpdate -= Callback;
                 action();
@@ -25,33 +25,22 @@
 
         private static readonly List<DelayActionEntry> DelayActions = new List<DelayActionEntry>();
 
-        private static void OnUpdate(EventArgs _)
+        private static void OnUpdate(EventArgs args)
         {
             if (DelayActions.Count == 0)
-            {
                 return;
-            }
 
             var time = Game.Time;
 
-            while (true)
+            for (var i = DelayActions.Count - 1; i >= 0; i--)
             {
-                var i = DelayActions.Count - 1;
                 var item = DelayActions[i];
 
                 if (item.ExecuteTime > time)
-                {
                     break;
-                }
 
                 DelayActions.RemoveAt(i);
-
                 item.Callback();
-
-                if (i == 0)
-                {
-                    break;
-                }
             }
         }
 
@@ -61,6 +50,8 @@
         {
             DelayActions.Add(new DelayActionEntry(time, action));
             DelayActions.Sort(DelayActionComparer);
+
+            Console.WriteLine("added");
         }
 
         private class DelayActionEntry

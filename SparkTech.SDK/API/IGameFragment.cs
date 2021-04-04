@@ -8,11 +8,15 @@
 
     public interface IGameFragment
     {
-        void SendChat(string text);
+        void Say(string text);
 
-        void ShowChat(string text);
+        void Print(string text);
 
         void SendEmote(Emote emote);
+
+        void SendSummonerEmote(SummonerEmoteSlot slot);
+
+        void SendMasteryBadge();
 
         void SendPing(PingCategory category, IGameObject target);
 
@@ -42,7 +46,11 @@
 
         float Time { get; }
 
-        float Ping { get; }
+        int Ping { get; }
+
+        int FPS { get; }
+
+        string Version { get; }
 
         Action<EventArgs> Update { get; set; }
     }

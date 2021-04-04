@@ -1,4 +1,26 @@
-﻿namespace SparkTech.SDK.Orbwalker
+﻿//  -------------------------------------------------------------------
+//
+//  Last updated: 21/08/2017
+//  Created: 29/07/2017
+//
+//  Copyright (c) Entropy, 2017 - 2017
+//
+//  Orbwalker.cs is a part of SparkTech
+//
+//  SparkTech is free software: you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation, either version 3 of the License, or
+//  (at your option) any later version.
+//  SparkTech is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+//  GNU General Public License for more details.
+//  You should have received a copy of the GNU General Public License
+//  along with SparkTech. If not, see <http://www.gnu.org/licenses/>.
+//
+//  -------------------------------------------------------------------
+
+namespace SparkTech.SDK.Orbwalker
 {
     using System;
 
@@ -7,121 +29,35 @@
     using SparkTech.SDK.Entities;
     using SparkTech.SDK.EventData;
     using SparkTech.SDK.GUI.Menu;
-    using SparkTech.SDK.Properties;
+    using SparkTech.SDK.Modules;
 
-    public class Orbwalker : OrbwalkerService, IOrbwalker
+    public abstract class Orbwalker : IModule
     {
-        public Menu Menu { get; } = new Menu("surgical")
-        {
-            
-        };
+        public static readonly Picker<Orbwalker> Picker = new Picker<Orbwalker>(new SparkWalker());
 
-        public JObject GetTranslations()
+        public abstract Menu Menu { get; }
+
+        public abstract JObject GetTranslations();
+
+        public abstract void Start();
+
+        public abstract void Pause();
+
+        public static event Action<BeforeAttackEventArgs> BeforeAttack;
+
+        public static event Action<AfterAttackEventArgs> AfterAttack;
+
+        protected static bool ProcessBeforeAttack(IAttackable target)
         {
-            return JObject.Parse(Resources.Orbwalker);
+            var args = new BeforeAttackEventArgs(target);
+            BeforeAttack.SafeInvoke(args);
+
+            return !args.IsBlocked;
         }
 
-        public void Start()
+        protected static void ProcessAfterAttack(IAttackable target)
         {
-
+            AfterAttack.SafeInvoke(new AfterAttackEventArgs(target));
         }
-
-        public void Pause()
-        {
-
-        }
-
-
     }
-
-    /*
-    public class DefaultOrbwalker : IOrbwalker
-    {
-        ModuleMenu IModule.Menu => Menu;
-
-        private static readonly ModuleMenu Menu;
-
-        //private static readonly Menu KeysMenu;
-
-        static DefaultOrbwalker()
-        {
-            Modes = new List<Mode> { Mode.Combo, Mode.Lasthit, Mode.Mixed, Mode.Laneclear, Mode.Flee };
-
-            KeysMenu = new Menu("Keys")
-                       {
-                           //new MenuKeyBind("Combo", WindowMessageWParam.Space),
-                           //new MenuKeyBind("Lasthit", WindowMessageWParam.X),
-                           //new MenuKeyBind("Mixed", WindowMessageWParam.C),
-                           //new MenuKeyBind("Laneclear", WindowMessageWParam.V),
-                           //new MenuKeyBind("Flee", WindowMessageWParam.Z)
-                       };
-
-            Menu = new ModuleMenu("Orbwalker") { KeysMenu };
-        }
-
-        protected virtual IAIBase Unit => ObjectManager.Player;
-
-        #region Constructors and Destructors
-
-        public DefaultOrbwalker()
-        {
-            //AIBaseClient.OnProcessBasicAttack += this.OnProcessBasicAttack;
-            //Renderer.OnEndScene += this.OnEndScene;
-            //Spellbook.OnStopCast += this.OnStopCast;
-        }
-
-        /*
-        private void OnStopCast(SpellbookStopCastEventArgs args)
-        {
-            if (!this.Unit.Compare(args.Sender))
-            {
-
-            }
-        }
-
-        private void OnEndScene(EventArgs args)
-        {
-
-        }
-
-        private void OnProcessBasicAttack(AIBaseClientCastEventArgs args)
-        {
-            if (args.Caster.IsMe())
-            {
-                this.LastAttackStartTime = args.ExecuteTime;
-
-                this.IsAttacking = true;
-            }
-        }
-
-        private static readonly List<Mode> Modes;
-
-        public Mode GetMode()
-        {
-            return Modes.Find(n => KeysMenu[n.ToString()].GetValue<bool>());
-        }
-        
-        #endregion
-
-        #region Explicit Interface Methods
-
-        void IModule.Release()
-        {
-            //AIBaseClient.OnProcessBasicAttack -= this.OnProcessBasicAttack;
-            //Spellbook.OnStopCast -= this.OnStopCast;
-            //Renderer.OnEndScene -= this.OnEndScene;
-        }
-
-        #endregion
-
-        public float LastAutoAttackStartTime { get; private set; }
-
-        public bool IsAttacking { get; private set; }
-
-        public float LastOrderTime { get; private set; }
-
-        Action<BeforeAttackEventArgs> IOrbwalker.BeforeAttack { get; set; }
-
-        Action<IAttackableUnit> IOrbwalker.AfterAttack { get; set; }
-    }*/
 }

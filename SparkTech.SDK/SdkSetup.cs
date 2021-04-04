@@ -1,8 +1,12 @@
 ﻿namespace SparkTech.SDK
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Globalization;
     using System.IO;
     using System.Linq;
+    using System.Threading.Tasks;
 
     using Newtonsoft.Json.Linq;
 
@@ -33,14 +37,21 @@
 
         private static readonly Translations Strings;
 
+        private static readonly Netlicensing Auth;
+
+        private readonly static Dictionary<string, Action<EventArgs>> MenuLicenseHandlers;
+
+        private static bool premiumActivated;
+
         static SdkSetup()
         {
+            MenuLicenseHandlers = new Dictionary<string, Action<EventArgs>>();
             Strings = new Translations { JObject.Parse(Resources.Strings) };
-
+            Auth = new Netlicensing(Licensee.GetUserId(), "d1213e7b-0817-4544-aa37-01817170c494");
             Menu = new Menu("sdk")
             {
-                new MenuList("language") { Options = EnumCache<Language>.Names },
                 new Menu("modes"),
+                new Menu("humanizer"),
                 new Menu("menu")
                 {
                     new MenuKey("key", Key.ShiftKey),
@@ -51,7 +62,6 @@
                     new MenuInt("x", 0, 500, 40),
                     new MenuInt("y", 0, 500, 40)
                 },
-                new MenuList("theme"),
                 new Menu("notifications")
                 {
                     new MenuFloat("decayTime", 0f, 10f, 4.5f),
@@ -61,14 +71,12 @@
                 new Menu("clock")
                 {
                     new MenuList("mode"),
-                    new MenuList("elements"),
+                    new MenuList("elements", Theme.WatermarkOffset == 0 ? 0 : 2),
                     new MenuBool("background", false),
                     new MenuColorBool("customColor", Color.LawnGreen, true)
                 },
-                new Menu("humanizer")
-                {
-                    new MenuBool("enable", true)
-                },
+                new MenuList("theme"),
+                new MenuList("language") { Options = EnumCache<Language>.Names },
                 new Menu("loader")
                 {
                     new MenuAction("refresh", Platform.ScriptLoader.Load),
@@ -76,9 +84,10 @@
                 },
                 new Menu("license")
                 {
-                    new MenuText("lifetime"),
-                    new MenuText("licensed"),
-                    new MenuText("unlicensed")
+                    new MenuText("core"),
+                    new MenuText("sdk"),
+                    new MenuAction("shop", OpenIndividualShop),
+                    new MenuAction("sdkLicenseRefresh", SetSdkAuth)
                 },
                 new Menu("about")
                 {
@@ -90,11 +99,12 @@
 
             if (Platform.HasRenderAPI)
             {
-                var texture = Texture.FromMemory(Render.Device, Resources.Banner, 295, 100, 0, Usage.None, Format.Unknown, Pool.Default, Filter.Default, Filter.Default, 0);
+                var texture = Texture.FromMemory(Render.Device, Resources.Banner, 295, 100, 0, Usage.None, Format.Unknown, Pool.Managed, Filter.Default, Filter.Default, 0);
 
                 Menu.Add(new MenuTexture("banner", texture));
             }
 
+            Humanizer.Initialize(Menu.GetMenu("humanizer"));
             Mode.Initialize(Menu.GetMenu("modes"));
             Menu.Build(Menu, GetMenuTranslations());
 
@@ -103,17 +113,19 @@
 
             SetupMenu(out FirstRun);
 
+            if (Platform.HasCoreAPI)
+            {
+                typeof(DelayAction).Trigger();
+            }
+
             typeof(DamageLibraryService).Trigger();
             typeof(TargetSelectorService).Trigger();
             typeof(HealthPredictionService).Trigger();
             typeof(MovementPredictionService).Trigger();
-            typeof(OrbwalkerService).Trigger();
+            typeof(Orbwalker.Orbwalker).Trigger();
             typeof(EvadeService).Trigger();
             typeof(UtilityService).Trigger();
             typeof(ChampionService).Trigger();
-
-            // SurgicalAuth = new Netlicensing(Machine.UserId, "d1213e7b-0817-4544-aa37-01817170c494");
-            // var AuthTask = SurgicalAuth.GetAuth("SparkTech.SDK").ContinueWith(HandleAuth, TaskScheduler.Current);
 
             if (!Platform.HasUserInputAPI)
             {
@@ -128,47 +140,80 @@
             Platform.ScriptLoader.Load();
         }
 
-        internal static void SetAuth(AuthResult result)
+        internal static void SetCoreAuth(AuthResult result)
         {
-            var menu = Menu.GetMenu("license");
+            MenuAuthHelper(result, "core");
+        }
 
-            foreach (var item in menu)
+        private static void SetSdkAuth()
+        {
+            Task.Factory.StartNew(async () =>
             {
-                item.IsVisible = false;
-            }
+                var result = await Auth.GetAuth("SparkTech.SDK");
+                MenuAuthHelper(result, "sdk");
+
+                if (premiumActivated || !result.IsLicensed)
+                    return;
+
+                premiumActivated = true;
+                // aaa
+            });
+        }
+
+        private static void OpenIndividualShop()
+        {
+            Task.Factory.StartNew(async () => Process.Start(await Auth.GetShopUrl()));
+        }
+
+        private static void MenuAuthHelper(AuthResult result, string menuName)
+        {
+            string str;
 
             if (result == null || !result.IsLicensed)
             {
-                menu["unlicensed"].IsVisible = true;
+                str = "licenseUnlicensed";
             }
             else if (result.IsLifetime())
             {
-                menu["lifetime"].IsVisible = true;
+                str = "licenseLifetime";
             }
             else
             {
-                var expiry = result.Expiry.ToString(CultureInfo.InvariantCulture);
-
-                var item = menu.Get<MenuText>("licensed");
-                item.IsVisible = true;
-
-                void Update() => item.Text = item.Text.Replace("{expiry}", expiry);
-
-                Update();
-                Menu.OnLanguageChanged += args => Update();
+                str = "licenseSubscription";
             }
+
+            var expiry = result.Expiry.ToString(CultureInfo.InvariantCulture);
+            var item = Menu.GetMenu("license").Get<MenuText>(menuName);
+
+            void Update(EventArgs _)
+            {
+                var inner = GetString(str).Replace("{expiry}", expiry);
+                item.Text = item.Text.Replace("{status}", "\n" + inner);
+            }
+
+            if (MenuLicenseHandlers.TryGetValue(menuName, out var value))
+            {
+                Menu.OnLanguageChanged -= value;
+                MenuLicenseHandlers.Remove(menuName);
+            }
+
+            MenuLicenseHandlers[menuName] = Update;
+            Menu.OnLanguageChanged += Update;
+
+            Update(null);
         }
 
         private static void SetupMenu(out bool firstRun)
         {
             HandlePosition();
-            HandleClock();
             HandleNotifications();
             HandleTheme();
+            HandleClock();
             HandleArrows();
             HandleLoadedCount();
 
             SetMenuTriggers();
+            SetSdkAuth();
 
             var langItem = Menu["language"];
 
@@ -213,6 +258,13 @@
         internal static string GetString(string str)
         {
             return Strings.GetString(str);
+        }
+
+        private static void HandleAuth(Task<AuthResult> task)
+        {
+            var result = task.Result;
+            Console.WriteLine(result);
+            Process.Start(Auth.GetShopUrl().Result);
         }
 
         private static void HandleClock()
@@ -263,7 +315,6 @@
         private static void HandleTheme()
         {
             var item = Menu.Get<MenuList>("theme");
-            
             var selected = item.GetValue<int>();
 
             if (selected == 0 && !Platform.HasOwnTheme)

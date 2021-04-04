@@ -4,13 +4,13 @@
 
     public class BeforeAttackEventArgs : BlockableEventArgs, IEventArgsTarget<IAttackable>
     {
-        public int TargetId { get; }
+        public int TargetId => this.Target.Id;
 
-        public IAttackable Target => ObjectManager.GetById<IAttackable>(this.TargetId);
+        public IAttackable Target { get; }
 
-        public BeforeAttackEventArgs(int targetId)
+        public BeforeAttackEventArgs(IAttackable target)
         {
-            this.TargetId = targetId;
+            this.Target = target;
         }
     }
 }

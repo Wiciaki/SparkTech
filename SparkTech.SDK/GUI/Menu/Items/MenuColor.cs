@@ -81,7 +81,7 @@
 
         protected internal override void OnWndProc(Point point, int width, WndProcEventArgs args)
         {
-            if (Menu.IsLeftClick(args.Message) && ColorPicker.IsColorSelected(out var color))
+            if (Menu.IsLeftClick(args.Message) && this.IsExpanded && ColorPicker.IsColorSelected(out var color))
             {
                 this.Value = color;
             }

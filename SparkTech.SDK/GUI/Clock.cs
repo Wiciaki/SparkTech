@@ -18,7 +18,10 @@
 
         private static Size2 size;
 
-        private static Point point;
+        internal static int HeightTaken()
+        {
+            return mode == 3 ? 0 : size.Height;
+        }
 
         internal static void SetMode(int value)
         {
@@ -85,7 +88,6 @@
         internal static void UpdateSize()
         {
             size = Theme.MeasureText(GetText(DateTime.Today));
-            point = new Point((Render.Resolution.Width - size.Width) / 2, Theme.WatermarkOffset);
         }
 
         private static void OnEndScene()
@@ -112,6 +114,7 @@
 
             var bgcolor = useBackground ? Theme.BackgroundColor : Color.Transparent;
             var txtcolor = customColor ?? Theme.TextColor;
+            var point = new Point((Render.Resolution.Width - size.Width) / 2, Theme.WatermarkOffset);
 
             Theme.DrawTextBox(point, size, bgcolor, txtcolor, GetText(date), true);
         }

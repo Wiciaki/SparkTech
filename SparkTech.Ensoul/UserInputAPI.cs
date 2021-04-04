@@ -13,7 +13,12 @@
 
         public UserInputAPI()
         {
-            Game.OnWndProc += args => this.WndProcess(new WndProcEventArgs(args.Msg, args.WParam, args.LParam));
+            Game.OnWndProc += args =>
+            {
+                var arg = new WndProcEventArgs(args.Msg, args.WParam, args.LParam);
+                this.WndProcess(arg);
+                if (arg.IsBlocked) args.Process = false;
+            };
         }
     }
 }

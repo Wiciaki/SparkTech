@@ -2,10 +2,12 @@
   "en": {
     "keySelector": "Press now...",
     "firstTimeWelcome": "Welcome to {platform}!\nEnglish language detected.\nYou can change that from within the menu.",
-    "none": "None",
     "platformHasNoTheme": "provides no theme",
     "loaderHeader": "No new scripts detected",
     "loaderContent": "In case of malfunctioning,\nplease make sure to put the .dll in\n%appdata%/SparkTech.SDK/Scripts",
+	"licenseUnlicensed": "You are currently unlicensed",
+	"licenseLifetime": "You are using a lifetime license",
+	"licenseSubscription": "Subscription active. Expiry time: {expiry}",
 
     // special, don't translate
     "languageUnknown": "Welcome to {platform}!\nYour system language,\n\"{language}\" is not supported by the SDK.\nDefault, English will be used.\nYou can change that from within the menu."
@@ -13,7 +15,6 @@
   "zh": {
     "keySelector": "现在按...",
     "firstTimeWelcome": "Welcome to {platform}!\nChinese language detected.\nYou can change that in the menu.",
-    "none": "None",
     "platformHasNoTheme": "??",
     "loaderHeader": "??",
     "loaderContent": "??"

@@ -36,6 +36,8 @@
 
             this.picker.IsVisible = true;
             this.root.IsVisible = true;
+
+            if (typeof(TModule).Name == "IDamageLibrary") this.picker.SetValue(1); // temp fix
         }
 
         internal Picker(TModule module)
@@ -64,8 +66,6 @@
 
             this.Current = module;
             this.Current.Start();
-
-            if (typeof(TModule).Name == "IDamageLibrary") picker.SetValue(1); // temp fix
         }
 
         private static JObject GetTranslations(string input)

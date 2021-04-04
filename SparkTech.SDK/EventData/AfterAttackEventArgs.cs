@@ -6,13 +6,13 @@
 
     public class AfterAttackEventArgs : EventArgs, IEventArgsTarget<IAttackable>
     {
-        public int TargetId { get; }
+        public int TargetId => this.Target.Id;
 
-        public IAttackable Target => ObjectManager.GetById<IAttackable>(this.TargetId);
+        public IAttackable Target { get; }
 
-        public AfterAttackEventArgs(int targetId)
+        public AfterAttackEventArgs(IAttackable target)
         {
-            this.TargetId = targetId;
+            this.Target = target;
         }
     }
 }

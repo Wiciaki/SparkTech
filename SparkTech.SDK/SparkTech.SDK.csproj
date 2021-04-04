@@ -202,12 +202,14 @@
     <Compile Include="HealthPrediction\HealthPredictionService.cs" />
     <Compile Include="HealthPrediction\IHealthPredition.cs" />
     <Compile Include="HealthPrediction\PortedPrediction.cs" />
+    <Compile Include="Humanizer.cs" />
     <Compile Include="InternalEx.cs" />
     <Compile Include="IResumable.cs" />
     <Compile Include="Keys.cs" />
     <Compile Include="Licensing\AuthResult.cs" />
     <Compile Include="Licensing\IAuth.cs" />
     <Compile Include="Licensing\IShop.cs" />
+    <Compile Include="Licensing\Licensee.cs" />
     <Compile Include="Licensing\Netlicensing.cs" />
     <Compile Include="Logging\ConsoleLogger.cs" />
     <Compile Include="Logging\FileLogger.cs" />
@@ -226,9 +228,9 @@
     <Compile Include="MovementPrediction\MovementPredictionService.cs" />
     <Compile Include="MovementPrediction\PredictionInput.cs" />
     <Compile Include="MovementPrediction\PredictionOutput.cs" />
-    <Compile Include="Orbwalker\IOrbwalker.cs" />
+    <Compile Include="Orbwalker\SparkWalker.cs" />
     <Compile Include="Orbwalker\Orbwalker.cs" />
-    <Compile Include="Orbwalker\OrbwalkerService.cs" />
+    <Compile Include="Orbwalker\Orbwalking.cs" />
     <Compile Include="Packets\Packet.cs" />
     <Compile Include="Packets\PacketChannel.cs" />
     <Compile Include="Packets\PacketProtocolFlags.cs" />
@@ -250,6 +252,7 @@
     <Compile Include="SpellDatabase\PlayerSpell.cs" />
     <Compile Include="SpellDatabase\Spell.cs" />
     <Compile Include="SpellDatabase\SpellLink.cs" />
+    <Compile Include="SummonerEmoteSlot.cs" />
     <Compile Include="TargetSelector\ITargetSelector.cs" />
     <Compile Include="TargetSelector\Implementation\TargetSelectorImpl.cs" />
     <Compile Include="TargetSelector\TargetSelectorService.cs" />

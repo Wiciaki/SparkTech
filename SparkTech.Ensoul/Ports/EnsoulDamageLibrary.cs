@@ -9,7 +9,7 @@
 
     public class EnsoulDamageLibrary : IDamageLibrary
     {
-        public Menu Menu { get; }
+        public Menu Menu { get; } = new Menu("Ensoul Port");
 
         public JObject GetTranslations()
         {

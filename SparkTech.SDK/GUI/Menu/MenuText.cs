@@ -145,7 +145,7 @@
             }
 
             point.X = (Render.Resolution.Width - this.helpTextSize.Width) / 2;
-            point.Y = this.helpTextSize.Height + Theme.WatermarkOffset;
+            point.Y = Clock.HeightTaken() + Theme.WatermarkOffset;
 
             Theme.DrawTextBox(point, this.helpTextSize, this.HelpText, true);
         }

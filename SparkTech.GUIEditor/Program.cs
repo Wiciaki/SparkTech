@@ -54,7 +54,7 @@
 
             RenderLoop.Run(form, () =>
             {
-                form.Device.Clear(ClearFlags.Target, Color.Zero, 1f, 0);
+                form.Device.Clear(ClearFlags.Target, Color.Black, 1f, 0);
                 form.Device.BeginScene();
 
                 form.BeginScene();

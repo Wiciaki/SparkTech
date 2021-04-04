@@ -7,7 +7,7 @@
 
     public class DamageLibraryImpl : IDamageLibrary
     {
-        public Menu Menu { get; }
+        public Menu Menu { get; } = new Menu("Spark [NOT READY]");
 
         public JObject GetTranslations()
         {

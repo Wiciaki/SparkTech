@@ -1,7 +1,6 @@
 ﻿namespace SparkTech.SDK
 {
     using System;
-    using System.Linq;
 
     using SparkTech.SDK.API;
     using SparkTech.SDK.Entities;
@@ -11,8 +10,6 @@
     using SparkTech.SDK.Modules;
     using SparkTech.SDK.Packets;
     using SparkTech.SDK.Rendering;
-
-    using SparkTech.SDK.TargetSelector;
 
     public sealed class Platform
     {
@@ -54,7 +51,7 @@
 
         public int WatermarkOffset { get; set; }
 
-        public void Load()
+        public void Load(Action continueWith = null)
         {
             RenderFragment = this.RenderAPI;
             UserInputFragment = this.UserInputAPI;
@@ -99,22 +96,21 @@
             }
 
             GUI.Theme.WatermarkOffset = this.WatermarkOffset; // also triggers Theme class .cctor
+            SdkSetup.SetCoreAuth(this.AuthResult);
 
-            SdkSetup.SetAuth(this.AuthResult);
+            PrintInitialized();
 
-            Log.Info("SparkTech.SDK initialized!");
-
-            Render.OnDraw += delegate
+            if (continueWith != null)
+            {
+                try
                 {
-                    //var hero = ObjectManager.Get<IHero>().Where(o => o.Distance(ObjectManager.Player) < 550f).GetTarget();
-
-                    //if (hero != null)
-                    //    Circle.Draw(SharpDX.Color.Magenta, hero.BoundingRadius, 1f, true, hero.Position);
-
-                    //foreach (var o in ObjectManager.Get<IUnit>())
-                    //    Text.Draw(o.Name, SharpDX.Color.Magenta, (SharpDX.Point)Game.WorldToScreen(o.Position));
-
-                };
+                    continueWith();
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex);
+                }
+            }
         }
 
         public Platform(string name)
@@ -130,6 +126,27 @@
             }
 
             Name = name;
+        }
+
+        private static void PrintInitialized()
+        {
+            var message = "SparkTech.SDK initialized!";
+            Log.Info(message);
+
+            message = ">>>>>>> " + message + " <<<<<<<";
+
+            var color = Console.ForegroundColor;
+
+            try
+            {
+                Console.ForegroundColor = ConsoleColor.Blue;
+                Console.WriteLine(string.Format($"\n{{0,{(Console.WindowWidth + message.Length) / 2}}}\n", message));
+            }
+            catch { }
+            finally
+            {
+                Console.ForegroundColor = color;
+            }
         }
 
         internal static Exception FragmentException()

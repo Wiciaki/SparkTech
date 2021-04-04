@@ -64,27 +64,30 @@
 
         private static void ProcessItem(IGameObject sender, bool add)
         {
-            var senderType = sender.GetType();
-
-            foreach (var entry in Container.Where(p => p.Key.IsAssignableFrom(senderType)).Select(p => p.Value))
+            lock (Container)
             {
-                MethodBase method;
-                Action<IGameObject> action;
+                var senderType = sender.GetType();
 
-                if (add)
+                foreach (var entry in Container.Where(p => p.Key.IsAssignableFrom(senderType)).Select(p => p.Value))
                 {
-                    method = entry.AddMethod;
-                    action = OnCreate;
-                }
-                else
-                {
-                    method = entry.RemoveMethod;
-                    action = OnDelete;
-                }
+                    MethodBase method;
+                    Action<IGameObject> action;
 
-                ArgsHelperArray[0] = sender;
-                method.Invoke(entry.HashSet, ArgsHelperArray);
-                action.SafeInvoke(sender);
+                    if (add)
+                    {
+                        method = entry.AddMethod;
+                        action = OnCreate;
+                    }
+                    else
+                    {
+                        method = entry.RemoveMethod;
+                        action = OnDelete;
+                    }
+
+                    ArgsHelperArray[0] = sender;
+                    method.Invoke(entry.HashSet, ArgsHelperArray);
+                    action.SafeInvoke(sender);
+                }
             }
         }
 

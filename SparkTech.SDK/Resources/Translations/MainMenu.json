@@ -274,7 +274,14 @@
       "zh": {
         "text": "??"
       }
-    }
+    },
+	"apm": {
+	  "en": {
+		"text": "Target APM"
+	  },
+	  "zh": {
+        "text": "??"
+      }
   },
   "loader": {
     "en": {
@@ -309,25 +316,33 @@
     "zh": {
       "text": "??"
     },
-    "licensed": {
+    "core": {
       "en": {
-        "text": "License active.\nExpires at: {expiry}"
+        "text": "Core license status: {status}"
       },
       "zh": {
-        "text": "?? {expiry}"
+        "text": "?? {status}"
       }
     },
-    "unlicensed": {
+    "sdk": {
       "en": {
-        "text": "You're currently unlicensed"
+        "text": "SDK subscription status: {status}"
+      },
+      "zh": {
+        "text": "?? {status}"
+      }
+    },
+    "shop": {
+      "en": {
+        "text": "Open your individual shop in the browser"
       },
       "zh": {
         "text": "??"
       }
     },
-    "lifetime": {
+	"sdkLicenseRefresh": {
       "en": {
-        "text": "You're currently using a lifetime license"
+        "text": "Check for an updated license"
       },
       "zh": {
         "text": "??"
@@ -351,7 +366,7 @@
     },
     "contact": {
       "en": {
-        "text": "Find me on discord:Spark#9147"
+        "text": "Find me on discord: Spark#9147"
       },
       "zh": {
         "text": "??"
