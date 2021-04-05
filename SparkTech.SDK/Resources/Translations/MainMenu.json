@@ -276,12 +276,13 @@
       }
     },
 	"apm": {
-	  "en": {
-		"text": "Target APM"
-	  },
-	  "zh": {
+      "en": {
+        "text": "Target APM"
+      },
+      "zh": {
         "text": "??"
       }
+    }
   },
   "loader": {
     "en": {

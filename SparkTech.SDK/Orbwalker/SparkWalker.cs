@@ -176,7 +176,7 @@
                     if (target != null && ProcessBeforeAttack(target))
                     {
                         missileLaunched = false;
-                        LastAutoAttackStartT = float.MaxValue;
+                        LastAutoAttackStartT = Game.Time;
                         Player.IssueOrder(GameObjectOrder.AttackUnit, target);
                         return;
                     }
@@ -191,7 +191,7 @@
 
         private IAttackable GetOrbwalkingTarget()
         {
-            return ObjectManager.Get<IAttackable>().FirstOrDefault(t => t.IsValidTarget() && t.Distance(ObjectManager.Player) <= Orbwalking.GetAutoAttackRange(ObjectManager.Player, t));
+            return ObjectManager.Get<IAttackable>().Where(t => t.IsValidTarget() && t.Distance(ObjectManager.Player) <= Orbwalking.GetAutoAttackRange(ObjectManager.Player, t)).OrderByDescending(h => h is IHero).FirstOrDefault();
         }
     }
 }
