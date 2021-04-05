@@ -151,7 +151,7 @@
 
             private static Point GetPickerPosition()
             {
-                return new Point(Render.Resolution.Width - 50 - Size.Width, Render.Resolution.Height - 330 - Size.Height);
+                return new Point(Render.Width - 50 - Size.Width, Render.Height - 330 - Size.Height);
             }
 
             private static Color GetPixel(int x, int y)

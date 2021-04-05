@@ -46,21 +46,11 @@
     <Reference Include="EnsoulSharp.SDK">
       <HintPath>C:\Users\Penguin\Desktop\EnsoulSharp\Reference\EnsoulSharp.SDK.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>C:\Users\Penguin\Desktop\EnsoulSharp\Reference\Newtonsoft.Json.dll</HintPath>
-      <SpecificVersion>False</SpecificVersion>
-    </Reference>
-    <Reference Include="SharpDX, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
-      <HintPath>C:\Users\Penguin\Desktop\EnsoulSharp\Reference\SharpDX.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpDX.Direct3D11, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
-      <HintPath>C:\Users\Penguin\Desktop\EnsoulSharp\Reference\SharpDX.Direct3D11.dll</HintPath>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\EnsoulSharp\Reference\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.Direct3D9">
       <HintPath>C:\Users\Penguin\Desktop\EnsoulSharp\Reference\SharpDX.Direct3D9.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpDX.DXGI, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
-      <HintPath>C:\Users\Penguin\Desktop\EnsoulSharp\Reference\SharpDX.DXGI.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.Mathematics">
       <HintPath>C:\Users\Penguin\Desktop\EnsoulSharp\Reference\SharpDX.Mathematics.dll</HintPath>
@@ -99,7 +89,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SparkTech.SDK\SparkTech.SDK.csproj">

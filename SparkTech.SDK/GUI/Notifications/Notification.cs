@@ -107,8 +107,7 @@
                 return;
             }
 
-            var res = Render.Resolution;
-            var point = new Point(res.Width - 50, 100);
+            var point = new Point(Render.Width - 50, 100);
             var time = GetTime() - decayTime;
             var width = Entries.Max(entry => entry.Notification.Width);
 

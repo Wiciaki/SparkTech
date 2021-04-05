@@ -2,12 +2,13 @@
 {
     using System;
 
-    using SharpDX;
     using SharpDX.Direct3D9;
 
     public interface IRenderAPI
     {
-        Size2 Resolution { get; }
+        int Width { get; }
+
+        int Height { get; }
 
         Device Device { get; }
 

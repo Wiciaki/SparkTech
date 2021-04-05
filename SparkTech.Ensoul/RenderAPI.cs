@@ -11,7 +11,9 @@
 
     internal class RenderAPI : IRenderAPI
     {
-        public Size2 Resolution => new Size2(Drawing.Width, Drawing.Height);
+        public int Width => Drawing.Width;
+
+        public int Height => Drawing.Height;
 
         public Action BeginScene { get; set; }
 

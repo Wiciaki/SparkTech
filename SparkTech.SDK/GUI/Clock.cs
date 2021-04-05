@@ -114,7 +114,7 @@
 
             var bgcolor = useBackground ? Theme.BackgroundColor : Color.Transparent;
             var txtcolor = customColor ?? Theme.TextColor;
-            var point = new Point((Render.Resolution.Width - size.Width) / 2, Theme.WatermarkOffset);
+            var point = new Point((Render.Width - size.Width) / 2, Theme.WatermarkOffset);
 
             Theme.DrawTextBox(point, size, bgcolor, txtcolor, GetText(date), true);
         }

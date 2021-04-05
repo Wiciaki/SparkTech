@@ -38,7 +38,11 @@
 
         public static event Action OnDraw, OnBeginScene, OnEndScene, OnLostDevice, OnResetDevice, OnDispose;
 
-        public static Size2 Resolution => Fragment.Resolution;
+        public static int Width => Fragment.Width;
+
+        public static int Height => Fragment.Height;
+
+        public static Size2 Resolution => new Size2(Width, Height);
 
         private static void InvokeRenderEvent(Action @event)
         {
