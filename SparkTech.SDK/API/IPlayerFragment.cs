@@ -10,11 +10,11 @@
 
         int SpellTrainingPoints { get; }
 
-        void IssueOrder(GameObjectOrder order, Vector3 target);
+        bool IssueOrder(GameObjectOrder order, Vector3 target);
 
-        void IssueOrder(GameObjectOrder order, IAttackable target);
+        bool IssueOrder(GameObjectOrder order, IAttackable target);
 
-        void UpdateChargedSpell(SpellSlot slot, Vector3 target, bool releaseCast);
+        bool UpdateChargedSpell(SpellSlot slot, Vector3 target, bool releaseCast);
 
         bool CastSpell(SpellSlot slot, Vector3 position);
 

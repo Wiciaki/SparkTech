@@ -47,7 +47,7 @@
       <HintPath>C:\Users\Penguin\Desktop\EnsoulSharp\Reference\EnsoulSharp.SDK.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json">
-      <HintPath>..\..\EnsoulSharp\Reference\Newtonsoft.Json.dll</HintPath>
+      <HintPath>C:\Users\Penguin\Desktop\EnsoulSharp\Reference\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.Direct3D9">
       <HintPath>C:\Users\Penguin\Desktop\EnsoulSharp\Reference\SharpDX.Direct3D9.dll</HintPath>

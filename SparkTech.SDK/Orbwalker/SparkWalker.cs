@@ -25,6 +25,12 @@
                 new MenuColorBool("playerHold", Color.DodgerBlue, false),
                 new MenuColorBool("targetMinion", Color.Magenta, false)
             },
+            new Menu("speed")
+            {
+                new MenuFloat("attack", 0f, 0.3f, 0.04f),
+                new MenuFloat("move", 0f, 0.6f, 0.04f)
+            },
+            new MenuBool("Use missile checks for more speed sometimes", true),
             new MenuBool("underTurretFarming", true),
             new MenuBool("meleeMagnet", false)
         };
@@ -41,7 +47,7 @@
 
             if (Platform.HasCoreAPI)
             {
-                foreach (var hero in ObjectManager.Get<IHero>().Where(h => h.IsEnemy()))
+                foreach (var hero in ObjectManager.Get<IHero>().Where(h => h.IsEnemy() && h.CharName != "PracticeTool_TargetDummy"))
                 {
                     menu.Add(new MenuColorBool(GetMenuId(hero), Color.Yellow, false));
                     menu["alone"].IsVisible = false;
@@ -96,7 +102,7 @@
             if (args.Source?.Owner == null || !args.Source.Owner.IsMe() || !args.DestroyMissile || !args.KeepAnimationPlaying)
                 return;
 
-            LastAutoAttackStartT = 0;
+            attackT = 0;
         }
 
         private void EntityEvents_OnProcessSpellCast(ProcessSpellCastEventArgs args)
@@ -107,11 +113,11 @@
             var name = args.SpellData.Name;
 
             if (Orbwalking.IsAutoAttackReset(name))
-                LastAutoAttackStartT = 0;
+                attackT = 0;
 
             if (Orbwalking.IsAutoAttack(name))
             {
-                missileLaunched = true;
+                // ?
             }
         }
 
@@ -126,14 +132,13 @@
 
             if (Orbwalking.IsAutoAttackReset(name))
             {
-                LastAutoAttackStartT = 0;
+                attackT = 0;
             }
 
             if (Orbwalking.IsAutoAttack(name))
             {
                 ProcessAfterAttack((IAttackable)args.Target);
-                LastAutoAttackStartT = Game.Time - (Game.Ping / 2000f);
-                missileLaunched = false;
+                attackT = Game.Time - (Game.Ping / 2000f);
             }
         }
 
@@ -146,18 +151,16 @@
             Render.OnDraw -= this.Render_OnDraw;
         }
 
-        private bool missileLaunched;
-
-        private float LastAutoAttackStartT;
+        private float attackT;
 
         public bool CanAttack()
         {
-            return Game.Time + ((Game.Ping + 50) / 2000f) >= LastAutoAttackStartT + ObjectManager.Player.AttackDelay;
+            return Game.Time + (Game.Ping / 2000f) + Menu.GetMenu("speed")["attack"].GetValue<float>() >= this.attackT + ObjectManager.Player.AttackDelay;
         }
 
         public bool CanMove()
         {
-            return missileLaunched || Game.Time + ((Game.Ping + 50) / 2000f) >= LastAutoAttackStartT + ObjectManager.Player.AttackCastDelay;
+            return Game.Time + (Game.Ping / 2000f) + Menu.GetMenu("speed")["move"].GetValue<float>() >= this.attackT + ObjectManager.Player.AttackCastDelay;
         }
 
         private void Game_OnUpdate(EventArgs obj)
@@ -173,12 +176,9 @@
                 {
                     var target = this.GetOrbwalkingTarget();
 
-                    if (target != null && ProcessBeforeAttack(target))
+                    if (target != null && ProcessBeforeAttack(target) && Player.IssueOrder(GameObjectOrder.AttackUnit, target))
                     {
-                        missileLaunched = false;
-                        LastAutoAttackStartT = Game.Time;
-                        Player.IssueOrder(GameObjectOrder.AttackUnit, target);
-                        return;
+                        attackT = Game.Time + ObjectManager.Player.AttackDelay;
                     }
                 }
             }

@@ -15,22 +15,35 @@
 
         public static int SpellTrainingPoints => Fragment.SpellTrainingPoints;
 
-        public static void IssueOrder(GameObjectOrder order, Vector3 target)
+        public static bool IssueOrder(GameObjectOrder order, Vector3 target)
         {
-            Fragment.IssueOrder(order, target);
+            return Fragment.IssueOrder(order, target);
         }
 
-        public static void IssueOrder(GameObjectOrder order, IAttackable target)
+        public static bool IssueOrder(GameObjectOrder order, IAttackable target)
         {
-            Fragment.IssueOrder(order, target);
+            return Fragment.IssueOrder(order, target);
+        }
+        
+        public static bool CastSpell(SpellSlot slot)
+        {
+            return Fragment.CastSpell(slot);
         }
 
-        public static void UpdateChargedSpell(SpellSlot slot, Vector3 target, bool releaseCast)
+        public static bool CastSpell(SpellSlot slot, IGameObject target)
         {
-            Fragment.UpdateChargedSpell(slot, target, releaseCast);
+            return Fragment.CastSpell(slot, target);
         }
 
-        //bool CastSpell(SpellCastInput args);
+        public static bool CastSpell(SpellSlot slot, Vector3 target)
+        {
+            return Fragment.CastSpell(slot, target);
+        }
+
+        public static bool UpdateChargedSpell(SpellSlot slot, Vector3 target, bool releaseCast)
+        {
+            return Fragment.UpdateChargedSpell(slot, target, releaseCast);
+        }
 
         public static void LevelSpell(SpellSlot slot)
         {

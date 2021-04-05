@@ -61,6 +61,30 @@
 		}
 	}
   },
+  "speed": {
+	  "en": {
+		  "text": "Speed adjustments"
+	  },
+	  "zh": {
+		  "text": "??"
+	  },
+	  "attack": {
+		"en": {
+			"text": "Faster attacks"
+		},
+		"zh": {
+			"text": "??"
+		}
+	  },
+	  "move": {
+		"en": {
+			"text": "Faster AA cancel"
+		},
+		"zh": {
+			"text": "??"
+		}
+	 }
+  },
   "underTurretFarming": {
 	    "en": {
 			"text": "Try to farm under turret [BETA]"

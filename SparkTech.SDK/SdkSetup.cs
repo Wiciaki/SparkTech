@@ -208,12 +208,12 @@
             HandlePosition();
             HandleNotifications();
             HandleTheme();
-            HandleClock();
             HandleArrows();
             HandleLoadedCount();
 
             SetMenuTriggers();
             SetSdkAuth();
+            HandleClock();
 
             var langItem = Menu["language"];
 

@@ -19,14 +19,14 @@
         public int SpellTrainingPoints => this.player.SpellTrainingPoints;
         public int EvolvePoints => this.player.EvolvePoints;
 
-        public void IssueOrder(GameObjectOrder order, Vector3 target)
+        public bool IssueOrder(GameObjectOrder order, Vector3 target)
         {
-            this.player.IssueOrder((EnsoulSharp.GameObjectOrder)order, target);
+            return this.player.IssueOrder((EnsoulSharp.GameObjectOrder)order, target);
         }
 
-        public void IssueOrder(GameObjectOrder order, IAttackable target)
+        public bool IssueOrder(GameObjectOrder order, IAttackable target)
         {
-            this.player.IssueOrder((EnsoulSharp.GameObjectOrder)order, EnsoulSharp.ObjectManager.GetUnitByNetworkId<EnsoulSharp.AttackableUnit>(target.Id));
+            return this.player.IssueOrder((EnsoulSharp.GameObjectOrder)order, EnsoulSharp.ObjectManager.GetUnitByNetworkId<EnsoulSharp.AttackableUnit>(target.Id));
         }
 
         public void LevelSpell(SpellSlot slot)
@@ -39,9 +39,9 @@
             this.book.EvolveSpell((EnsoulSharp.SpellSlot)slot);
         }
 
-        public void UpdateChargedSpell(SpellSlot slot, Vector3 target, bool releaseCast)
+        public bool UpdateChargedSpell(SpellSlot slot, Vector3 target, bool releaseCast)
         {
-            this.book.UpdateChargedSpell((EnsoulSharp.SpellSlot)slot, target, releaseCast);
+            return this.book.UpdateChargedSpell((EnsoulSharp.SpellSlot)slot, target, releaseCast);
         }
 
         public bool CastSpell(SpellSlot slot, Vector3 position)

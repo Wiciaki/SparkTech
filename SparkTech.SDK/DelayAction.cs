@@ -50,8 +50,6 @@
         {
             DelayActions.Add(new DelayActionEntry(time, action));
             DelayActions.Sort(DelayActionComparer);
-
-            Console.WriteLine("added");
         }
 
         private class DelayActionEntry
