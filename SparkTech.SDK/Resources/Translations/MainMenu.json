@@ -335,7 +335,8 @@
     },
     "shop": {
       "en": {
-        "text": "Open your individual shop in the browser"
+        "text": "Open your individual shop in the browser",
+		"helpText": "Buying a subscription there will assign a license to your current PC\nATM there are no benefits for subscribers, it's just a donation"
       },
       "zh": {
         "text": "??"

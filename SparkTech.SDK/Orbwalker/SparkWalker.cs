@@ -17,6 +17,13 @@
     {
         public override Menu Menu { get; } = new Menu("spark")
         {
+            new MenuText("info"),
+            new Menu("speed")
+            {
+                new MenuFloat("attack", 0f, 0.15f, 0.04f),
+                new MenuFloat("move", -0.3f, 1f, 0f),
+                new MenuFloat("orderTime", 0f, 0.15f, 0.04f)
+            },
             new Menu("drawings")
             {
                 new MenuColorBool("playerRange", Color.DodgerBlue, true),
@@ -25,12 +32,6 @@
                 new MenuColorBool("playerHold", Color.DodgerBlue, false),
                 new MenuColorBool("targetMinion", Color.Magenta, false)
             },
-            new Menu("speed")
-            {
-                new MenuFloat("attack", 0f, 0.3f, 0.04f),
-                new MenuFloat("move", 0f, 0.6f, 0.04f)
-            },
-            new MenuBool("Use missile checks for more speed sometimes", true),
             new MenuBool("underTurretFarming", true),
             new MenuBool("meleeMagnet", false)
         };
@@ -62,7 +63,7 @@
             return $"{hero.CharName} [{hero.Name}/{hero.Id}]";
         }
 
-        private void Render_OnDraw()
+        private void OnDraw()
         {
             var drawings = this.Menu.GetMenu("drawings");
             var playerRange = drawings["playerRange"];
@@ -85,111 +86,140 @@
             }
         }
 
+        public SparkWalker()
+        {
+            if (Platform.HasCoreAPI)
+            {
+                EntityEvents.OnDoCast += this.OnDoCast;
+                EntityEvents.OnProcessSpellCast += this.OnProcessSpellCast;
+                EntityEvents.OnSpellbookStopCast += this.OnSpellbookStopCast;
+            }
+        }
+
         public override void Start()
         {
-            if (!Platform.HasCoreAPI)
-                return;
-
-            Game.OnUpdate += this.Game_OnUpdate;
-            Render.OnDraw += this.Render_OnDraw;
-            EntityEvents.OnDoCast += this.EntityEvents_OnDoCast;
-            EntityEvents.OnProcessSpellCast += this.EntityEvents_OnProcessSpellCast;
-            EntityEvents.OnSpellbookStopCast += this.EntityEvents_OnSpellbookStopCast;
-        }
-
-        private void EntityEvents_OnSpellbookStopCast(StopCastEventArgs args)
-        {
-            if (args.Source?.Owner == null || !args.Source.Owner.IsMe() || !args.DestroyMissile || !args.KeepAnimationPlaying)
-                return;
-
-            attackT = 0;
-        }
-
-        private void EntityEvents_OnProcessSpellCast(ProcessSpellCastEventArgs args)
-        {
-            if (!args.Source.IsMe())
-                return;
-
-            var name = args.SpellData.Name;
-
-            if (Orbwalking.IsAutoAttackReset(name))
-                attackT = 0;
-
-            if (Orbwalking.IsAutoAttack(name))
+            if (Platform.HasCoreAPI)
             {
-                // ?
-            }
-        }
-
-        private void EntityEvents_OnDoCast(ProcessSpellCastEventArgs args)
-        {
-            if (!args.Source.IsMe())
-            {
-                return;
-            }
-
-            var name = args.SpellData.Name;
-
-            if (Orbwalking.IsAutoAttackReset(name))
-            {
-                attackT = 0;
-            }
-
-            if (Orbwalking.IsAutoAttack(name))
-            {
-                ProcessAfterAttack((IAttackable)args.Target);
-                attackT = Game.Time - (Game.Ping / 2000f);
+                Game.OnUpdate += this.OnUpdate;
+                Render.OnDraw += this.OnDraw;
             }
         }
 
         public override void Pause()
         {
-            if (!Platform.HasCoreAPI)
-                return;
+            if (Platform.HasCoreAPI)
+            {
+                Game.OnUpdate -= this.OnUpdate;
+                Render.OnDraw -= this.OnDraw;
+            }
+        }
 
-            Game.OnUpdate -= this.Game_OnUpdate;
-            Render.OnDraw -= this.Render_OnDraw;
+        protected virtual IUnit Unit => ObjectManager.Player;
+
+        private void OnSpellbookStopCast(StopCastEventArgs args)
+        {
+            var owner = args.Source?.Owner;
+
+            if (owner == null || owner.Id != this.Unit.Id || !args.DestroyMissile || !args.KeepAnimationPlaying)
+            {
+                return;
+            }
+
+            this.attackT = 0;
+        }
+
+        private void OnProcessSpellCast(ProcessSpellCastEventArgs args)
+        {
+            if (args.Source.Id != this.Unit.Id)
+            {
+                return;
+            }
+
+            var name = args.SpellData.Name;
+
+            if (Orbwalking.IsAutoAttackReset(name))
+            { 
+                this.attackT = 0; 
+            }
+
+            if (Orbwalking.IsAutoAttack(name))
+            {
+                ProcessAfterAttack((IAttackable)args.Target);
+            }
+        }
+
+        private void OnDoCast(ProcessSpellCastEventArgs args)
+        {
+            if (args.Source.Id != this.Unit.Id)
+            {
+                return;
+            }
+
+            var name = args.SpellData.Name;
+
+            if (Orbwalking.IsAutoAttackReset(name))
+            {
+                this.attackT = 0;
+            }
+
+            if (Orbwalking.IsAutoAttack(name))
+            {
+                this.attackT = Game.Time - PingOffset();
+            }
         }
 
         private float attackT;
 
+        private float PingOffset() => Game.Ping / 2000f;
+
         public bool CanAttack()
         {
-            return Game.Time + (Game.Ping / 2000f) + Menu.GetMenu("speed")["attack"].GetValue<float>() >= this.attackT + ObjectManager.Player.AttackDelay;
+            var attackSetting = Menu.GetMenu("speed")["attack"].GetValue<float>();
+
+            return Game.Time + PingOffset() + attackSetting >= this.attackT + this.Unit.AttackDelay;
         }
 
         public bool CanMove()
         {
-            return Game.Time + (Game.Ping / 2000f) + Menu.GetMenu("speed")["move"].GetValue<float>() >= this.attackT + ObjectManager.Player.AttackCastDelay;
+            var cancelSetting = Menu.GetMenu("speed")["move"].GetValue<float>();
+
+            var attackSpeedMod = this.Unit.AttackSpeedMod / 10f;
+            var attackSpeed = 0.1f / this.Unit.AttackDelay;
+            var percentAttackSpeedMod = this.Unit.PercentAttackSpeedMod / 10f;
+
+            var magic = (attackSpeed + attackSpeedMod) * percentAttackSpeedMod * attackSpeed * 2f + percentAttackSpeedMod;
+            
+            return Game.Time + PingOffset() + cancelSetting + magic >= this.attackT + this.Unit.AttackCastDelay * (1f - attackSpeedMod);
         }
 
-        private void Game_OnUpdate(EventArgs obj)
+        private void OnUpdate(EventArgs obj)
         {
-            if (Mode.NoneMode())
+            var mode = Mode.Current;
+
+            if (mode.IsNone)
             {
                 return;
             }
 
-            if (Mode.Current.ChampsAutoAttack)
+            if (CanAttack())
             {
-                if (CanAttack())
-                {
-                    var target = this.GetOrbwalkingTarget();
+                var target = this.GetOrbwalkingTarget(mode);
 
-                    if (target != null && ProcessBeforeAttack(target) && Player.IssueOrder(GameObjectOrder.AttackUnit, target))
-                    {
-                        attackT = Game.Time + ObjectManager.Player.AttackDelay;
-                    }
+                if (target != null && ProcessBeforeAttack(target) && Player.IssueOrder(GameObjectOrder.AttackUnit, target))
+                {
+                    attackT = Game.Time + this.Unit.AttackDelay;
                 }
             }
 
-            if (CanMove())
+            var orderSetting = Menu.GetMenu("speed")["orderTime"].GetValue<float>();
+
+            if (CanMove() && this.attackT <= Game.Time + orderSetting)
             {
                 Player.IssueOrder(GameObjectOrder.MoveTo, Game.Cursor);
             }
         }
 
-        private IAttackable GetOrbwalkingTarget()
+        private IAttackable GetOrbwalkingTarget(Mode mode)
         {
             return ObjectManager.Get<IAttackable>().Where(t => t.IsValidTarget() && t.Distance(ObjectManager.Player) <= Orbwalking.GetAutoAttackRange(ObjectManager.Player, t)).OrderByDescending(h => h is IHero).FirstOrDefault();
         }

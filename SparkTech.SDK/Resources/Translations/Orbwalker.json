@@ -70,7 +70,8 @@
 	  },
 	  "attack": {
 		"en": {
-			"text": "Faster attacks"
+			"text": "Faster attacks",
+			"helpText": "Sends the attack order earlier than allowed.\nSetting this too high will reduce the movement of your champion\nBest value is around 0.04"
 		},
 		"zh": {
 			"text": "??"
@@ -78,13 +79,31 @@
 	  },
 	  "move": {
 		"en": {
-			"text": "Faster AA cancel"
+			"text": "Faster AA cancel",
+			"helpText": "Normally, setting it above 0 will cause stuttering\nIncreasing can be useful in some edge cases like when you have 2.50 AS, but\neven then it doesn't really change THAT much.\nTry lowering this when you have problems with cancelled autos"
 		},
 		"zh": {
 			"text": "??"
 		}
-	 }
+	 },
+	 "orderTime": {
+		"en": {
+			"text": "Extra order time",
+			"helpText": "Time for the orb to wait for attack command to complete\nTry increasing this if your autos cancel because the enemy leaves your range etc.\nToo high value will make the orb chase enemies instead of follow cursor"
+		},
+		"zh": {
+			"text": "??"
+		}
+	  },
   },
+    "info": {
+	    "en": {
+			"text": "To set keybinds, check SparkTech.SDK/Modes\nAlso, check out HP Pred menu for farming config"
+	    },
+	    "zh": {
+		    "text": "??"
+	    }
+	},
   "underTurretFarming": {
 	    "en": {
 			"text": "Try to farm under turret [BETA]"

@@ -9,7 +9,7 @@
     {
         public static Mode Current => Modes.Find(mode => mode.IsActive);
 
-        public static bool NoneMode() => Current.DisplayName == "None";
+        public bool IsNone => this.DisplayName == "None";
 
         public virtual string DisplayName => this.menu.Text;
 
