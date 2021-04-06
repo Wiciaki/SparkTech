@@ -15,26 +15,66 @@
 
     public class SparkWalker : Orbwalker
     {
-        public override Menu Menu { get; } = new Menu("spark")
+        public SparkWalker()
         {
-            new MenuText("info"),
-            new Menu("speed")
+            this.Menu = new Menu("spark")
             {
-                new MenuFloat("attack", 0f, 0.15f, 0.04f),
-                new MenuFloat("move", -0.3f, 1f, 0f),
-                new MenuFloat("orderTime", 0f, 0.15f, 0.04f)
-            },
-            new Menu("drawings")
+                new MenuText("info"),
+                new Menu("speed")
+                {
+                    new MenuList("logic"),
+                    new MenuFloat("move", -0.3f, 1.5f, 0f),
+                    new MenuFloat("attack", 0f, 0.15f, 0.04f),
+                    new MenuFloat("orderTime", 0f, 0.15f, 0.04f),
+                },
+                new Menu("drawings")
+                {
+                    new MenuColorBool("playerRange", Color.DodgerBlue, true),
+                    GetEnemyMenu(),
+                    new MenuColorBool("minions", Color.Silver, true),
+                    new MenuColorBool("playerHold", Color.DodgerBlue, false),
+                    new MenuColorBool("targetMinion", Color.Magenta, false)
+                },
+                new MenuBool("underTurretFarming", true),
+                new MenuBool("meleeMagnet", false)
+            };
+
+            var basic = this.Menu.GetMenu("speed")["logic"];
+            ShowItems(basic.GetValue<int>());
+            basic.BeforeValueChange += args => ShowItems(args.NewValue<int>());
+
+            if (Platform.HasCoreAPI)
             {
-                new MenuColorBool("playerRange", Color.DodgerBlue, true),
-                GetEnemyMenu(),
-                new MenuColorBool("minions", Color.Silver, true),
-                new MenuColorBool("playerHold", Color.DodgerBlue, false),
-                new MenuColorBool("targetMinion", Color.Magenta, false)
-            },
-            new MenuBool("underTurretFarming", true),
-            new MenuBool("meleeMagnet", false)
-        };
+                EntityEvents.OnDoCast += this.OnDoCast;
+                EntityEvents.OnProcessSpellCast += this.OnProcessSpellCast;
+                EntityEvents.OnSpellbookStopCast += this.OnSpellbookStopCast;
+            }
+        }
+
+        private void ShowItems(int value)
+        {
+            this.Menu.GetMenu("speed")["move"].IsVisible = value != 2;
+        }
+
+        public override void Start()
+        {
+            if (Platform.HasCoreAPI)
+            {
+                Game.OnUpdate += this.OnUpdate;
+                Render.OnDraw += this.OnDraw;
+            }
+        }
+
+        public override void Pause()
+        {
+            if (Platform.HasCoreAPI)
+            {
+                Game.OnUpdate -= this.OnUpdate;
+                Render.OnDraw -= this.OnDraw;
+            }
+        }
+
+        public override Menu Menu { get; }
 
         public override JObject GetTranslations()
         {
@@ -83,34 +123,6 @@
             if (playerHold.GetValue<bool>())
             {
                 Circle.Draw(playerHold.GetValue<Color>(), ObjectManager.Player.BoundingRadius, ObjectManager.Player.Position);
-            }
-        }
-
-        public SparkWalker()
-        {
-            if (Platform.HasCoreAPI)
-            {
-                EntityEvents.OnDoCast += this.OnDoCast;
-                EntityEvents.OnProcessSpellCast += this.OnProcessSpellCast;
-                EntityEvents.OnSpellbookStopCast += this.OnSpellbookStopCast;
-            }
-        }
-
-        public override void Start()
-        {
-            if (Platform.HasCoreAPI)
-            {
-                Game.OnUpdate += this.OnUpdate;
-                Render.OnDraw += this.OnDraw;
-            }
-        }
-
-        public override void Pause()
-        {
-            if (Platform.HasCoreAPI)
-            {
-                Game.OnUpdate -= this.OnUpdate;
-                Render.OnDraw -= this.OnDraw;
             }
         }
 
@@ -181,15 +193,37 @@
 
         public bool CanMove()
         {
+            var time = Game.Time + PingOffset();
+            var attackCastDelay = this.Unit.AttackCastDelay;
+
+            var logicSelected = this.Menu.GetMenu("speed")["logic"].GetValue<int>();
+
+            if (logicSelected != 0)
+            {
+                if (time >= this.attackT + attackCastDelay)
+                {
+                    return true;
+                }
+
+                if (logicSelected == 2)
+                {
+                    return false;
+                }
+            }
+
             var cancelSetting = Menu.GetMenu("speed")["move"].GetValue<float>();
 
             var attackSpeedMod = this.Unit.AttackSpeedMod / 10f;
             var attackSpeed = 0.1f / this.Unit.AttackDelay;
             var percentAttackSpeedMod = this.Unit.PercentAttackSpeedMod / 10f;
 
+            //Console.WriteLine("attackSpeedMod: " + attackSpeedMod);
+            //Console.WriteLine("attackSpeed: " + attackSpeed);
+            //Console.WriteLine("percentAttackSpeedMod: " + percentAttackSpeedMod);
+
             var magic = (attackSpeed + attackSpeedMod) * percentAttackSpeedMod * attackSpeed * 2f + percentAttackSpeedMod;
-            
-            return Game.Time + PingOffset() + cancelSetting + magic >= this.attackT + this.Unit.AttackCastDelay * (1f - attackSpeedMod);
+
+            return time + cancelSetting + magic >= this.attackT + attackCastDelay * (1f - attackSpeedMod);
         }
 
         private void OnUpdate(EventArgs obj)

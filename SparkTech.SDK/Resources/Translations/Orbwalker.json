@@ -68,6 +68,19 @@
 	  "zh": {
 		  "text": "??"
 	  },
+	  "logic": {
+		"en": {
+			"text": "AA cancel logic",
+			"options": [
+				"New logic only",
+				"Mixed",
+				"Legacy logic only"
+			]
+		},
+		"zh": {
+			"text": "??"
+		}
+	  },
 	  "attack": {
 		"en": {
 			"text": "Faster attacks",
