@@ -15,17 +15,21 @@
     {
         public static string Name { get; private set; }
 
-        internal static IRenderAPI RenderFragment { get; private set; }
+        public IRenderAPI RenderAPI { get; set; }
 
-        internal static ICoreAPI CoreFragment { get; private set; }
-        
-        internal static IUserInputAPI UserInputFragment { get; private set; }
+        public IUserInputAPI UserInputAPI { get; set; }
 
-        internal static ITheme PlatformTheme { get; private set; }
+        public ICoreAPI CoreAPI { get; set; }
 
-        internal static ILogger PlatformLogger { get; private set; }
+        public ITheme Theme { get; set; }
 
-        internal static Loader ScriptLoader { get; private set; } = new Loader();
+        public ILogger Logger { get; set; }
+
+        public AuthResult AuthResult { get; set; }
+
+        public PlatformFixes Fixes { get; set; }
+
+        public Loader Loader { get => ScriptLoader; set => ScriptLoader = value; }
 
         public static bool HasRenderAPI => RenderFragment != null;
 
@@ -35,35 +39,24 @@
 
         public static bool HasOwnTheme => PlatformTheme != null;
 
-        public IRenderAPI RenderAPI { get; set; }
+        private static Platform platform;
 
-        public ICoreAPI CoreAPI { get; set; }
-        
-        public IUserInputAPI UserInputAPI { get; set; }
+        internal static IRenderAPI RenderFragment => platform.RenderAPI;
 
-        public ITheme Theme { get; set; }
+        internal static ICoreAPI CoreFragment => platform.CoreAPI;
 
-        public ILogger Logger { get; set; }
+        internal static IUserInputAPI UserInputFragment => platform.UserInputAPI;
 
-        public AuthResult AuthResult { get; set; }
+        internal static ITheme PlatformTheme => platform.Theme;
 
-        public Loader Loader { get => ScriptLoader; set => ScriptLoader = value; }
+        internal static ILogger PlatformLogger => platform.Logger;
 
-        public int WatermarkOffset { get; set; } // fix
+        internal static Loader ScriptLoader { get; private set; } = new Loader();
 
         internal static bool IsLoaded { get; private set; }
 
-        public void Load(Action continueWith = null)
+        public void Load(Action continuation = null)
         {
-            RenderFragment = this.RenderAPI;
-            UserInputFragment = this.UserInputAPI;
-            CoreFragment = this.CoreAPI;
-
-            PlatformLogger = this.Logger;
-            PlatformTheme = this.Theme;
-
-            ScriptLoader = this.Loader;
-
             typeof(Log).Trigger();
 
             if (HasRenderAPI)
@@ -88,7 +81,7 @@
             {
                 typeof(ObjectManager).Trigger();
                 typeof(EntityEvents).Trigger();
-                typeof(Player).Trigger();
+                typeof(Entities.Humanizer).Trigger();
                 typeof(Game).Trigger();
                 typeof(Packet).Trigger();
             }
@@ -97,17 +90,17 @@
                 Log.Warn("CoreAPI not present!");
             }
 
-            GUI.Theme.WatermarkOffset = this.WatermarkOffset; // also triggers Theme class .cctor
+            GUI.Theme.WatermarkOffset = this.Fixes?.WatermarkOffset ?? 0; // also triggers Theme class .cctor
             SdkSetup.SetCoreAuth(this.AuthResult);
 
             IsLoaded = true;
             PrintInitialized();
 
-            if (continueWith != null)
+            if (continuation != null)
             {
                 try
                 {
-                    continueWith();
+                    continuation();
                 }
                 catch (Exception ex)
                 {
@@ -129,6 +122,7 @@
             }
 
             Name = name;
+            platform = this;
         }
 
         private static void PrintInitialized()

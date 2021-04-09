@@ -113,7 +113,7 @@
     <Compile Include="Entities\ITurret.cs" />
     <Compile Include="Entities\IUnit.cs" />
     <Compile Include="Entities\ObjectManager.cs" />
-    <Compile Include="Entities\Player.cs" />
+    <Compile Include="Entities\Humanizer.cs" />
     <Compile Include="Entities\Props\ISpellData.cs" />
     <Compile Include="EnumCache.cs" />
     <Compile Include="Evade\Evade.cs" />
@@ -203,7 +203,6 @@
     <Compile Include="HealthPrediction\HealthPredictionService.cs" />
     <Compile Include="HealthPrediction\IHealthPredition.cs" />
     <Compile Include="HealthPrediction\PortedPrediction.cs" />
-    <Compile Include="Humanizer.cs" />
     <Compile Include="InternalEx.cs" />
     <Compile Include="IResumable.cs" />
     <Compile Include="Keys.cs" />
@@ -237,6 +236,7 @@
     <Compile Include="Packets\PacketProtocolFlags.cs" />
     <Compile Include="PingCategory.cs" />
     <Compile Include="Platform.cs" />
+    <Compile Include="PlatformFixes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs" />
     <Compile Include="Rendering\Circle.cs" />

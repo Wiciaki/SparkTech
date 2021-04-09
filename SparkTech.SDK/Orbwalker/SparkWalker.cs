@@ -128,6 +128,8 @@
 
         protected virtual IUnit Unit => ObjectManager.Player;
 
+        private readonly Humanizer humanizer = new Humanizer();
+
         private void OnSpellbookStopCast(StopCastEventArgs args)
         {
             var owner = args.Source?.Owner;
@@ -239,9 +241,9 @@
             {
                 var target = this.GetOrbwalkingTarget(mode);
 
-                if (target != null && ProcessBeforeAttack(target) && Player.IssueOrder(GameObjectOrder.AttackUnit, target))
+                if (target != null && ProcessBeforeAttack(target) && humanizer.IssueOrder(GameObjectOrder.AttackUnit, target))
                 {
-                    attackT = Game.Time + this.Unit.AttackDelay;
+                    this.attackT = Game.Time + this.Unit.AttackDelay;
                 }
             }
 
@@ -249,7 +251,7 @@
 
             if (CanMove() && this.attackT <= Game.Time + orderSetting)
             {
-                Player.IssueOrder(GameObjectOrder.MoveTo, Game.Cursor);
+                humanizer.IssueOrder(GameObjectOrder.MoveTo, Game.Cursor);
             }
         }
 

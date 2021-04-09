@@ -4,6 +4,10 @@
     {
         int Level { get; }
 
+        int EvolvePoints { get; }
+
+        int SpellTrainingPoints { get; }
+
         float Experience { get; }
 
         float ExpToCurrentLevel { get; }

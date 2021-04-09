@@ -16,11 +16,14 @@
             var platform = new Platform("EnsoulSharp")
             {
                 AuthResult = AuthResult.GetLifetime(),
-                WatermarkOffset = 13,
-
                 RenderAPI = new RenderAPI(),
                 UserInputAPI = new UserInputAPI(),
-                CoreAPI = new CoreAPI()
+                CoreAPI = new CoreAPI(),
+                Fixes = new PlatformFixes
+                {
+                    WatermarkOffset = 13,
+
+                }
             };
 
             platform.Load(PostLoad);

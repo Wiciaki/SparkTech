@@ -1,6 +1,5 @@
 ﻿namespace SparkTech.SDK.Orbwalker
 {
-    using System;
     using System.Collections.Generic;
 
     using SparkTech.SDK.Entities;
@@ -136,6 +135,11 @@
             return AttackResets.Contains(name.ToLower());
         }
 
+        public static bool IsMelee(this IUnit unit)
+        {
+            return unit.CombatType == GameObjectCombatType.Melee;
+        }
+
         public static float GetAutoAttackRange(IUnit source)
         {
             return source.AttackRange + source.BoundingRadius;
@@ -144,11 +148,6 @@
         public static float GetAutoAttackRange(IUnit source, IAttackable target)
         {
             return GetAutoAttackRange(source) + target.BoundingRadius;
-        }
-
-        public static bool IsMelee(this IUnit unit)
-        {
-            return unit.CombatType == GameObjectCombatType.Melee;
         }
     }
 }

@@ -16,9 +16,6 @@
             this.book = this.player.Spellbook;
         }
 
-        public int SpellTrainingPoints => this.player.SpellTrainingPoints;
-        public int EvolvePoints => this.player.EvolvePoints;
-
         public bool IssueOrder(GameObjectOrder order, Vector3 target)
         {
             return this.player.IssueOrder((EnsoulSharp.GameObjectOrder)order, target);

@@ -25,7 +25,7 @@
 
         private static void OnUpdate(EventArgs _)
         {
-            if (Player.SpellTrainingPoints == 0)
+            if (ObjectManager.Player.SpellTrainingPoints == 0)
             {
                 return;
             }

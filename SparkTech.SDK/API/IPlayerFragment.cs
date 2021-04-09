@@ -6,10 +6,6 @@
 
     public interface IPlayerFragment
     {
-        int EvolvePoints { get; }
-
-        int SpellTrainingPoints { get; }
-
         bool IssueOrder(GameObjectOrder order, Vector3 target);
 
         bool IssueOrder(GameObjectOrder order, IAttackable target);
@@ -20,7 +16,7 @@
 
         bool CastSpell(SpellSlot slot, Vector3 startPosition, Vector3 endPosition);
 
-        bool CastSpell(SpellSlot slot, IGameObject target); // why not IAttackable?
+        bool CastSpell(SpellSlot slot, IGameObject target);
 
         bool CastSpell(SpellSlot slot);
 

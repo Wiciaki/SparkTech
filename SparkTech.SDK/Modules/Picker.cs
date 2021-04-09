@@ -51,7 +51,7 @@
                 input = input.Substring(1);
             }
 
-            this.picker = new MenuList("picker") { IsVisible = false, IsExpanded = true, Options = new List<string> { module.Menu.Text } };
+            this.picker = new MenuList("picker") { IsVisible = false, Options = new List<string> { module.Menu.Text } };
             this.picker.BeforeValueChange += this.BeforeValueChange;
 
             this.root = new Menu(input.ToLower()) { IsVisible = module.Menu.Any() };
@@ -64,8 +64,12 @@
             Menu.Build(this.root, GetTranslations(input), false);
             Menu.OnLanguageChanged += args => this.UpdateOptions();
 
+            if (Platform.HasCoreAPI)
+            {
+                module.Start();
+            }
+
             this.Current = module;
-            this.Current.Start();
         }
 
         private static JObject GetTranslations(string input)
@@ -91,9 +95,13 @@
                 return;
             }
 
-            this.Current.Pause();
+            if (Platform.HasCoreAPI)
+            {
+                this.Current.Pause();
+                module.Start();
+            }
+
             this.Current = module;
-            this.Current.Start();
         }
 
         private void UpdateOptions()

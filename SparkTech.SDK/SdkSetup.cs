@@ -107,7 +107,7 @@
                 Menu.Add(new MenuTexture("banner", texture));
             }
 
-            Humanizer.Initialize(Menu.GetMenu("humanizer"));
+            //Humanizer.Initialize(Menu.GetMenu("humanizer")); todo
             Mode.Initialize(Menu.GetMenu("modes"));
             Menu.Build(Menu, GetMenuTranslations());
 
