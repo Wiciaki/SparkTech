@@ -49,7 +49,9 @@
 
         public Loader Loader { get => ScriptLoader; set => ScriptLoader = value; }
 
-        public int WatermarkOffset { get; set; }
+        public int WatermarkOffset { get; set; } // fix
+
+        internal static bool IsLoaded { get; private set; }
 
         public void Load(Action continueWith = null)
         {
@@ -98,6 +100,7 @@
             GUI.Theme.WatermarkOffset = this.WatermarkOffset; // also triggers Theme class .cctor
             SdkSetup.SetCoreAuth(this.AuthResult);
 
+            IsLoaded = true;
             PrintInitialized();
 
             if (continueWith != null)

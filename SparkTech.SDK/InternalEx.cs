@@ -8,9 +8,9 @@
 
     internal static class InternalEx
     {
-        public static void SafeInvoke<T>(this Action<T> evt, T args)
+        internal static void SafeInvoke<T>(this Action<T> evt, T args)
         {
-            if (evt == null)
+            if (evt == null || !Platform.IsLoaded)
             {
                 return;
             }
@@ -28,7 +28,7 @@
             }
         }
 
-        public static void Trigger(this Type type)
+        internal static void Trigger(this Type type)
         {
             RuntimeHelpers.RunClassConstructor(type.TypeHandle);
         }

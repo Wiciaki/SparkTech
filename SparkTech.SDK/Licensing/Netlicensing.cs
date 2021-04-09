@@ -27,12 +27,10 @@
         }
 
         public Netlicensing(string licenseeNumber, SecureString apiKey) : this(licenseeNumber, new NetworkCredential("apiKey", apiKey))
-        {
-        }
+        { }
 
         public Netlicensing(string licenseeNumber, string apiKey) : this(licenseeNumber, new NetworkCredential("apiKey", apiKey))
-        {
-        }
+        { }
 
         public async Task<string> GetShopUrl()
         {
@@ -114,7 +112,6 @@
             request.ContentType = "application/x-www-form-urlencoded";
 
             var bytes = Encoding.UTF8.GetBytes(string.Join("&", reqParams));
-
             request.ContentLength = bytes.Length;
 
             using (var requestStream = request.GetRequestStream())
@@ -126,7 +123,7 @@
             {
                 using (var response = (HttpWebResponse)await request.GetResponseAsync())
                 {
-                    using (var responseStream = response.GetResponseStream() ?? throw new NullReferenceException("responseStream == null"))
+                    using (var responseStream = response.GetResponseStream())
                     {
                         Log.Info("Netlicensing post OK");
 
@@ -142,15 +139,13 @@
             }
             catch (WebException ex)
             {
-                Log.Info("Netlicensing post failed!");
+                Log.Info("Netlicensing request failed!");
 
                 var response = (HttpWebResponse)ex.Response;
 
                 if (response != null)
                 {
-                    var statusCode = response.StatusCode;
-
-                    Log.Info("Response code: " + (int)statusCode);
+                    Log.Info("Response code: " + (int)response.StatusCode);
                 }
 
                 return null;

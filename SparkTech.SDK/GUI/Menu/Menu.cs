@@ -3,7 +3,6 @@
     using System;
     using System.Collections;
     using System.Collections.Generic;
-    using System.Diagnostics.Contracts;
     using System.IO;
     using System.Linq;
     using System.Threading;
@@ -256,6 +255,26 @@
         private void UpdateTranslations()
         {
             this.SetTranslations(this.translations);
+        }
+
+        public void ResetTranslations(params string[] childPath)
+        {
+            if (childPath.Length == 0)
+                return;
+
+            var menu = this;
+            var t = this.translations;
+
+            for (var i = 0; i < childPath.Length - 1; i++)
+            {
+                var id = childPath[i];
+
+                menu = menu.GetMenu(id);
+                t = t.GetObject(id);
+            }
+
+            var last = childPath.Last();
+            menu.Get<MenuText>(last).SetTranslations(t.GetObject(last));
         }
 
         private static void UpdateItemSize(MenuItem item, Translations t)

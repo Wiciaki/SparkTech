@@ -23,7 +23,7 @@
                 new Menu("speed")
                 {
                     new MenuList("logic"),
-                    new MenuFloat("move", -0.3f, 1.5f, 0f),
+                    new MenuFloat("move", -0.3f, 0.6f, 0f),
                     new MenuFloat("attack", 0f, 0.15f, 0.04f),
                     new MenuFloat("orderTime", 0f, 0.15f, 0.04f),
                 },

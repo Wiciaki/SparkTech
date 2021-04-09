@@ -5,5 +5,7 @@
     public interface IAuth
     {
         Task<AuthResult> GetAuth(string product);
+
+        Task<string> GetShopUrl();
     }
 }

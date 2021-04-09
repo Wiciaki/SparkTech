@@ -33,7 +33,7 @@
                 return (HashSet<TGameObject>)entry.HashSet;
             }
 
-            Log.Info($"ObjectManager - now caching {typeof(TGameObject).Name}!");
+            Log.Info($"ObjectManager - now caching {typeof(TGameObject).Name}");
 
             var hashset = new HashSet<TGameObject>(Container[typeof(IGameObject)].HashSet.OfType<TGameObject>(), new EntityComparer<TGameObject>());
             Container.Add(typeof(TGameObject), new CacheEntry(hashset));

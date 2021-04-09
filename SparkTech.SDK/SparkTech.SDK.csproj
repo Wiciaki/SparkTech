@@ -54,6 +54,7 @@
       <HintPath>C:\Users\Penguin\Desktop\EnsoulSharp\Reference\SharpDX.Mathematics.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Management" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="API\ICoreAPI.cs" />

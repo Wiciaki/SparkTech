@@ -46,7 +46,7 @@
 
         private static void InvokeRenderEvent(Action @event)
         {
-            if (@event == null)
+            if (@event == null || !Platform.IsLoaded)
             {
                 return;
             }

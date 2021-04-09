@@ -23,7 +23,6 @@
     using SparkTech.SDK.Licensing;
     using SparkTech.SDK.Logging;
     using SparkTech.SDK.MovementPrediction;
-    using SparkTech.SDK.Orbwalker;
     using SparkTech.SDK.Properties;
     using SparkTech.SDK.Rendering;
     using SparkTech.SDK.TargetSelector;
@@ -33,11 +32,15 @@
     {
         public static readonly bool FirstRun;
 
+        private static readonly IAuth Auth;
+
+        private const string ValidateKey = "d1213e7b-0817-4544-aa37-01817170c494";
+
+        private const string ProductNumber = "PUJD2J5XN";
+
         private static readonly Menu Menu;
 
         private static readonly Translations Strings;
-
-        private static readonly Netlicensing Auth;
 
         private readonly static Dictionary<string, Action<EventArgs>> MenuLicenseHandlers;
 
@@ -47,7 +50,7 @@
         {
             MenuLicenseHandlers = new Dictionary<string, Action<EventArgs>>();
             Strings = new Translations { JObject.Parse(Resources.Strings) };
-            Auth = new Netlicensing(Licensee.GetUserId(), "d1213e7b-0817-4544-aa37-01817170c494");
+            Auth = new Netlicensing(Licensee.GetUserId(), ValidateKey);
             Menu = new Menu("sdk")
             {
                 new Menu("modes"),
@@ -149,7 +152,7 @@
         {
             Task.Factory.StartNew(async () =>
             {
-                var result = await Auth.GetAuth("SparkTech.SDK");
+                var result = await Auth.GetAuth(ProductNumber);
                 MenuAuthHelper(result, "sdk");
 
                 if (premiumActivated || !result.IsLicensed)
@@ -187,6 +190,8 @@
 
             void Update(EventArgs _)
             {
+                Menu.ResetTranslations("license", menuName);
+
                 var inner = GetString(str).Replace("{expiry}", expiry);
                 item.Text = item.Text.Replace("{status}", "\n" + inner);
             }
@@ -194,7 +199,6 @@
             if (MenuLicenseHandlers.TryGetValue(menuName, out var value))
             {
                 Menu.OnLanguageChanged -= value;
-                MenuLicenseHandlers.Remove(menuName);
             }
 
             MenuLicenseHandlers[menuName] = Update;
@@ -246,7 +250,7 @@
             }
             else
             {
-                welcomeMsg = GetString("languageUnknown");
+                welcomeMsg = "Welcome to {platform}!\nYour system language,\n\"{language}\" is not supported by SparkTech.SDK.\nDefault, English will be used.\nYou can change that from within the menu.";
                 welcomeMsg = welcomeMsg.Replace("{language}", culture.EnglishName);
             }
 
@@ -258,13 +262,6 @@
         internal static string GetString(string str)
         {
             return Strings.GetString(str);
-        }
-
-        private static void HandleAuth(Task<AuthResult> task)
-        {
-            var result = task.Result;
-            Console.WriteLine(result);
-            Process.Start(Auth.GetShopUrl().Result);
         }
 
         private static void HandleClock()

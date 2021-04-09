@@ -7,16 +7,16 @@
     "loaderContent": "In case of malfunctioning,\nplease make sure to put the .dll in\n%appdata%/SparkTech.SDK/Scripts",
 	"licenseUnlicensed": "You are currently unlicensed",
 	"licenseLifetime": "You are using a lifetime license",
-	"licenseSubscription": "Subscription active. Expiry time: {expiry}",
-
-    // special, don't translate
-    "languageUnknown": "Welcome to {platform}!\nYour system language,\n\"{language}\" is not supported by the SDK.\nDefault, English will be used.\nYou can change that from within the menu."
+	"licenseSubscription": "Subscription active. Expiry time: {expiry}"
   },
   "zh": {
     "keySelector": "现在按...",
     "firstTimeWelcome": "Welcome to {platform}!\nChinese language detected.\nYou can change that in the menu.",
     "platformHasNoTheme": "??",
     "loaderHeader": "??",
-    "loaderContent": "??"
+    "loaderContent": "??",
+	"licenseUnlicensed": "??",
+	"licenseLifetime": "??",
+	"licenseSubscription": "??: {expiry}",
   } 
 }
