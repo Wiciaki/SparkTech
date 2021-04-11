@@ -9,10 +9,28 @@
         public MissileClient(TEntity entity) : base(entity)
         { }
 
-        public IUnit Caster => ObjectManager.GetById<IUnit>(this.Entity.SpellCaster.NetworkId);
+        public IUnit Caster
+        {
+            get
+            {
+                var caster = this.Entity.SpellCaster;
+
+                return caster == null ? null : ObjectManager.GetById<IUnit>(caster.NetworkId);
+            }
+        }
+
+        public IGameObject Target
+        {
+            get
+            {
+                var target = this.Entity.Target;
+
+                return target == null ? null : ObjectManager.GetById(target.NetworkId);
+            }
+        }
+
         public Vector3 StartPosition => this.Entity.StartPosition;
         public Vector3 EndPosition => this.Entity.EndPosition;
-        public IGameObject Target => ObjectManager.GetById(this.Entity.Target.NetworkId);
         public SpellSlot Slot => (SpellSlot)this.Entity.Slot;
         public bool IsComplete => this.Entity.IsComplete;
         public float Width => this.Entity.Width;
