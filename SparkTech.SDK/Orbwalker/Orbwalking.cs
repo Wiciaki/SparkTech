@@ -1,127 +1,33 @@
 ﻿namespace SparkTech.SDK.Orbwalker
 {
+    using System;
     using System.Collections.Generic;
+    using System.Linq;
+
+    using Newtonsoft.Json.Linq;
 
     using SparkTech.SDK.Entities;
+    using SparkTech.SDK.Properties;
 
     public static class Orbwalking
     {
-        public static readonly IList<string> AttackResets = new string[]
-    {
-      "asheq",
-      "camilleq2",
-      "camilleq",
-      "dariusnoxiantacticsonh",
-      "elisespiderw",
-      "fiorae",
-      "gravesmove",
-      "garenq",
-      "gangplankqwrapper",
-      "illaoiw",
-      "jaycehypercharge",
-      "jaxempowertwo",
-      "kaylee",
-      "luciane",
-      "leonashieldofdaybreakattack",
-      "leonashieldofdaybreak",
-      "mordekaisermaceofspades",
-      "monkeykingdoubleattack",
-      "meditate",
-      "masochism",
-      "netherblade",
-      "nautiluspiercinggaze",
-      "nasusq",
-      "powerfist",
-      "rengarqemp",
-      "rengarq",
-      "renektonpreexecute",
-      "reksaiq",
-      "settq",
-      "sivirw",
-      "shyvanadoubleattack",
-      "sejuaninorthernwinds",
-      "trundletrollsmash",
-      "talonnoxiandiplomacy",
-      "takedown",
-      "vorpalspikes",
-      "volibearq",
-      "vie",
-      "vaynetumble",
-      "xinzhaoq",
-      "xinzhaocombotarget",
-      "yorickspectral",
-      "apheliosinfernumq",
-      "gravesautoattackrecoilcastedummy"
-    };
+        public static readonly IList<string> AttackResets;
 
-        public static readonly IList<string> Attacks = new string[13]
-        {
-      "caitlynheadshotmissile",
-      "itemtitanichydracleave",
-      "itemtiamatcleave",
-      "kennenmegaproc",
-      "masteryidoublestrike",
-      "quinnwenhanced",
-      "renektonsuperexecute",
-      "renektonexecute",
-      "trundleq",
-      "viktorqbuff",
-      "xinzhaoqthrust1",
-      "xinzhaoqthrust2",
-      "xinzhaoqthrust3"
-        };
+        public static readonly IList<string> Attacks;
 
-        public static readonly IList<string> NoAttacks = new string[48]
+        public static readonly IList<string> NoAttacks;
+
+        static Orbwalking()
         {
-      "asheqattacknoonhit",
-      "annietibbersbasicattack",
-      "annietibbersbasicattack2",
-      "bluecardattack",
-      "dravenattackp_r",
-      "dravenattackp_rc",
-      "dravenattackp_rq",
-      "dravenattackp_l",
-      "dravenattackp_lc",
-      "dravenattackp_lq",
-      "elisespiderlingbasicattack",
-      "gravesbasicattackspread",
-      "gravesautoattackrecoil",
-      "goldcardattack",
-      "heimertyellowbasicattack",
-      "heimertyellowbasicattack2",
-      "heimertbluebasicattack",
-      "heimerdingerwattack2",
-      "heimerdingerwattack2ult",
-      "ivernminionbasicattack2",
-      "ivernminionbasicattack",
-      "kindredwolfbasicattack",
-      "monkeykingdoubleattack",
-      "malzaharvoidlingbasicattack",
-      "malzaharvoidlingbasicattack2",
-      "malzaharvoidlingbasicattack3",
-      "redcardattack",
-      "shyvanadoubleattackdragon",
-      "shyvanadoubleattack",
-      "talonqdashattack",
-      "talonqattack",
-      "volleyattackwithsound",
-      "volleyattack",
-      "yorickghoulmeleebasicattack",
-      "yorickghoulmeleebasicattack2",
-      "yorickghoulmeleebasicattack3",
-      "yorickbigghoulbasicattack",
-      "zyraeplantattack",
-      "zoebasicattackspecial1",
-      "zoebasicattackspecial2",
-      "zoebasicattackspecial3",
-      "zoebasicattackspecial4",
-      "apheliosseverumattackmis",
-      "aphelioscrescendumattackmisin",
-      "aphelioscrescendumattackmisout",
-      "gravesautoattackrecoilcastedummy",
-      "gravesautoattackrecoil",
-      "gravesbasicattackspread"
-        };
+            string[] Parse(string resource)
+            {
+                return JArray.Parse(resource).Values<string>().ToArray();
+            }
+
+            AttackResets = Parse(Resources.AttackResets);
+            Attacks = Parse(Resources.Attacks);
+            NoAttacks = Parse(Resources.NoAttacks);
+        }
 
         public static bool IsAutoAttack(string name)
         {
@@ -147,6 +53,21 @@
 
         public static float GetAutoAttackRange(IUnit source, IAttackable target)
         {
+            if (target is IUnit unit)
+            {
+                var champ = source.CharName;
+
+                if (champ == "Caitlyn" && unit.HasBuff("caitlynyordletrapinternal"))
+                {
+                    return 1300f;
+                }
+
+                if (champ == "Aphelios" && source.HasBuff("aphelioscalibrumbonusrangebuff") && unit.HasBuff("aphelioscalibrumbonusrangedebuff"))
+                {
+                    return 1800f;
+                }
+            }
+
             return GetAutoAttackRange(source) + target.BoundingRadius;
         }
     }

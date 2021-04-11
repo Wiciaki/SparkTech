@@ -61,6 +61,66 @@ namespace SparkTech.SDK.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to [
+        ///  &quot;asheq&quot;,
+        ///  &quot;camilleq2&quot;,
+        ///  &quot;camilleq&quot;,
+        ///  &quot;dariusnoxiantacticsonh&quot;,
+        ///  &quot;elisespiderw&quot;,
+        ///  &quot;fiorae&quot;,
+        ///  &quot;gravesmove&quot;,
+        ///  &quot;garenq&quot;,
+        ///  &quot;gangplankqwrapper&quot;,
+        ///  &quot;illaoiw&quot;,
+        ///  &quot;jaycehypercharge&quot;,
+        ///  &quot;jaxempowertwo&quot;,
+        ///  &quot;kaylee&quot;,
+        ///  &quot;luciane&quot;,
+        ///  &quot;leonashieldofdaybreakattack&quot;,
+        ///  &quot;leonashieldofdaybreak&quot;,
+        ///  &quot;mordekaisermaceofspades&quot;,
+        ///  &quot;monkeykingdoubleattack&quot;,
+        ///  &quot;meditate&quot;,
+        ///  &quot;masochism&quot;,
+        ///  &quot;netherblade&quot;,
+        ///  &quot;nautiluspiercinggaze&quot;,
+        ///  &quot;nasusq&quot;,
+        ///  &quot;powerfist&quot;,
+        ///  &quot;rengarqemp&quot;,
+        ///  &quot;rengarq&quot;,
+        ///  &quot;renekto [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string AttackResets {
+            get {
+                return ResourceManager.GetString("AttackResets", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to [
+        ///  &quot;caitlynheadshotmissile&quot;,
+        ///  &quot;caitlynentrapmentmissile&quot;,
+        ///  &quot;itemtitanichydracleave&quot;,
+        ///  &quot;itemtiamatcleave&quot;,
+        ///  &quot;kennenmegaproc&quot;,
+        ///  &quot;masteryidoublestrike&quot;,
+        ///  &quot;quinnwenhanced&quot;,
+        ///  &quot;renektonsuperexecute&quot;,
+        ///  &quot;renektonexecute&quot;,
+        ///  &quot;trundleq&quot;,
+        ///  &quot;viktorqbuff&quot;,
+        ///  &quot;xinzhaoqthrust1&quot;,
+        ///  &quot;xinzhaoqthrust2&quot;,
+        ///  &quot;xinzhaoqthrust3&quot;
+        ///].
+        /// </summary>
+        internal static string Attacks {
+            get {
+                return ResourceManager.GetString("Attacks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
         internal static byte[] Banner {
@@ -73,7 +133,7 @@ namespace SparkTech.SDK.Properties {
         /// <summary>
         ///   Looks up a localized string similar to {
         ///  &quot;en&quot;: {
-        ///    &quot;text&quot;: &quot;Surgical Evade&quot;
+        ///    &quot;text&quot;: &quot;Soon™® [Spark]&quot;
         ///  },
         ///  &quot;zh&quot;: {
         ///    &quot;text&quot;: &quot;??&quot; 
@@ -90,11 +150,36 @@ namespace SparkTech.SDK.Properties {
         /// <summary>
         ///   Looks up a localized string similar to {
         ///  &quot;en&quot;: {
-        ///    &quot;text&quot;: &quot;Surgical SDK&quot;,
+        ///    &quot;text&quot;: &quot;Ported L# [Spark]&quot;
+        ///  },
+        ///  &quot;zh&quot;: {
+        ///    &quot;text&quot;: &quot;??&quot;
+        ///  },
+        ///  &quot;windup&quot;: {
+        ///    &quot;en&quot;: {
+        ///      &quot;text&quot;: &quot;Extra windup time&quot;,
+        ///      &quot;helpText&quot;: &quot;Windup time is broscience, i will find a way to\nget rid of this in the future&quot;
+        ///    },
+        ///    &quot;zh&quot;: {
+        ///      &quot;text&quot;: &quot;??&quot;
+        ///    }
+        ///  }
+        ///}.
+        /// </summary>
+        internal static string HealthPrediction {
+            get {
+                return ResourceManager.GetString("HealthPrediction", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
+        ///  &quot;en&quot;: {
+        ///    &quot;text&quot;: &quot;SparkTech.SDK&quot;,
         ///    &quot;helpText&quot;: &quot;Here you will find all the settings that impact other scripts&quot;
         ///  },
         ///  &quot;zh&quot;: {
-        ///    &quot;text&quot;: &quot;Surgeon制作&quot;,
+        ///    &quot;text&quot;: &quot;Spark制作&quot;,
         ///    &quot;helpText&quot;: &quot;帮助&quot;
         ///  },
         ///  &quot;language&quot;: {
@@ -111,9 +196,8 @@ namespace SparkTech.SDK.Properties {
         ///      &quot;helpText&quot;: &quot;All the settings besides key are champion-specific&quot;
         ///    },
         ///    &quot;zh&quot;: {
-        ///      &quot;text&quot;: &quot;SHANA PLS TRANSLATE TY&quot;
-        ///    },
-        ///     [rest of string was truncated]&quot;;.
+        ///      &quot;text&quot;: &quot;CHINESE PPL PLS TRANSLATE TY&quot;
+        ///    },        /// [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string MainMenu {
             get {
@@ -184,15 +268,36 @@ namespace SparkTech.SDK.Properties {
                 return ResourceManager.GetString("Module", resourceCulture);
             }
         }
-
-        internal static string HealthPrediction
-        {
-            get
-            {
-                return ResourceManager.GetString("HealthPrediction", resourceCulture);
+        
+        /// <summary>
+        ///   Looks up a localized string similar to [
+        ///  &quot;asheqattacknoonhit&quot;,
+        ///  &quot;annietibbersbasicattack&quot;,
+        ///  &quot;annietibbersbasicattack2&quot;,
+        ///  &quot;bluecardattack&quot;,
+        ///  &quot;dravenattackp_r&quot;,
+        ///  &quot;dravenattackp_rc&quot;,
+        ///  &quot;dravenattackp_rq&quot;,
+        ///  &quot;dravenattackp_l&quot;,
+        ///  &quot;dravenattackp_lc&quot;,
+        ///  &quot;dravenattackp_lq&quot;,
+        ///  &quot;elisespiderlingbasicattack&quot;,
+        ///  &quot;gravesbasicattackspread&quot;,
+        ///  &quot;gravesautoattackrecoil&quot;,
+        ///  &quot;goldcardattack&quot;,
+        ///  &quot;heimertyellowbasicattack&quot;,
+        ///  &quot;heimertyellowbasicattack2&quot;,
+        ///  &quot;heimertbluebasicattack&quot;,
+        ///  &quot;heimerdingerwattack2&quot;,
+        ///  &quot;heimerdingerwattack2ult&quot;,
+        ///  &quot;i [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string NoAttacks {
+            get {
+                return ResourceManager.GetString("NoAttacks", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to {
         ///  &quot;en&quot;: {
@@ -212,9 +317,43 @@ namespace SparkTech.SDK.Properties {
         /// <summary>
         ///   Looks up a localized string similar to {
         ///  &quot;en&quot;: {
-        ///    &quot;text&quot;:  &quot;Surgical&quot; 
-        ///  }
-        ///}.
+        ///    &quot;text&quot;:  &quot;SparkWalker&quot; 
+        ///  },
+        ///  &quot;zh&quot;: {
+        ///	&quot;text&quot;: &quot;??&quot;
+        ///  },
+        ///  &quot;drawings&quot;: {
+        ///	&quot;en&quot;: {
+        ///		&quot;text&quot;: &quot;Drawings&quot;
+        ///	},
+        ///	&quot;zh&quot;: {
+        ///		&quot;text&quot;: &quot;??&quot;
+        ///	},
+        ///	&quot;playerRange&quot;: {
+        ///		&quot;en&quot;: {
+        ///			&quot;text&quot;: &quot;Show your AutoAttack range&quot;
+        ///		},
+        ///		&quot;zh&quot;: {
+        ///			&quot;text&quot;: &quot;??&quot;
+        ///		}
+        ///	},
+        ///	&quot;enemy&quot;: {
+        ///		&quot;en&quot;: {
+        ///			&quot;text&quot;: &quot;Show enemies&apos; AA ranges&quot;
+        ///		},
+        ///		&quot;zh&quot;: {
+        ///			&quot;text&quot;: &quot;??&quot;
+        ///		},
+        ///		&quot;alone&quot;: {
+        ///			&quot;en&quot;: {
+        ///				&quot;text&quot;: &quot;No enemy heroes detected&quot;
+        ///			},
+        ///			&quot;zh&quot;: {
+        ///				&quot;text&quot;: &quot;??&quot;
+        ///			}
+        ///	}
+        ///	},
+        ///	&quot;minions&quot;: [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string Orbwalker {
             get {
@@ -247,13 +386,12 @@ namespace SparkTech.SDK.Properties {
         ///  &quot;en&quot;: {
         ///    &quot;keySelector&quot;: &quot;Press now...&quot;,
         ///    &quot;firstTimeWelcome&quot;: &quot;Welcome to {platform}!\nEnglish language detected.\nYou can change that from within the menu.&quot;,
-        ///    &quot;none&quot;: &quot;None&quot;,
         ///    &quot;platformHasNoTheme&quot;: &quot;provides no theme&quot;,
         ///    &quot;loaderHeader&quot;: &quot;No new scripts detected&quot;,
         ///    &quot;loaderContent&quot;: &quot;In case of malfunctioning,\nplease make sure to put the .dll in\n%appdata%/SparkTech.SDK/Scripts&quot;,
-        ///
-        ///    // special, don&apos;t translate
-        ///    &quot;languageUnknown&quot;: &quot;Welcome to {platform}!\nYour system languag [rest of string was truncated]&quot;;.
+        ///	&quot;licenseUnlicensed&quot;: &quot;You are currently unlicensed&quot;,
+        ///	&quot;licenseLifetime&quot;: &quot;You are using a lifetime license&quot;,
+        ///	&quot;licenseS [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string Strings {
             get {
@@ -264,7 +402,8 @@ namespace SparkTech.SDK.Properties {
         /// <summary>
         ///   Looks up a localized string similar to {
         ///  &quot;en&quot;: {
-        ///    &quot;text&quot;: &quot;Surgical&quot;
+        ///    &quot;text&quot;: &quot;Weights [Spark]&quot;,
+        ///	&quot;helpText&quot;: &quot;Early access version; not really that good ATM :(&quot;
         ///  },
         ///  &quot;zh&quot;: {
         ///    &quot;text&quot;: &quot;??&quot; 
@@ -324,9 +463,9 @@ namespace SparkTech.SDK.Properties {
         ///    },
         ///    &quot;indicator&quot;: {
         ///      &quot;en&quot;: {
-        ///        &quot;text&quot;: &quot;Enable damage indicator&quot;
+        ///        &quot;text&quot;: &quot;Enable damage indicators&quot;
         ///      },
-        ///      &quot;zh [rest of string was truncated]&quot;;.
+        ///      &quot;z [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string Utilities {
             get {

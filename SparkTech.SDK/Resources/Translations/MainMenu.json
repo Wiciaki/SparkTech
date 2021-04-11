@@ -267,9 +267,9 @@
     "zh": {
       "text": "??"
     },
-    "enable": {
+    "disable": {
       "en": {
-        "text": "Enable the global humanizer"
+        "text": "Disable all humanizers"
       },
       "zh": {
         "text": "??"

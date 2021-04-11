@@ -46,7 +46,7 @@
 
             var reg = GetRegistryHwid();
 
-            var input = RandomizeStr(uniq + proc + mobo + reg + disk, 25);
+            var input = Shuffle(uniq + proc + mobo + reg + disk, 25);
 
             var i = 5;
             return string.Join("-", input.ToLookup(c => Math.Floor(i++ / 5f)).Select(e => new string(e.ToArray())));
@@ -78,16 +78,18 @@
             }
         }
 
-        private static string RandomizeStr(string str, int length)
+        private static string Shuffle(string str, int length)
         {
-            byte[] bytes;
-
             using (var algo = new SHA512CryptoServiceProvider())
             {
-                bytes = algo.ComputeHash(Encoding.UTF8.GetBytes(str));
-            }
+                var hash = algo.ComputeHash(Encoding.UTF8.GetBytes(str));
+                var result = Convert.ToBase64String(hash).Substring(0, length);
 
-            return Convert.ToBase64String(bytes).Substring(0, length).Replace('/', '0').Replace('+', '1').ToUpper(CultureInfo.InvariantCulture);
+                result = result.Replace('/', '0');
+                result = result.Replace('+', '1');
+
+                return result.ToUpper(CultureInfo.InvariantCulture);
+            }
         }
     }
 }

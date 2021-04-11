@@ -270,8 +270,39 @@
     <EmbeddedResource Include="Properties\Resources.resx" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\Database\AttackResets.json" />
+    <None Include="Resources\Database\Attacks.json" />
+    <None Include="Resources\Database\NoAttacks.json" />
+    <None Include="Resources\RenderEffectCompiled" />
+    <None Include="Resources\Translations\Evade.json" />
     <None Include="Resources\Translations\HealthPrediction.json" />
+    <None Include="Resources\Translations\MainMenu.json" />
+    <None Include="Resources\Translations\Mode.json" />
+    <None Include="Resources\Translations\Module.json" />
+    <None Include="Resources\Translations\NullChampion.json" />
+    <None Include="Resources\Translations\Orbwalker.json" />
+    <None Include="Resources\Translations\Strings.json" />
+    <None Include="Resources\Translations\TargetSelector.json" />
+    <None Include="Resources\Translations\Utilities.json" />
   </ItemGroup>
   <ItemGroup />
+  <ItemGroup>
+    <Content Include="Resources\Banner.png" />
+    <Content Include="Resources\Picker.jpg" />
+  </ItemGroup>
+<!--
+  <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup> 
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup> -->
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

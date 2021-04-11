@@ -55,7 +55,23 @@
 
         internal static bool IsLoaded { get; private set; }
 
-        public void Load(Action continuation = null)
+        public Platform(string name)
+        {
+            if (Name != null)
+            {
+                throw new InvalidOperationException($"Platform, \"{Name}\" already declared!");
+            }
+
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                throw new ArgumentException("Invalid platform name", nameof(name));
+            }
+
+            Name = name;
+            platform = this;
+        }
+
+        public async void Load(Action continuation = null)
         {
             typeof(Log).Trigger();
 
@@ -81,7 +97,7 @@
             {
                 typeof(ObjectManager).Trigger();
                 typeof(EntityEvents).Trigger();
-                typeof(Entities.Humanizer).Trigger();
+                typeof(Humanizer).Trigger();
                 typeof(Game).Trigger();
                 typeof(Packet).Trigger();
             }
@@ -93,8 +109,8 @@
             GUI.Theme.WatermarkOffset = this.Fixes?.WatermarkOffset ?? 0; // also triggers Theme class .cctor
             SdkSetup.SetCoreAuth(this.AuthResult);
 
-            IsLoaded = true;
-            PrintInitialized();
+            Initialize();
+            Console.WriteLine(await Humanizer.Benchmark());
 
             if (continuation != null)
             {
@@ -109,41 +125,26 @@
             }
         }
 
-        public Platform(string name)
+        private static void Initialize()
         {
-            if (Name != null)
-            {
-                throw new InvalidOperationException($"Platform, \"{Name}\" already declared!");
-            }
+            IsLoaded = true;
 
-            if (string.IsNullOrWhiteSpace(name))
-            {
-                throw new ArgumentException("Invalid platform name", nameof(name));
-            }
-
-            Name = name;
-            platform = this;
-        }
-
-        private static void PrintInitialized()
-        {
             var message = "SparkTech.SDK initialized!";
             Log.Info(message);
 
             message = ">>>>>>> " + message + " <<<<<<<";
 
             var color = Console.ForegroundColor;
+            Console.ForegroundColor = ConsoleColor.Blue;
 
             try
             {
-                Console.ForegroundColor = ConsoleColor.Blue;
                 Console.WriteLine(string.Format($"\n{{0,{(Console.WindowWidth + message.Length) / 2}}}\n", message));
             }
-            catch { }
-            finally
-            {
-                Console.ForegroundColor = color;
-            }
+            catch
+            { }
+            
+            Console.ForegroundColor = color;
         }
 
         internal static Exception FragmentException()

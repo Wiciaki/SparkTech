@@ -15,6 +15,7 @@
 
     using SparkTech.SDK.Champion;
     using SparkTech.SDK.DamageLibrary;
+    using SparkTech.SDK.Entities;
     using SparkTech.SDK.Evade;
     using SparkTech.SDK.GUI;
     using SparkTech.SDK.GUI.Menu;
@@ -54,7 +55,11 @@
             Menu = new Menu("sdk")
             {
                 new Menu("modes"),
-                new Menu("humanizer"),
+                new Menu("humanizer") 
+                {
+                    new MenuBool("disable", false),
+                    new MenuInt("apm", 200, 600, 400)
+                },
                 new Menu("menu")
                 {
                     new MenuKey("key", Key.ShiftKey),
@@ -107,7 +112,6 @@
                 Menu.Add(new MenuTexture("banner", texture));
             }
 
-            //Humanizer.Initialize(Menu.GetMenu("humanizer")); todo
             Mode.Initialize(Menu.GetMenu("modes"));
             Menu.Build(Menu, GetMenuTranslations());
 
@@ -214,10 +218,11 @@
             HandleTheme();
             HandleArrows();
             HandleLoadedCount();
+            HandleClock();
+            HandleHumanizer();
 
             SetMenuTriggers();
             SetSdkAuth();
-            HandleClock();
 
             var langItem = Menu["language"];
 
@@ -307,6 +312,35 @@
             y.BeforeValueChange += args => Menu.SetPosition(x.GetValue<int>(), args.NewValue<int>());
 
             Menu.SetPosition(x.GetValue<int>(), y.GetValue<int>());
+        }
+
+        private static void HandleHumanizer()
+        {
+            var menu = Menu.GetMenu("humanizer");
+
+            var disabled = menu["disable"];
+            var apm = menu["apm"];
+            apm.IsVisible = !disabled.GetValue<bool>();
+
+            if (Platform.HasCoreAPI)
+            {
+                Humanizer.Apm = apm.GetValue<int>();
+                Humanizer.IsEnabled = !disabled.GetValue<bool>();
+
+                apm.BeforeValueChange += args => Humanizer.Apm = apm.GetValue<int>();
+            }
+
+            disabled.BeforeValueChange += args =>
+            {
+                var value = !args.NewValue<bool>();
+
+                if (Platform.HasCoreAPI)
+                {
+                    Humanizer.IsEnabled = value;
+                }
+
+                apm.IsVisible = value;
+            };
         }
 
         private static void HandleTheme()

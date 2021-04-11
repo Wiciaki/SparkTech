@@ -23,6 +23,11 @@
             return !o.IsAlly();
         }
 
+        public static bool IsDummy(this IHero hero)
+        {
+            return hero.CharName == "PracticeTool_TargetDummy";
+        }
+
         public static float HealthPercent(this IHero hero)
         {
             return hero.Health / hero.MaxHealth * 100f;
@@ -135,7 +140,12 @@
 
         public static bool Compare(this IGameObject left, IGameObject right)
         {
-            return GameObjectComparer.Equals(left, right);
+            return right != null && GameObjectComparer.Equals(left, right);
+        }
+
+        public static bool Compare(this IGameObject left, int rightId)
+        {
+            return left.Id == rightId;
         }
 
         public static bool IsMovementImpairing(this IBuff buff)

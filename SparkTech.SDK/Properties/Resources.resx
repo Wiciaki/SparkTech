@@ -118,6 +118,12 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="AttackResets" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Database\AttackResets.json;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1250</value>
+  </data>
+  <data name="Attacks" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Database\Attacks.json;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1250</value>
+  </data>
   <data name="Banner" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Banner.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
@@ -135,6 +141,9 @@
   </data>
   <data name="Module" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\translations\module.json;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1250</value>
+  </data>
+  <data name="NoAttacks" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Database\NoAttacks.json;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1250</value>
   </data>
   <data name="NullChampion" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\translations\nullchampion.json;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1250</value>
