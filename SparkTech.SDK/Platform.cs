@@ -71,7 +71,7 @@
             platform = this;
         }
 
-        public async void Load(Action continuation = null)
+        public void Load(Action continuation = null)
         {
             typeof(Log).Trigger();
 
@@ -110,7 +110,6 @@
             SdkSetup.SetCoreAuth(this.AuthResult);
 
             Initialize();
-            Console.WriteLine(await Humanizer.Benchmark());
 
             if (continuation != null)
             {

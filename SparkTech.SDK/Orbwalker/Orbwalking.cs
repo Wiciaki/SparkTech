@@ -17,6 +17,11 @@
 
         public static readonly IList<string> NoAttacks;
 
+        public static bool IsMelee(this IUnit unit)
+        {
+            return unit.CombatType == GameObjectCombatType.Melee;
+        }
+
         static Orbwalking()
         {
             string[] Parse(string resource)
@@ -39,11 +44,6 @@
         public static bool IsAutoAttackReset(string name)
         {
             return AttackResets.Contains(name.ToLower());
-        }
-
-        public static bool IsMelee(this IUnit unit)
-        {
-            return unit.CombatType == GameObjectCombatType.Melee;
         }
 
         public static float GetAutoAttackRange(IUnit source)

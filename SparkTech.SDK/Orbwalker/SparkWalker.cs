@@ -152,13 +152,13 @@
 
             var name = args.SpellData.Name;
 
-            if (Orbwalking.IsAutoAttack(name))
-            {
-                this.attackT = Game.Time - GetPingOffset();
-            }
-            else if (Orbwalking.IsAutoAttackReset(name))
+            if (Orbwalking.IsAutoAttackReset(name))
             {
                 this.attackT = 0;
+            }
+            else if (Orbwalking.IsAutoAttack(name))
+            {
+                this.attackT = Game.Time - GetPingOffset();
             }
         }
 
