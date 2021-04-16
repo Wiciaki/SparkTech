@@ -45,7 +45,7 @@
 
             var platform = new Platform("GUI Editor")
             {
-                AuthResult = AuthResult.GetLifetime(),
+                AuthResult = new AuthResult(true),
                 RenderAPI = form,
                 UserInputAPI = form
             };
@@ -56,8 +56,6 @@
             {
                 form.Device.Clear(ClearFlags.Target, Color.Black, 1f, 0);
                 form.Device.BeginScene();
-
-                form.BeginScene();
 
                 Picture.Draw(default, texture);
 
@@ -83,8 +81,6 @@
             public Size2 Resolution { get; }
 
             public Device Device { get; set; }
-
-            public Action BeginScene { get; set; }
 
             public Action Draw { get; set; }
 

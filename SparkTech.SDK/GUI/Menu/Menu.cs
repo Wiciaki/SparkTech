@@ -12,9 +12,11 @@
 
     using SharpDX;
 
-    using SparkTech.SDK.EventData;
-    using SparkTech.SDK.Logging;
-    using SparkTech.SDK.Rendering;
+    using EventData;
+    using Input;
+    using Logging;
+    using Rendering;
+    using SparkTech.SDK.League;
 
     public class Menu : MenuText, IEnumerable<MenuItem>, IExpandable
     {
@@ -526,7 +528,7 @@
                 return false;
             }
 
-            return point.X <= UserInput.Cursor2D.X && point.X + size.Width >= UserInput.Cursor2D.X && point.Y <= UserInput.Cursor2D.Y && point.Y + size.Height >= UserInput.Cursor2D.Y;
+            return point.X <= UserInput.CursorPos2D.X && point.X + size.Width >= UserInput.CursorPos2D.X && point.Y <= UserInput.CursorPos2D.Y && point.Y + size.Height >= UserInput.CursorPos2D.Y;
         }
 
         internal static bool IsLeftClick(WindowsMessages message)

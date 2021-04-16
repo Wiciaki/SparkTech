@@ -1,9 +1,9 @@
-﻿namespace SparkTech.SDK
+﻿namespace SparkTech.SDK.Input
 {
     using System.Collections.Generic;
     using System.Linq;
 
-    using SparkTech.SDK.GUI.Menu;
+    using GUI.Menu;
 
     public class Mode
     {

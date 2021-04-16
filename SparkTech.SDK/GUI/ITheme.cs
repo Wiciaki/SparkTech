@@ -1,5 +1,7 @@
 ﻿namespace SparkTech.SDK.GUI
 {
+    using Modules;
+
     using SharpDX;
 
     public interface ITheme : IResumable

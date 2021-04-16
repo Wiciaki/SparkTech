@@ -72,8 +72,7 @@
                 using (var moc = mos.Get())
                 {
                     var results = moc.Cast<ManagementBaseObject>().Select(mbo => mbo[value]?.ToString());
-                    
-                    return results.SingleOrDefault(str => !string.IsNullOrEmpty(str));
+                    return results.SingleOrDefault(s => !string.IsNullOrEmpty(s));
                 }
             }
         }

@@ -3,7 +3,9 @@
     using System;
 
     using SharpDX;
-    using SparkTech.SDK.GUI.Themes;
+
+    using Modules;
+    using Themes;
 
     public static class Theme
     {

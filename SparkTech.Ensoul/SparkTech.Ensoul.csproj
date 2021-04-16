@@ -77,6 +77,7 @@
     <Compile Include="Entities\Props\SpellData.cs" />
     <Compile Include="Fragments\EntityEventsFragment.cs" />
     <Compile Include="Fragments\GameFragment.cs" />
+    <Compile Include="Fragments\NavMeshFragment.cs" />
     <Compile Include="Fragments\ObjectManagerFragment.cs" />
     <Compile Include="Fragments\PacketFragment.cs" />
     <Compile Include="Fragments\PlayerFragment.cs" />

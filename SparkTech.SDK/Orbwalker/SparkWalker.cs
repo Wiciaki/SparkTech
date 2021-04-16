@@ -10,6 +10,8 @@
     using SparkTech.SDK.Entities;
     using SparkTech.SDK.EventData;
     using SparkTech.SDK.GUI.Menu;
+    using SparkTech.SDK.Input;
+    using SparkTech.SDK.League;
     using SparkTech.SDK.Properties;
     using SparkTech.SDK.Rendering;
 
@@ -77,17 +79,14 @@
             {
                 foreach (var hero in ObjectManager.Get<IHero>().Where(h => h.IsEnemy() && !h.IsDummy()))
                 {
-                    menu.Add(new MenuColorBool(GetMenuId(hero), Color.Yellow, false));
+                    var id = $"{hero.CharName} [{hero.Name}/{hero.Id}]";
+
+                    menu.Add(new MenuColorBool(id, Color.Yellow, false));
                     menu["alone"].IsVisible = false;
                 }
             }
 
             return menu;
-        }
-
-        private static string GetMenuId(IHero hero)
-        {
-            return $"{hero.CharName} [{hero.Name}/{hero.Id}]";
         }
 
         private void OnDraw()
@@ -100,7 +99,7 @@
                 Circle.Draw(playerRange.GetValue<Color>(), Orbwalking.GetAutoAttackRange(ObjectManager.Player), ObjectManager.Player.Position);
             }
 
-            foreach (var (hero, color) in from hero in ObjectManager.Get<IHero>() where hero.IsEnemy() && hero.IsVisible let item = drawings[GetMenuId(hero)] where item != null && item.GetValue<bool>() select (hero, item.GetValue<Color>()))
+            foreach (var (hero, color) in from hero in ObjectManager.Get<IHero>() where hero.IsEnemy() && hero.IsVisible let item = drawings.Cast<MenuText>().FirstOrDefault(i => i.Text.EndsWith(hero.Id.ToString())) where item != null && item.GetValue<bool>() select (hero, item.GetValue<Color>()))
             {
                 Circle.Draw(color, Orbwalking.GetAutoAttackRange(hero), hero.Position);
             }
@@ -131,7 +130,7 @@
         {
             if (this.Unit.Compare(args.Source?.Owner) && args.DestroyMissile && args.KeepAnimationPlaying)
             {
-                this.attackT = 0;
+                this.attackT = 0f;
             }
         }
 
@@ -154,7 +153,7 @@
 
             if (Orbwalking.IsAutoAttackReset(name))
             {
-                this.attackT = 0;
+                this.attackT = 0f;
             }
             else if (Orbwalking.IsAutoAttack(name))
             {
@@ -178,14 +177,14 @@
 
             var attackCastDelay = this.Unit.AttackCastDelay;
 
-            if (logic != 0)
+            if (logic != 2)
             {
                 if (time >= this.attackT + attackCastDelay)
                 {
                     return true;
                 }
 
-                if (logic == 2)
+                if (logic == 0)
                 {
                     return false;
                 }
@@ -217,7 +216,7 @@
 
                 if (target != null && ProcessBeforeAttack(target) && this.Humanizer.IssueOrder(this.AttackOrder, target))
                 {
-                    this.attackT = time + this.Unit.AttackDelay;
+                    this.attackT = time;
                 }
             }
 
@@ -225,7 +224,7 @@
 
             if (CanMove(time) && this.attackT <= time + extraTime)
             {
-                this.Humanizer.IssueOrder(this.MoveOrder, Game.Cursor);
+                this.Humanizer.IssueOrder(this.MoveOrder, Game.CursorPos);
             }
         }
 

@@ -1,4 +1,4 @@
-﻿namespace SparkTech.SDK
+﻿namespace SparkTech.SDK.Input
 {
     using System;
 
@@ -13,7 +13,7 @@
 
         public static event Action<WndProcEventArgs> OnWndProc;
 
-        public static Point Cursor2D { get; private set; }
+        public static Point CursorPos2D { get; private set; }
 
         static UserInput()
         {
@@ -26,7 +26,7 @@
                     var x = (short)args.LParam;
                     var y = (short)(args.LParam >> 16);
 
-                    Cursor2D = new Point(x, y);
+                    CursorPos2D = new Point(x, y);
                 }
 
                 OnWndProc.SafeInvoke(args);

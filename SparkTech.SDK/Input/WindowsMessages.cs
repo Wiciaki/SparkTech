@@ -1,4 +1,4 @@
-﻿namespace SparkTech.SDK
+﻿namespace SparkTech.SDK.Input
 {
     using System;
     using System.Diagnostics.CodeAnalysis;

@@ -12,8 +12,6 @@
 
         Device Device { get; }
 
-        Action BeginScene { get; set; }
-
         Action Draw { get; set; }
 
         Action EndScene { get; set; }

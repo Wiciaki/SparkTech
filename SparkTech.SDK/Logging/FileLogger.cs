@@ -1,5 +1,6 @@
 ﻿namespace SparkTech.SDK.Logging
 {
+
     using System;
     using System.IO;
 

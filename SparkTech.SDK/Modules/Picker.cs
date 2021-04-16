@@ -9,6 +9,7 @@
 
     using SparkTech.SDK.EventData;
     using SparkTech.SDK.GUI.Menu;
+    using SparkTech.SDK.Logging;
     using SparkTech.SDK.Properties;
 
     public sealed class Picker<TModule> where TModule : class, IModule

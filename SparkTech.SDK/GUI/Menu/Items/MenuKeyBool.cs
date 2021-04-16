@@ -2,7 +2,8 @@
 {
     using SharpDX;
 
-    using SparkTech.SDK.EventData;
+    using EventData;
+    using Input;
 
     public class MenuKeyBool : MenuKey, IMenuValue<bool>
     {

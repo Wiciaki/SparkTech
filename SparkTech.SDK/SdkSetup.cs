@@ -21,6 +21,8 @@
     using SparkTech.SDK.GUI.Menu;
     using SparkTech.SDK.GUI.Notifications;
     using SparkTech.SDK.HealthPrediction;
+    using SparkTech.SDK.Input;
+    using SparkTech.SDK.League;
     using SparkTech.SDK.Licensing;
     using SparkTech.SDK.Logging;
     using SparkTech.SDK.MovementPrediction;
@@ -45,7 +47,7 @@
 
         private readonly static Dictionary<string, Action<EventArgs>> MenuLicenseHandlers;
 
-        private static bool premiumActivated;
+        private static bool authed;
 
         static SdkSetup()
         {
@@ -159,10 +161,10 @@
                 var result = await Auth.GetAuth(ProductNumber);
                 MenuAuthHelper(result, "sdk");
 
-                if (premiumActivated || !result.IsLicensed)
+                if (authed || !result.IsLicensed)
                     return;
 
-                premiumActivated = true;
+                authed = true;
                 // aaa
             });
         }

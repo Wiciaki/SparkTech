@@ -72,9 +72,9 @@
 		"en": {
 			"text": "AA cancel logic",
 			"options": [
-				"New logic only",
+				"Standard",
 				"Mixed",
-				"Legacy logic only"
+				"Experimental"
 			]
 		},
 		"zh": {

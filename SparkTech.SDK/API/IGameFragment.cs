@@ -5,9 +5,12 @@
     using SharpDX;
 
     using SparkTech.SDK.Entities;
+    using SparkTech.SDK.League;
 
     public interface IGameFragment
     {
+        INavMesh GetNavMesh();
+
         void Say(string text);
 
         void Print(string text);
@@ -34,7 +37,7 @@
 
         Vector3 ScreenToWorld(Vector2 pos);
 
-        Vector3 Cursor { get; }
+        Vector3 CursorPos { get; }
 
         Matrix ProjectionMatrix { get; }
 

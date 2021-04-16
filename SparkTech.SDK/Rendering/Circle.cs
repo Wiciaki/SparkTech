@@ -3,6 +3,7 @@
     using SharpDX;
     using SharpDX.Direct3D9;
 
+    using SparkTech.SDK.League;
     using SparkTech.SDK.Properties;
 
     public static class Circle

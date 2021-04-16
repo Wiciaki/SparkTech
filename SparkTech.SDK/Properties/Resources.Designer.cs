@@ -63,6 +63,7 @@ namespace SparkTech.SDK.Properties {
         /// <summary>
         ///   Looks up a localized string similar to [
         ///  &quot;asheq&quot;,
+        ///  &quot;caitlynentrapment&quot;,
         ///  &quot;camilleq2&quot;,
         ///  &quot;camilleq&quot;,
         ///  &quot;dariusnoxiantacticsonh&quot;,
@@ -87,8 +88,7 @@ namespace SparkTech.SDK.Properties {
         ///  &quot;nasusq&quot;,
         ///  &quot;powerfist&quot;,
         ///  &quot;rengarqemp&quot;,
-        ///  &quot;rengarq&quot;,
-        ///  &quot;renekto [rest of string was truncated]&quot;;.
+        /// [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string AttackResets {
             get {
@@ -99,7 +99,6 @@ namespace SparkTech.SDK.Properties {
         /// <summary>
         ///   Looks up a localized string similar to [
         ///  &quot;caitlynheadshotmissile&quot;,
-        ///  &quot;caitlynentrapmentmissile&quot;,
         ///  &quot;itemtitanichydracleave&quot;,
         ///  &quot;itemtiamatcleave&quot;,
         ///  &quot;kennenmegaproc&quot;,
@@ -138,8 +137,7 @@ namespace SparkTech.SDK.Properties {
         ///  &quot;zh&quot;: {
         ///    &quot;text&quot;: &quot;??&quot; 
         ///  } 
-        ///}
-        ///.
+        ///}.
         /// </summary>
         internal static string Evade {
             get {

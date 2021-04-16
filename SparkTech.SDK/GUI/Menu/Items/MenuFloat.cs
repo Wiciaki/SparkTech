@@ -6,7 +6,8 @@
 
     using SharpDX;
 
-    using SparkTech.SDK.EventData;
+    using EventData;
+    using Input;
 
     public class MenuFloat : MenuValue, IMenuValue<float>
     {
@@ -115,7 +116,7 @@
 
             if (this.dragging)
             {
-                var diff = Math.Max(0, Math.Min(barWidth, UserInput.Cursor2D.X - point.X));
+                var diff = Math.Max(0, Math.Min(barWidth, UserInput.CursorPos2D.X - point.X));
 
                 if (reverseMode)
                 {
@@ -194,7 +195,6 @@
             else if (args.Message == WindowsMessages.LBUTTONUP)
             {
                 this.dragging = false;
-
                 this.Value = this.dvalue;
             }
         }

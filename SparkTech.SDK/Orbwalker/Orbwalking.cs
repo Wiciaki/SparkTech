@@ -24,10 +24,7 @@
 
         static Orbwalking()
         {
-            string[] Parse(string resource)
-            {
-                return JArray.Parse(resource).Values<string>().ToArray();
-            }
+            string[] Parse(string resource) => JArray.Parse(resource).Values<string>().ToArray();
 
             AttackResets = Parse(Resources.AttackResets);
             Attacks = Parse(Resources.Attacks);
@@ -37,7 +34,6 @@
         public static bool IsAutoAttack(string name)
         {
             name = name.ToLower();
-
             return name.Contains("attack") && !NoAttacks.Contains(name) || Attacks.Contains(name);
         }
 

@@ -5,13 +5,15 @@
     using SparkTech.SDK.API;
     using SparkTech.SDK.Entities;
     using SparkTech.SDK.GUI;
+    using SparkTech.SDK.Input;
+    using SparkTech.SDK.League;
     using SparkTech.SDK.Licensing;
     using SparkTech.SDK.Logging;
     using SparkTech.SDK.Modules;
     using SparkTech.SDK.Packets;
     using SparkTech.SDK.Rendering;
 
-    public sealed class Platform
+    public class Platform
     {
         public static string Name { get; private set; }
 
@@ -71,7 +73,7 @@
             platform = this;
         }
 
-        public void Load(Action continuation = null)
+        public void Load()
         {
             typeof(Log).Trigger();
 
@@ -106,43 +108,37 @@
                 Log.Warn("CoreAPI not present!");
             }
 
-            GUI.Theme.WatermarkOffset = this.Fixes?.WatermarkOffset ?? 0; // also triggers Theme class .cctor
+            // also triggers Theme class .cctor
+            GUI.Theme.WatermarkOffset = this.Fixes?.WatermarkOffset ?? 0;
             SdkSetup.SetCoreAuth(this.AuthResult);
 
-            Initialize();
+            IsLoaded = true;
+            this.Fixes?.PostLoadAction?.SafeInvoke();
 
-            if (continuation != null)
-            {
-                try
-                {
-                    continuation();
-                }
-                catch (Exception ex)
-                {
-                    Log.Error(ex);
-                }
-            }
+            HelloWorld();
         }
 
-        private static void Initialize()
+        private static void HelloWorld()
         {
-            IsLoaded = true;
-
             var message = "SparkTech.SDK initialized!";
             Log.Info(message);
+
+            int width;
+
+            try
+            {
+                width = Console.WindowWidth;
+            }
+            catch
+            {
+                return;
+            }
 
             message = ">>>>>>> " + message + " <<<<<<<";
 
             var color = Console.ForegroundColor;
             Console.ForegroundColor = ConsoleColor.Blue;
-
-            try
-            {
-                Console.WriteLine(string.Format($"\n{{0,{(Console.WindowWidth + message.Length) / 2}}}\n", message));
-            }
-            catch
-            { }
-            
+            Console.WriteLine(string.Format($"\n{{0,{(width + message.Length) / 2}}}\n", message));
             Console.ForegroundColor = color;
         }
 

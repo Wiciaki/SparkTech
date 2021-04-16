@@ -1,13 +1,15 @@
-﻿namespace SparkTech.SDK
+﻿namespace SparkTech.SDK.League
 {
     using System;
     using System.Collections.Generic;
 
-    using SparkTech.SDK.Logging;
-
     public static class DelayAction
     {
         private static readonly List<Action> OnStartHandlers = new List<Action>();
+
+        private static readonly List<DelayActionEntry> DelayActions = new List<DelayActionEntry>();
+
+        private static readonly IComparer<DelayActionEntry> DelayActionComparer = new DelayActionEntry.Comparer();
 
         public static event Action OnGameStart
         {
@@ -15,7 +17,7 @@
             {
                 if (Game.State == GameState.Running)
                 {
-                    RunCallback(value);
+                    value.SafeInvoke();
                 }
                 else
                 {
@@ -28,18 +30,6 @@
             }
         }
 
-        private static void RunCallback(Action callback)
-        {
-            try
-            {
-                callback();
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex);
-            }
-        }
-
         static DelayAction()
         {
             Game.OnUpdate += OnUpdate;
@@ -49,7 +39,7 @@
         {
             if (OnStartHandlers.Count != 0 && Game.State == GameState.Running)
             {
-                OnStartHandlers.ForEach(RunCallback);
+                OnStartHandlers.ForEach(h => h.SafeInvoke());
                 OnStartHandlers.Clear();
             }
 
@@ -65,16 +55,14 @@
                 var item = DelayActions[i];
 
                 if (item.ExecuteTime > time)
+                {
                     break;
+                }
 
                 DelayActions.RemoveAt(i);
-                RunCallback(item.Callback);
+                item.Callback.SafeInvoke();
             }
         }
-
-        private static readonly List<DelayActionEntry> DelayActions = new List<DelayActionEntry>();
-
-        private static readonly IComparer<DelayActionEntry> DelayActionComparer = new DelayActionEntry.Comparer();
 
         public static void Add(float time, Action action)
         {

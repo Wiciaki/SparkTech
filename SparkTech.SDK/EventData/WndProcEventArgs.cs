@@ -1,5 +1,7 @@
 ﻿namespace SparkTech.SDK.EventData
 {
+    using Input;
+
     public class WndProcEventArgs : BlockableEventArgs
     {
         public uint Msg { get; }

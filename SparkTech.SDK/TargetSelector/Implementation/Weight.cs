@@ -5,6 +5,7 @@
 
     using SparkTech.SDK.Entities;
     using SparkTech.SDK.GUI.Menu;
+    using SparkTech.SDK.League;
 
     public abstract class Weight : IComparer<IHero>
     {
@@ -57,7 +58,7 @@
 
             protected override IComparable GetComparable(IHero target)
             {
-                return float.MaxValue - Game.Cursor.Distance(target);
+                return float.MaxValue - Game.CursorPos.Distance(target);
             }
         }
 

@@ -22,27 +22,56 @@
 
 namespace SparkTech.SDK.MovementPrediction
 {
+    using System;
+    using System.Collections.Generic;
+
+    using SharpDX;
+
+    using SparkTech.SDK.Entities;
+    using SparkTech.SDK.League;
+
     public class PredictionOutput
     {
-        /*#region Public Properties
+        internal int _aoeTargetsHitCount;
+        internal List<IHero> _aoeTargetsHit = new List<IHero>();
+        internal Vector3 _castPosition = Vector3.Zero;
+        internal Vector3 _unitPosition = Vector3.Zero;
+        public List<IUnit> CollisionObjects = new List<IUnit>();
+        public HitChance Hitchance = HitChance.None;
+        public PredictionInput Input;
 
-        public List<AIBaseClient> AoeTargetObjs { get; set; }
+        public List<IHero> AoeTargetsHit
+        {
+            get => this._aoeTargetsHit;
+            set => this._aoeTargetsHit = value;
+        }
 
-        public Vector3 CastPosition { get; set; }
+        public int AoeTargetsHitCount
+        {
+            get => Math.Max(this._aoeTargetsHitCount, this.AoeTargetsHit.Count);
+            set => this._aoeTargetsHitCount = value;
+        }
 
-        public List<AIBaseClient> CollisionObjs { get; set; }
+        public Vector3 CastPosition
+        {
+            get
+            {
+                if (this._castPosition.IsValid() && this._castPosition.ToVector2().IsValid())
+                    return this._castPosition;
+                return this.Input.Unit != null && this.Input.Unit.IsValid ? this.Input.Unit.PreviousPosition : Vector3.Zero;
+            }
+            set => this._castPosition = value;
+        }
 
-        /// <summary>
-        ///     How many targets the cast position will hit
-        /// </summary>
-        public int HitCount { get; set; }
-
-        /// <summary>
-        /// </summary>
-        public float Probability { get; set; }
-
-        public Vector3 TargetUnitPosition { get; set; }
-
-        #endregion*/
+        public Vector3 UnitPosition
+        {
+            get
+            {
+                if (this._unitPosition.IsValid() && this._unitPosition.ToVector2().IsValid())
+                    return this._unitPosition;
+                return this.Input.Unit != null && this.Input.Unit.IsValid ? this.Input.Unit.PreviousPosition : Vector3.Zero;
+            }
+            set => this._unitPosition = value;
+        }
     }
 }

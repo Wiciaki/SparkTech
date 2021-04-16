@@ -25,7 +25,6 @@ namespace SparkTech.SDK
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
-    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.Linq;
 
@@ -33,10 +32,6 @@ namespace SparkTech.SDK
     ///     Exposes the enumeration for fast access.
     /// </summary>
     /// <typeparam name="TEnum">The enumeration type to be cached.</typeparam>
-    [SuppressMessage(
-        "ReSharper",
-        "StaticMemberInGenericType",
-        Justification = "The members differ for every type param provided, therefore the suppression is fine.")]
     public static class EnumCache<TEnum> where TEnum : struct, IConvertible
     {
         #region Static Fields
@@ -125,12 +120,10 @@ namespace SparkTech.SDK
             if (i == -1)
             {
                 result = default(TEnum);
-
                 return false;
             }
 
             result = Values[i];
-
             return true;
         }
 

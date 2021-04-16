@@ -28,6 +28,18 @@
             }
         }
 
+        internal static void SafeInvoke(this Action action)
+        {
+            try
+            {
+                action();
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex);
+            }
+        }
+
         internal static void Trigger(this Type type)
         {
             RuntimeHelpers.RunClassConstructor(type.TypeHandle);

@@ -1,4 +1,4 @@
-﻿namespace SparkTech.SDK
+﻿namespace SparkTech.SDK.League
 {
     using System;
 
@@ -11,11 +11,14 @@
     {
         private static readonly IGameFragment Fragment;
 
+        public static NavMesh NavMesh { get; }
+
         static Game()
         {
             Fragment = Platform.CoreFragment?.GetGameFragment() ?? throw Platform.FragmentException();
-
             Fragment.Update = args => OnUpdate.SafeInvoke(args);
+
+            NavMesh = new NavMesh(Fragment.GetNavMesh());
         }
 
         public static event Action<EventArgs> OnUpdate;
@@ -24,7 +27,7 @@
 
         public static GameMap Map => Fragment.Map;
 
-        public static Vector3 Cursor => Fragment.Cursor;
+        public static Vector3 CursorPos => Fragment.CursorPos;
 
         public static float Time => Fragment.Time;
 
@@ -35,7 +38,7 @@
         public static Matrix ViewMatrix => Fragment.ViewMatrix;
 
         public static void SendChat(string text)
-        { 
+        {
             Fragment.Say(text);
         }
 

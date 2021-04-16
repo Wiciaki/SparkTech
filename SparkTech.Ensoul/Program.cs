@@ -15,18 +15,18 @@
         {
             var platform = new Platform("EnsoulSharp")
             {
-                AuthResult = AuthResult.GetLifetime(),
+                AuthResult = new AuthResult(true),
                 RenderAPI = new RenderAPI(),
                 UserInputAPI = new UserInputAPI(),
                 CoreAPI = new CoreAPI(),
                 Fixes = new PlatformFixes
                 {
                     WatermarkOffset = 13,
-
+                    PostLoadAction = PostLoad
                 }
             };
 
-            platform.Load(PostLoad);
+            platform.Load();
         }
 
         private static void PostLoad()

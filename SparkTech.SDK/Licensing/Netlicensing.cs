@@ -46,7 +46,7 @@
             var ending = $"licensee/{this.licenseeNumber}/validate";
             var param = "productNumber=" + productNumber;
 
-            return GetAuth(await this.SendPost(ending, param)) ?? AuthResult.GetUnlicensed();
+            return GetAuth(await this.SendPost(ending, param)) ?? new AuthResult(false);
         }
 
         private static Dictionary<string, string> GetResponseObjects(JObject json)

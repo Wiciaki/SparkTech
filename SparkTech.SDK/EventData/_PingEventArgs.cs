@@ -3,6 +3,7 @@
     using SharpDX;
 
     using SparkTech.SDK.Entities;
+    using SparkTech.SDK.League;
 
     public class _PingEventArgs : BlockableEventArgs, IEventArgsSource<IGameObject>, IEventArgsTarget<IGameObject>
     {

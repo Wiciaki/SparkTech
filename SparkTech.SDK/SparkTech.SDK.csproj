@@ -13,8 +13,7 @@
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
     <PreBuildEvent />
-    <PostBuildEvent>
-    </PostBuildEvent>
+    <PostBuildEvent />
     <PlatformTarget>x86</PlatformTarget>
     <CscToolPath>C:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\MSBuild\15.0\Bin\Roslyn</CscToolPath>
     <OutputPath>bin\Release</OutputPath>
@@ -76,8 +75,12 @@
     <Compile Include="DamageLibrary\DamageLibraryService.cs" />
     <Compile Include="DamageLibrary\IDamageLibrary.cs" />
     <Compile Include="DamageLibrary\Implementation\DamageLibraryImpl.cs" />
-    <Compile Include="DelayAction.cs" />
-    <Compile Include="Emote.cs" />
+    <Compile Include="Detectors\DashDetector.cs" />
+    <Compile Include="Entities\SpellType.cs" />
+    <Compile Include="EventData\DashEventArgs.cs" />
+    <Compile Include="League\CollisionFlags.cs" />
+    <Compile Include="League\DelayAction.cs" />
+    <Compile Include="League\Emote.cs" />
     <Compile Include="Entities\EntityComparer.cs" />
     <Compile Include="Entities\EntityEvents.cs" />
     <Compile Include="Entities\Enumerations\AbilityResourceType.cs" />
@@ -152,11 +155,18 @@
     <Compile Include="EventData\UpdateChargedSpellEventArgs.cs" />
     <Compile Include="EventData\_VisibilityChangedEventArgs.cs" />
     <Compile Include="EventData\WndProcEventArgs.cs" />
-    <Compile Include="Folder.cs" />
-    <Compile Include="Game.cs" />
-    <Compile Include="GameEventId.cs" />
-    <Compile Include="GameMap.cs" />
-    <Compile Include="GameState.cs" />
+    <Compile Include="League\Extensions.cs" />
+    <Compile Include="League\INavMesh.cs" />
+    <Compile Include="League\MovementCollisionInfo.cs" />
+    <Compile Include="League\NavMesh.cs" />
+    <Compile Include="League\NavMeshCell.cs" />
+    <Compile Include="League\PathCache.cs" />
+    <Compile Include="League\ProjectionInfo.cs" />
+    <Compile Include="Logging\Folder.cs" />
+    <Compile Include="League\Game.cs" />
+    <Compile Include="League\GameEventId.cs" />
+    <Compile Include="League\GameMap.cs" />
+    <Compile Include="League\GameState.cs" />
     <Compile Include="Geometry\AOE\MEB.cs" />
     <Compile Include="Geometry\AOE\MEC.cs" />
     <Compile Include="Geometry\Arc.cs" />
@@ -204,8 +214,8 @@
     <Compile Include="HealthPrediction\IHealthPredition.cs" />
     <Compile Include="HealthPrediction\PortedPrediction.cs" />
     <Compile Include="InternalEx.cs" />
-    <Compile Include="IResumable.cs" />
-    <Compile Include="Keys.cs" />
+    <Compile Include="Modules\IResumable.cs" />
+    <Compile Include="Input\Keys.cs" />
     <Compile Include="Licensing\AuthResult.cs" />
     <Compile Include="Licensing\IAuth.cs" />
     <Compile Include="Licensing\IShop.cs" />
@@ -216,13 +226,14 @@
     <Compile Include="Logging\ILogger.cs" />
     <Compile Include="Logging\Log.cs" />
     <Compile Include="Logging\LogLevel.cs" />
-    <Compile Include="Mode.cs" />
+    <Compile Include="Input\Mode.cs" />
     <Compile Include="Modules\IEntryPoint.cs" />
     <Compile Include="Modules\IModule.cs" />
     <Compile Include="Modules\Loader.cs" />
     <Compile Include="Modules\Picker.cs" />
     <Compile Include="MovementPrediction\Collision.cs" />
     <Compile Include="MovementPrediction\CollisionableObjects.cs" />
+    <Compile Include="MovementPrediction\HitChance.cs" />
     <Compile Include="MovementPrediction\IMovementPrediction.cs" />
     <Compile Include="MovementPrediction\MovementPrediction.cs" />
     <Compile Include="MovementPrediction\MovementPredictionService.cs" />
@@ -234,11 +245,15 @@
     <Compile Include="Packets\Packet.cs" />
     <Compile Include="Packets\PacketChannel.cs" />
     <Compile Include="Packets\PacketProtocolFlags.cs" />
-    <Compile Include="PingCategory.cs" />
+    <Compile Include="League\PingCategory.cs" />
     <Compile Include="Platform.cs" />
     <Compile Include="PlatformFixes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Properties\Resources.Designer.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Rendering\Circle.cs" />
     <Compile Include="Rendering\Picture.cs" />
     <Compile Include="Rendering\Render.cs" />
@@ -253,21 +268,25 @@
     <Compile Include="SpellDatabase\PlayerSpell.cs" />
     <Compile Include="SpellDatabase\Spell.cs" />
     <Compile Include="SpellDatabase\SpellLink.cs" />
-    <Compile Include="SummonerEmoteSlot.cs" />
+    <Compile Include="League\SummonerEmoteSlot.cs" />
     <Compile Include="TargetSelector\ITargetSelector.cs" />
     <Compile Include="TargetSelector\Implementation\TargetSelectorImpl.cs" />
     <Compile Include="TargetSelector\TargetSelectorService.cs" />
     <Compile Include="TargetSelector\Implementation\Weight.cs" />
-    <Compile Include="UserInput.cs" />
+    <Compile Include="Input\UserInput.cs" />
     <Compile Include="Utilities\Activator.cs" />
     <Compile Include="Utilities\AutoLvlUp.cs" />
     <Compile Include="Utilities\DamageIndicator.cs" />
     <Compile Include="Utilities\IUtility.cs" />
+    <Compile Include="Utilities\SharedExperience.cs" />
     <Compile Include="Utilities\UtilityService.cs" />
-    <Compile Include="WindowsMessages.cs" />
+    <Compile Include="Input\WindowsMessages.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Properties\Resources.resx" />
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Database\AttackResets.json" />
@@ -290,20 +309,5 @@
     <Content Include="Resources\Banner.png" />
     <Content Include="Resources\Picker.jpg" />
   </ItemGroup>
-<!--
-  <ItemGroup>
-    <Compile Update="Properties\Resources.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-  </ItemGroup> 
-  <ItemGroup>
-    <EmbeddedResource Update="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-  </ItemGroup> 
-  -->
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

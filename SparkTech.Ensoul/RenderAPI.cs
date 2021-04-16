@@ -15,8 +15,6 @@
 
         public int Height => Drawing.Height;
 
-        public Action BeginScene { get; set; }
-
         public Action Draw { get; set; }
 
         public Action EndScene { get; set; }
@@ -29,12 +27,12 @@
 
         public RenderAPI()
         {
-            Drawing.OnBeginScene += args => this.BeginScene();
             Drawing.OnDraw += args =>
             {
                 EnsoulSharp.SDK.MenuUI.MenuManager.Instance.MenuVisible = false;
                 this.Draw();
             };
+
             Drawing.OnEndScene += args => this.EndScene();
             Drawing.OnPreReset += args => this.LostDevice();
             Drawing.OnPostReset += args => this.ResetDevice();

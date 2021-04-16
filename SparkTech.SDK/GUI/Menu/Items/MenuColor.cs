@@ -8,9 +8,10 @@
     using SharpDX;
     using SharpDX.Direct3D9;
 
-    using SparkTech.SDK.EventData;
-    using SparkTech.SDK.Properties;
-    using SparkTech.SDK.Rendering;
+    using EventData;
+    using Properties;
+    using Rendering;
+    using Input;
 
     public class MenuColor : MenuValue, IExpandable, IMenuValue<Color>
     {
@@ -169,7 +170,7 @@
 
                 if (Menu.IsCursorInside(palette, Size))
                 {
-                    var cursor = UserInput.Cursor2D;
+                    var cursor = UserInput.CursorPos2D;
 
                     color = GetPixel(cursor.X - palette.X, cursor.Y - palette.Y);
                     return true;

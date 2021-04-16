@@ -7,6 +7,7 @@
     using SharpDX;
 
     using SparkTech.SDK.API;
+    using SparkTech.SDK.League;
 
     public class Humanizer : IPlayerFragment
     {

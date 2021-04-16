@@ -1,4 +1,4 @@
-﻿namespace SparkTech.SDK
+﻿namespace SparkTech.SDK.Logging
 {
     using System;
     using System.IO;
@@ -16,7 +16,7 @@
         static Folder()
         {
             var appData = new Folder(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData));
-            
+
             Root = appData.GetFolder("SparkTech.SDK");
             Logs = Root.GetFolder("Logs");
             Menu = Root.GetFolder("Menu");

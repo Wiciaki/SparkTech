@@ -22,63 +22,47 @@
 
 namespace SparkTech.SDK.MovementPrediction
 {
+    using SharpDX;
+
+    using SparkTech.SDK.Entities;
+    using SparkTech.SDK.League;
+
     public class PredictionInput
     {
-        /*#region Fields
-
-        private Vector3 from;
-
-        #endregion
-
-        #region Public Properties
-
-        // SpellInfo
-
-        /// <summary>
-        ///     How many targets the spell can hit
-        /// </summary>
-        public int CollisionCount { get; set; }
-
-        public CollisionableObjects CollisionObjects { get; set; } =
-            CollisionableObjects.Minions | CollisionableObjects.YasuoWall;
-
-        public float Delay { get; set; }
+        internal Vector3 _from;
+        internal Vector3 _rangeCheckFrom;
+        public bool AddHitBox = true;
+        public bool Aoe;
+        public bool Collision;
+        public CollisionableObjects[] CollisionObjects = new CollisionableObjects[]
+        {
+            CollisionableObjects.Minions,
+            CollisionableObjects.YasuoWall
+        };
+        public float Delay;
+        public float Radius = 1f;
+        public float Range = float.MaxValue;
+        public float Speed = float.MaxValue;
+        public SpellType Type = SpellType.None;
+        public IUnit Unit = ObjectManager.Player;
 
         public Vector3 From
         {
-            get => this.from.IsZero ? LocalPlayer.Instance.Position : this.from;
-
-            set => this.from = value;
+            get => !this._from.ToVector2().IsValid() ? ObjectManager.Player.PreviousPosition : this._from;
+            set => this._from = value;
         }
 
-        public AIBaseClient FromUnit { get; set; } = LocalPlayer.Instance;
+        public Vector3 RangeCheckFrom
+        {
+            get
+            {
+                if (this._rangeCheckFrom.ToVector2().IsValid())
+                    return this._rangeCheckFrom;
+                return !this.From.ToVector2().IsValid() ? ObjectManager.Player.PreviousPosition : this.From;
+            }
+            set => this._rangeCheckFrom = value;
+        }
 
-        public bool HasCollision { get; set; }
-
-        /// <summary>
-        ///     If the spell is area of effect
-        /// </summary>
-        public bool IsAOE { get; set; }
-
-        public float Radius { get; set; } = 1f;
-
-        public float Range { get; set; } = float.MaxValue;
-
-        public float RealRadius => this.UseBoundingRadius ? this.Radius + this.FromUnit.BoundingRadius : this.Radius;
-
-        ///public Spell SelectedSpell { get; set; }
-
-        public float Speed { get; set; } = float.MaxValue;
-
-        /// <summary>
-        ///     List of targets to get the prediction
-        /// </summary>
-        public AIBaseClient Target { get; set; }
-
-        public bool UseBoundingRadius { get; set; } = true;
-
-        #endregion
-
-        //private Vector3 rangeCheckFrom;*/
+        public float RealRadius => !this.AddHitBox ? this.Radius : this.Radius + this.Unit.BoundingRadius;
     }
 }

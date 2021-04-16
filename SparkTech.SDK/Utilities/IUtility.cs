@@ -1,6 +1,8 @@
 ﻿namespace SparkTech.SDK.Utilities
 {
-    using SparkTech.SDK.GUI.Menu;
+    using GUI.Menu;
+
+    using Modules;
 
     public interface IUtility : IResumable
     {

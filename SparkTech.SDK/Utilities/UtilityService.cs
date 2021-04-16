@@ -21,7 +21,7 @@
             }
 
             Menu.Build(menu, JObject.Parse(Resources.Utilities));
-
+            
             foreach (var utility in utilities)
             {
                 var item = active[utility.Menu.Id];

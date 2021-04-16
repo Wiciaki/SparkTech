@@ -4,8 +4,8 @@
 
     using SharpDX;
 
-    using SparkTech.SDK.EventData;
-    using SparkTech.SDK.Logging;
+    using EventData;
+    using Input;
 
     public class MenuAction : MenuText
     {
@@ -57,15 +57,7 @@
             }
 
             this.pressing = false;
-
-            try
-            {
-                this.action();
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex);
-            }
+            this.action.SafeInvoke();
         }
     }
 }

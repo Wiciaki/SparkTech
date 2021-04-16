@@ -3,6 +3,7 @@
     using System;
 
     using SparkTech.SDK.Entities;
+    using SparkTech.SDK.League;
 
     public class NotifyEventArgs : EventArgs, IEventArgsSource<IGameObject>
     {

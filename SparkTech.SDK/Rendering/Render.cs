@@ -7,7 +7,6 @@
     using SharpDX.Direct3D9;
 
     using SparkTech.SDK.API;
-    using SparkTech.SDK.Logging;
 
     public static class Render
     {
@@ -18,7 +17,6 @@
             Fragment = Platform.RenderFragment ?? throw Platform.APIException("RenderAPI");
 
             Fragment.Draw = () => InvokeRenderEvent(OnDraw);
-            Fragment.BeginScene = () => InvokeRenderEvent(OnBeginScene);
             Fragment.EndScene = () => InvokeRenderEvent(OnEndScene);
             Fragment.LostDevice = () => InvokeRenderEvent(OnLostDevice);
             Fragment.ResetDevice = () => InvokeRenderEvent(OnResetDevice);
@@ -36,7 +34,7 @@
 
         public static Device Device => Fragment.Device;
 
-        public static event Action OnDraw, OnBeginScene, OnEndScene, OnLostDevice, OnResetDevice, OnDispose;
+        public static event Action OnDraw, OnEndScene, OnLostDevice, OnResetDevice, OnDispose;
 
         public static int Width => Fragment.Width;
 
@@ -53,14 +51,7 @@
 
             foreach (var callback in @event.GetInvocationList().Cast<Action>())
             {
-                try
-                {
-                    callback();
-                }
-                catch (Exception ex)
-                {
-                    Log.Error(ex);
-                }
+                callback.SafeInvoke();
             }
         }
     }

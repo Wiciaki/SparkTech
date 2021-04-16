@@ -3,44 +3,48 @@
     using System.Collections;
     using System.Collections.Generic;
 
-    public sealed class RadioBind : IEnumerable, IResumable
+    public sealed class RadioBind : IEnumerable
     {
-        private bool block, working;
+        private readonly List<MenuItem> items = new List<MenuItem>();
 
-        private readonly List<MenuBool> items = new List<MenuBool>();
+        private bool updating;
 
-        public void Add(MenuBool item)
+        public void Add<T>(T item) where T : MenuItem, IMenuValue<bool>
         {
+            if (this.items.Exists(m => m.GetValue<bool>()))
+            {
+                item.SetValue(false);
+            }
+
+            if (this.items.Count == 0)
+            {
+                item.SetValue(true);
+            }
+
             this.items.Add(item);
 
-            item.BeforeValueChange += _ => this.BeforeValueChange(item);
-        }
-
-        private void BeforeValueChange(MenuItem item)
-        {
-            if (this.block || !this.working)
+            item.BeforeValueChange += args =>
             {
-                return;
-            }
+                if (this.updating)
+                {
+                    return;
+                }
 
-            this.block = true;
+                if (item.GetValue<bool>())
+                {
+                    args.Block();
+                    return;
+                }
 
-            foreach (var i in this.items)
-            {
-                i.Value = i.Id == item.Id;
-            }
+                this.updating = true;
 
-            this.block = false;
-        }
+                foreach (var i in this.items)
+                {
+                    i.SetValue(i.Id == item.Id);
+                }
 
-        public void Start()
-        {
-            this.working = true;
-        }
-
-        public void Pause()
-        {
-            this.working = false;
+                this.updating = false;
+            };
         }
 
         IEnumerator IEnumerable.GetEnumerator()

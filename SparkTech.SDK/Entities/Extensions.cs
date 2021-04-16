@@ -6,6 +6,8 @@
 
     using SharpDX;
 
+    using SparkTech.SDK.League;
+
     public static class Extensions
     {
         public static bool IsMe(this IGameObject o)
@@ -210,35 +212,6 @@
         {
             return Math.Max(0, buff.EndTime - Game.Time);
         }
-
-        #region Distance
-
-        public static float Distance(this Vector2 from, Vector2 to)
-        {
-            return Vector2.Distance(from, to);
-        }
-
-        public static float Distance(this Vector3 from, Vector3 to)
-        {
-            return Vector3.Distance(from, to);
-        }
-
-        public static float Distance(this Vector3 from, IGameObject to)
-        {
-            return from.Distance(to.Position);
-        }
-
-        public static float Distance(this IGameObject from, Vector3 to)
-        {
-            return from.Position.Distance(to);
-        }
-
-        public static float Distance(this IGameObject from, IGameObject to)
-        {
-            return from.Position.Distance(to.Position);
-        }
-
-        #endregion
 
         public static bool IsValidTarget(this IAttackable t, bool mustBeEnemy = true)
         {
